@@ -1,0 +1,21 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% block sidebar %}
+  {% url 'account_email' as email_url %}
+  {% url 'account_change_password' as password_url %}
+  {% url 'mfa_index' as mfa_url %}
+  <nav class="tablet:grid-col-3 margin-bottom-4" aria-label="{% translate 'Account settings' %}">
+    <ul class="usa-sidenav">
+      <li class="usa-sidenav__item">
+        <a href="{{ email_url }}" {% if request.path == email_url %}class="usa-current" aria-current="page"{% endif %}>{% translate "Email addresses" %}</a>
+      </li>
+      <li class="usa-sidenav__item">
+        <a href="{{ password_url }}" {% if request.path == password_url %}class="usa-current" aria-current="page"{% endif %}>{% translate "Password" %}</a>
+      </li>
+      <li class="usa-sidenav__item">
+        <a href="{{ mfa_url }}" {% if request.path == mfa_url %}class="usa-current" aria-current="page"{% endif %}>{% translate "Two-factor login" %}</a>
+      </li>
+    </ul>
+  </nav>
+{% endblock sidebar %}
+{% block content_width %}tablet:grid-col-9{% endblock content_width %}

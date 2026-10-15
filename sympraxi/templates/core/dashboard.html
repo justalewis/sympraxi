@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "My centers" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% blocktranslate with name=user.display_name %}Hello, {{ name }}{% endblocktranslate %}</h1>
+  {% if centers %}
+    <h2>{% translate "Your centers" %}</h2>
+    <ul class="usa-card-group">
+      {% for entry in centers %}
+        <li class="usa-card tablet:grid-col-6">
+          <div class="usa-card__container">
+            <div class="usa-card__header"><h3 class="usa-card__heading">{{ entry.center.name }}</h3></div>
+            <div class="usa-card__body"><p>{% translate "Your role:" %} {{ entry.roles|join:", " }}</p></div>
+            <div class="usa-card__footer">
+              <a class="usa-button" href="{{ entry.center.get_absolute_url }}">{% blocktranslate with name=entry.center.name %}Open {{ name }}{% endblocktranslate %}</a>
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="usa-alert usa-alert--info">
+      <div class="usa-alert__body">
+        <h2 class="usa-alert__heading">{% translate "You're not part of a center yet" %}</h2>
+        <p class="usa-alert__text">{% translate "When a writing center adds you as a student or staff member, it will show up here." %}</p>
+      </div>
+    </div>
+  {% endif %}
+{% endblock content %}

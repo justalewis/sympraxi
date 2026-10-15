@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with name=center.name %}People in {{ name }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  <nav aria-label="{% translate 'Breadcrumbs' %}" class="usa-breadcrumb">
+    <ol class="usa-breadcrumb__list">
+      <li class="usa-breadcrumb__list-item"><a class="usa-breadcrumb__link" href="{{ center.get_absolute_url }}"><span>{{ center.name }}</span></a></li>
+      <li class="usa-breadcrumb__list-item usa-current" aria-current="page"><span>{% translate "People" %}</span></li>
+    </ol>
+  </nav>
+  <h1>{% translate "People in this center" %}</h1>
+  {% url 'centers:members' slug=center.slug as members_url %}
+  <form class="usa-search usa-search--small" role="search" method="get" action="{{ members_url }}"
+        hx-get="{{ members_url }}" hx-target="#member-results" hx-push-url="true"
+        hx-trigger="input changed delay:300ms from:#member-search, submit">
+    <label class="usa-sr-only" for="member-search">{% translate "Search by name or email" %}</label>
+    <input class="usa-input" id="member-search" type="search" name="q" value="{{ query }}" autocomplete="off">
+    <button class="usa-button" type="submit"><span class="usa-search__submit-text">{% translate "Search" %}</span></button>
+  </form>
+  <div id="member-results" aria-live="polite">
+    {% include "centers/_member_results.html" %}
+  </div>
+{% endblock content %}

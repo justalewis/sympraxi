@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if form.non_field_errors %}
+  <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+    <div class="usa-alert__body"><p class="usa-alert__text">{{ form.non_field_errors|join:" " }}</p></div>
+  </div>
+{% endif %}
+{% for field in form.hidden_fields %}{{ field }}{% endfor %}
+{% for field in form.visible_fields %}{% include "includes/field.html" %}{% endfor %}

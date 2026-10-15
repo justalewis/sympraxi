@@ -1,0 +1,29 @@
+{% load i18n %}
+{% if page.object_list %}
+  <table class="usa-table usa-table--borderless">
+    <caption class="usa-sr-only">{% translate "People in this center" %}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{% translate "Name" %}</th>
+        <th scope="col">{% translate "Email" %}</th>
+        <th scope="col">{% translate "Role" %}</th>
+        <th scope="col">{% translate "Status" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in page.object_list %}
+        <tr>
+          <th scope="row">{{ m.user.display_name }}{% if m.user.pronouns %} <span class="text-base">({{ m.user.pronouns }})</span>{% endif %}</th>
+          <td>{{ m.user.email }}</td>
+          <td>{{ m.get_role_display }}</td>
+          <td>{% if m.is_active %}{% translate "Active" %}{% else %}{% translate "Inactive" %}{% endif %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include "includes/pagination.html" %}
+{% elif query %}
+  <p>{% blocktranslate %}Nobody matches “{{ query }}”.{% endblocktranslate %}</p>
+{% else %}
+  <p>{% translate "Nobody has been added to this center yet." %}</p>
+{% endif %}

@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local configuration and data
+.env
+/media/
+/staticfiles/
+/backups/
+*.sqlite3
+
+# Frontend build
+node_modules/
+/sympraxi/static/vendor/
+
+# Playwright
+test-results/
+playwright-report/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local preview configuration (machine-specific paths)
+.claude/launch.json

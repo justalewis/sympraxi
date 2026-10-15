@@ -1,0 +1,16 @@
+# PostgreSQL for local development: docker compose -f compose.dev.yaml up -d
+# Then set DATABASE_URL=postgres://sympraxi:sympraxi@localhost:5432/sympraxi in .env
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: sympraxi
+      POSTGRES_USER: sympraxi
+      POSTGRES_PASSWORD: sympraxi
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - devdb:/var/lib/postgresql
+
+volumes:
+  devdb:

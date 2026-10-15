@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ center.name }}{% endblock head_title %}
+{% block content %}
+  <h1>{{ center.name }}</h1>
+  {% if my_roles %}
+    <p>{% translate "Your roles here:" %} {% for role in my_roles %}<span class="usa-tag">{{ role.label }}</span> {% endfor %}</p>
+  {% endif %}
+  <p>{% translate "Scheduling, session records and resources arrive in the next phase." %}</p>
+  {% if can_view_members or can_view_audit_log %}
+    <h2>{% translate "Center tools" %}</h2>
+    <ul class="usa-list">
+      {% if can_view_members %}<li><a href="{% url 'centers:members' slug=center.slug %}">{% translate "People in this center" %}</a></li>{% endif %}
+      {% if can_view_audit_log %}<li><a href="{% url 'privacy:audit_log' slug=center.slug %}">{% translate "Audit log" %}</a></li>{% endif %}
+    </ul>
+  {% endif %}
+  {% if center.contact_email %}
+    <p>{% translate "Contact:" %} <a href="mailto:{{ center.contact_email }}">{{ center.contact_email }}</a></p>
+  {% endif %}
+{% endblock content %}

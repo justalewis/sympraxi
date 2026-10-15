@@ -1,0 +1,4 @@
+{% load allauth %}
+<div class="usa-alert usa-alert--{% if attrs.level == 'error' %}error{% elif attrs.level == 'warning' %}warning{% else %}info{% endif %} usa-alert--slim">
+  <div class="usa-alert__body"><p class="usa-alert__text">{% slot message %}{% endslot %}</p></div>
+</div>

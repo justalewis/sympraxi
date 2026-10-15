@@ -1,0 +1,18 @@
+{% load allauth %}
+{% if attrs.type == "checkbox" or attrs.type == "radio" %}
+  <div class="usa-{{ attrs.type }}">
+    <input class="usa-{{ attrs.type }}__input" type="{{ attrs.type }}"{% if attrs.required %} required{% endif %}{% if attrs.disabled %} disabled{% endif %}{% if attrs.checked %} checked{% endif %}{% if attrs.name %} name="{{ attrs.name }}"{% endif %}{% if attrs.id %} id="{{ attrs.id }}"{% endif %}{% if attrs.value is not None %} value="{{ attrs.value }}"{% endif %}>
+    <label class="usa-{{ attrs.type }}__label" for="{{ attrs.id }}">{% slot label %}{% endslot %}</label>
+  </div>
+{% else %}
+  <div class="usa-form-group{% if attrs.errors %} usa-form-group--error{% endif %}">
+    <label class="usa-label" for="{{ attrs.id }}">{% slot label %}{% endslot %}</label>
+    {% if slots.help_text %}<div class="usa-hint" id="{{ attrs.id }}_helptext">{% slot help_text %}{% endslot %}</div>{% endif %}
+    {% if attrs.errors %}<span class="usa-error-message" role="alert">{{ attrs.errors }}</span>{% endif %}
+    {% if attrs.type == "textarea" %}
+      <textarea class="usa-textarea"{% if attrs.required %} required{% endif %}{% if attrs.rows %} rows="{{ attrs.rows }}"{% endif %}{% if attrs.disabled %} disabled{% endif %}{% if attrs.readonly %} readonly{% endif %}{% if attrs.name %} name="{{ attrs.name }}"{% endif %}{% if attrs.id %} id="{{ attrs.id }}"{% endif %}{% if slots.help_text %} aria-describedby="{{ attrs.id }}_helptext"{% endif %}>{% slot value %}{% endslot %}</textarea>
+    {% else %}
+      <input class="usa-input" type="{{ attrs.type }}"{% if attrs.required %} required{% endif %}{% if attrs.disabled %} disabled{% endif %}{% if attrs.readonly %} readonly{% endif %}{% if attrs.name %} name="{{ attrs.name }}"{% endif %}{% if attrs.id %} id="{{ attrs.id }}"{% endif %}{% if attrs.autocomplete %} autocomplete="{{ attrs.autocomplete }}"{% endif %}{% if attrs.value is not None %} value="{{ attrs.value }}"{% endif %}{% if slots.help_text %} aria-describedby="{{ attrs.id }}_helptext"{% endif %}>
+    {% endif %}
+  </div>
+{% endif %}

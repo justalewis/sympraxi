@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Welcome" %}{% endblock head_title %}
+{% block content %}
+  <h1>{{ SITE_NAME }}</h1>
+  <p class="usa-intro">{% translate "Book writing center appointments, keep track of your sessions, and find resources for your writing." %}</p>
+  <div class="sympraxi-button-group">
+    <a class="usa-button" href="{% url 'account_login' %}">{% translate "Sign in" %}</a>
+    <a class="usa-button usa-button--outline" href="{% url 'account_signup' %}">{% translate "Create an account" %}</a>
+  </div>
+{% endblock content %}

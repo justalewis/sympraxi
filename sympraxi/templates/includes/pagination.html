@@ -1,0 +1,24 @@
+{% load i18n %}
+{% if page.has_other_pages %}
+  <nav aria-label="{% translate 'Pages' %}" class="usa-pagination">
+    <ul class="usa-pagination__list">
+      {% if page.has_previous %}
+        <li class="usa-pagination__item usa-pagination__arrow">
+          <a href="?page={{ page.previous_page_number }}{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="usa-pagination__link usa-pagination__previous-page">
+            <span class="usa-pagination__link-text">{% translate "Previous" %}</span>
+          </a>
+        </li>
+      {% endif %}
+      <li class="usa-pagination__item usa-pagination__page-no">
+        <span class="usa-pagination__button usa-current" aria-current="page">{% blocktranslate with number=page.number total=page.paginator.num_pages %}Page {{ number }} of {{ total }}{% endblocktranslate %}</span>
+      </li>
+      {% if page.has_next %}
+        <li class="usa-pagination__item usa-pagination__arrow">
+          <a href="?page={{ page.next_page_number }}{% if query %}&amp;q={{ query|urlencode }}{% endif %}" class="usa-pagination__link usa-pagination__next-page">
+            <span class="usa-pagination__link-text">{% translate "Next" %}</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}

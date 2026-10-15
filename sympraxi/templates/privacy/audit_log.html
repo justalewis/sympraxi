@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with name=center.name %}Audit log for {{ name }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  <nav aria-label="{% translate 'Breadcrumbs' %}" class="usa-breadcrumb">
+    <ol class="usa-breadcrumb__list">
+      <li class="usa-breadcrumb__list-item"><a class="usa-breadcrumb__link" href="{{ center.get_absolute_url }}"><span>{{ center.name }}</span></a></li>
+      <li class="usa-breadcrumb__list-item usa-current" aria-current="page"><span>{% translate "Audit log" %}</span></li>
+    </ol>
+  </nav>
+  <h1>{% translate "Audit log" %}</h1>
+  <p>{% translate "Who changed access to this center or viewed its records. Entries can’t be edited or deleted." %}</p>
+  {% if page.object_list %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Audit log entries, newest first" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "When" %}</th>
+          <th scope="col">{% translate "Who" %}</th>
+          <th scope="col">{% translate "What" %}</th>
+          <th scope="col">{% translate "From" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in page.object_list %}
+          <tr>
+            <th scope="row" data-label="{% translate 'When' %}"><time datetime="{{ event.occurred_at|date:'c' }}">{{ event.occurred_at|date:"SHORT_DATETIME_FORMAT" }}</time></th>
+            <td data-label="{% translate 'Who' %}">{{ event.actor_label|default:"—" }}</td>
+            <td data-label="{% translate 'What' %}">{{ event.action_label }}{% if event.details.role %} ({{ event.details.role }}){% endif %}</td>
+            <td data-label="{% translate 'From' %}">{{ event.ip_address|default:"—" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% include "includes/pagination.html" %}
+  {% else %}
+    <p>{% translate "No entries yet." %}</p>
+  {% endif %}
+{% endblock content %}

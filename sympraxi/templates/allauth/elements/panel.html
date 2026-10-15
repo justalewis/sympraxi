@@ -1,0 +1,10 @@
+{% load allauth %}
+<section class="sympraxi-panel">
+  <h2>{% slot title %}{% endslot %}</h2>
+  {% slot body %}{% endslot %}
+  {% if slots.actions %}
+    <div class="sympraxi-button-group">
+      {% for action in slots.actions %}{{ action }}{% endfor %}
+    </div>
+  {% endif %}
+</section>

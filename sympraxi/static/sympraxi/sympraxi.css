@@ -1,0 +1,67 @@
+/* Small additions on top of the U.S. Web Design System. Keep this file short;
+   prefer USWDS utility classes in templates. No inline styles anywhere: the
+   Content Security Policy blocks them. */
+
+.sympraxi-main {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+/* usa-prose limits line length for reading; forms and tables use the full column. */
+.sympraxi-content.usa-prose > table,
+.sympraxi-content.usa-prose > form,
+.sympraxi-content.usa-prose > .usa-card-group {
+  max-width: none;
+}
+
+.sympraxi-form-actions,
+.sympraxi-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.sympraxi-panel {
+  margin-bottom: 2rem;
+}
+
+/* The sign-out control is a form button styled to sit in the nav like a link. */
+.sympraxi-nav-form {
+  margin: 0;
+}
+
+.sympraxi-nav-button.usa-button--unstyled {
+  padding: 1rem;
+  font-weight: 400;
+  color: #1b1b1b;
+  text-decoration: none;
+}
+
+.sympraxi-nav-button.usa-button--unstyled:hover {
+  color: #005ea2;
+}
+
+@media (min-width: 64em) {
+  .sympraxi-nav-button.usa-button--unstyled {
+    font-weight: 700;
+    color: #565c65;
+  }
+}
+
+.sympraxi-content .usa-table {
+  width: 100%;
+}
+
+.sympraxi-footer-text {
+  margin: 0;
+}
+
+/* allauth renders the TOTP QR code as an image; keep it a scannable size. */
+.usa-form img[src^="data:image/svg"] {
+  width: 12rem;
+  height: 12rem;
+  display: block;
+  margin-bottom: 1rem;
+}

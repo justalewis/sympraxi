@@ -1,0 +1,100 @@
+{% load static i18n %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false, "allowScriptTags": false}'>
+  <title>{% block head_title %}{% endblock head_title %} | {{ SITE_NAME }}</title>
+  <script src="{% static 'vendor/uswds/js/uswds-init.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'vendor/uswds/css/uswds.min.css' %}">
+  <link rel="stylesheet" href="{% static 'sympraxi/sympraxi.css' %}">
+  <link rel="icon" href="{% static 'sympraxi/favicon.svg' %}" type="image/svg+xml">
+  {% block extra_head %}{% endblock extra_head %}
+</head>
+<body>
+  <a class="usa-skipnav" href="#main-content">{% translate "Skip to main content" %}</a>
+
+  <header class="usa-header usa-header--basic">
+    <div class="usa-nav-container">
+      <div class="usa-navbar">
+        <div class="usa-logo">
+          <em class="usa-logo__text"><a href="{% url 'core:home' %}">{{ SITE_NAME }}</a></em>
+        </div>
+        <button type="button" class="usa-menu-btn">{% translate "Menu" %}</button>
+      </div>
+      <nav aria-label="{% translate 'Main' %}" class="usa-nav">
+        <button type="button" class="usa-nav__close">
+          <img src="{% static 'vendor/uswds/img/usa-icons/close.svg' %}" alt="{% translate 'Close menu' %}">
+        </button>
+        <ul class="usa-nav__primary usa-accordion">
+          {% if user.is_authenticated %}
+            <li class="usa-nav__primary-item">
+              <a class="usa-nav-link" href="{% url 'core:home' %}"><span>{% translate "My centers" %}</span></a>
+            </li>
+            <li class="usa-nav__primary-item">
+              <a class="usa-nav-link" href="{% url 'account_email' %}"><span>{% translate "Account" %}</span></a>
+            </li>
+            {% if user.is_superuser %}
+              <li class="usa-nav__primary-item">
+                <a class="usa-nav-link" href="{% url 'admin:index' %}"><span>{% translate "Site administration" %}</span></a>
+              </li>
+            {% endif %}
+            <li class="usa-nav__primary-item">
+              <form method="post" action="{% url 'account_logout' %}" class="sympraxi-nav-form">
+                {% csrf_token %}
+                <button type="submit" class="usa-button usa-button--unstyled sympraxi-nav-button">{% translate "Sign out" %}</button>
+              </form>
+            </li>
+          {% else %}
+            <li class="usa-nav__primary-item">
+              <a class="usa-nav-link" href="{% url 'account_login' %}"><span>{% translate "Sign in" %}</span></a>
+            </li>
+            <li class="usa-nav__primary-item">
+              <a class="usa-nav-link" href="{% url 'account_signup' %}"><span>{% translate "Create an account" %}</span></a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="usa-overlay"></div>
+
+  <main id="main-content" tabindex="-1">
+    <div class="grid-container usa-section sympraxi-main">
+      <div class="grid-row grid-gap">
+        {% block sidebar %}{% endblock sidebar %}
+        <div class="{% block content_width %}grid-col-12{% endblock content_width %} usa-prose sympraxi-content">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="usa-alert usa-alert--{% if message.level_tag == 'error' %}error{% elif message.level_tag == 'warning' %}warning{% elif message.level_tag == 'success' %}success{% else %}info{% endif %} usa-alert--slim" role="status">
+                <div class="usa-alert__body"><p class="usa-alert__text">{{ message }}</p></div>
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% block content %}{% endblock content %}
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="usa-footer usa-footer--slim">
+    <div class="usa-footer__primary-section">
+      <div class="grid-container">
+        <p class="sympraxi-footer-text">
+          {% if SITE_NAME == "Sympraxi" %}
+            {% translate "Sympraxi is free software licensed under the GNU Affero General Public License." %}
+          {% else %}
+            {% blocktranslate %}{{ SITE_NAME }} runs Sympraxi, free software licensed under the GNU Affero General Public License.{% endblocktranslate %}
+          {% endif %}
+          <a href="{% url 'core:source' %}">{% translate "Get the source code" %}</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'vendor/htmx/htmx.min.js' %}"></script>
+  <script src="{% static 'vendor/uswds/js/uswds.min.js' %}"></script>
+  {% block extra_body %}{% endblock extra_body %}
+</body>
+</html>

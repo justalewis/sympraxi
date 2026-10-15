@@ -1,0 +1,18 @@
+{% load i18n sympraxi_forms %}
+{% with kind=field|widget_kind %}
+  {% if kind == "checkbox" %}
+    <div class="usa-checkbox">
+      {{ field|usa_widget }}
+      <label class="usa-checkbox__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    </div>
+  {% else %}
+    <div class="usa-form-group{% if field.errors %} usa-form-group--error{% endif %}">
+      <label class="usa-label{% if field.errors %} usa-label--error{% endif %}" for="{{ field.id_for_label }}">
+        {{ field.label }}{% if not field.field.required %} <span class="usa-hint">({% translate "optional" %})</span>{% endif %}
+      </label>
+      {% if field.help_text %}<div class="usa-hint" id="{{ field.auto_id }}_helptext">{{ field.help_text|safe }}</div>{% endif %}
+      {% if field.errors %}<span class="usa-error-message" id="{{ field.auto_id }}_error" role="alert">{{ field.errors|join:" " }}</span>{% endif %}
+      {{ field|usa_widget }}
+    </div>
+  {% endif %}
+{% endwith %}

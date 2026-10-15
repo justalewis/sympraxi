@@ -1,0 +1,73 @@
+[project]
+name = "sympraxi"
+version = "0.1.0.dev0"
+description = "Open-source scheduling, session records and training for college writing centers."
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+dependencies = [
+    "Django[argon2]>=6.1.2,<6.2",
+    "django-allauth[mfa]>=65.19.7",
+    "django-environ>=0.14.0",
+    "django-htmx>=1.29.0",
+    "django-tasks-db>=0.13.0",
+    "gunicorn>=26.2.0",
+    "psycopg[binary]>=3.3.6",
+    "whitenoise>=6.12.0",
+]
+
+[dependency-groups]
+dev = [
+    "axe-playwright-python>=0.1.8",
+    "django-stubs[compatible-mypy]>=6.1.2",
+    "factory-boy>=3.3.3",
+    "mypy>=2.4.0",
+    "pip-audit>=2.10.1",
+    "pytest>=9.1.1",
+    "pytest-django>=4.14.0",
+    "pytest-playwright>=0.10.0",
+    "ruff>=0.17.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "sympraxi.test_settings"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers -m 'not e2e'"
+markers = [
+    "e2e: browser tests (Playwright + axe); run with `pytest -m e2e`",
+]
+filterwarnings = [
+    # WhiteNoise looks for collected static files, which tests don't need.
+    "ignore:No directory at:UserWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["**/migrations/*.py", "catalog"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "DJ", "S", "SIM", "RUF"]
+ignore = [
+    "RUF012",  # Django class attributes (Meta, admin options) are fine as mutable defaults
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["mypy_django_plugin.main"]
+strict_optional = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+check_untyped_defs = true
+ignore_missing_imports = true
+exclude = ["migrations/"]
+
+[tool.django-stubs]
+django_settings_module = "sympraxi.test_settings"

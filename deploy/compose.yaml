@@ -1,0 +1,70 @@
+# Production stack for one college. Run every command from this directory:
+#   docker compose up -d
+# See docs/install.md. Settings live in deploy/.env (start from .env.example).
+
+name: sympraxi
+
+x-app: &app
+  image: ${SYMPRAXI_IMAGE:-sympraxi:local}
+  build:
+    context: ..
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  env_file: .env
+  environment:
+    DATABASE_URL: postgres://sympraxi:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in deploy/.env}@db:5432/sympraxi
+    SYMPRAXI_TRUST_X_FORWARDED_FOR: "true"
+  volumes:
+    - media:/app/media
+  depends_on:
+    db:
+      condition: service_healthy
+
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sympraxi
+      POSTGRES_USER: sympraxi
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in deploy/.env}
+    volumes:
+      # PostgreSQL 18 images keep their data under /var/lib/postgresql/18/docker.
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sympraxi -d sympraxi"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    <<: *app
+
+  worker:
+    <<: *app
+    command: ["python", "manage.py", "db_worker"]
+    healthcheck:
+      disable: true
+
+  caddy:
+    image: caddy:2.11.7-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SYMPRAXI_DOMAIN: ${SYMPRAXI_DOMAIN:?Set SYMPRAXI_DOMAIN in deploy/.env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  media:
+  caddy_data:
+  caddy_config:
