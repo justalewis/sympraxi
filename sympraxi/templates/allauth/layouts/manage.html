@@ -1,9 +1,11 @@
 {% extends "allauth/layouts/base.html" %}
-{% load i18n %}
+{% load i18n socialaccount %}
 {% block sidebar %}
   {% url 'account_email' as email_url %}
   {% url 'account_change_password' as password_url %}
   {% url 'mfa_index' as mfa_url %}
+  {% url 'socialaccount_connections' as linked_url %}
+  {% get_providers as sso_providers %}
   <nav class="tablet:grid-col-3 margin-bottom-4" aria-label="{% translate 'Account settings' %}">
     <ul class="usa-sidenav">
       <li class="usa-sidenav__item">
@@ -15,6 +17,11 @@
       <li class="usa-sidenav__item">
         <a href="{{ mfa_url }}" {% if request.path == mfa_url %}class="usa-current" aria-current="page"{% endif %}>{% translate "Two-factor login" %}</a>
       </li>
+      {% if sso_providers %}
+        <li class="usa-sidenav__item">
+          <a href="{{ linked_url }}" {% if request.path == linked_url %}class="usa-current" aria-current="page"{% endif %}>{% translate "Linked accounts" %}</a>
+        </li>
+      {% endif %}
     </ul>
   </nav>
 {% endblock sidebar %}

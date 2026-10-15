@@ -1,0 +1,35 @@
+{% extends "socialaccount/base_manage.html" %}
+{% load i18n socialaccount %}
+{% block head_title %}{% translate "Linked accounts" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "Linked accounts" %}</h1>
+  {% if form.accounts %}
+    <p>{% translate "You can sign in with these college accounts." %}</p>
+    <form class="usa-form usa-form--large" method="post" action="{% url 'socialaccount_connections' %}">
+      {% csrf_token %}
+      <fieldset class="usa-fieldset{% if form.errors %} usa-form-group usa-form-group--error{% endif %}">
+        <legend class="usa-legend">{% translate "Choose an account to unlink" %}</legend>
+        {% for error in form.non_field_errors %}<span class="usa-error-message" role="alert">{{ error }}</span>{% endfor %}
+        {% for error in form.account.errors %}<span class="usa-error-message" role="alert">{{ error }}</span>{% endfor %}
+        {% for choice in form.fields.account.choices %}
+          {% with account=choice.0.instance.get_provider_account %}
+            <div class="usa-radio">
+              <input class="usa-radio__input" type="radio" id="id_account_{{ account.account.pk }}" name="account" value="{{ account.account.pk }}" required>
+              <label class="usa-radio__label" for="id_account_{{ account.account.pk }}">{{ account.get_brand.name }}: {{ account }}</label>
+            </div>
+          {% endwith %}
+        {% endfor %}
+      </fieldset>
+      <div class="sympraxi-form-actions">
+        <button type="submit" class="usa-button usa-button--outline">{% translate "Unlink" %}</button>
+      </div>
+    </form>
+  {% else %}
+    <p>{% translate "No college accounts are linked to this account yet." %}</p>
+  {% endif %}
+  {% get_providers as socialaccount_providers %}
+  {% if socialaccount_providers %}
+    <h2>{% translate "Link an account" %}</h2>
+    {% include "includes/sso_buttons.html" with providers=socialaccount_providers process="connect" outline=True %}
+  {% endif %}
+{% endblock content %}

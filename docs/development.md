@@ -21,6 +21,8 @@ uv run python manage.py runserver
 
 `seed_demo` creates a demo center with a director, front desk worker, tutor and student, and prints a password for them. Staff accounts are asked to set up two-factor login on first sign-in; any authenticator app works. To skip that while developing, set `SYMPRAXI_REQUIRE_STAFF_MFA=false` in `.env`.
 
+Single sign-on is off until its variables are set (see `.env.example` and "Single sign-on" in [install.md](install.md)). Testing against a real tenant needs an app registration whose redirect URI points at `http://localhost:8000/accounts/oidc/entra/login/callback/`; the automated tests use a fake provider instead.
+
 Emails print to the console in development. Set `SYMPRAXI_QUEUE_EMAIL=false` to send them inline, or run `uv run python manage.py db_worker` alongside `runserver` to process the queue.
 
 ## Checks
@@ -49,6 +51,7 @@ HYPOTHESIS_PROFILE=thorough uv run pytest tests/test_booking_properties.py
 | `sympraxi/core/policy.py` | Every permission rule. Start here before adding a view |
 | `sympraxi/privacy/` | Audit log (append-only, enforced by a database trigger) |
 | `sympraxi/accounts/` | User model, sign-up rules, the staff two-factor gate |
+| `sympraxi/accounts/sso.py` | What a single sign-on login must prove; `sso_config.py` builds the providers from the environment |
 | `sympraxi/centers/` | Centers, roles, memberships |
 | `sympraxi/scheduling/services.py` | Every booking rule: limits, notice, cutoff, groups, locks |
 | `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions and closures |
@@ -56,6 +59,7 @@ HYPOTHESIS_PROFILE=thorough uv run pytest tests/test_booking_properties.py
 | `sympraxi/templates/allauth/` | Sign-in and account pages restyled with USWDS |
 | `tests/test_policy_matrix.py` | Every role against every action, written out by hand |
 | `tests/test_url_inventory.py` | Fails if a new URL isn't assigned a permission |
+| `tests/sso_idp.py` | A fake Entra ID and Google for SSO tests; nothing goes over the network |
 | `tests/e2e/` | Browser tests: axe accessibility and Content Security Policy |
 | `deploy/` | Production Compose stack, Caddy, install, backup, restore, upgrade |
 

@@ -1,0 +1,8 @@
+{% extends "socialaccount/base_entrance.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Sign-in canceled" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "Sign-in canceled" %}</h1>
+  <p>{% translate "You canceled signing in with your college account." %}</p>
+  <p><a class="usa-button" href="{% url 'account_login' %}">{% translate "Back to sign in" %}</a></p>
+{% endblock content %}

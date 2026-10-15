@@ -10,6 +10,8 @@ from pathlib import Path
 import environ
 from django.utils.csp import CSP
 
+from sympraxi.accounts import sso_config
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
@@ -55,6 +57,8 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.mfa",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.openid_connect",
     "django_htmx",
     "django_tasks_db",
     "sympraxi.core",
@@ -166,6 +170,34 @@ MFA_WEBAUTHN_ALLOW_INSECURE_ORIGIN = DEBUG
 
 SESSION_COOKIE_AGE = env.int("SYMPRAXI_SESSION_SECONDS", default=8 * 60 * 60)
 
+# --- Single sign-on ---------------------------------------------------------
+# Microsoft Entra ID and Google Workspace through OpenID Connect. Each provider is
+# set up from its SYMPRAXI_ENTRA_* or SYMPRAXI_GOOGLE_* variables (see
+# sympraxi/accounts/sso_config.py and docs/install.md); one whose variables
+# aren't set doesn't appear. The checks every sign-in must pass are in
+# sympraxi/accounts/sso.py.
+
+# Accept the identity provider's multi-factor login in place of Sympraxi's 2FA,
+# but only when its ID token proves it (`amr` contains "mfa"). Off by default.
+SYMPRAXI_TRUST_IDP_MFA = env.bool("SYMPRAXI_TRUST_IDP_MFA", default=False)
+# Hide password sign-in and sign-up once SSO is set up. Site administrators keep
+# a break-glass password sign-in at /accounts/login/local/.
+SYMPRAXI_SSO_ONLY = env.bool("SYMPRAXI_SSO_ONLY", default=False)
+
+SYMPRAXI_SSO_PROVIDERS = sso_config.providers_from_env(env, trust_idp_mfa=SYMPRAXI_TRUST_IDP_MFA)
+sso_config.check_sso_only(SYMPRAXI_SSO_ONLY, SYMPRAXI_SSO_PROVIDERS)
+
+SOCIALACCOUNT_ADAPTER = "sympraxi.accounts.adapter.SocialAccountAdapter"
+SOCIALACCOUNT_PROVIDERS = {"openid_connect": {"APPS": SYMPRAXI_SSO_PROVIDERS}}
+# A sign-in that passes the checks in sso.py may link to an existing account with
+# the same address; allauth then records the link, so later sign-ins match the
+# provider's stable ID rather than the address.
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_STORE_TOKENS = False
+SOCIALACCOUNT_LOGIN_ON_GET = False
+SOCIALACCOUNT_REQUESTS_TIMEOUT = 10
+
 # --- Email ------------------------------------------------------------------
 
 DEFAULT_FROM_EMAIL = env.str("SYMPRAXI_FROM_EMAIL", default="sympraxi@localhost")
@@ -214,7 +246,9 @@ SECURE_CSP = {
     "img-src": [CSP.SELF, "data:"],
     "font-src": [CSP.SELF],
     "connect-src": [CSP.SELF],
-    "form-action": [CSP.SELF],
+    # Browsers apply form-action to redirects too, and an SSO button is a form that
+    # redirects to the identity provider's sign-in page.
+    "form-action": [CSP.SELF, *sso_config.login_origins(SYMPRAXI_SSO_PROVIDERS)],
     "frame-ancestors": [CSP.NONE],
     "base-uri": [CSP.NONE],
     "object-src": [CSP.NONE],

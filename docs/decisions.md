@@ -2,6 +2,26 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 1: single sign-on (October 2026)
+
+**One Entra tenant and one Google domain per installation, set in the environment.** The build plan had each center entering its own tenant's settings. An installation serves one college, though, and a college has one tenant or one Workspace domain. Reading providers from `SYMPRAXI_ENTRA_*` and `SYMPRAXI_GOOGLE_*` variables keeps client secrets out of the database and its backups. allauth's admin screens for apps and tokens are removed, and an app saved in the database is ignored. A provider with only some of its variables set stops the site from starting, rather than quietly leaving SSO off.
+
+**allauth's generic OpenID Connect provider for both.** allauth's Microsoft provider reads the Graph profile, whose `mail` field isn't verified and which carries no tenant or `amr` claim. The generic provider reads the ID token, which has everything the checks need. Userinfo isn't fetched, PKCE is on, and tokens aren't stored. The sign-in URLs are `/accounts/oidc/entra/...` and `/accounts/oidc/google/...`.
+
+**The tenant is pinned three ways.** The discovery document is the tenant's own (`/{tenant}/v2.0`), so allauth rejects ID tokens from any other issuer. `common`, `organizations`, `consumers` and anything that isn't a GUID are refused at startup. `sympraxi/accounts/sso.py` also checks `tid` and `iss` on every sign-in.
+
+**Only addresses the provider vouches for.** Entra's `email` claim is unverified and editable, the hole behind the 2023 "nOAuth" account takeovers. Sympraxi requires Entra's `xms_edov` claim (the address is in a domain the tenant verified), and Google's `email_verified` plus a matching `hd`. When `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` is set, the address must be in it. The checks run on every sign-in, so an account that stops passing them can't keep using SSO.
+
+**Linking by address, with two limits.** A sign-in that passes the checks is linked to an existing account with the same address. After that, sign-ins match the provider's subject ID, so a later change of address doesn't break the link. An account already linked to a different identity at the same provider is never linked again by address: colleges reuse addresses, and a new holder must not inherit the old holder's records. allauth removes the password of a matched account whose address was never verified, so whoever registered it first loses access. Links, unlinks and refused sign-ins are audited (`auth.sso_linked`, `auth.sso_unlinked`, `auth.login_failed` with a reason).
+
+**SSO doesn't skip the staff 2FA rule unless the token proves MFA.** By default allauth's two-factor step runs after SSO like after a password, and staff without a second factor are sent to set one up. `SYMPRAXI_TRUST_IDP_MFA` accepts the provider's MFA only when the ID token's `amr` claim contains `mfa`. Nothing else counts, including Google's `hwk` and `swk`, whose meaning as multi-factor Google doesn't define. Entra sends `amr` once it is added as an optional claim. Google began sending `amr` in June 2026, on request, and only to apps it has verified, so an Internal Workspace app may never receive it; those installations keep Sympraxi's own 2FA.
+
+**SSO-only is enforced at sign-in, not in the template.** `SYMPRAXI_SSO_ONLY` hides the password form, passkey button and sign-up link. `AccountAdapter.pre_login()` refuses every non-SSO sign-in except a site administrator's, from any page. Site administrators keep a break-glass password page at `/accounts/login/local/`, with two-factor login as usual. Without a provider, the setting is refused at startup and ignored at runtime, so it can't lock everyone out.
+
+**SSO buttons are forms, and form-action allows the provider.** Starting sign-in takes a POST, so a link on another site can't start one. Browsers apply the Content Security Policy's `form-action` to the redirect that follows a form, so the policy adds `https://login.microsoftonline.com` or `https://accounts.google.com`, only for providers that are set up. A browser test presses each button from the keyboard and checks that the browser then requests the provider's page, which it does only if the policy allows the redirect. The test browser resolves no host but localhost, so that request, like any other a page might make, never leaves the machine. Playwright can't intercept a request made while following a redirect, so blocking name lookups is the only dependable guard.
+
+**Plain text buttons, no logos.** "Sign in with Microsoft" and "Sign in with Google" use the standard USWDS button. Vendor logos would put trademarked artwork in the repository for no gain in clarity.
+
 ## Phase 1: scheduling core (October 2026)
 
 **No double-booking, enforced by PostgreSQL.** An exclusion constraint (`scheduling_appointment_no_tutor_overlap`) rejects two active appointments for the same tutor whose times overlap, on any schedule in any center. The `=` on the tutor column needs the `btree_gist` extension, which the first scheduling migration creates. It is a trusted extension, so the database owner can create it without superuser rights. The booking service checks first so people get a readable message; the constraint catches the race that check can't.

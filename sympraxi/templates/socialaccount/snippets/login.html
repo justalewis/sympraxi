@@ -1,0 +1,6 @@
+{% load i18n socialaccount %}{% comment %} Shown under the sign-up form. {% endcomment %}
+{% get_providers as socialaccount_providers %}
+{% if socialaccount_providers %}
+  <h2>{% translate "Or use your college account" %}</h2>
+  {% include "includes/sso_buttons.html" with providers=socialaccount_providers process="login" outline=True %}
+{% endif %}

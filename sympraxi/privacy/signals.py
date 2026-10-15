@@ -4,6 +4,7 @@ from typing import Any
 
 from allauth.account import signals as account_signals
 from allauth.mfa import signals as mfa_signals
+from allauth.socialaccount import signals as social_signals
 from django.contrib.auth import signals as auth_signals
 from django.dispatch import receiver
 
@@ -44,6 +45,40 @@ def on_password_reset(sender: Any, request: Any, user: Any, **kwargs: Any) -> No
 @receiver(account_signals.email_changed)
 def on_email_changed(sender: Any, request: Any, user: Any, **kwargs: Any) -> None:
     record(AuditAction.EMAIL_CHANGED, request=request, actor=user)
+
+
+@receiver(social_signals.social_account_added)
+def on_sso_linked(sender: Any, request: Any, sociallogin: Any, **kwargs: Any) -> None:
+    # "connect": the person linked it from their account page. "email_match": their
+    # first SSO sign-in matched an existing account's verified address.
+    how = "connect" if sociallogin.state.get("process") == "connect" else "email_match"
+    record(
+        AuditAction.SSO_LINKED,
+        request=request,
+        actor=sociallogin.user,
+        target=sociallogin.account,
+        provider=sociallogin.account.provider,
+        how=how,
+    )
+
+
+@receiver(account_signals.user_signed_up)
+def on_sso_signup(sender: Any, request: Any, user: Any, **kwargs: Any) -> None:
+    sociallogin = kwargs.get("sociallogin")
+    if sociallogin is not None:
+        record(
+            AuditAction.SSO_LINKED,
+            request=request,
+            actor=user,
+            target=sociallogin.account,
+            provider=sociallogin.account.provider,
+            how="new_account",
+        )
+
+
+@receiver(social_signals.social_account_removed)
+def on_sso_unlinked(sender: Any, request: Any, socialaccount: Any, **kwargs: Any) -> None:
+    record(AuditAction.SSO_UNLINKED, request=request, provider=socialaccount.provider)
 
 
 @receiver(mfa_signals.authenticator_added)

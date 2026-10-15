@@ -15,6 +15,8 @@ ACTION_LABELS = {
     "auth.mfa_added": _("Added a two-factor method"),
     "auth.mfa_removed": _("Removed a two-factor method"),
     "auth.mfa_recovery_codes_reset": _("Generated new recovery codes"),
+    "auth.sso_linked": _("Linked a college sign-in account"),
+    "auth.sso_unlinked": _("Unlinked a college sign-in account"),
     "access.membership_added": _("Added someone to the center"),
     "access.membership_changed": _("Changed someone's role"),
     "access.membership_removed": _("Removed someone from the center"),

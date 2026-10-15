@@ -50,9 +50,11 @@
             <li class="usa-nav__primary-item">
               <a class="usa-nav-link" href="{% url 'account_login' %}"><span>{% translate "Sign in" %}</span></a>
             </li>
-            <li class="usa-nav__primary-item">
-              <a class="usa-nav-link" href="{% url 'account_signup' %}"><span>{% translate "Create an account" %}</span></a>
-            </li>
+            {% if LOCAL_SIGNUP_OPEN %}
+              <li class="usa-nav__primary-item">
+                <a class="usa-nav-link" href="{% url 'account_signup' %}"><span>{% translate "Create an account" %}</span></a>
+              </li>
+            {% endif %}
           {% endif %}
         </ul>
       </nav>

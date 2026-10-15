@@ -1,7 +1,25 @@
 import pytest
 
+from sympraxi.accounts.adapter import SocialAccountAdapter
 from sympraxi.centers.models import Center, Role
+from tests import sso_idp
 from tests.factories import CenterFactory, MembershipFactory, UserFactory, give_mfa
+
+
+@pytest.fixture
+def idp(monkeypatch) -> sso_idp.FakeIdP:
+    """Answer allauth's requests to Entra and Google from memory."""
+    fake = sso_idp.FakeIdP()
+    monkeypatch.setattr(SocialAccountAdapter, "get_requests_session", lambda self: fake.session())
+    return fake
+
+
+@pytest.fixture
+def sso(settings, idp) -> sso_idp.FakeIdP:
+    """Entra ID and Google Workspace set up for example.edu, behind the fake provider."""
+    settings.SOCIALACCOUNT_PROVIDERS = sso_idp.providers()
+    settings.SYMPRAXI_SIGNUP_EMAIL_DOMAINS = ["example.edu"]
+    return idp
 
 
 @pytest.fixture

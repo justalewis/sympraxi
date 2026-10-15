@@ -1,0 +1,22 @@
+{% load i18n socialaccount %}{% comment %}
+  Single sign-on buttons. Each one is a small form that POSTs to allauth, which then
+  redirects to the identity provider; a POST keeps the start of sign-in behind
+  CSRF protection. Pass `providers` (from {% get_providers %}) and `process`
+  ("login" or "connect").
+{% endcomment %}
+<ul class="usa-list--unstyled sympraxi-sso">
+  {% for provider in providers %}
+    <li class="sympraxi-sso__item">
+      <form method="post" action="{% provider_login_url provider process=process %}" class="sympraxi-sso__form">
+        {% csrf_token %}
+        <button type="submit" class="usa-button{% if outline %} usa-button--outline{% endif %} sympraxi-sso__button">
+          {% if process == "connect" %}
+            {% blocktranslate with name=provider.name %}Link your {{ name }} account{% endblocktranslate %}
+          {% else %}
+            {% blocktranslate with name=provider.name %}Sign in with {{ name }}{% endblocktranslate %}
+          {% endif %}
+        </button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>

@@ -1,16 +1,21 @@
 """Every page passes axe, and no page trips the Content Security Policy.
 
 Run with: uv run pytest -m e2e  (after `npm --prefix frontend run build` and
-`uv run playwright install chromium`). Add each new page to PAGES.
+`uv run playwright install chromium`). Add each new page to PAGES, or to
+SSO_PAGES if it only looks different once single sign-on is set up.
 """
 
 from datetime import date
 
 import pytest
+from allauth.socialaccount.models import SocialAccount
 from axe_playwright_python.sync_playwright import Axe
+from django.utils.csp import CSP
 
+from sympraxi.accounts import sso_config
 from sympraxi.centers.models import Role
 from sympraxi.scheduling.timeutils import local_date
+from tests import sso_idp
 from tests.factories import CenterFactory, MembershipFactory, UserFactory, give_mfa
 from tests.scheduling_world import build_world
 
@@ -70,6 +75,19 @@ PAGES = [
     ("director-without-2fa", "/accounts/2fa/"),
 ]
 
+# Pages that change once single sign-on is set up: (who, path, variant). "sso" has
+# Entra ID and Google set up; "sso-only" also hides password sign-in.
+SSO_PAGES = [
+    (None, "/accounts/login/", "sso"),
+    (None, "/accounts/signup/", "sso"),
+    (None, "/accounts/login/", "sso-only"),
+    (None, "/accounts/login/local/", "sso-only"),
+    (None, "/accounts/oidc/entra/login/", "sso"),
+    (None, "/accounts/3rdparty/login/cancelled/", "sso"),
+    ("student", "/accounts/3rdparty/", "sso"),
+]
+ALL_PAGES = [(who, path, None) for who, path in PAGES] + SSO_PAGES
+
 ROLES = {"student": Role.STUDENT, "tutor": Role.TUTOR, "front_desk": Role.FRONT_DESK}
 
 # WCAG 2.0, 2.1 and 2.2 at levels A and AA, plus axe's general best practices.
@@ -82,7 +100,18 @@ AXE_OPTIONS = {
 }
 
 
-def open_page(browser, live_server, sign_in, who, path, **context_args):
+def set_up_sso(settings, variant: str | None) -> None:
+    """Configure the providers as settings.py would, including the CSP's form-action."""
+    if variant is None:
+        return
+    providers = sso_idp.providers()
+    settings.SOCIALACCOUNT_PROVIDERS = providers
+    settings.SYMPRAXI_SSO_ONLY = variant == "sso-only"
+    origins = sso_config.login_origins(providers["openid_connect"]["APPS"])
+    settings.SECURE_CSP = {**settings.SECURE_CSP, "form-action": [CSP.SELF, *origins]}
+
+
+def open_page(browser, live_server, sign_in, who, path, variant=None, **context_args):
     center = CenterFactory()
     context = browser.new_context(**context_args)
     user = None
@@ -92,6 +121,13 @@ def open_page(browser, live_server, sign_in, who, path, **context_args):
         MembershipFactory(user=UserFactory(), center=center)  # someone to list
         if who in ("director", "tutor", "front_desk"):
             give_mfa(user)
+        if variant is not None:
+            SocialAccount.objects.create(
+                user=user,
+                provider="entra",
+                uid="e2e-subject",
+                extra_data={"id_token": sso_idp.entra_claims(email=user.email)},
+            )
         sign_in(context, user)
     world = build_world(
         center,
@@ -116,13 +152,16 @@ def open_page(browser, live_server, sign_in, who, path, **context_args):
     return context, page, url
 
 
-IDS = [f"{w or 'anonymous'}:{p}" for w, p in PAGES]
+IDS = [f"{w or 'anonymous'}{'+' + v if v else ''}:{p}" for w, p, v in ALL_PAGES]
 
 
-@pytest.mark.parametrize(("who", "path"), PAGES, ids=IDS)
-def test_page_passes_axe(browser, live_server, sign_in, who, path) -> None:
+@pytest.mark.parametrize(("who", "path", "variant"), ALL_PAGES, ids=IDS)
+def test_page_passes_axe(browser, live_server, sign_in, settings, who, path, variant) -> None:
+    set_up_sso(settings, variant)
     # axe is injected as a script, so this context must ignore the page's CSP.
-    context, page, url = open_page(browser, live_server, sign_in, who, path, bypass_csp=True)
+    context, page, url = open_page(
+        browser, live_server, sign_in, who, path, variant, bypass_csp=True
+    )
     response = page.goto(url)
     assert response is not None and response.status == 200, f"{url} returned {response}"
     results = Axe().run(page, options=AXE_OPTIONS)
@@ -130,9 +169,7 @@ def test_page_passes_axe(browser, live_server, sign_in, who, path) -> None:
     assert results.violations_count == 0, results.generate_report()
 
 
-@pytest.mark.parametrize(("who", "path"), PAGES, ids=IDS)
-def test_page_has_no_csp_violations(browser, live_server, sign_in, who, path) -> None:
-    context, page, url = open_page(browser, live_server, sign_in, who, path)
+def watch_for_csp_problems(page) -> list[str]:
     problems: list[str] = []
     page.on(
         "console",
@@ -144,9 +181,54 @@ def test_page_has_no_csp_violations(browser, live_server, sign_in, who, path) ->
         ),
     )
     page.on("pageerror", lambda err: problems.append(str(err)))
+    return problems
+
+
+@pytest.mark.parametrize(("who", "path", "variant"), ALL_PAGES, ids=IDS)
+def test_page_has_no_csp_violations(
+    browser, live_server, sign_in, settings, who, path, variant
+) -> None:
+    set_up_sso(settings, variant)
+    context, page, url = open_page(browser, live_server, sign_in, who, path, variant)
+    problems = watch_for_csp_problems(page)
     page.goto(url)
     page.wait_for_load_state("networkidle")
     context.close()
+    assert problems == []
+
+
+@pytest.mark.parametrize(
+    ("label", "provider_url"),
+    [
+        ("Sign in with Microsoft", f"https://login.microsoftonline.com/{sso_idp.TENANT}/"),
+        ("Sign in with Google", "https://accounts.google.com/"),
+    ],
+)
+def test_sso_button_works_from_the_keyboard_under_the_csp(
+    browser, live_server, settings, idp, label, provider_url
+) -> None:
+    """Tab to the button, press Enter, and the browser heads for the provider.
+
+    The button is a form whose answer redirects off-site, and browsers apply the
+    CSP's form-action to that redirect. If the policy blocked it, the browser would
+    never request the provider's page. The test browser can't resolve outside
+    hosts (see conftest.py), so the request goes nowhere.
+    """
+    set_up_sso(settings, "sso")
+    context = browser.new_context()
+    page = context.new_page()
+    problems = watch_for_csp_problems(page)
+    page.goto(live_server.url + "/accounts/login/")
+    for _ in range(40):
+        page.keyboard.press("Tab")
+        if page.evaluate("document.activeElement.textContent.trim()") == label:
+            break
+    else:
+        pytest.fail(f"The Tab key never reached the {label!r} button")
+    with page.expect_request(lambda request: request.url.startswith(provider_url)) as went:
+        page.keyboard.press("Enter")
+    context.close()
+    assert "response_type=code" in went.value.url
     assert problems == []
 
 

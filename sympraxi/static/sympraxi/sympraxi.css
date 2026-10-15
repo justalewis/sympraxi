@@ -58,6 +58,25 @@
   margin: 0;
 }
 
+/* Single sign-on buttons: one form per provider, stacked, full width on phones. */
+.sympraxi-sso {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0 2rem;
+  max-width: 24rem;
+}
+
+.sympraxi-sso__item,
+.sympraxi-sso__form {
+  margin: 0;
+}
+
+.sympraxi-sso__button.usa-button {
+  width: 100%;
+  margin: 0;
+}
+
 /* allauth renders the TOTP QR code as an image; keep it a scannable size. */
 .usa-form img[src^="data:image/svg"] {
   width: 12rem;

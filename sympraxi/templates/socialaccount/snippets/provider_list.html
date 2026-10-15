@@ -1,0 +1,5 @@
+{% load socialaccount %}
+{% get_providers as socialaccount_providers %}
+{% if socialaccount_providers %}
+  {% include "includes/sso_buttons.html" with providers=socialaccount_providers process=process outline=True %}
+{% endif %}

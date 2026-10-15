@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.translation import gettext as _
 
+from sympraxi.accounts import sso
 from sympraxi.core import policy
 
 # Pages a staff member can reach before setting up two-factor login:
@@ -27,7 +28,9 @@ class RequireStaffMFAMiddleware:
     """Send tutors, front desk, directors and site admins to 2FA setup until they finish it.
 
     Staff can read student records, so a stolen password alone must not be enough.
-    Students are not forced, but can turn 2FA on themselves.
+    Students are not forced, but can turn 2FA on themselves. Single sign-on doesn't
+    change this unless SYMPRAXI_TRUST_IDP_MFA is on and the sign-in proved MFA at
+    the identity provider (see `sympraxi.accounts.sso`).
     """
 
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
@@ -37,6 +40,7 @@ class RequireStaffMFAMiddleware:
         if (
             settings.SYMPRAXI_REQUIRE_STAFF_MFA
             and not request.path.startswith(EXEMPT_PREFIXES)
+            and not sso.idp_mfa_trusted(request)
             and needs_mfa_setup(request.user)
         ):
             messages.info(

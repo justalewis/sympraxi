@@ -3,7 +3,8 @@
 Adding a view without classifying it here fails `test_every_url_is_classified`.
 That is the point: no page that touches student data ships by accident.
 Third-party URLs (allauth, the Django admin) are excluded; the admin is
-restricted to site administrators and sits behind the same 2FA gate.
+restricted to site administrators and sits behind the same 2FA gate. allauth's
+single sign-on URLs (/accounts/oidc/<provider>/...) are covered in test_sso.py.
 """
 
 import pytest
@@ -13,7 +14,9 @@ from sympraxi.core import policy
 from sympraxi.core.policy import Action
 from tests.scheduling_world import World, build_world
 
-PUBLIC = {"core:home", "core:healthz", "core:source"}
+# accounts:local_login is the break-glass password sign-in. It is public like the
+# regular sign-in page; AccountAdapter.pre_login() decides who may use it.
+PUBLIC = {"core:home", "core:healthz", "core:source", "accounts:local_login"}
 
 # Center-scoped pages, the action each one requires, and the object the action is
 # checked against ("center", or an attribute of the test World).

@@ -1,0 +1,22 @@
+{% extends "socialaccount/base_entrance.html" %}
+{% load i18n %}
+{% comment %}
+  Shown when someone opens a provider's sign-in URL directly. Starting sign-in
+  takes a POST, so a link elsewhere can't start it on its own.
+{% endcomment %}
+{% block head_title %}{% if process == "connect" %}{% blocktranslate with name=provider.name %}Link your {{ name }} account{% endblocktranslate %}{% else %}{% blocktranslate with name=provider.name %}Sign in with {{ name }}{% endblocktranslate %}{% endif %}{% endblock head_title %}
+{% block content %}
+  {% if process == "connect" %}
+    <h1>{% blocktranslate with name=provider.name %}Link your {{ name }} account{% endblocktranslate %}</h1>
+    <p>{% blocktranslate with name=provider.name %}You'll go to {{ name }} to confirm it's you, then come back here.{% endblocktranslate %}</p>
+  {% else %}
+    <h1>{% blocktranslate with name=provider.name %}Sign in with {{ name }}{% endblocktranslate %}</h1>
+    <p>{% blocktranslate with name=provider.name %}You'll go to {{ name }} to sign in with your college account, then come back here.{% endblocktranslate %}</p>
+  {% endif %}
+  <form method="post" class="usa-form">
+    {% csrf_token %}
+    <div class="sympraxi-form-actions">
+      <button type="submit" class="usa-button">{% translate "Continue" %}</button>
+    </div>
+  </form>
+{% endblock content %}

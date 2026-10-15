@@ -1,9 +1,16 @@
+from allauth.socialaccount.models import SocialAccount, SocialApp, SocialToken
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.admin import AuditedMembershipFormsetMixin, MembershipInline
+
+# SSO providers come from the environment (settings.SYMPRAXI_SSO_PROVIDERS), so the
+# admin offers no place to store a client secret. Tokens aren't stored at all.
+# Linked accounts are changed only through the account page, which is audited.
+for model in (SocialApp, SocialToken, SocialAccount):
+    admin.site.unregister(model)
 
 
 @admin.register(User)

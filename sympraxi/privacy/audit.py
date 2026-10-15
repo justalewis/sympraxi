@@ -25,6 +25,8 @@ class AuditAction(StrEnum):
     MFA_ADDED = "auth.mfa_added"
     MFA_REMOVED = "auth.mfa_removed"
     MFA_RECOVERY_CODES_RESET = "auth.mfa_recovery_codes_reset"
+    SSO_LINKED = "auth.sso_linked"
+    SSO_UNLINKED = "auth.sso_unlinked"
     MEMBERSHIP_ADDED = "access.membership_added"
     MEMBERSHIP_CHANGED = "access.membership_changed"
     MEMBERSHIP_REMOVED = "access.membership_removed"

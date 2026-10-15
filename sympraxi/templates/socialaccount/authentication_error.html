@@ -1,0 +1,8 @@
+{% extends "socialaccount/base_entrance.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Sign-in didn't work" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "Sign-in didn't work" %}</h1>
+  <p>{% translate "Something went wrong while signing in with your college account. Please try again. If it keeps happening, contact your writing center." %}</p>
+  <p><a class="usa-button" href="{% url 'account_login' %}">{% translate "Back to sign in" %}</a></p>
+{% endblock content %}

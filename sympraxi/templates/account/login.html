@@ -1,0 +1,70 @@
+{% extends "account/base_entrance.html" %}
+{% load i18n allauth account socialaccount %}
+{% comment %}
+  The sign-in page. Single sign-on buttons come first when a provider is set up.
+  With SYMPRAXI_SSO_ONLY (the SSO_ONLY context variable) the password form, the
+  passkey button and the sign-up link are left out, except on the break-glass
+  page for site administrators (accounts:local_login, which sets `break_glass`).
+  Leaving them out is only the visible half: AccountAdapter.pre_login() refuses
+  non-SSO sign-ins for everyone but site administrators.
+{% endcomment %}
+{% block head_title %}{% if break_glass %}{% translate "Administrator sign-in" %}{% else %}{% translate "Sign in" %}{% endif %}{% endblock head_title %}
+{% block content %}
+  {% get_providers as sso_providers %}
+  {% if break_glass %}
+    <h1>{% translate "Administrator sign-in" %}</h1>
+    <p>
+      {% translate "This page is for site administrators when single sign-on isn't working." %}
+      {% if sso_providers %}
+        {% url 'account_login' as login_url %}
+        {% blocktranslate %}Everyone else should <a href="{{ login_url }}">sign in with their college account</a>.{% endblocktranslate %}
+      {% endif %}
+    </p>
+  {% else %}
+    <h1>{% translate "Sign in" %}</h1>
+    {% if sso_providers %}
+      <p>{% translate "Use your college account." %}</p>
+      {% include "includes/sso_buttons.html" with providers=sso_providers process="login" %}
+    {% endif %}
+  {% endif %}
+
+  {% if not SSO_ONLY or break_glass %}
+    {% if sso_providers and not break_glass %}
+      <h2>{% translate "Or use your email and password" %}</h2>
+    {% endif %}
+    {% if LOCAL_SIGNUP_OPEN and not break_glass %}
+      <p>{% blocktranslate %}New here? <a href="{{ signup_url }}">Create an account</a> first.{% endblocktranslate %}</p>
+    {% endif %}
+    {% if break_glass %}{% url 'accounts:local_login' as login_url %}{% else %}{% url 'account_login' as login_url %}{% endif %}
+    {% element form form=form method="post" action=login_url tags="entrance,login" %}
+      {% slot body %}
+        {% csrf_token %}
+        {% element fields form=form unlabeled=True %}
+        {% endelement %}
+        {{ redirect_field }}
+      {% endslot %}
+      {% slot actions %}
+        {% element button type="submit" tags="prominent,login" %}
+          {% translate "Sign in" %}
+        {% endelement %}
+      {% endslot %}
+    {% endelement %}
+    {% if PASSKEY_LOGIN_ENABLED %}
+      {% element hr %}
+      {% endelement %}
+      {% element button_group vertical=True %}
+        {% element button type="submit" form="mfa_login" id="passkey_login" tags="prominent,login,outline,primary" %}
+          {% translate "Sign in with a passkey" %}
+        {% endelement %}
+      {% endelement %}
+    {% endif %}
+  {% endif %}
+{% endblock content %}
+{% block extra_body %}
+  {{ block.super }}
+  {% if PASSKEY_LOGIN_ENABLED %}
+    {% if not SSO_ONLY or break_glass %}
+      {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
+    {% endif %}
+  {% endif %}
+{% endblock extra_body %}
