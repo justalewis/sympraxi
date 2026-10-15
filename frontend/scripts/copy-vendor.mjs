@@ -11,9 +11,14 @@ const target = join(here, "..", "..", "sympraxi", "static", "vendor");
 rmSync(target, { recursive: true, force: true });
 
 const copies = [
+  // The source maps come along because the minified files reference them, and
+  // Django's manifest storage refuses to build when a referenced file is missing.
   ["@uswds/uswds/dist/css/uswds.min.css", "uswds/css/uswds.min.css"],
+  ["@uswds/uswds/dist/css/uswds.min.css.map", "uswds/css/uswds.min.css.map"],
   ["@uswds/uswds/dist/js/uswds.min.js", "uswds/js/uswds.min.js"],
+  ["@uswds/uswds/dist/js/uswds.min.js.map", "uswds/js/uswds.min.js.map"],
   ["@uswds/uswds/dist/js/uswds-init.min.js", "uswds/js/uswds-init.min.js"],
+  ["@uswds/uswds/dist/js/uswds-init.min.js.map", "uswds/js/uswds-init.min.js.map"],
   ["@uswds/uswds/dist/fonts", "uswds/fonts"],
   ["@uswds/uswds/dist/img", "uswds/img"],
   ["@uswds/uswds/LICENSE.md", "uswds/LICENSE.md"],
