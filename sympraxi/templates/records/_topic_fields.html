@@ -1,0 +1,24 @@
+{% load i18n %}
+{# Topic checkboxes on three axes. With panel_url, changing a box refreshes the suggestions. #}
+<div id="record-topics"{% if panel_url %} hx-post="{{ panel_url }}" hx-trigger="change" hx-target="#resource-results" hx-params="csrfmiddlewaretoken,topics,resources,resource_q"{% endif %}>
+  {% for section in axes %}
+    <fieldset class="usa-fieldset sympraxi-topics">
+      <legend class="usa-legend usa-legend--large">{{ section.legend }}</legend>
+      <p class="usa-hint">{{ section.hint }}</p>
+      {% if section.groups %}
+        {% for group in section.groups %}
+          <details class="sympraxi-topic-group"{% if group.chosen %} open{% endif %}>
+            <summary>{{ group.label }}</summary>
+            <div class="sympraxi-topic-list">
+              {% for choice in group.choices %}{% include "records/_topic_choice.html" %}{% endfor %}
+            </div>
+          </details>
+        {% endfor %}
+      {% else %}
+        <div class="sympraxi-topic-list">
+          {% for choice in section.choices %}{% include "records/_topic_choice.html" %}{% endfor %}
+        </div>
+      {% endif %}
+    </fieldset>
+  {% endfor %}
+</div>

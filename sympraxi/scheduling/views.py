@@ -5,6 +5,7 @@ as a list, choose one. Filters work without JavaScript; with it, htmx swaps in
 only the list and announces how many times are open.
 """
 
+from collections.abc import Sequence
 from datetime import date, timedelta
 from typing import Any, cast
 from urllib.parse import urlencode
@@ -23,6 +24,8 @@ from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center
 from sympraxi.centers.views import HtmxHttpRequest
 from sympraxi.core.policy import Action, can, get_for_action
+from sympraxi.records import brief
+from sympraxi.records.models import SessionRecord
 from sympraxi.scheduling import ics, notifications, services
 from sympraxi.scheduling.availability import OpenTime, lengths_offered, open_times
 from sympraxi.scheduling.forms import (
@@ -453,6 +456,7 @@ def appointment_detail(request: HttpRequest, slug: str, appointment_id: UUID) ->
         "may_confirm": staff and appointment.is_active and appointment.is_tentative,
         "is_tutor": appointment.tutor_id == user.pk,
         "location": ics.location(appointment),
+        **brief.appointment_context(request, appointment),
     }
     with timezone.override(center.time_zone):
         return render(request, "scheduling/appointment_detail.html", context)
@@ -708,6 +712,10 @@ def day_sheet(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpRespons
         )
         .order_by("starts_at", "tutor__full_name")
     )
+    appointments = list(rows)
+    show_records = can(request.user, Action.VIEW_RECORD_STATUS, schedule.center)
+    if show_records:
+        _add_record_status(appointments)
     query = request.GET.copy()
     context = {
         "center": schedule.center,
@@ -715,7 +723,8 @@ def day_sheet(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpRespons
         "crumbs": crumbs(schedule.center),
         "form": form,
         "day": day,
-        "appointments": list(rows),
+        "appointments": appointments,
+        "show_records": show_records,
         "show_zone": has_transition(day, tz),
         "previous_url": _day_link(query, day - timedelta(days=1)),
         "next_url": _day_link(query, day + timedelta(days=1)),
@@ -724,3 +733,19 @@ def day_sheet(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpRespons
     }
     with timezone.override(schedule.center.time_zone):
         return render(request, "scheduling/day_sheet.html", context)
+
+
+def _add_record_status(appointments: Sequence[Appointment]) -> None:
+    """Mark each student on the day sheet with whether their session record is written.
+
+    Only the status: front desk staff never see what a record says.
+    """
+    status = {
+        (appointment_id, student_id): value
+        for appointment_id, student_id, value in SessionRecord.objects.filter(
+            appointment__in=appointments
+        ).values_list("appointment_id", "student_id", "status")
+    }
+    for appointment in appointments:
+        for person in getattr(appointment, "people", []):
+            person.record_status = status.get((appointment.pk, person.student_id), "")

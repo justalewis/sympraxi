@@ -14,10 +14,20 @@
       {% if can_tutor %}<li><a href="{% url 'scheduling:my_tutoring' slug=center.slug %}">{% translate "Your tutoring schedule" %}</a></li>{% endif %}
     </ul>
   {% endif %}
-  {% if can_view_members or can_view_audit_log or can_manage_schedules %}
+  {% if can_see_own_writing or can_see_records_to_write %}
+    <h2>{% translate "Session records" %}</h2>
+    <ul class="usa-list">
+      {% if can_see_own_writing %}<li><a href="{% url 'records:my_writing' slug=center.slug %}">{% translate "My writing: your session summaries and next steps" %}</a></li>{% endif %}
+      {% if can_see_records_to_write %}<li><a href="{% url 'records:to_write' slug=center.slug %}">{% translate "Session records to write" %}</a></li>{% endif %}
+      {% if can_write_records %}<li><a href="{% url 'records:new' slug=center.slug %}">{% translate "Record a meeting that wasn't booked" %}</a></li>{% endif %}
+    </ul>
+  {% endif %}
+  {% if can_view_members or can_view_audit_log or can_manage_schedules or can_manage_records %}
     <h2>{% translate "Center tools" %}</h2>
     <ul class="usa-list">
       {% if can_manage_schedules %}<li><a href="{% url 'scheduling:schedules' slug=center.slug %}">{% translate "Set up schedules, terms and rooms" %}</a></li>{% endif %}
+      {% if can_manage_records %}<li><a href="{% url 'records:resources' slug=center.slug %}">{% translate "Your center's resources" %}</a></li>{% endif %}
+      {% if can_manage_records %}<li><a href="{% url 'records:settings' slug=center.slug %}">{% translate "Session record settings" %}</a></li>{% endif %}
       {% if can_view_members %}<li><a href="{% url 'centers:members' slug=center.slug %}">{% translate "People in this center" %}</a></li>{% endif %}
       {% if can_view_audit_log %}<li><a href="{% url 'privacy:audit_log' slug=center.slug %}">{% translate "Audit log" %}</a></li>{% endif %}
     </ul>

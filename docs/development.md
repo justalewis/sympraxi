@@ -19,7 +19,7 @@ uv run python manage.py seed_demo
 uv run python manage.py runserver
 ```
 
-`seed_demo` creates a demo center with a director, front desk worker, tutor and student, and prints a password for them. Staff accounts are asked to set up two-factor login on first sign-in; any authenticator app works. To skip that while developing, set `SYMPRAXI_REQUIRE_STAFF_MFA=false` in `.env`.
+`seed_demo` creates a demo center with a director, front desk worker, tutor and student, and prints a password for them. It also loads the topic vocabulary and resource catalog from `catalog/` and gives the demo student three past sessions, two of them written up. Without the demo, load the catalog with `uv run python manage.py load_catalog`; it is safe to run again. Staff accounts are asked to set up two-factor login on first sign-in; any authenticator app works. To skip that while developing, set `SYMPRAXI_REQUIRE_STAFF_MFA=false` in `.env`.
 
 Single sign-on is off until its variables are set (see `.env.example` and "Single sign-on" in [install.md](install.md)). Testing against a real tenant needs an app registration whose redirect URI points at `http://localhost:8000/accounts/oidc/entra/login/callback/`; the automated tests use a fake provider instead.
 
@@ -57,8 +57,16 @@ HYPOTHESIS_PROFILE=thorough uv run pytest tests/test_booking_properties.py
 | `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions and closures |
 | `sympraxi/scheduling/timeutils.py` | Wall-clock times and daylight-saving rules |
 | `sympraxi/templates/allauth/` | Sign-in and account pages restyled with USWDS |
+| `sympraxi/records/models.py` | Session records, amendments, writing projects, topics and resources |
+| `sympraxi/records/services.py` | Saving, finalizing and amending records, and group copies |
+| `sympraxi/records/migrations/0002_final_records_locked.py` | The trigger that refuses changes to final records outside an amendment |
+| `sympraxi/records/catalog.py` | Loads `catalog/` into the database (`manage.py load_catalog`) |
+| `sympraxi/records/suggestions.py` | Which resources are suggested for a record's topics, and catalog search |
+| `sympraxi/records/brief.py` | Record status and the pre-session brief on the appointment page |
+| `sympraxi/records/export.py` | One student's complete record, for a FERPA inspection request |
 | `tests/test_policy_matrix.py` | Every role against every action, written out by hand |
 | `tests/test_url_inventory.py` | Fails if a new URL isn't assigned a permission |
+| `tests/records_world.py` | Builders for session-record tests: topics, resources, appointments, records |
 | `tests/sso_idp.py` | A fake Entra ID and Google for SSO tests; nothing goes over the network |
 | `tests/e2e/` | Browser tests: axe accessibility and Content Security Policy |
 | `deploy/` | Production Compose stack, Caddy, install, backup, restore, upgrade |

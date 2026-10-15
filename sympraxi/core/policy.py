@@ -14,6 +14,13 @@ Some grants reach only a person's own records: a student sees the appointments
 they are in, a tutor the appointments they teach. Those limits are the
 `OBJECT_RULES` below. Asked about a center, `can()` answers "may they do this to
 anything here"; asked about an object, it also applies the rule.
+
+Session records follow the same pattern. A tutor reads the records of students
+they have (or had) an appointment with in that center, and writes records only
+for appointments they teach. A student sees only their own final records, and
+only the parts written for them. Front desk staff see whether a record exists,
+never what it says. A record "about a student" in a center is checked against
+the student's `Membership` there, which carries both the student and the center.
 """
 
 from collections.abc import Callable
@@ -25,7 +32,14 @@ from django.db.models import Model, QuerySet
 from django.http import Http404
 
 from sympraxi.centers.models import STAFF_ROLES, Center, Membership, Role
-from sympraxi.scheduling.models import Appointment, Participant, Schedule, Visibility
+from sympraxi.records.models import RecordStatus, SessionRecord, WritingProject
+from sympraxi.scheduling.models import (
+    Appointment,
+    AppointmentStatus,
+    Participant,
+    Schedule,
+    Visibility,
+)
 
 # `request.user`: a signed-in User or an AnonymousUser.
 UserLike = Any
@@ -55,6 +69,18 @@ class Action(StrEnum):
     MANAGE_SCHEDULES = "scheduling.manage_schedules"
     # Exemptions often record accommodations, so only directors see them.
     MANAGE_EXEMPTIONS = "scheduling.manage_exemptions"
+    # Whether a session record exists and is final, without what it says.
+    VIEW_RECORD_STATUS = "records.view_status"
+    # Write, finalize and amend session records; start and edit writing projects.
+    WRITE_RECORDS = "records.write"
+    # Read whole session records, staff notes included, and a student's history.
+    VIEW_RECORDS = "records.view"
+    # A student's own "My writing" page and their own final records.
+    VIEW_OWN_WRITING = "records.view_own_writing"
+    # Everything the center keeps about one student, for a FERPA inspection request.
+    EXPORT_STUDENT_RECORD = "records.export_student"
+    # The center's own link-only resources and its session-record settings.
+    MANAGE_RECORDS = "records.manage"
 
 
 ROLE_GRANTS: dict[Role, frozenset[Action]] = {
@@ -66,6 +92,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_APPOINTMENT,
             Action.CANCEL_APPOINTMENT,
             Action.CHANGE_APPOINTMENT,
+            Action.VIEW_OWN_WRITING,
         }
     ),
     Role.TUTOR: frozenset(
@@ -74,6 +101,9 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_SCHEDULES,
             Action.VIEW_APPOINTMENT,
             Action.VIEW_OWN_TUTORING,
+            Action.VIEW_RECORD_STATUS,
+            Action.WRITE_RECORDS,
+            Action.VIEW_RECORDS,
         }
     ),
     Role.FRONT_DESK: frozenset(
@@ -86,6 +116,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.CANCEL_APPOINTMENT,
             Action.CHANGE_APPOINTMENT,
             Action.VIEW_ALL_APPOINTMENTS,
+            Action.VIEW_RECORD_STATUS,
         }
     ),
     Role.DIRECTOR: frozenset(
@@ -103,6 +134,11 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_ALL_APPOINTMENTS,
             Action.MANAGE_SCHEDULES,
             Action.MANAGE_EXEMPTIONS,
+            Action.VIEW_RECORD_STATUS,
+            Action.WRITE_RECORDS,
+            Action.VIEW_RECORDS,
+            Action.EXPORT_STUDENT_RECORD,
+            Action.MANAGE_RECORDS,
         }
     ),
 }
@@ -139,6 +175,54 @@ def _tutor_of(user: UserLike, obj: Model) -> bool:
     return _appointment(obj).tutor_id == user.pk
 
 
+def has_tutored(user: UserLike, student_id: Any, center_id: Any) -> bool:
+    """Whether the user teaches or taught an appointment the student is in, in the center.
+
+    Upcoming appointments count, so the tutor can read the student's history
+    before the session. Canceled appointments, and groups the student left, don't.
+    """
+    return (
+        Participant.objects.filter(
+            student_id=student_id,
+            canceled_at__isnull=True,
+            appointment__tutor_id=user.pk,
+            appointment__schedule__center_id=center_id,
+        )
+        .exclude(appointment__status=AppointmentStatus.CANCELED)
+        .exists()
+    )
+
+
+def _reads_student(user: UserLike, obj: Model) -> bool:
+    """A tutor reads what's kept about students they tutor, and the records they wrote."""
+    if isinstance(obj, SessionRecord):
+        return obj.tutor_id == user.pk or has_tutored(user, obj.student_id, obj.center_id)
+    if isinstance(obj, Membership):
+        return obj.role == Role.STUDENT and has_tutored(user, obj.user_id, obj.center_id)
+    if isinstance(obj, WritingProject):
+        return has_tutored(user, obj.student_id, obj.center_id)
+    return False
+
+
+def _writes_for(user: UserLike, obj: Model) -> bool:
+    """A tutor writes records for appointments they teach, and edits only their own records."""
+    if isinstance(obj, Appointment):
+        return obj.tutor_id == user.pk
+    if isinstance(obj, SessionRecord):
+        return obj.tutor_id == user.pk
+    if isinstance(obj, WritingProject):
+        return has_tutored(user, obj.student_id, obj.center_id)
+    return False
+
+
+def _own_final_record(user: UserLike, obj: Model) -> bool:
+    return (
+        isinstance(obj, SessionRecord)
+        and obj.student_id == user.pk
+        and obj.status == RecordStatus.FINAL
+    )
+
+
 # Limits on a role's grant when the object isn't the center itself. A role with
 # no entry here gets the action on everything in its center.
 OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
@@ -149,13 +233,18 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.STUDENT, Action.CHANGE_APPOINTMENT): _participant,
     (Role.TUTOR, Action.VIEW_SCHEDULES): _published,
     (Role.TUTOR, Action.VIEW_APPOINTMENT): _tutor_of,
+    (Role.TUTOR, Action.VIEW_RECORD_STATUS): _tutor_of,
+    (Role.TUTOR, Action.WRITE_RECORDS): _writes_for,
+    (Role.TUTOR, Action.VIEW_RECORDS): _reads_student,
+    (Role.STUDENT, Action.VIEW_OWN_WRITING): _own_final_record,
     (Role.FRONT_DESK, Action.VIEW_SCHEDULES): _not_hidden,
     (Role.FRONT_DESK, Action.BOOK_FOR_OTHERS): _not_hidden,
     (Role.DIRECTOR, Action.BOOK_FOR_OTHERS): _not_hidden,
 }
 
 # Site administrators keep the installation running: they create centers, appoint
-# directors and investigate security events. They are not a back door to records.
+# directors and investigate security events. They are not a back door to records:
+# none of the records actions belong here.
 SITE_ADMIN_GRANTS: frozenset[Action] = frozenset(
     {
         Action.VIEW_CENTER,

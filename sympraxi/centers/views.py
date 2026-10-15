@@ -21,6 +21,10 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_book_own": can(request.user, Action.BOOK_OWN, center),
         "can_tutor": can(request.user, Action.VIEW_OWN_TUTORING, center),
         "can_manage_schedules": can(request.user, Action.MANAGE_SCHEDULES, center),
+        "can_see_own_writing": can(request.user, Action.VIEW_OWN_WRITING, center),
+        "can_see_records_to_write": can(request.user, Action.VIEW_RECORD_STATUS, center),
+        "can_write_records": can(request.user, Action.WRITE_RECORDS, center),
+        "can_manage_records": can(request.user, Action.MANAGE_RECORDS, center),
     }
     return render(request, "centers/center_detail.html", context)
 
@@ -43,7 +47,12 @@ def member_list(request: HtmxHttpRequest, slug: str) -> HttpResponse:
     page = Paginator(members.order_by("user__full_name", "role"), 50).get_page(
         request.GET.get("page")
     )
-    context = {"center": center, "page": page, "query": query}
+    context = {
+        "center": center,
+        "page": page,
+        "query": query,
+        "can_view_records": can(request.user, Action.VIEW_RECORDS, center),
+    }
     # A search typed into the box replaces only the results, not the whole page.
     template = "centers/_member_results.html" if request.htmx else "centers/member_list.html"
     return render(request, template, context)

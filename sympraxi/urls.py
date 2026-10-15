@@ -13,6 +13,7 @@ urlpatterns = [
     path("", include("sympraxi.privacy.urls")),
     path("centers/", include("sympraxi.centers.urls")),
     path("centers/<slug:slug>/", include("sympraxi.scheduling.urls")),
+    path("centers/<slug:slug>/", include("sympraxi.records.urls")),
     path("accounts/", include("sympraxi.accounts.urls")),
     path("accounts/", include("allauth.urls")),
     path("admin/", admin.site.urls),

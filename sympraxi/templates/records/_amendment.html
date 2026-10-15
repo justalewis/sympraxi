@@ -1,0 +1,24 @@
+{% load i18n records %}
+<section class="sympraxi-amendment" aria-labelledby="amendment-{{ m.pk }}">
+  <h3 id="amendment-{{ m.pk }}">{% blocktranslate with when=m.created_at|date:"F j, Y" time=m.created_at|time who=m.author.display_name %}{{ when }} at {{ time }}, by {{ who }}{% endblocktranslate %}</h3>
+  <p><strong>{% translate "Reason:" %}</strong> {{ m.reason }}</p>
+  <table class="usa-table usa-table--borderless usa-table--stacked">
+    <caption>{% translate "What changed" %}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{% translate "Part of the record" %}</th>
+        <th scope="col">{% translate "Before" %}</th>
+        <th scope="col">{% translate "After" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in m|amendment_rows %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Part of the record' %}">{{ row.label }}</th>
+          <td data-label="{% translate 'Before' %}">{{ row.before|linebreaksbr|default:"-" }}</td>
+          <td data-label="{% translate 'After' %}">{{ row.after|linebreaksbr|default:"-" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>

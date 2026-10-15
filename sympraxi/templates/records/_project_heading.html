@@ -1,0 +1,14 @@
+{% load i18n %}
+{% if group.project %}
+  <h2 id="project-{{ forloop.counter }}">{{ group.project.title }}{% if group.project.is_finished %} <span class="usa-tag">{% translate "Finished" %}</span>{% endif %}</h2>
+  {% if group.project.course or group.project.instructor or group.project.due_on %}
+    <p class="sympraxi-resource__meta">
+      {% if group.project.course %}{{ group.project.course }}{% endif %}{% if group.project.course and group.project.instructor %} · {% endif %}{% if group.project.instructor %}{{ group.project.instructor }}{% endif %}{% if group.project.due_on %}{% if group.project.course or group.project.instructor %} · {% endif %}{% blocktranslate with date=group.project.due_on|date:"F j" %}Due {{ date }}{% endblocktranslate %}{% endif %}
+    </p>
+  {% endif %}
+  {% if editable %}
+    <p><a href="{% url 'records:project_edit' slug=center.slug project_id=group.project.pk %}">{% translate "Edit the project" %}<span class="usa-sr-only"> {{ group.project.title }}</span></a></p>
+  {% endif %}
+{% else %}
+  <h2 id="project-{{ forloop.counter }}">{% translate "Sessions not linked to a project" %}</h2>
+{% endif %}

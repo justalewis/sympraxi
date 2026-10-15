@@ -24,6 +24,7 @@ fi
 docker compose build
 docker compose up -d --wait db
 docker compose run --rm web python manage.py migrate --noinput
+docker compose run --rm web python manage.py load_catalog
 docker compose run --rm web python manage.py createcachetable
 docker compose up -d --wait
 

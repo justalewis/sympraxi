@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "My writing" %}{% endblock head_title %}
+{% block content %}
+  {% translate "My writing" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "My writing" %}</h1>
+  <p>{% blocktranslate with center=center.name %}This page shows what you worked on in each session at {{ center }}, your next steps, and the resources your tutor shared. A session shows up here once your tutor finishes writing it up.{% endblocktranslate %}</p>
+
+  {% for group in groups %}
+    <section class="sympraxi-project" aria-labelledby="project-{{ forloop.counter }}">
+      {% include "records/_project_heading.html" with editable=False %}
+      {% for rec in group.records %}
+        <article class="sympraxi-record" aria-labelledby="record-{{ rec.pk }}">
+          <h3 id="record-{{ rec.pk }}">{% blocktranslate with when=rec.held_at|date:"l, F j, Y" tutor=rec.tutor.display_name %}{{ when }}, with {{ tutor }}{% endblocktranslate %}</h3>
+          {% include "records/_student_record.html" with attachments=rec.attachments.all %}
+        </article>
+      {% empty %}
+        <p>{% translate "No sessions written up for this project yet." %}</p>
+      {% endfor %}
+    </section>
+  {% empty %}
+    <p>{% translate "Nothing here yet. After your first session, your tutor's summary will appear on this page." %}</p>
+  {% endfor %}
+
+  <h2>{% translate "Your records" %}</h2>
+  <p>{% blocktranslate with center=center.name %}You can ask {{ center }} for a copy of everything it keeps about your sessions, including notes written for staff.{% endblocktranslate %}{% if center.contact_email %} {% blocktranslate with email=center.contact_email %}Write to {{ email }}.{% endblocktranslate %}{% endif %}</p>
+{% endblock content %}

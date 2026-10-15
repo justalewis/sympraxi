@@ -1,0 +1,21 @@
+{% load i18n %}
+{# The parts of a record written for the student. Staff notes only when the center shows them. #}
+{% if rec.summary %}
+  <{{ h|default:"h4" }}>{% translate "What you worked on" %}</{{ h|default:"h4" }}>
+  {{ rec.summary|linebreaks }}
+{% endif %}
+{% if rec.next_steps %}
+  <{{ h|default:"h4" }}>{% translate "Next steps" %}</{{ h|default:"h4" }}>
+  {{ rec.next_steps|linebreaks }}
+{% endif %}
+{% if attachments %}
+  <{{ h|default:"h4" }}>{% translate "Resources" %}</{{ h|default:"h4" }}>
+  {% include "records/_attachment_list.html" %}
+{% endif %}
+{% if show_notes and rec.staff_notes %}
+  <{{ h|default:"h4" }}>{% translate "Notes your tutor wrote for center staff" %}</{{ h|default:"h4" }}>
+  {{ rec.staff_notes|linebreaks }}
+{% endif %}
+{% if rec.amendments.all %}
+  <p class="sympraxi-resource__meta">{% blocktranslate with when=rec.amendments.all.last.created_at|date:"F j, Y" %}Updated on {{ when }}.{% endblocktranslate %}</p>
+{% endif %}

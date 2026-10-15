@@ -8,6 +8,7 @@
         <th scope="col">{% translate "Email" %}</th>
         <th scope="col">{% translate "Role" %}</th>
         <th scope="col">{% translate "Status" %}</th>
+        {% if can_view_records %}<th scope="col">{% translate "Session records" %}</th>{% endif %}
       </tr>
     </thead>
     <tbody>
@@ -17,6 +18,7 @@
           <td>{{ m.user.email }}</td>
           <td>{{ m.get_role_display }}</td>
           <td>{% if m.is_active %}{% translate "Active" %}{% else %}{% translate "Inactive" %}{% endif %}</td>
+          {% if can_view_records %}<td>{% if m.role == "student" %}<a href="{% url 'records:student_history' slug=center.slug membership_id=m.pk %}">{% translate "History" %}<span class="usa-sr-only"> {% blocktranslate with name=m.user.display_name %}for {{ name }}{% endblocktranslate %}</span></a>{% endif %}</td>{% endif %}
         </tr>
       {% endfor %}
     </tbody>

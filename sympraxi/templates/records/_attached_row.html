@@ -1,0 +1,14 @@
+{% load i18n %}
+<li class="sympraxi-resource">
+  <input type="hidden" name="resources" value="{{ a.resource.pk }}">
+  <p class="sympraxi-resource__title"><a href="{{ a.resource.url }}" target="_blank" rel="noopener">{{ a.resource.title }} <span class="sympraxi-resource__meta">{% translate "(opens in a new tab)" %}</span></a></p>
+  <p class="sympraxi-resource__meta">{{ a.resource.publisher }}{% if not a.resource.is_active %} · {% translate "no longer in the catalog" %}{% endif %}</p>
+  <div class="usa-form-group">
+    <label class="usa-label" for="note-{{ a.resource.pk }}">{% translate "Note to the student" %}<span class="usa-sr-only"> {% blocktranslate with title=a.resource.title %}about {{ title }}{% endblocktranslate %}</span> <span class="usa-hint">({% translate "optional" %})</span></label>
+    <textarea class="usa-textarea sympraxi-textarea-short" id="note-{{ a.resource.pk }}" name="note-{{ a.resource.pk }}" rows="2">{{ a.note }}</textarea>
+  </div>
+  <div class="usa-checkbox">
+    <input class="usa-checkbox__input" id="remove-{{ a.resource.pk }}" type="checkbox" name="remove" value="{{ a.resource.pk }}">
+    <label class="usa-checkbox__label" for="remove-{{ a.resource.pk }}">{% translate "Take it off when I save" %}<span class="usa-sr-only"> {{ a.resource.title }}</span></label>
+  </div>
+</li>

@@ -31,7 +31,7 @@ The first run creates `deploy/.env` with a new secret key and database password.
 | `SYMPRAXI_FROM_EMAIL` and `EMAIL_URL` | Your center's address and the campus relay |
 | `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` | `example.edu` (only these addresses can register) |
 
-Then run the script again. It builds the image, creates the database tables and starts everything:
+Then run the script again. It builds the image, creates the database tables, loads the topic vocabulary and resource catalog, and starts everything:
 
 ```bash
 bash install.sh
@@ -178,7 +178,7 @@ The script checks the checksums, asks you to confirm, replaces the database and 
 bash upgrade.sh
 ```
 
-It backs up, pulls the new code, rebuilds, migrates and restarts. Read the release notes first. Feature releases come out in late May and late December. Avoid schema-changing upgrades during a term unless a security fix requires one.
+It backs up, pulls the new code, rebuilds, migrates, updates the topic vocabulary and resource catalog, and restarts. Read the release notes first. Feature releases come out in late May and late December. Avoid schema-changing upgrades during a term unless a security fix requires one.
 
 ## If you change the code
 

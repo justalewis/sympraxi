@@ -34,6 +34,8 @@ COPY --from=python-deps /opt/venv /opt/venv
 WORKDIR /app
 COPY manage.py LICENSE ./
 COPY sympraxi ./sympraxi
+# The topic vocabulary and resource catalog, loaded by `manage.py load_catalog`.
+COPY catalog ./catalog
 COPY --from=assets /build/sympraxi/static/vendor ./sympraxi/static/vendor
 RUN SYMPRAXI_SECRET_KEY=build-only DATABASE_URL=postgres://build@localhost/build \
     python manage.py collectstatic --noinput

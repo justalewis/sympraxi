@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Your center's resources" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Resources" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Your center's resources" %}</h1>
+  <p>{% blocktranslate count n=shared_count with publishers=publisher_count %}Tutors can attach {{ n }} link from the shared catalog, from {{ publishers }} publishers, and any links your center adds here.{% plural %}Tutors can attach {{ n }} links from the shared catalog, from {{ publishers }} publishers, and any links your center adds here.{% endblocktranslate %}</p>
+  <p>{% translate "Add links to your own handouts or pages. Sympraxi stores the address and your description, never a copy of the page." %}</p>
+  <p><a class="usa-button" href="{% url 'records:resource_create' slug=center.slug %}">{% translate "Add a link" %}</a></p>
+  {% if resources %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Your center's links" %}</caption>
+      <thead><tr>
+        <th scope="col">{% translate "Title" %}</th>
+        <th scope="col">{% translate "Topics" %}</th>
+        <th scope="col">{% translate "Offered to tutors" %}</th>
+        <th scope="col"><span class="usa-sr-only">{% translate "Change" %}</span></th>
+      </tr></thead>
+      <tbody>
+        {% for r in resources %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Title' %}"><a href="{{ r.url }}">{{ r.title }}</a></th>
+            <td data-label="{% translate 'Topics' %}">{% for t in r.topics.all %}{{ t.label }}{% if not forloop.last %}; {% endif %}{% endfor %}</td>
+            <td data-label="{% translate 'Offered to tutors' %}">{% if r.is_active %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</td>
+            <td data-label="{% translate 'Change' %}"><a href="{% url 'records:resource_edit' slug=center.slug resource_id=r.pk %}">{% translate "Edit" %}<span class="usa-sr-only"> {{ r.title }}</span></a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Your center hasn't added any links yet." %}</p>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,7 @@
+{% load i18n %}
+<p class="sympraxi-resource__title"><a href="{{ resource.url }}" target="_blank" rel="noopener">{{ resource.title }} <span class="sympraxi-resource__meta">{% translate "(opens in a new tab)" %}</span></a></p>
+<p class="sympraxi-resource__meta">{{ resource.publisher }}{% if resource.is_local %} · {% translate "your center's link" %}{% endif %}</p>
+<p class="sympraxi-resource__summary">{{ resource.summary }}</p>
+<button type="submit" class="usa-button usa-button--outline" name="attach" value="{{ resource.pk }}"
+        hx-post="{% url 'records:attach_row' slug=center.slug %}" hx-target="#attached-resources" hx-swap="beforeend"
+        hx-params="csrfmiddlewaretoken,attach,resources">{% translate "Attach" %}<span class="usa-sr-only"> {{ resource.title }}</span></button>

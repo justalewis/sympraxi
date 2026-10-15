@@ -14,16 +14,21 @@ from django.utils.csp import CSP
 
 from sympraxi.accounts import sso_config
 from sympraxi.centers.models import Role
+from sympraxi.records.models import RecordStatus, SessionRecord
 from sympraxi.scheduling.timeutils import local_date
 from tests import sso_idp
 from tests.factories import CenterFactory, MembershipFactory, UserFactory, give_mfa
+from tests.records_world import add_records
 from tests.scheduling_world import build_world
 
 pytestmark = [pytest.mark.e2e, pytest.mark.django_db(transaction=True)]
 
 # (who is signed in, path). Placeholders are filled from a test center and its
 # scheduling world: {slug}, {schedule}, {appointment}, {assignment}, {exception},
-# {term}, {closure}, {room}, {exemption}, {slot} (a free time) and {tomorrow}.
+# {term}, {closure}, {room}, {exemption}, {slot} (a free time) and {tomorrow};
+# and its records (tests/records_world.py): {past_appointment}, {record} (final,
+# amended), {draft}, {unwritten} (past, no record), {project}, {resource} and
+# {student_membership}.
 PAGES = [
     (None, "/"),
     (None, "/accounts/login/"),
@@ -73,6 +78,26 @@ PAGES = [
     ("director", "/centers/{slug}/exemptions/new/"),
     ("director", "/centers/{slug}/exemptions/{exemption}/end/"),
     ("director-without-2fa", "/accounts/2fa/"),
+    # Session records
+    ("student", "/centers/{slug}/my-writing/"),
+    ("student", "/centers/{slug}/my-writing/{record}/"),
+    ("student", "/centers/{slug}/appointments/{past_appointment}/"),
+    ("tutor", "/centers/{slug}/records/to-write/"),
+    ("tutor", "/centers/{slug}/appointments/{unwritten}/record/"),
+    ("tutor", "/centers/{slug}/appointments/{past_appointment}/"),
+    ("tutor", "/centers/{slug}/records/{draft}/edit/"),
+    ("tutor", "/centers/{slug}/records/{record}/"),
+    ("tutor", "/centers/{slug}/records/{record}/amend/"),
+    ("tutor", "/centers/{slug}/records/new/"),
+    ("tutor", "/centers/{slug}/students/{student_membership}/writing/"),
+    ("tutor", "/centers/{slug}/projects/{project}/edit/"),
+    ("front_desk", "/centers/{slug}/records/to-write/"),
+    ("front_desk", "/centers/{slug}/appointments/{past_appointment}/"),
+    ("director", "/centers/{slug}/students/{student_membership}/export/"),
+    ("director", "/centers/{slug}/resources/"),
+    ("director", "/centers/{slug}/resources/new/"),
+    ("director", "/centers/{slug}/resources/{resource}/edit/"),
+    ("director", "/centers/{slug}/records/settings/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -129,10 +154,12 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
                 extra_data={"id_token": sso_idp.entra_claims(email=user.email)},
             )
         sign_in(context, user)
-    world = build_world(
-        center,
-        student=user if who == "student" else None,
-        tutor=user if who == "tutor" else None,
+    world = add_records(
+        build_world(
+            center,
+            student=user if who == "student" else None,
+            tutor=user if who == "tutor" else None,
+        )
     )
     tomorrow = local_date(world.appointment.starts_at, world.schedule.tz)
     url = live_server.url + path.format(
@@ -147,6 +174,13 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         exemption=world.exemption.pk,
         slot=world.slot_query(),
         tomorrow=tomorrow.isoformat(),
+        past_appointment=world.past_appointment.pk,
+        record=world.record.pk,
+        draft=world.draft.pk,
+        unwritten=world.unwritten.pk,
+        project=world.project.pk,
+        resource=world.resource.pk,
+        student_membership=world.student_membership.pk,
     )
     page = context.new_page()
     return context, page, url
@@ -278,3 +312,79 @@ def test_a_student_books_a_time(browser, live_server, sign_in) -> None:
     page.wait_for_selector("text=You're booked")
     assert "/appointments/" in page.url
     context.close()
+
+
+def tab_to(page, matches, *, limit: int = 60) -> None:
+    """Press Tab until the focused element's text or value satisfies `matches`."""
+    for _ in range(limit):
+        page.keyboard.press("Tab")
+        label = page.evaluate(
+            "(document.activeElement.textContent || '').trim() + ' ' + "
+            "(document.activeElement.value || '')"
+        )
+        if matches(label):
+            return
+    pytest.fail("The Tab key never reached the control")
+
+
+def test_a_tutor_writes_and_finalizes_a_record_by_keyboard(browser, live_server, sign_in) -> None:
+    """Tag a topic, see a suggestion, attach it and finalize, without a mouse or a reload."""
+    context, page, url = open_page(
+        browser, live_server, sign_in, "tutor", "/centers/{slug}/appointments/{unwritten}/record/"
+    )
+    problems = watch_for_csp_problems(page)
+    page.goto(url)
+    page.evaluate("window.notReloaded = true")
+
+    page.focus("#id_summary")
+    page.keyboard.type("We moved your thesis to the first paragraph.")
+
+    # Open the "Ideas and argument" group and check "Thesis" with the space bar.
+    page.focus("summary:has-text('Ideas and argument')")
+    page.keyboard.press("Enter")
+    page.focus("#topic-argument--thesis")
+    page.keyboard.press("Space")
+    assert page.is_checked("#topic-argument--thesis")
+
+    # The suggestions follow the topic, and the status line says so.
+    page.wait_for_selector("#resource-results >> text=Our thesis handout")
+    assert "suggestion" in page.locator("#resource-status").inner_text()
+
+    tab_to(page, lambda label: label.startswith("Attach Our thesis handout"))
+    page.keyboard.press("Enter")
+    page.wait_for_selector("#attached-resources >> text=Our thesis handout")
+    assert "Attached Our thesis handout" in page.locator("#resource-status").inner_text()
+    assert page.locator("#attached-empty").is_hidden()
+
+    # The new row's note box is the next thing to type in.
+    page.focus("#attached-resources textarea")
+    page.keyboard.type("Read the second half.")
+    assert page.evaluate("window.notReloaded") is True
+
+    page.focus("button:has-text('Save and finalize')")
+    page.keyboard.press("Enter")
+    page.wait_for_selector("text=Finalized.")
+    # The page is now the record itself: /centers/<slug>/records/<id>/.
+    rec = SessionRecord.objects.get(pk=page.url.rstrip("/").split("/")[-1])
+    assert rec.status == RecordStatus.FINAL
+    assert [(a.resource.title, a.note) for a in rec.attachments.all()] == [
+        ("Our thesis handout", "Read the second half.")
+    ]
+    context.close()
+    assert problems == []
+
+
+def test_resource_search_updates_without_reloading(browser, live_server, sign_in) -> None:
+    context, page, url = open_page(
+        browser, live_server, sign_in, "tutor", "/centers/{slug}/records/{draft}/edit/"
+    )
+    problems = watch_for_csp_problems(page)
+    page.goto(url)
+    page.evaluate("window.notReloaded = true")
+    page.fill("#resource-search", "handout")
+    page.wait_for_selector("#resource-results >> text=Matching “handout”")
+    assert "Our thesis handout" in page.locator("#resource-results").inner_text()
+    assert "1 resource matches your search." in page.locator("#resource-status").inner_text()
+    assert page.evaluate("window.notReloaded") is True
+    context.close()
+    assert problems == []

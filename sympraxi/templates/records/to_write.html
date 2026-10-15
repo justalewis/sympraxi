@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Session records to write" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Records to write" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Session records to write" %}</h1>
+  <p>{% blocktranslate count days=days %}This list shows appointments from the last {{ days }} day that don't have a final record yet, one line per student.{% plural %}This list shows appointments from the last {{ days }} days that don't have a final record yet, one line per student.{% endblocktranslate %}</p>
+  {% if can_write %}
+    <p><a class="usa-button usa-button--outline" href="{% url 'records:new' slug=center.slug %}">{% translate "Record a meeting that wasn't booked" %}</a></p>
+  {% endif %}
+
+  {% if rows %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Appointments without a final record" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "When" %}</th>
+          <th scope="col">{% translate "Student" %}</th>
+          <th scope="col">{% translate "Tutor" %}</th>
+          <th scope="col">{% translate "Record" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            <th scope="row" data-label="{% translate 'When' %}"><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=row.appointment.pk %}">{{ row.appointment.starts_at|date:"D, M j" }}, {{ row.appointment.starts_at|time }}</a></th>
+            <td data-label="{% translate 'Student' %}">{{ row.student.display_name }}</td>
+            <td data-label="{% translate 'Tutor' %}">{{ row.appointment.tutor.display_name }}</td>
+            <td data-label="{% translate 'Record' %}">
+              {% if row.rec %}{% translate "Draft" %}{% else %}{% translate "Not started" %}{% endif %}
+              {% if row.write_url %}
+                · <a href="{{ row.write_url }}">{% if row.rec %}{% translate "Finish it" %}{% else %}{% translate "Write it" %}{% endif %}<span class="usa-sr-only"> {% blocktranslate with name=row.student.display_name %}for {{ name }}{% endblocktranslate %}</span></a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Every appointment in that time has a final record." %}</p>
+  {% endif %}
+
+  {% if drafts %}
+    <h2>{% translate "Drafts for meetings that weren't booked" %}</h2>
+    <ul class="usa-list">
+      {% for d in drafts %}
+        <li><a href="{% url 'records:edit' slug=center.slug record_id=d.pk %}">{{ d.student.display_name }}, {{ d.held_at|date:"D, M j" }}</a> · {{ d.tutor.display_name }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

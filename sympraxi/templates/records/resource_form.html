@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% translate "Add a link to a page or handout your center wants tutors to share. Write the description yourself; don't copy the page's own text." %}</p>
+  <form class="usa-form usa-form--large sympraxi-wide-form" method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+        <div class="usa-alert__body"><p class="usa-alert__text">{{ form.non_field_errors|join:" " }}</p></div>
+      </div>
+    {% endif %}
+    {% include "includes/field.html" with field=form.title %}
+    {% include "includes/field.html" with field=form.url %}
+    {% include "includes/field.html" with field=form.summary %}
+    {% include "includes/field.html" with field=form.publisher %}
+    {% include "includes/field.html" with field=form.license %}
+    {% include "includes/field.html" with field=form.language %}
+    <h2>{% translate "Topics" %}</h2>
+    <p>{% translate "Tutors see the link suggested when they tag a session with one of its concerns." %}</p>
+    {% if form.topics.errors %}<span class="usa-error-message" role="alert">{{ form.topics.errors|join:" " }}</span>{% endif %}
+    {% include "records/_topic_fields.html" %}
+    {% include "includes/field.html" with field=form.is_active %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Save the link" %}</button>
+      <a href="{% url 'records:resources' slug=center.slug %}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+{% endblock content %}

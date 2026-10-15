@@ -39,6 +39,16 @@ class AuditAction(StrEnum):
     APPOINTMENT_LEFT = "scheduling.appointment_left"
     EXEMPTION_ADDED = "scheduling.exemption_added"
     EXEMPTION_REVOKED = "scheduling.exemption_revoked"
+    RECORD_STARTED = "records.record_started"
+    RECORD_SAVED = "records.record_saved"
+    RECORD_FINALIZED = "records.record_finalized"
+    RECORD_AMENDED = "records.record_amended"
+    RECORD_VIEWED = "records.record_viewed"
+    HISTORY_VIEWED = "records.history_viewed"
+    STUDENT_RECORD_EXPORTED = "records.student_record_exported"
+    PROJECT_SAVED = "records.project_saved"
+    RESOURCE_SAVED = "records.resource_saved"
+    RECORD_SETTINGS_CHANGED = "records.settings_changed"
 
 
 def client_ip(request: HttpRequest) -> str | None:

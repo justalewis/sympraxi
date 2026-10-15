@@ -1,0 +1,45 @@
+{% load i18n %}
+{# Session records on the appointment page. See sympraxi/records/brief.py for who sees what. #}
+{% if my_record_url %}
+  <h2>{% translate "Your session summary" %}</h2>
+  <p><a href="{{ my_record_url }}">{% translate "Read the summary, next steps and resources" %}</a></p>
+{% endif %}
+
+{% if record_rows %}
+  <h2>{% translate "Session records" %}</h2>
+  <ul class="usa-list">
+    {% for row in record_rows %}
+      <li>
+        {{ row.student.display_name }}:
+        {% if not row.rec %}{% translate "not written yet" %}{% elif row.rec.is_final %}{% translate "final" %}{% else %}{% translate "draft" %}{% endif %}
+        {% if row.view_url %}· <a href="{{ row.view_url }}">{% translate "Read it" %}<span class="usa-sr-only"> {% blocktranslate with name=row.student.display_name %}({{ name }}){% endblocktranslate %}</span></a>{% endif %}
+        {% if row.write_url %}· <a href="{{ row.write_url }}">{% if not row.rec %}{% translate "Write it" %}{% elif row.rec.is_final %}{% translate "Amend it" %}{% else %}{% translate "Finish it" %}{% endif %}<span class="usa-sr-only"> {% blocktranslate with name=row.student.display_name %}({{ name }}){% endblocktranslate %}</span></a>{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% for brief in briefs %}
+  <section class="sympraxi-brief" aria-labelledby="brief-{{ brief.student.pk }}">
+    <h2 id="brief-{{ brief.student.pk }}">{% blocktranslate with name=brief.student.display_name %}Before the session: {{ name }}{% endblocktranslate %}</h2>
+    <h3>{% translate "Open writing projects" %}</h3>
+    {% if brief.projects %}
+      <ul class="usa-list">
+        {% for p in brief.projects %}
+          <li>{{ p.title }}{% if p.course %}, {{ p.course }}{% endif %}{% if p.due_on %}, {% blocktranslate with date=p.due_on|date:"F j" %}due {{ date }}{% endblocktranslate %}{% endif %}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{% translate "None." %}</p>
+    {% endif %}
+    <h3>{% translate "Last sessions" %}</h3>
+    {% for r in brief.recent %}
+      <h4>{% blocktranslate with when=r.held_at|date:"F j, Y" tutor=r.tutor.display_name %}{{ when }}, with {{ tutor }}{% endblocktranslate %}</h4>
+      {{ r.summary|linebreaks }}
+      {% if r.next_steps %}<p><strong>{% translate "Next steps:" %}</strong> {{ r.next_steps|linebreaksbr }}</p>{% endif %}
+    {% empty %}
+      <p>{% translate "No earlier sessions written up." %}</p>
+    {% endfor %}
+    <p><a href="{{ brief.history_url }}">{% blocktranslate with name=brief.student.display_name %}All of {{ name }}'s session records{% endblocktranslate %}</a></p>
+  </section>
+{% endfor %}

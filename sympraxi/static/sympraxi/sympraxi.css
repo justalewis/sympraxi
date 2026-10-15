@@ -158,3 +158,131 @@
   margin: 1rem 0;
   max-width: 40rem;
 }
+
+/* --- Session records ------------------------------------------------------ */
+
+/* The record and resource forms hold long checkbox lists; let them use the
+   column. Inputs and text areas keep their own USWDS widths. */
+.sympraxi-wide-form.usa-form {
+  max-width: none;
+}
+
+.sympraxi-wide-form .usa-input,
+.sympraxi-wide-form .usa-select {
+  max-width: 30rem;
+}
+
+.sympraxi-wide-form .usa-textarea {
+  max-width: 40rem;
+}
+
+.sympraxi-topics {
+  margin-top: 1.5rem;
+}
+
+.sympraxi-topic-group {
+  border-top: 1px solid #dfe1e2;
+  padding: 0.5rem 0;
+}
+
+.sympraxi-topic-group > summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.5rem 0;
+}
+
+/* Two columns of checkboxes on wide screens, one on phones. */
+.sympraxi-topic-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 2rem;
+}
+
+@media (min-width: 40em) {
+  .sympraxi-topic-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.sympraxi-resource-list {
+  max-width: none;
+}
+
+.sympraxi-resource {
+  border-bottom: 1px solid #dfe1e2;
+  padding: 0.75rem 0;
+  max-width: none;
+}
+
+.sympraxi-resource p {
+  margin: 0.25rem 0;
+}
+
+.sympraxi-resource__title {
+  font-weight: 700;
+}
+
+.sympraxi-resource__meta {
+  color: #565c65;
+  font-size: 0.93rem;
+}
+
+.sympraxi-resource .usa-button {
+  margin-top: 0.5rem;
+}
+
+.sympraxi-textarea-short.usa-textarea {
+  height: 4rem;
+}
+
+.sympraxi-status {
+  font-weight: 700;
+  min-height: 1.5rem;
+}
+
+.sympraxi-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.sympraxi-search-row .usa-input,
+.sympraxi-search-row .usa-button {
+  margin-top: 0.5rem;
+}
+
+.sympraxi-subfields {
+  margin-top: 1.5rem;
+}
+
+.sympraxi-record,
+.sympraxi-brief,
+.sympraxi-amendment {
+  border-left: 4px solid #dfe1e2;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+}
+
+.sympraxi-project {
+  margin-bottom: 2.5rem;
+}
+
+/* The FERPA export prints cleanly: no site header, footer or page links. */
+@media print {
+  .usa-header,
+  .usa-footer,
+  .usa-skipnav,
+  .usa-overlay,
+  .sympraxi-no-print {
+    display: none;
+  }
+
+  .sympraxi-main {
+    padding: 0;
+  }
+
+  .sympraxi-record {
+    break-inside: avoid;
+  }
+}

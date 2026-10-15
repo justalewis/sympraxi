@@ -30,6 +30,8 @@
     <p>{% translate "This is a group appointment." %}</p>
   {% endif %}
 
+  {% include "records/_appointment_records.html" %}
+
   <h2>{% translate "What you can do" %}</h2>
   <ul class="usa-list">
     {% if appointment.is_active %}

@@ -1,0 +1,16 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=student.display_name %}Hello {{ name }},{% endblocktranslate %}
+
+{% blocktranslate with tutor=record.tutor.display_name center=center.name when=record.held_at|date:"l, F j" %}{{ tutor }} has written up your session at {{ center }} on {{ when }}. You can read the summary, your next steps and any resources here:{% endblocktranslate %}
+{{ url }}
+{% if include_text %}
+{% translate "Summary:" %}
+{{ record.summary }}
+{% if record.next_steps %}
+{% translate "Next steps:" %}
+{{ record.next_steps }}
+{% endif %}{% endif %}
+{% translate "Your sessions are also listed on your My writing page." %}
+
+{{ center.name }}{% if center.contact_email %}
+{{ center.contact_email }}{% endif %}
+{% endautoescape %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Session record" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Session record" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with name=rec.student.display_name %}Session record for {{ name }}{% endblocktranslate %}</h1>
+  <dl class="sympraxi-summary">
+    <dt>{% translate "When" %}</dt>
+    <dd><time datetime="{{ rec.held_at|date:'c' }}">{{ rec.held_at|date:"l, F j, Y" }}, {{ rec.held_at|time }}</time>{% if not rec.appointment %} ({% translate "a meeting that wasn't booked" %}){% endif %}</dd>
+    <dt>{% translate "Tutor" %}</dt>
+    <dd>{{ rec.tutor.display_name }}</dd>
+    <dt>{% translate "Length" %}</dt>
+    <dd>{% blocktranslate count n=rec.minutes %}{{ n }} minute{% plural %}{{ n }} minutes{% endblocktranslate %}</dd>
+    <dt>{% translate "Writing project" %}</dt>
+    <dd>{% if rec.project %}{{ rec.project.title }}{% if rec.project.course %}, {{ rec.project.course }}{% endif %}{% else %}{% translate "None" %}{% endif %}</dd>
+    <dt>{% translate "Status" %}</dt>
+    <dd>
+      <span class="usa-tag">{{ rec.get_status_display }}</span>
+      {% if rec.is_final %}{% blocktranslate with when=rec.finalized_at|date:"F j, Y" who=rec.finalized_by.display_name %}Finalized on {{ when }} by {{ who }}.{% endblocktranslate %}{% else %}{% translate "The student can't see it yet." %}{% endif %}
+    </dd>
+  </dl>
+
+  {% if problems %}
+    <div class="usa-alert usa-alert--warning usa-alert--slim">
+      <div class="usa-alert__body">
+        <p class="usa-alert__text">{% translate "Before it can be finalized:" %} {{ problems|join:" " }}</p>
+      </div>
+    </div>
+  {% endif %}
+
+  <h2>{% translate "Summary for the student" %}</h2>
+  {% if rec.summary %}{{ rec.summary|linebreaks }}{% else %}<p>{% translate "Not written yet." %}</p>{% endif %}
+
+  <h2>{% translate "Next steps" %}</h2>
+  {% if rec.next_steps %}{{ rec.next_steps|linebreaks }}{% else %}<p>{% translate "None." %}</p>{% endif %}
+
+  <h2>{% translate "Resources" %}</h2>
+  {% include "records/_attachment_list.html" %}
+
+  <h2>{% translate "Topics" %}</h2>
+  {% if topics %}
+    <dl class="sympraxi-summary">
+      {% for axis, tags in topics %}
+        <dt>{{ axis }}</dt>
+        <dd>{% for t in tags %}{{ t.label }}{% if not forloop.last %}; {% endif %}{% endfor %}</dd>
+      {% endfor %}
+    </dl>
+  {% else %}
+    <p>{% translate "None yet." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Notes for staff" %}</h2>
+  {% if rec.staff_notes %}{{ rec.staff_notes|linebreaks }}{% else %}<p>{% translate "None." %}</p>{% endif %}
+
+  {% if amendments %}
+    <h2>{% translate "Changes after it was finalized" %}</h2>
+    {% for m in amendments %}
+      {% include "records/_amendment.html" %}
+    {% endfor %}
+  {% endif %}
+
+  <h2>{% translate "What you can do" %}</h2>
+  <ul class="usa-list">
+    {% if can_write %}
+      {% if rec.is_final %}
+        <li><a href="{% url 'records:amend' slug=center.slug record_id=rec.pk %}">{% translate "Change this record (an amendment)" %}</a></li>
+      {% else %}
+        <li><a href="{% url 'records:edit' slug=center.slug record_id=rec.pk %}">{% translate "Finish the draft" %}</a></li>
+      {% endif %}
+    {% endif %}
+    {% if history_url %}
+      <li><a href="{{ history_url }}">{% blocktranslate with name=rec.student.display_name %}See all of {{ name }}'s session records{% endblocktranslate %}</a></li>
+    {% endif %}
+    {% if rec.appointment %}
+      <li><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=rec.appointment_id %}">{% translate "Go to the appointment" %}</a></li>
+    {% endif %}
+  </ul>
+{% endblock content %}

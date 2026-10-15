@@ -29,6 +29,16 @@ ACTION_LABELS = {
     "scheduling.appointment_left": _("Took a student out of a group appointment"),
     "scheduling.exemption_added": _("Exempted a student from booking limits"),
     "scheduling.exemption_revoked": _("Ended a booking-limit exemption"),
+    "records.record_started": _("Started a session record"),
+    "records.record_saved": _("Saved a draft session record"),
+    "records.record_finalized": _("Finalized a session record"),
+    "records.record_amended": _("Amended a final session record"),
+    "records.record_viewed": _("Read a session record"),
+    "records.history_viewed": _("Read a student's session history"),
+    "records.student_record_exported": _("Exported a student's complete record"),
+    "records.project_saved": _("Saved a writing project"),
+    "records.resource_saved": _("Saved one of the center's resources"),
+    "records.settings_changed": _("Changed the session record settings"),
 }
 
 

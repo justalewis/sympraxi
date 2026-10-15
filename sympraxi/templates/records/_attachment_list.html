@@ -1,0 +1,14 @@
+{% load i18n %}
+{% if attachments %}
+  <ul class="usa-list usa-list--unstyled sympraxi-resource-list">
+    {% for a in attachments %}
+      <li class="sympraxi-resource">
+        <p class="sympraxi-resource__title"><a href="{{ a.resource.url }}">{{ a.resource.title }}</a></p>
+        <p class="sympraxi-resource__meta">{{ a.resource.publisher }}</p>
+        {% if a.note %}<p>{{ a.note }}</p>{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>{% translate "None attached." %}</p>
+{% endif %}

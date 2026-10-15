@@ -1,0 +1,8 @@
+{% load i18n %}
+<div class="usa-checkbox">
+  <input class="usa-checkbox__input" id="{{ choice.html_id }}" type="checkbox" name="topics" value="{{ choice.topic.slug }}"{% if choice.checked %} checked{% endif %}>
+  <label class="usa-checkbox__label" for="{{ choice.html_id }}">
+    {% if choice.topic.axis == "concern" and ":" not in choice.topic.slug %}{% blocktranslate with label=choice.topic.label %}{{ label }}, in general{% endblocktranslate %}{% else %}{{ choice.topic.label }}{% endif %}{% if choice.topic.is_deprecated %} ({% translate "retired term" %}){% endif %}
+    {% if choice.topic.definition %}<span class="usa-checkbox__label-description">{{ choice.topic.definition }}</span>{% endif %}
+  </label>
+</div>

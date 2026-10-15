@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with name=student.display_name %}Session history for {{ name }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% translate "Session history" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with name=student.display_name %}Session history for {{ name }}{% endblocktranslate %}</h1>
+  {% if student.pronouns %}<p>{% blocktranslate with pronouns=student.pronouns %}Pronouns: {{ pronouns }}{% endblocktranslate %}</p>{% endif %}
+  <p>{% translate "This page lists every session record about this student at this center, newest first within each project. Your visit is recorded in the audit log." %}</p>
+  {% if can_export %}
+    <p><a href="{% url 'records:export' slug=center.slug membership_id=membership.pk %}">{% translate "Export this student's complete record" %}</a></p>
+  {% endif %}
+
+  {% for group in groups %}
+    <section class="sympraxi-project" aria-labelledby="project-{{ forloop.counter }}">
+      {% include "records/_project_heading.html" with editable=True %}
+      {% for rec in group.records %}
+        <article class="sympraxi-record" aria-labelledby="record-{{ rec.pk }}">
+          <h3 id="record-{{ rec.pk }}"><a href="{% url 'records:detail' slug=center.slug record_id=rec.pk %}">{{ rec.held_at|date:"l, F j, Y" }}</a>, {% blocktranslate with tutor=rec.tutor.display_name %}with {{ tutor }}{% endblocktranslate %}
+            {% if not rec.is_final %}<span class="usa-tag">{% translate "Draft" %}</span>{% endif %}
+            {% if rec.amendments.all %}<span class="usa-tag">{% translate "Amended" %}</span>{% endif %}
+          </h3>
+          <h4>{% translate "Summary for the student" %}</h4>
+          {% if rec.summary %}{{ rec.summary|linebreaks }}{% else %}<p>{% translate "Not written yet." %}</p>{% endif %}
+          {% if rec.next_steps %}<h4>{% translate "Next steps" %}</h4>{{ rec.next_steps|linebreaks }}{% endif %}
+          {% if rec.staff_notes %}<h4>{% translate "Notes for staff" %}</h4>{{ rec.staff_notes|linebreaks }}{% endif %}
+          {% if rec.topics.all %}<p><strong>{% translate "Topics:" %}</strong> {% for t in rec.topics.all %}{{ t.label }}{% if not forloop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+          {% if rec.attachments.all %}
+            <h4>{% translate "Resources" %}</h4>
+            {% include "records/_attachment_list.html" with attachments=rec.attachments.all %}
+          {% endif %}
+        </article>
+      {% empty %}
+        <p>{% translate "No sessions recorded for this project yet." %}</p>
+      {% endfor %}
+    </section>
+  {% empty %}
+    <p>{% translate "No session records yet." %}</p>
+  {% endfor %}
+{% endblock content %}

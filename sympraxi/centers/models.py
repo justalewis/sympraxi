@@ -34,6 +34,24 @@ class Center(models.Model):
     )
     contact_email = models.EmailField(_("contact email"), blank=True)
     is_active = models.BooleanField(_("active"), default=True)
+    # Session records. Students always see their summaries, next steps and
+    # resources; these two settings decide whether they see more.
+    students_see_staff_notes = models.BooleanField(
+        _("show staff notes to students"),
+        default=False,
+        help_text=_(
+            "Students see the notes written for staff on their My writing page. Students can "
+            "ask to see these notes either way."
+        ),
+    )
+    summary_email_includes_text = models.BooleanField(
+        _("put the summary in the email"),
+        default=False,
+        help_text=_(
+            "The email that tells a student their summary is ready also includes the summary "
+            "and next steps. Otherwise it only links to them."
+        ),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

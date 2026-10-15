@@ -12,6 +12,7 @@ from django.urls import URLPattern, URLResolver, get_resolver, reverse
 
 from sympraxi.core import policy
 from sympraxi.core.policy import Action
+from tests.records_world import add_records
 from tests.scheduling_world import World, build_world
 
 # accounts:local_login is the break-glass password sign-in. It is public like the
@@ -57,6 +58,25 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "scheduling:exemptions": (Action.MANAGE_EXEMPTIONS, "center"),
     "scheduling:exemption_create": (Action.MANAGE_EXEMPTIONS, "center"),
     "scheduling:exemption_revoke": (Action.MANAGE_EXEMPTIONS, "exemption"),
+    # Session records. "record" is final, "draft" is a draft.
+    "records:start": (Action.WRITE_RECORDS, "appointment"),
+    "records:to_write": (Action.VIEW_RECORD_STATUS, "center"),
+    "records:new": (Action.WRITE_RECORDS, "center"),
+    "records:detail": (Action.VIEW_RECORDS, "record"),
+    "records:edit": (Action.WRITE_RECORDS, "draft"),
+    "records:amend": (Action.WRITE_RECORDS, "record"),
+    "records:resource_panel": (Action.WRITE_RECORDS, "center"),
+    "records:attach_row": (Action.WRITE_RECORDS, "center"),
+    "records:student_history": (Action.VIEW_RECORDS, "student_membership"),
+    "records:export": (Action.EXPORT_STUDENT_RECORD, "student_membership"),
+    "records:export_json": (Action.EXPORT_STUDENT_RECORD, "student_membership"),
+    "records:project_edit": (Action.WRITE_RECORDS, "project"),
+    "records:my_writing": (Action.VIEW_OWN_WRITING, "center"),
+    "records:my_record": (Action.VIEW_OWN_WRITING, "record"),
+    "records:settings": (Action.MANAGE_RECORDS, "center"),
+    "records:resources": (Action.MANAGE_RECORDS, "center"),
+    "records:resource_create": (Action.MANAGE_RECORDS, "center"),
+    "records:resource_edit": (Action.MANAGE_RECORDS, "resource"),
 }
 
 # The URL keyword for each kind of object.
@@ -69,10 +89,17 @@ URL_KWARGS = {
     "closure": "closure_id",
     "room": "room_id",
     "exemption": "exemption_id",
+    "record": "record_id",
+    "draft": "record_id",
+    "student_membership": "membership_id",
+    "project": "project_id",
+    "resource": "resource_id",
 }
 
 # Pages that need a chosen open time in the query string.
 NEEDS_SLOT = {"scheduling:book", "scheduling:staff_book"}
+# Pages that name the student in the query string.
+NEEDS_STUDENT = {"records:start"}
 
 ROLES = ["none", "student", "tutor", "front_desk", "director", "site_admin"]
 
@@ -97,6 +124,8 @@ def url_for(name: str, world: World) -> str:
     if kind != "center":
         kwargs[URL_KWARGS[kind]] = str(getattr(world, kind).pk)
     url = reverse(name, kwargs=kwargs)
+    if name in NEEDS_STUDENT:
+        return f"{url}?student={world.student.pk}"
     return f"{url}?{world.slot_query()}" if name in NEEDS_SLOT else url
 
 
@@ -107,7 +136,7 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return build_world(center)
+    return add_records(build_world(center))
 
 
 def test_every_url_is_classified() -> None:

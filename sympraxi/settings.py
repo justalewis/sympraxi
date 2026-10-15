@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "sympraxi.centers",
     "sympraxi.privacy",
     "sympraxi.scheduling",
+    "sympraxi.records",
 ]
 
 MIDDLEWARE = [

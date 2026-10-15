@@ -11,12 +11,14 @@ import pytest
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 
-from sympraxi.centers.models import Center, Membership
+from sympraxi.centers.models import Center, Membership, Role
 from sympraxi.core import policy
 from sympraxi.core.policy import Action
-from sympraxi.scheduling.models import Appointment, Participant, Visibility
+from sympraxi.records.models import SessionRecord, WritingProject
+from sympraxi.scheduling.models import Appointment, AppointmentStatus, Participant, Visibility
 from tests.factories import MembershipFactory, UserFactory
-from tests.scheduling_world import build_world, make_schedule
+from tests.records_world import appointment_for, membership, standalone
+from tests.scheduling_world import build_world, make_member, make_schedule
 
 CENTER_ACTIONS = [
     Action.VIEW_CENTER,
@@ -39,7 +41,16 @@ SCHEDULING_ACTIONS = [
     Action.MANAGE_EXEMPTIONS,
 ]
 
-ACTIONS = CENTER_ACTIONS + SCHEDULING_ACTIONS
+RECORDS_ACTIONS = [
+    Action.VIEW_RECORD_STATUS,
+    Action.WRITE_RECORDS,
+    Action.VIEW_RECORDS,
+    Action.VIEW_OWN_WRITING,
+    Action.EXPORT_STUDENT_RECORD,
+    Action.MANAGE_RECORDS,
+]
+
+ACTIONS = CENTER_ACTIONS + SCHEDULING_ACTIONS + RECORDS_ACTIONS
 
 # fmt: off
 EXPECTED_IN_OWN_CENTER = {
@@ -66,6 +77,22 @@ EXPECTED_SCHEDULING = {
     "director":    (1,     0,    1,      1,     1,      1,      1,        0,        1,         1),
     "site_admin":  (0,     0,    0,      0,     0,      0,      0,        0,        0,         0),
 }
+
+# Session records, asked about the center. "Write records" and "view records"
+# mean "for the students they tutor" for tutors, and "own writing" means a
+# student's own final records; RECORD_CASES below checks those parts. Front desk
+# staff see only whether a record exists. Site administrators get nothing:
+# session records are student records.
+EXPECTED_RECORDS = {
+    #              record  write    view     own      export   manage
+    #              status  records  records  writing  student  records
+    "none":        (0,     0,       0,       0,       0,       0),
+    "student":     (0,     0,       0,       1,       0,       0),
+    "tutor":       (1,     1,       1,       0,       0,       0),
+    "front_desk":  (1,     0,       0,       0,       0,       0),
+    "director":    (1,     1,       1,       0,       1,       1),
+    "site_admin":  (0,     0,       0,       0,       0,       0),
+}
 # fmt: on
 
 CASES = [
@@ -73,6 +100,7 @@ CASES = [
     for table, actions in (
         (EXPECTED_IN_OWN_CENTER, CENTER_ACTIONS),
         (EXPECTED_SCHEDULING, SCHEDULING_ACTIONS),
+        (EXPECTED_RECORDS, RECORDS_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)
@@ -284,3 +312,150 @@ def test_roles_combine(person_with_role, center) -> None:
     assert policy.can(user, Action.CANCEL_APPOINTMENT, objects["own_appointment"])
     assert not policy.can(user, Action.CANCEL_APPOINTMENT, objects["own_tutoring"])
     assert not policy.can(user, Action.VIEW_APPOINTMENT, objects["other_appointment"])
+
+
+# --- Session records ---------------------------------------------------------------
+
+# (role, action, object, expected). For a tutor, "my student" is a student they
+# have an appointment with, and the records are written by another tutor unless
+# named "own". For a student, "own" records are about them.
+# fmt: off
+RECORD_CASES = [
+    ("student",    Action.VIEW_OWN_WRITING,      "own_final_record",        True),
+    ("student",    Action.VIEW_OWN_WRITING,      "own_draft_record",        False),
+    ("student",    Action.VIEW_OWN_WRITING,      "other_record",            False),
+    ("student",    Action.VIEW_OWN_WRITING,      "group_mate_record",       False),
+    ("student",    Action.VIEW_RECORDS,          "own_final_record",        False),
+    ("student",    Action.VIEW_RECORD_STATUS,    "own_appointment",         False),
+    ("tutor",      Action.VIEW_RECORDS,          "record_of_my_student",    True),
+    ("tutor",      Action.VIEW_RECORDS,          "draft_of_my_student",     True),
+    ("tutor",      Action.VIEW_RECORDS,          "own_written_record",      True),
+    ("tutor",      Action.VIEW_RECORDS,          "other_record",            False),
+    ("tutor",      Action.VIEW_RECORDS,          "canceled_student_record", False),
+    ("tutor",      Action.VIEW_RECORDS,          "left_group_record",       False),
+    ("tutor",      Action.VIEW_RECORDS,          "my_student",              True),
+    ("tutor",      Action.VIEW_RECORDS,          "upcoming_student",        True),
+    ("tutor",      Action.VIEW_RECORDS,          "other_student",           False),
+    ("tutor",      Action.VIEW_RECORDS,          "my_student_project",      True),
+    ("tutor",      Action.VIEW_RECORDS,          "other_project",           False),
+    ("tutor",      Action.WRITE_RECORDS,         "own_tutoring",            True),
+    ("tutor",      Action.WRITE_RECORDS,         "other_appointment",       False),
+    ("tutor",      Action.WRITE_RECORDS,         "own_written_record",      True),
+    ("tutor",      Action.WRITE_RECORDS,         "record_of_my_student",    False),
+    ("tutor",      Action.WRITE_RECORDS,         "my_student_project",      True),
+    ("tutor",      Action.WRITE_RECORDS,         "other_project",           False),
+    ("tutor",      Action.VIEW_RECORD_STATUS,    "own_tutoring",            True),
+    ("tutor",      Action.VIEW_RECORD_STATUS,    "other_appointment",       False),
+    ("tutor",      Action.EXPORT_STUDENT_RECORD, "my_student",              False),
+    ("front_desk", Action.VIEW_RECORD_STATUS,    "other_appointment",       True),
+    ("front_desk", Action.VIEW_RECORDS,          "other_record",            False),
+    ("front_desk", Action.VIEW_RECORDS,          "other_student",           False),
+    ("front_desk", Action.WRITE_RECORDS,         "other_appointment",       False),
+    ("director",   Action.VIEW_RECORDS,          "other_record",            True),
+    ("director",   Action.VIEW_RECORDS,          "draft_of_my_student",     True),
+    ("director",   Action.VIEW_RECORDS,          "other_student",           True),
+    ("director",   Action.WRITE_RECORDS,         "other_record",            True),
+    ("director",   Action.WRITE_RECORDS,         "other_appointment",       True),
+    ("director",   Action.EXPORT_STUDENT_RECORD, "other_student",           True),
+    ("director",   Action.VIEW_OWN_WRITING,      "other_record",            False),
+    ("site_admin", Action.VIEW_RECORDS,          "other_record",            False),
+    ("site_admin", Action.VIEW_RECORDS,          "other_student",           False),
+    ("site_admin", Action.EXPORT_STUDENT_RECORD, "other_student",           False),
+    ("site_admin", Action.VIEW_RECORD_STATUS,    "other_appointment",       False),
+    ("site_admin", Action.WRITE_RECORDS,         "other_appointment",       False),
+]
+# fmt: on
+
+
+def _record_objects(center, user):
+    """Records, students, projects and appointments around `user`, one of each kind."""
+    world = build_world(center)
+    other_tutor = world.tutor
+
+    def student():
+        return make_member(center, Role.STUDENT)
+
+    # The user's own sessions as a student: one written up, one still a draft.
+    own_final = standalone(center, user, other_tutor, final=True)
+    own_draft = standalone(center, user, other_tutor, days=-3)
+    own_appointment = appointment_for(world, user, days=-4)
+
+    # A group the user was in. The other student's record is theirs alone.
+    mate = student()
+    group = appointment_for(world, [user, mate], days=-5, capacity=4)
+    group_mate_record = standalone(center, mate, other_tutor, final=True, appointment=group)
+
+    # Students the user tutors: past, upcoming, canceled, and one who left a group.
+    mine = student()
+    appointment_for(world, mine, days=-6, tutor=user)
+    upcoming = student()
+    appointment_for(world, upcoming, days=3, tutor=user)
+    canceled = student()
+    appointment_for(world, canceled, days=-7, tutor=user, status=AppointmentStatus.CANCELED)
+    left = student()
+    left_group = appointment_for(world, [left, student()], days=-8, tutor=user, capacity=4)
+    Participant.objects.filter(appointment=left_group, student=left).update(
+        canceled_at=left_group.starts_at
+    )
+    own_tutoring = appointment_for(world, mine, days=-9, tutor=user)
+
+    stranger = world.student
+    return {
+        "own_final_record": own_final,
+        "own_draft_record": own_draft,
+        "own_appointment": own_appointment,
+        "group_mate_record": group_mate_record,
+        "record_of_my_student": standalone(center, mine, other_tutor, final=True),
+        "draft_of_my_student": standalone(center, mine, other_tutor),
+        "own_written_record": standalone(center, student(), user, final=True),
+        "other_record": standalone(center, stranger, other_tutor, final=True),
+        "canceled_student_record": standalone(center, canceled, other_tutor, final=True),
+        "left_group_record": standalone(center, left, other_tutor, final=True),
+        "my_student": membership(center, mine),
+        "upcoming_student": membership(center, upcoming),
+        "other_student": membership(center, stranger),
+        "my_student_project": WritingProject.objects.create(
+            center=center, student=mine, title="Mine"
+        ),
+        "other_project": WritingProject.objects.create(
+            center=center, student=stranger, title="Theirs"
+        ),
+        "own_tutoring": own_tutoring,
+        "other_appointment": world.appointment,
+    }
+
+
+@pytest.mark.parametrize(("role", "action", "name", "expected"), RECORD_CASES)
+def test_record_access(person_with_role, center, role, action, name, expected) -> None:
+    user = person_with_role(role, center)
+    obj = _record_objects(center, user)[name]
+    assert policy.can(user, action, obj) is expected
+
+
+def test_someone_elses_session_record_is_hidden_not_forbidden(person_with_role, center) -> None:
+    """Students and tutors who may read some records get a 404 for anyone else's."""
+    student = person_with_role("student", center)
+    other = _record_objects(center, student)["other_record"]
+    with pytest.raises(Http404):
+        policy.get_for_action(
+            student, Action.VIEW_OWN_WRITING, SessionRecord.objects.all(), pk=other.pk
+        )
+    tutor = person_with_role("tutor", center)
+    with pytest.raises(Http404):
+        policy.get_for_action(tutor, Action.VIEW_RECORDS, SessionRecord.objects.all(), pk=other.pk)
+    # Front desk staff have no grant to read records at all, so it's a 403.
+    desk = person_with_role("front_desk", center)
+    with pytest.raises(PermissionDenied):
+        policy.get_for_action(desk, Action.VIEW_RECORDS, SessionRecord.objects.all(), pk=other.pk)
+
+
+def test_record_access_ends_when_the_appointment_is_canceled(person_with_role, center) -> None:
+    tutor = person_with_role("tutor", center)
+    world = build_world(center)
+    student = make_member(center, Role.STUDENT)
+    appointment = appointment_for(world, student, days=-2, tutor=tutor)
+    rec = standalone(center, student, world.tutor, final=True)
+    assert policy.can(tutor, Action.VIEW_RECORDS, rec)
+    Appointment.objects.filter(pk=appointment.pk).update(status=AppointmentStatus.CANCELED)
+    assert not policy.can(tutor, Action.VIEW_RECORDS, rec)
+    assert not policy.can(tutor, Action.VIEW_RECORDS, membership(center, student))

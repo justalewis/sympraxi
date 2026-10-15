@@ -1,0 +1,25 @@
+{% load i18n %}
+{% if htmx %}
+  {# Update the status line outside the list, so screen readers hear what changed. #}
+  <span id="resource-status" hx-swap-oob="innerHTML">{% if query %}{% blocktranslate count n=results|length %}{{ n }} resource matches your search.{% plural %}{{ n }} resources match your search.{% endblocktranslate %} {% endif %}{% blocktranslate count n=suggestions|length %}{{ n }} suggestion for the topics you chose.{% plural %}{{ n }} suggestions for the topics you chose.{% endblocktranslate %}</span>
+{% endif %}
+{% if query %}
+  <h4>{% blocktranslate %}Matching “{{ query }}”{% endblocktranslate %}</h4>
+  {% if results %}
+    <ul class="usa-list usa-list--unstyled sympraxi-resource-list">
+      {% for resource in results %}<li class="sympraxi-resource">{% include "records/_resource_item.html" %}</li>{% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "Nothing matches that search." %}</p>
+  {% endif %}
+{% endif %}
+<h4>{% translate "Suggested for the topics you chose" %}</h4>
+{% if suggestions %}
+  <ul class="usa-list usa-list--unstyled sympraxi-resource-list">
+    {% for s in suggestions %}{% with resource=s.resource %}<li class="sympraxi-resource">{% include "records/_resource_item.html" %}</li>{% endwith %}{% endfor %}
+  </ul>
+{% elif has_concern %}
+  <p>{% translate "Nothing in the catalog matches those concerns yet. Try a search." %}</p>
+{% else %}
+  <p>{% translate "Tag a concern above and resources that fit it appear here." %}</p>
+{% endif %}

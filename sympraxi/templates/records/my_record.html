@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Your session summary" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Session summary" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with when=rec.held_at|date:"l, F j" %}Your session on {{ when }}{% endblocktranslate %}</h1>
+  <p>
+    {% blocktranslate with tutor=rec.tutor.display_name %}With {{ tutor }}.{% endblocktranslate %}
+    {% if rec.project %}{% blocktranslate with title=rec.project.title %}Project: {{ title }}.{% endblocktranslate %}{% endif %}
+  </p>
+  {% include "records/_student_record.html" with h="h2" %}
+  <p><a href="{% url 'records:my_writing' slug=center.slug %}">{% translate "See all your sessions on My writing" %}</a></p>
+{% endblock content %}

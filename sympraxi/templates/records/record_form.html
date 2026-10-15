@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>
+    {% if appointment %}
+      {% blocktranslate with name=student.display_name when=appointment.starts_at|date:"l, F j, Y" time=appointment.starts_at|time %}With {{ name }}, starting at {{ time }} on {{ when }}.{% endblocktranslate %}
+    {% else %}
+      {% blocktranslate with name=student.display_name when=rec.held_at|date:"l, F j, Y" time=rec.held_at|time %}With {{ name }}, starting at {{ time }} on {{ when }}, in a meeting that wasn't booked.{% endblocktranslate %}
+    {% endif %}
+    {% if rec %}<span class="usa-tag">{{ rec.get_status_display }}</span>{% endif %}
+  </p>
+
+  <div class="usa-alert usa-alert--info usa-alert--slim">
+    <div class="usa-alert__body">
+      <p class="usa-alert__text">
+        {% translate "Students can ask to see everything written here, including the notes for staff. Federal law (FERPA) gives them that right, so write as if the student will read it." %}
+        {% if center.students_see_staff_notes %}{% translate "At this center, students also see the notes for staff on their My writing page." %}{% endif %}
+      </p>
+    </div>
+  </div>
+  {% if amend %}
+    <p>{% translate "This record is final. Your change is saved as an amendment, and the earlier version is kept with your name, the time and your reason." %}</p>
+  {% endif %}
+
+  {% url 'records:resource_panel' slug=center.slug as panel_url %}
+  <form id="record-form" class="usa-form usa-form--large sympraxi-wide-form" method="post" novalidate>
+    {% csrf_token %}
+    {% if not rec %}<input type="hidden" name="student" value="{{ student.pk }}">{% endif %}
+    {% if form.non_field_errors %}
+      <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+        <div class="usa-alert__body"><p class="usa-alert__text">{{ form.non_field_errors|join:" " }}</p></div>
+      </div>
+    {% endif %}
+
+    <h2>{% translate "For the student" %}</h2>
+    {% include "includes/field.html" with field=form.summary %}
+    {% include "includes/field.html" with field=form.next_steps %}
+
+    <h2>{% translate "Topics" %}</h2>
+    <p>{% translate "Tag the session on three separate questions. The tags show the center what students come in for, and they decide which resources are suggested below." %}</p>
+    {% if form.topics.errors %}<span class="usa-error-message" role="alert">{{ form.topics.errors|join:" " }}</span>{% endif %}
+    {% include "records/_topic_fields.html" with panel_url=panel_url %}
+
+    <h2>{% translate "Resources for the student" %}</h2>
+    <p>{% translate "Attached resources appear with the summary. A short note can point the student to the part that matters." %}</p>
+    <h3>{% translate "Attached" %}</h3>
+    <p id="attached-empty"{% if attached %} class="display-none"{% endif %}>{% translate "Nothing attached yet." %}</p>
+    <ul id="attached-resources" class="usa-list usa-list--unstyled sympraxi-resource-list">
+      {% for a in attached %}{% include "records/_attached_row.html" %}{% endfor %}
+    </ul>
+    <p id="resource-status" class="sympraxi-status" role="status"></p>
+
+    <h3>{% translate "Find more" %}</h3>
+    <div class="usa-form-group">
+      <label class="usa-label" for="resource-search">{% translate "Search the catalog by title, publisher or description" %}</label>
+      <div class="sympraxi-search-row">
+        <input class="usa-input" id="resource-search" type="search" name="resource_q" value="{{ query }}" autocomplete="off"{% if searched %} autofocus{% endif %}
+               hx-post="{{ panel_url }}" hx-trigger="input changed delay:400ms" hx-target="#resource-results"
+               hx-params="csrfmiddlewaretoken,topics,resources,resource_q">
+        <button class="usa-button" type="submit" name="search" value="1">{% translate "Search" %}</button>
+      </div>
+    </div>
+    <div id="resource-results">
+      {% include "records/_resource_results.html" with new_tab=True %}
+    </div>
+
+    <h2>{% translate "For staff" %}</h2>
+    {% include "includes/field.html" with field=form.staff_notes %}
+
+    <h2>{% translate "About the session" %}</h2>
+    {% include "includes/field.html" with field=form.minutes %}
+    {% include "includes/field.html" with field=form.project %}
+    <fieldset class="usa-fieldset sympraxi-subfields">
+      <legend class="usa-legend">{% translate "A new project" %}</legend>
+      <p class="usa-hint">{% translate "Fill this in if the session started a piece of writing that isn't in the list, and choose “A new project” above." %}</p>
+      {% include "includes/field.html" with field=form.project_title %}
+      {% include "includes/field.html" with field=form.project_course %}
+      {% include "includes/field.html" with field=form.project_instructor %}
+      {% include "includes/field.html" with field=form.project_due_on %}
+    </fieldset>
+
+    {% if form.copy_to_group %}
+      <h2>{% translate "The rest of the group" %}</h2>
+      {% include "includes/field.html" with field=form.copy_to_group %}
+    {% endif %}
+
+    {% if amend %}
+      <h2>{% translate "Why it changed" %}</h2>
+      {% include "includes/field.html" with field=form.reason %}
+    {% endif %}
+
+    <div class="sympraxi-form-actions">
+      {% if amend %}
+        <button class="usa-button" type="submit" name="action" value="amend">{% translate "Save the amendment" %}</button>
+      {% else %}
+        <button class="usa-button usa-button--outline" type="submit" name="action" value="save">{% translate "Save draft" %}</button>
+        <button class="usa-button" type="submit" name="action" value="finalize" aria-describedby="finalize-hint">{% translate "Save and finalize" %}</button>
+      {% endif %}
+      <a href="{{ back_url }}">{% translate "Go back without saving" %}</a>
+    </div>
+    {% if not amend %}
+      <p class="usa-hint" id="finalize-hint">{% translate "Finalizing shows the summary to the student and emails them a link. After that, any change is kept as an amendment." %}</p>
+    {% endif %}
+  </form>
+{% endblock content %}

@@ -27,6 +27,7 @@
           <th scope="col">{% translate "Students" %}</th>
           <th scope="col">{% translate "How" %}</th>
           <th scope="col">{% translate "Status" %}</th>
+          {% if show_records %}<th scope="col">{% translate "Session records" %}</th>{% endif %}
         </tr>
       </thead>
       <tbody>
@@ -37,6 +38,9 @@
             <td data-label="{% translate 'Students' %}">{% for p in a.people %}{% if not p.canceled_at %}{{ p.student.display_name }}{% if not forloop.last %}, {% endif %}{% endif %}{% empty %}—{% endfor %}</td>
             <td data-label="{% translate 'How' %}">{{ a.get_modality_display }}</td>
             <td data-label="{% translate 'Status' %}">{% if not a.is_active %}{% translate "Canceled" %}{% elif a.is_tentative %}{% translate "Tentative" %}{% else %}{% translate "Booked" %}{% endif %}{% if a.is_walk_in %}, {% translate "walk-in" %}{% endif %}{% if a.is_placeholder %}, {% translate "placeholder" %}{% endif %}</td>
+            {% if show_records %}
+              <td data-label="{% translate 'Session records' %}">{% for p in a.people %}{% if not p.canceled_at %}{{ p.student.display_name }}: {% if p.record_status == "final" %}{% translate "final" %}{% elif p.record_status == "draft" %}{% translate "draft" %}{% else %}{% translate "not written" %}{% endif %}{% if not forloop.last %}; {% endif %}{% endif %}{% empty %}-{% endfor %}</td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>

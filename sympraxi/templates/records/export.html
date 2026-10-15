@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load i18n records %}
+{% block head_title %}{% blocktranslate with name=student.display_name %}Complete record for {{ name }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% translate "Complete record" as current %}
+  <div class="sympraxi-no-print">{% include "scheduling/_breadcrumbs.html" with current=current %}</div>
+  <h1>{% blocktranslate with name=student.display_name %}Complete record for {{ name }}{% endblocktranslate %}</h1>
+  <p>{% blocktranslate with center=center.name when=exported_at|date:"F j, Y" time=exported_at|time who=request.user.display_name %}This is everything {{ center }} keeps about this student's sessions, as of {{ time }} on {{ when }}. Prepared by {{ who }}.{% endblocktranslate %}</p>
+  <p>{% translate "It includes drafts, notes for staff and every change made after a record was finalized. Other students are left out: a group appointment shows how many students were in it, not who they were." %}</p>
+  <ul class="usa-list sympraxi-no-print">
+    <li><a href="{% url 'records:export_json' slug=center.slug membership_id=membership.pk %}">{% translate "Download it as a JSON file" %}</a></li>
+    <li>{% translate "To print it or save it as a PDF, use your browser's Print command." %}</li>
+  </ul>
+
+  <h2>{% translate "Student" %}</h2>
+  <dl class="sympraxi-summary">
+    <dt>{% translate "Name" %}</dt><dd>{{ student.full_name }}{% if student.preferred_name %} ({% blocktranslate with name=student.preferred_name %}goes by {{ name }}{% endblocktranslate %}){% endif %}</dd>
+    {% if student.pronouns %}<dt>{% translate "Pronouns" %}</dt><dd>{{ student.pronouns }}</dd>{% endif %}
+    <dt>{% translate "Email" %}</dt><dd>{{ student.email }}</dd>
+    {% if student.student_id %}<dt>{% translate "Student ID" %}</dt><dd>{{ student.student_id }}</dd>{% endif %}
+    <dt>{% translate "In this center since" %}</dt><dd>{{ membership.created_at|date:"F j, Y" }}{% if not membership.is_active %} ({% translate "no longer active" %}){% endif %}</dd>
+  </dl>
+
+  <h2>{% translate "Writing projects" %}</h2>
+  {% if projects %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Writing projects" %}</caption>
+      <thead><tr>
+        <th scope="col">{% translate "Title" %}</th>
+        <th scope="col">{% translate "Course" %}</th>
+        <th scope="col">{% translate "Instructor" %}</th>
+        <th scope="col">{% translate "Due" %}</th>
+        <th scope="col">{% translate "Status" %}</th>
+      </tr></thead>
+      <tbody>
+        {% for p in projects %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Title' %}">{{ p.title }}</th>
+            <td data-label="{% translate 'Course' %}">{{ p.course|default:"-" }}</td>
+            <td data-label="{% translate 'Instructor' %}">{{ p.instructor|default:"-" }}</td>
+            <td data-label="{% translate 'Due' %}">{{ p.due_on|date:"F j, Y"|default:"-" }}</td>
+            <td data-label="{% translate 'Status' %}">{% if p.is_finished %}{% translate "Finished" %}{% else %}{% translate "Open" %}{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "None." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Appointments" %}</h2>
+  {% if participations %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Appointments" %}</caption>
+      <thead><tr>
+        <th scope="col">{% translate "When" %}</th>
+        <th scope="col">{% translate "Tutor" %}</th>
+        <th scope="col">{% translate "Schedule" %}</th>
+        <th scope="col">{% translate "How" %}</th>
+        <th scope="col">{% translate "Status" %}</th>
+      </tr></thead>
+      <tbody>
+        {% for p in participations %}
+          {% with a=p.appointment %}
+            <tr>
+              <th scope="row" data-label="{% translate 'When' %}">{{ a.starts_at|date:"M j, Y" }}, {{ a.starts_at|time }} {% translate "to" %} {{ a.ends_at|time:"P T" }}</th>
+              <td data-label="{% translate 'Tutor' %}">{{ a.tutor.display_name }}</td>
+              <td data-label="{% translate 'Schedule' %}">{{ a.schedule.name }}</td>
+              <td data-label="{% translate 'How' %}">{{ a.get_modality_display }}{% if p.group_size > 1 %}, {% blocktranslate with n=p.group_size %}group of {{ n }}{% endblocktranslate %}{% endif %}</td>
+              <td data-label="{% translate 'Status' %}">{% if not a.is_active %}{% translate "Canceled" %}{% elif p.canceled_at %}{% translate "Left the group" %}{% else %}{% translate "Booked" %}{% endif %}{% if a.is_walk_in %}, {% translate "walk-in" %}{% endif %}</td>
+            </tr>
+          {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "None." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Session records" %}</h2>
+  {% for rec in records %}
+    <article class="sympraxi-record" aria-labelledby="record-{{ rec.pk }}">
+      <h3 id="record-{{ rec.pk }}">{{ rec.held_at|date:"l, F j, Y" }}, {{ rec.held_at|time }}</h3>
+      <dl class="sympraxi-summary">
+        <dt>{% translate "Tutor" %}</dt><dd>{{ rec.tutor.display_name }}</dd>
+        <dt>{% translate "Length" %}</dt><dd>{% blocktranslate count n=rec.minutes %}{{ n }} minute{% plural %}{{ n }} minutes{% endblocktranslate %}</dd>
+        <dt>{% translate "Booked" %}</dt><dd>{% if rec.appointment_id %}{% translate "Yes" %}{% else %}{% translate "No, a meeting that wasn't booked" %}{% endif %}</dd>
+        <dt>{% translate "Status" %}</dt><dd>{{ rec.get_status_display }}{% if rec.is_final %}, {% blocktranslate with when=rec.finalized_at|date:"F j, Y" who=rec.finalized_by.display_name %}finalized on {{ when }} by {{ who }}{% endblocktranslate %}{% endif %}</dd>
+        <dt>{% translate "Written by" %}</dt><dd>{{ rec.created_by.display_name }}, {{ rec.created_at|date:"F j, Y" }}</dd>
+        {% if rec.project %}<dt>{% translate "Writing project" %}</dt><dd>{{ rec.project.title }}</dd>{% endif %}
+        <dt>{% translate "Topics" %}</dt><dd>{% for t in rec.topics.all %}{{ t.label }}{% if not forloop.last %}; {% endif %}{% empty %}{% translate "None" %}{% endfor %}</dd>
+      </dl>
+      <h4>{% translate "Summary for the student" %}</h4>
+      {% if rec.summary %}{{ rec.summary|linebreaks }}{% else %}<p>{% translate "None." %}</p>{% endif %}
+      <h4>{% translate "Next steps" %}</h4>
+      {% if rec.next_steps %}{{ rec.next_steps|linebreaks }}{% else %}<p>{% translate "None." %}</p>{% endif %}
+      <h4>{% translate "Notes for staff" %}</h4>
+      {% if rec.staff_notes %}{{ rec.staff_notes|linebreaks }}{% else %}<p>{% translate "None." %}</p>{% endif %}
+      <h4>{% translate "Resources" %}</h4>
+      {% if rec.attachments.all %}
+        <ul class="usa-list">
+          {% for a in rec.attachments.all %}
+            <li>{{ a.resource.title }} ({{ a.resource.publisher }}, {{ a.resource.license }}), {{ a.resource.url }}{% if a.note %}. {% translate "Note:" %} {{ a.note }}{% endif %}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>{% translate "None." %}</p>
+      {% endif %}
+      {% if rec.amendments.all %}
+        <h4>{% translate "Changes after it was finalized" %}</h4>
+        {% for m in rec.amendments.all %}
+          <p><strong>{% blocktranslate with when=m.created_at|date:"F j, Y" time=m.created_at|time who=m.author.display_name %}{{ when }} at {{ time }}, by {{ who }}.{% endblocktranslate %}</strong> {% translate "Reason:" %} {{ m.reason }}</p>
+          <ul class="usa-list">
+            {% for row in m|amendment_rows %}
+              <li>{{ row.label }}. {% translate "Before:" %} {{ row.before|default:"-" }} {% translate "After:" %} {{ row.after|default:"-" }}</li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      {% endif %}
+    </article>
+  {% empty %}
+    <p>{% translate "None." %}</p>
+  {% endfor %}
+{% endblock content %}

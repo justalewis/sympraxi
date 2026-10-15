@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if a %}{% include "records/_attached_row.html" %}{% endif %}
+{% if htmx %}
+  <span id="resource-status" hx-swap-oob="innerHTML">{{ status }}</span>
+  {% if a %}<p id="attached-empty" class="display-none" hx-swap-oob="true">{% translate "Nothing attached yet." %}</p>{% endif %}
+{% endif %}
