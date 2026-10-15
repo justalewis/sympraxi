@@ -63,6 +63,19 @@ def booking(student, assignment, hour: int, minutes: int = 30):
     )
 
 
+def moving(student, appointment, assignment, hour: int, minutes: int = 30):
+    return lambda: services.reschedule(
+        actor=student,
+        appointment=appointment,
+        assignment=assignment,
+        starts_at=at(assignment.schedule, TUESDAY, hour),
+        minutes=minutes,
+        as_staff=False,
+        now=NOW,
+        notify=False,
+    )
+
+
 @pytest.fixture
 def center():
     return CenterFactory(time_zone="America/New_York")
@@ -73,16 +86,9 @@ def schedule(center):
     return make_schedule(center, date(2027, 1, 4), date(2027, 2, 28))
 
 
-def test_one_slot_one_booking(center, schedule) -> None:
-    tutor = assign(schedule, hours=((time(9), time(17)),))
-    students = [make_member(center, Role.STUDENT) for _ in range(4)]
-    results = race(*(booking(s, tutor, 10) for s in students))
-    assert results == ["ok", "slot_taken", "slot_taken", "slot_taken"]
-    assert Appointment.objects.exclude(status=AppointmentStatus.CANCELED).count() == 1
-
-
-def test_one_tutor_on_two_schedules_one_booking(center, schedule) -> None:
-    # Different assignments take different row locks; the exclusion constraint decides.
+@pytest.fixture
+def shared_tutor(center, schedule):
+    """One tutor on two schedules: in person on `schedule`, online on another."""
     other = make_schedule(center, schedule.starts_on, schedule.ends_on, name="Online")
     tutor = make_member(center, Role.TUTOR)
     first = assign(schedule, tutor, hours=((time(9), time(17)),))
@@ -94,10 +100,53 @@ def test_one_tutor_on_two_schedules_one_booking(center, schedule) -> None:
         offers_online=True,
         meeting_url="https://meet.example.edu/x",
     )
+    return tutor, first, second
+
+
+def test_one_slot_one_booking(center, schedule) -> None:
+    tutor = assign(schedule, hours=((time(9), time(17)),))
+    students = [make_member(center, Role.STUDENT) for _ in range(4)]
+    results = race(*(booking(s, tutor, 10) for s in students))
+    assert results == ["ok", "slot_taken", "slot_taken", "slot_taken"]
+    assert Appointment.objects.exclude(status=AppointmentStatus.CANCELED).count() == 1
+
+
+def test_one_tutor_on_two_schedules_one_booking(center, shared_tutor) -> None:
+    # Each booking locks all of the tutor's assignments, so the second waits for
+    # the first and then sees it. Locking only the booked assignment could deadlock.
+    tutor, first, second = shared_tutor
     a, b = (make_member(center, Role.STUDENT) for _ in range(2))
     results = race(booking(a, first, 10, minutes=60), booking(b, second, 10))
     assert results == ["ok", "slot_taken"]
     assert Appointment.objects.filter(tutor=tutor).count() == 1
+
+
+def test_a_move_and_a_booking_for_one_tutor_on_two_schedules(center, shared_tutor) -> None:
+    tutor, first, second = shared_tutor
+    a, b = (make_member(center, Role.STUDENT) for _ in range(2))
+    appointment = booking(a, first, 9)()
+    results = race(moving(a, appointment, first, 10), booking(b, second, 10))
+    assert results == ["ok", "slot_taken"]
+    at_ten = Appointment.objects.filter(tutor=tutor, starts_at=at(first.schedule, TUESDAY, 10))
+    assert at_ten.count() == 1
+
+
+@pytest.mark.parametrize("errcode", ["deadlock_detected", "serialization_failure"])
+def test_a_deadlock_the_locks_miss_is_still_refused_politely(center, schedule, errcode) -> None:
+    # Stand in for a clash with a writer that doesn't take the tutor locks.
+    tutor = assign(schedule, hours=((time(9), time(17)),))
+    student = make_member(center, Role.STUDENT)
+
+    def fail_insert(execute, sql, params, many, context):
+        if sql.startswith('INSERT INTO "scheduling_appointment" '):
+            sql = f"DO $$ BEGIN RAISE EXCEPTION 'clash' USING ERRCODE = '{errcode}'; END $$"
+            params = None
+        return execute(sql, params, many, context)
+
+    with connection.execute_wrapper(fail_insert), pytest.raises(services.BookingError) as refused:
+        booking(student, tutor, 10)()
+    assert refused.value.code == "slot_taken"
+    assert not Appointment.objects.exists()
 
 
 def test_group_seats_are_never_oversold(center, schedule) -> None:

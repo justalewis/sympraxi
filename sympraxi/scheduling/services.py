@@ -5,12 +5,15 @@ Each function runs in one transaction and takes row locks in a fixed order, so
 two requests at the same moment can't both slip past a rule:
 
 1. the students' memberships in the center (their limits and their own calendar),
-2. the tutor assignments involved, by primary key (the tutor's caps and group seats),
+2. every assignment of the tutors involved, on any schedule, by primary key (the
+   tutor's caps, group seats and calendar),
 3. the appointment being joined or changed.
 
-The database's exclusion constraint is the last line against double-booking a
-tutor: it also covers a tutor booked at the same moment on two schedules, which
-lock different assignments.
+Locking all of a tutor's assignments makes two bookings for one tutor on two
+schedules take turns, so the later one sees the earlier and is refused. The
+database's exclusion constraint is still the last line against double-booking a
+tutor; if it, a deadlock or a serialization failure stops a write anyway, the
+person is told the time was just taken.
 
 Students booking for themselves are held to the schedule's notice, horizon,
 change cutoff and limits. Staff booking for someone (`as_staff=True`) are not
@@ -24,12 +27,13 @@ from collections.abc import Iterable, Sequence
 from datetime import date, datetime, timedelta
 from typing import Any
 
-from django.db import IntegrityError, transaction
+from django.db import DatabaseError, IntegrityError, OperationalError, transaction
 from django.db.models import Q, QuerySet
 from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
+from psycopg import errors as pg_errors
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership, Role
@@ -99,7 +103,7 @@ def book(
     try:
         with transaction.atomic():
             memberships = _lock_students(schedule.center, students)
-            assignment = _lock_assignments([assignment.pk])[assignment.pk]
+            assignment = _lock_tutors([assignment.pk])[assignment.pk]
             schedule = assignment.schedule
             _check_slot(assignment, starts_at, minutes, modality, as_staff=as_staff, now=now)
 
@@ -162,8 +166,8 @@ def book(
                 staff=as_staff,
                 override_limits=override_limits,
             )
-    except IntegrityError as exc:
-        _raise_if_overlap(exc)
+    except (IntegrityError, OperationalError) as exc:
+        _raise_if_taken(exc)
         raise
     if notify and not appointment.is_placeholder:
         _notify_on_commit(notifications.BOOKED, appointment, request, only=students)
@@ -248,7 +252,7 @@ def reschedule(
         with transaction.atomic():
             students = _students_in(appointment)
             memberships = _lock_students(appointment.schedule.center, students)
-            locked = _lock_assignments({appointment.assignment_id, target.pk})
+            locked = _lock_tutors({appointment.assignment_id, target.pk})
             target = locked[target.pk]
             current = (
                 Appointment.objects.select_for_update(of=("self",))
@@ -299,8 +303,8 @@ def reschedule(
                 staff=as_staff,
                 override_limits=override_limits,
             )
-    except IntegrityError as exc:
-        _raise_if_overlap(exc)
+    except (IntegrityError, OperationalError) as exc:
+        _raise_if_taken(exc)
         raise
     if notify and not current.is_placeholder:
         _notify_on_commit(notifications.CHANGED, current, request)
@@ -646,11 +650,19 @@ def _lock_students(center: Center, students: Sequence[User]) -> list[Membership]
     return memberships
 
 
-def _lock_assignments(ids: Iterable[uuid.UUID]) -> dict[uuid.UUID, TutorAssignment]:
+def _lock_tutors(ids: Iterable[uuid.UUID]) -> dict[uuid.UUID, TutorAssignment]:
+    """Lock every assignment the tutors of these assignments have, by primary key.
+
+    Locking only the assignment being booked lets two bookings for one tutor on
+    two schedules both insert at once; PostgreSQL then stops one with a deadlock
+    while checking the overlap constraint. With every assignment locked they
+    take turns, and the later one's check sees the earlier appointment.
+    """
+    tutors = TutorAssignment.objects.filter(pk__in=list(ids)).values("tutor_id")
     rows = (
         TutorAssignment.objects.select_for_update(of=("self",))
         .select_related("schedule__center", "schedule__term", "tutor", "room")
-        .filter(pk__in=list(ids))
+        .filter(tutor__in=tutors)
         .order_by("pk")
     )
     return {a.pk: a for a in rows}
@@ -690,10 +702,17 @@ def _add_participant(appointment: Appointment, student: User, actor: User) -> No
         participant.save(update_fields=["canceled_at", "added_by"])
 
 
-def _raise_if_overlap(exc: IntegrityError) -> None:
+def _raise_if_taken(exc: DatabaseError) -> None:
+    """Refuse politely when a booking at the same moment stopped this write.
+
+    The tutor locks should leave only the overlap constraint to catch, but a
+    deadlock or serialization failure means the same thing to the person asking.
+    """
     cause = exc.__cause__
     diag = getattr(cause, "diag", None)
-    if getattr(diag, "constraint_name", None) == OVERLAP_CONSTRAINT:
+    if getattr(diag, "constraint_name", None) == OVERLAP_CONSTRAINT or isinstance(
+        cause, (pg_errors.DeadlockDetected, pg_errors.SerializationFailure)
+    ):
         raise BookingError("slot_taken", _("Someone else just booked that time.")) from exc
 
 
