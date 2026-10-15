@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Your tutoring schedule" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Your tutoring" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Your tutoring schedule" %}</h1>
+  {% if days %}
+    {% for day, appointments in days %}
+      <h2>{{ day|date:"l, F j" }}</h2>
+      <table class="usa-table usa-table--borderless usa-table--stacked">
+        <caption class="usa-sr-only">{% blocktranslate with day=day|date:"l, F j" %}Your appointments on {{ day }}{% endblocktranslate %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Time" %}</th>
+            <th scope="col">{% translate "Students" %}</th>
+            <th scope="col">{% translate "How" %}</th>
+            <th scope="col">{% translate "Schedule" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in appointments %}
+            <tr>
+              <th scope="row" data-label="{% translate 'Time' %}"><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=a.pk %}">{{ a.starts_at|time }} {% translate "to" %} {{ a.ends_at|time:"P T" }}</a></th>
+              <td data-label="{% translate 'Students' %}">{% for p in a.active %}{{ p.student.display_name }}{% if not forloop.last %}, {% endif %}{% empty %}{% translate "Placeholder" %}{% endfor %}{% if a.is_tentative %} · {% translate "tentative" %}{% endif %}</td>
+              <td data-label="{% translate 'How' %}">{{ a.get_modality_display }}</td>
+              <td data-label="{% translate 'Schedule' %}">{{ a.schedule.name }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+  {% else %}
+    <p>{% translate "No upcoming appointments." %}</p>
+  {% endif %}
+{% endblock content %}

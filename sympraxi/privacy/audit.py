@@ -29,6 +29,14 @@ class AuditAction(StrEnum):
     MEMBERSHIP_CHANGED = "access.membership_changed"
     MEMBERSHIP_REMOVED = "access.membership_removed"
     AUDIT_LOG_VIEWED = "privacy.audit_log_viewed"
+    APPOINTMENT_BOOKED = "scheduling.appointment_booked"
+    APPOINTMENT_JOINED = "scheduling.appointment_joined"
+    APPOINTMENT_CHANGED = "scheduling.appointment_changed"
+    APPOINTMENT_CONFIRMED = "scheduling.appointment_confirmed"
+    APPOINTMENT_CANCELED = "scheduling.appointment_canceled"
+    APPOINTMENT_LEFT = "scheduling.appointment_left"
+    EXEMPTION_ADDED = "scheduling.exemption_added"
+    EXEMPTION_REVOKED = "scheduling.exemption_revoked"
 
 
 def client_ip(request: HttpRequest) -> str | None:

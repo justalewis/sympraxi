@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with name=assignment.tutor.display_name %}Weekly hours for {{ name }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% translate "Weekly hours" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with name=assignment.tutor.display_name %}Weekly hours for {{ name }}{% endblocktranslate %}</h1>
+  <p>{% blocktranslate with zone=center.time_zone opens=schedule.opens_at|time closes=schedule.closes_at|time %}Times are in the center's time zone ({{ zone }}). Students can book only inside the schedule's hours, {{ opens }} to {{ closes }}. Add more rows by saving; three empty rows appear each time.{% endblocktranslate %}</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {% if formset.non_form_errors %}
+      <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+        <div class="usa-alert__body"><p class="usa-alert__text">{{ formset.non_form_errors|join:" " }}</p></div>
+      </div>
+    {% endif %}
+    {% for form in formset %}
+      <fieldset class="usa-fieldset sympraxi-hours-row">
+        <legend class="usa-legend">{% blocktranslate with n=forloop.counter %}Hours {{ n }}{% endblocktranslate %}</legend>
+        {% include "includes/form_fields.html" %}
+      </fieldset>
+    {% endfor %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Save hours" %}</button>
+      <a href="{{ back }}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+{% endblock content %}

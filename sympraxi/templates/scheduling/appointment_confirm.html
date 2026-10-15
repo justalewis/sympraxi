@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Confirm an appointment" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Confirm" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Confirm this appointment?" %}</h1>
+  {% include "scheduling/_appointment_summary.html" %}
+  {% if error %}
+    <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+      <div class="usa-alert__body"><p class="usa-alert__text">{{ error }}</p></div>
+    </div>
+  {% endif %}
+  {% if appointment.is_active and appointment.is_tentative %}
+    <p>{% translate "The student gets an email saying it's confirmed." %}</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Confirm" %}</button>
+        <a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=appointment.pk %}">{% translate "Not now" %}</a>
+      </div>
+    </form>
+  {% else %}
+    <p>{% translate "This appointment doesn't need confirming." %}</p>
+  {% endif %}
+{% endblock content %}

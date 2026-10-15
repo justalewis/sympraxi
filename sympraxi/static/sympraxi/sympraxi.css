@@ -65,3 +65,77 @@
   display: block;
   margin-bottom: 1rem;
 }
+
+/* --- Scheduling ----------------------------------------------------------- */
+
+/* Booking filters sit in a row on wide screens and stack on narrow ones. */
+.sympraxi-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.sympraxi-filters .usa-form-group {
+  margin-top: 1rem;
+}
+
+.sympraxi-filters .usa-button {
+  margin-top: 1rem;
+}
+
+/* Open times: one row per time, readable as a plain list. */
+.sympraxi-times {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+}
+
+.sympraxi-time {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #dfe1e2;
+  max-width: none;
+}
+
+.sympraxi-time__when {
+  font-weight: 700;
+  min-width: 12rem;
+}
+
+.sympraxi-time__action {
+  margin-left: auto;
+}
+
+.sympraxi-time__action .usa-button {
+  margin: 0;
+}
+
+.sympraxi-day-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+
+.sympraxi-summary dt {
+  font-weight: 700;
+  margin-top: 0.75rem;
+}
+
+.sympraxi-summary dd {
+  margin-left: 0;
+}
+
+.sympraxi-hours-row {
+  border: 1px solid #dfe1e2;
+  padding: 0 1rem 1rem;
+  margin: 1rem 0;
+  max-width: 40rem;
+}

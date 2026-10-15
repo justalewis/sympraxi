@@ -1,0 +1,22 @@
+{% load i18n %}
+<dl class="sympraxi-summary">
+  <dt>{% translate "When" %}</dt>
+  <dd><time datetime="{{ appointment.starts_at|date:'c' }}">{{ appointment.starts_at|date:"l, F j, Y" }}, {{ appointment.starts_at|time }}</time> {% translate "to" %} {{ appointment.ends_at|time:"P T" }}</dd>
+  <dt>{% translate "Tutor" %}</dt>
+  <dd>{{ appointment.tutor.display_name }}</dd>
+  <dt>{% translate "How" %}</dt>
+  <dd>{{ appointment.get_modality_display }}</dd>
+  <dt>{% translate "Where" %}</dt>
+  <dd>{% if appointment.modality == "online" and appointment.meeting_url %}<a href="{{ appointment.meeting_url }}">{{ appointment.meeting_url }}</a>{% else %}{{ location }}{% endif %}</dd>
+  <dt>{% translate "Schedule" %}</dt>
+  <dd>{{ appointment.schedule.name }}</dd>
+  <dt>{% translate "Status" %}</dt>
+  <dd>
+    {% if not appointment.is_active %}<span class="usa-tag">{% translate "Canceled" %}</span>
+    {% elif appointment.is_tentative %}<span class="usa-tag">{% translate "Waiting for confirmation" %}</span>
+    {% else %}<span class="usa-tag">{% translate "Booked" %}</span>{% endif %}
+    {% if appointment.is_walk_in %}<span class="usa-tag">{% translate "Walk-in" %}</span>{% endif %}
+    {% if appointment.is_placeholder %}<span class="usa-tag">{% translate "Placeholder" %}</span>{% endif %}
+    {% if appointment.series_id %}<span class="usa-tag">{% translate "Weekly series" %}</span>{% endif %}
+  </dd>
+</dl>

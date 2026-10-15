@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Your appointments" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Your appointments" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Your appointments" %}</h1>
+  {% if schedules %}
+    <h2>{% translate "Book an appointment" %}</h2>
+    <ul class="usa-list">
+      {% for schedule in schedules %}
+        <li><a href="{% url 'scheduling:open_times' slug=center.slug schedule_id=schedule.pk %}">{% blocktranslate with name=schedule.name %}See open times on {{ name }}{% endblocktranslate %}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <h2>{% translate "Coming up" %}</h2>
+  {% if upcoming %}
+    <ul class="usa-list">
+      {% for a in upcoming %}
+        <li>
+          <a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=a.pk %}">{{ a.starts_at|date:"l, F j" }}, {{ a.starts_at|time:"P T" }}</a>
+          {% blocktranslate with tutor=a.tutor.display_name %}with {{ tutor }}{% endblocktranslate %} · {{ a.get_modality_display }}{% if a.is_tentative %} · {% translate "waiting for confirmation" %}{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "Nothing booked." %}</p>
+  {% endif %}
+
+  {% if past %}
+    <h2>{% translate "Earlier and canceled" %}</h2>
+    <ul class="usa-list">
+      {% for a in past %}
+        <li>
+          <a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=a.pk %}">{{ a.starts_at|date:"F j, Y" }}, {{ a.starts_at|time }}</a>
+          {% blocktranslate with tutor=a.tutor.display_name %}with {{ tutor }}{% endblocktranslate %}{% if not a.is_active or a.mine.0.canceled_at %} · {% translate "canceled" %}{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

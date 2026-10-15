@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Appointment" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Appointment" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with tutor=appointment.tutor.display_name %}Appointment with {{ tutor }}{% endblocktranslate %}</h1>
+  {% if mine and mine.canceled_at and appointment.is_active %}
+    <div class="usa-alert usa-alert--info usa-alert--slim">
+      <div class="usa-alert__body"><p class="usa-alert__text">{% translate "You left this group appointment." %}</p></div>
+    </div>
+  {% endif %}
+  {% include "scheduling/_appointment_summary.html" %}
+
+  {% if people is not None %}
+    <h2>{% translate "Students" %}</h2>
+    {% if people %}
+      <ul class="usa-list">
+        {% for p in people %}
+          <li>{{ p.student.display_name }}{% if p.student.pronouns %} ({{ p.student.pronouns }}){% endif %}{% if p.canceled_at %} · {% translate "left or canceled" %}{% endif %}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{% translate "None. This is a placeholder." %}</p>
+    {% endif %}
+    {% if appointment.capacity > 1 %}
+      <p>{% blocktranslate with taken=taken capacity=appointment.capacity %}{{ taken }} of {{ capacity }} places taken.{% endblocktranslate %}</p>
+    {% endif %}
+  {% elif appointment.capacity > 1 %}
+    <p>{% translate "This is a group appointment." %}</p>
+  {% endif %}
+
+  <h2>{% translate "What you can do" %}</h2>
+  <ul class="usa-list">
+    {% if appointment.is_active %}
+      <li><a href="{% url 'scheduling:appointment_ics' slug=center.slug appointment_id=appointment.pk %}">{% translate "Add to your calendar (.ics file)" %}</a></li>
+    {% endif %}
+    {% if may_confirm %}
+      <li><a href="{% url 'scheduling:appointment_confirm' slug=center.slug appointment_id=appointment.pk %}">{% translate "Confirm this appointment" %}</a></li>
+    {% endif %}
+    {% if may_change %}
+      <li><a href="{% url 'scheduling:appointment_change' slug=center.slug appointment_id=appointment.pk %}">{% translate "Move to another time" %}</a></li>
+    {% endif %}
+    {% if may_cancel and not within_cutoff %}
+      <li><a href="{% url 'scheduling:appointment_cancel' slug=center.slug appointment_id=appointment.pk %}">{% if appointment.capacity > 1 and not people %}{% translate "Leave this group appointment" %}{% else %}{% translate "Cancel this appointment" %}{% endif %}</a></li>
+    {% elif may_cancel %}
+      <li>{% blocktranslate with email=center.contact_email|default:center.name %}It's too close to the appointment to cancel online. Contact {{ email }}.{% endblocktranslate %}</li>
+    {% endif %}
+  </ul>
+{% endblock content %}

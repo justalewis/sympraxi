@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Rooms" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Rooms" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Rooms" %}</h1>
+  <p>{% translate "Where in-person appointments happen. Each tutor assignment can name a room." %}</p>
+  <p><a class="usa-button" href="{% url 'scheduling:room_create' slug=center.slug %}">{% translate "Add a room" %}</a></p>
+  {% if rooms %}
+    <ul class="usa-list">
+      {% for room in rooms %}
+        <li>{{ room.name }}{% if room.details %} ({{ room.details }}){% endif %}{% if not room.is_active %} · {% translate "not in use" %}{% endif %} · <a href="{% url 'scheduling:room_edit' slug=center.slug room_id=room.pk %}">{% translate "Edit" %}<span class="usa-sr-only"> {{ room.name }}</span></a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "No rooms yet." %}</p>
+  {% endif %}
+{% endblock content %}

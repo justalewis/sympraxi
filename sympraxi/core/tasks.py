@@ -1,3 +1,4 @@
+import base64
 from typing import Any
 
 from django.core.mail import EmailMultiAlternatives, mailers
@@ -19,4 +20,10 @@ def deliver_email(message: dict[str, Any]) -> None:
         alternatives=[tuple(a) for a in message["alternatives"]],
         connection=mailers["delivery"],
     )
+    # Messages queued before attachments were supported have no "attachments" key.
+    for item in message.get("attachments", []):
+        content: str | bytes = (
+            base64.b64decode(item["base64"]) if "base64" in item else item["text"]
+        )
+        email.attach(item["filename"] or None, content, item["mimetype"] or None)
     email.send()

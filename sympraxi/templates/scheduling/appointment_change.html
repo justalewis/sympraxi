@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Move an appointment" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Move" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% if staff %}{% translate "Move this appointment" %}{% else %}{% translate "Move your appointment" %}{% endif %}</h1>
+  <h2>{% translate "Now" %}</h2>
+  {% include "scheduling/_appointment_summary.html" %}
+
+  {% if not allowed %}
+    {% if not appointment.is_active %}
+      <p>{% translate "This appointment is canceled, so it can't be moved." %}</p>
+    {% elif group %}
+      <p>{% blocktranslate with email=center.contact_email|default:center.name %}Group appointments are moved by the center. Contact {{ email }}.{% endblocktranslate %}</p>
+    {% else %}
+      <p>{% blocktranslate with email=center.contact_email|default:center.name %}It's too close to the appointment to move it online. Contact {{ email }}.{% endblocktranslate %}</p>
+    {% endif %}
+  {% elif mode == "confirm" %}
+    <h2>{% translate "Move it to" %}</h2>
+    <dl class="sympraxi-summary">
+      <dt>{% translate "When" %}</dt>
+      <dd>{{ time.starts_at|date:"l, F j, Y" }}, {{ time.starts_at|time }} {% translate "to" %} {{ time.ends_at|time:"P T" }}</dd>
+      <dt>{% translate "Tutor" %}</dt>
+      <dd>{{ time.assignment.tutor.display_name }}</dd>
+    </dl>
+    {% if error %}
+      <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+        <div class="usa-alert__body"><p class="usa-alert__text">{{ error }}</p></div>
+      </div>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      {% for field in slot %}{{ field }}{% endfor %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Move it" %}</button>
+        <a href="{{ page_url }}?date={{ time.starts_at|date:'Y-m-d' }}">{% translate "Choose another time" %}</a>
+      </div>
+    </form>
+  {% else %}
+    <h2>{% translate "Pick a new time" %}</h2>
+    <p>{% blocktranslate with how=appointment.get_modality_display %}These are open times on the same schedule for an appointment like this one ({{ how }}).{% endblocktranslate %}</p>
+    <form class="sympraxi-filters" method="get" action="{{ page_url }}"
+          hx-get="{{ page_url }}" hx-target="#open-times" hx-push-url="true" hx-trigger="change, submit">
+      {% include "includes/field.html" with field=form.date %}
+      {% include "includes/field.html" with field=form.minutes %}
+      {% include "includes/field.html" with field=form.tutor %}
+      <button class="usa-button" type="submit">{% translate "Show open times" %}</button>
+    </form>
+    <p id="open-times-status" class="usa-sr-only" role="status">{% include "scheduling/_open_times_count.html" %}</p>
+    <div id="open-times">
+      {% include "scheduling/_open_times.html" %}
+    </div>
+  {% endif %}
+  <p><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=appointment.pk %}">{% translate "Keep it as it is" %}</a></p>
+{% endblock content %}

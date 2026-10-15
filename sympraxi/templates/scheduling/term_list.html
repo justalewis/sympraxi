@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Terms and closures" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Terms" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Terms and closures" %}</h1>
+  <p><a class="usa-button" href="{% url 'scheduling:term_create' slug=center.slug %}">{% translate "Add a term" %}</a></p>
+  {% for term in terms %}
+    <h2>{{ term.name }}</h2>
+    <p>{{ term.starts_on|date:"F j, Y" }} {% translate "to" %} {{ term.ends_on|date:"F j, Y" }} · <a href="{% url 'scheduling:term_edit' slug=center.slug term_id=term.pk %}">{% translate "Edit" %}<span class="usa-sr-only"> {{ term.name }}</span></a></p>
+    <h3>{% translate "Closed" %}</h3>
+    {% if term.closures.all %}
+      <ul class="usa-list">
+        {% for closure in term.closures.all %}
+          <li>{{ closure.label }}: {{ closure.starts_on|date:"M j" }}{% if closure.ends_on != closure.starts_on %} {% translate "to" %} {{ closure.ends_on|date:"M j" }}{% endif %} · <a href="{% url 'scheduling:closure_delete' slug=center.slug closure_id=closure.pk %}">{% translate "Remove" %}<span class="usa-sr-only"> {{ closure.label }}</span></a></li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{% translate "No closures." %}</p>
+    {% endif %}
+    <p><a href="{% url 'scheduling:closure_create' slug=center.slug term_id=term.pk %}">{% blocktranslate with term=term.name %}Add a closure to {{ term }}{% endblocktranslate %}</a></p>
+  {% empty %}
+    <p>{% translate "No terms yet. Add one before adding schedules." %}</p>
+  {% endfor %}
+{% endblock content %}

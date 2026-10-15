@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Book for a student" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Book for a student" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Book for a student" %}</h1>
+  <dl class="sympraxi-summary">
+    <dt>{% translate "When" %}</dt>
+    <dd>{{ time.starts_at|date:"l, F j, Y" }}, {{ time.starts_at|time }} {% translate "to" %} {{ time.ends_at|time:"P T" }}</dd>
+    <dt>{% translate "Tutor" %}</dt>
+    <dd>{{ time.assignment.tutor.display_name }}</dd>
+    {% if time.appointment %}
+      <dt>{% translate "Group" %}</dt>
+      <dd>{% blocktranslate count n=time.seats_left %}{{ n }} place left{% plural %}{{ n }} places left{% endblocktranslate %}</dd>
+    {% endif %}
+  </dl>
+  <form class="usa-form usa-form--large" method="post">
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Book" %}</button>
+      <a href="{% url 'scheduling:open_times' slug=center.slug schedule_id=schedule.pk %}?date={{ time.starts_at|date:'Y-m-d' }}">{% translate "Choose another time" %}</a>
+    </div>
+  </form>
+{% endblock content %}

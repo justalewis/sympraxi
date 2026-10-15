@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with name=schedule.name %}Open times on {{ name }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=schedule.name %}
+  <h1>{{ schedule.name }}</h1>
+  {% if schedule.description %}<p>{{ schedule.description }}</p>{% endif %}
+
+  {% if not open_for_booking %}
+    <div class="usa-alert usa-alert--info usa-alert--slim">
+      <div class="usa-alert__body"><p class="usa-alert__text">{% translate "No dates on this schedule are open for booking right now." %}</p></div>
+    </div>
+  {% else %}
+    {% if as_staff %}
+      <p>{% translate "Choose a time to book it for a student, or to hold it with a placeholder." %}</p>
+    {% else %}
+      <p>{% blocktranslate with first=first|date:"F j" last=last|date:"F j" %}Pick a date from {{ first }} to {{ last }} to see open times.{% endblocktranslate %}</p>
+    {% endif %}
+    {% url 'scheduling:open_times' slug=center.slug schedule_id=schedule.pk as page_url %}
+    <form class="sympraxi-filters" method="get" action="{{ page_url }}"
+          hx-get="{{ page_url }}" hx-target="#open-times" hx-push-url="true" hx-trigger="change, submit">
+      {% include "includes/field.html" with field=form.date %}
+      {% include "includes/field.html" with field=form.minutes %}
+      {% include "includes/field.html" with field=form.tutor %}
+      {% include "includes/field.html" with field=form.modality %}
+      <button class="usa-button" type="submit">{% translate "Show open times" %}</button>
+    </form>
+    <p id="open-times-status" class="usa-sr-only" role="status">{% include "scheduling/_open_times_count.html" %}</p>
+    <div id="open-times">
+      {% include "scheduling/_open_times.html" %}
+    </div>
+  {% endif %}
+  {% if can_see_day %}
+    <p><a href="{% url 'scheduling:day_sheet' slug=center.slug schedule_id=schedule.pk %}?date={{ day|date:'Y-m-d' }}">{% translate "See everyone booked that day" %}</a></p>
+  {% endif %}
+{% endblock content %}

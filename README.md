@@ -2,7 +2,7 @@
 
 An open-source system for college writing centers: tutor scheduling, session notes, online and asynchronous sessions, tutor hours and training, and a writing-resource library tutors can attach to sessions. It is meant as a free, self-hostable alternative to WCONLINE.
 
-Status: Phase 0 (foundation) is scaffolded: accounts with required two-factor login for staff, centers and roles, a single permission module, an append-only audit log, accessible base pages, CI, and a Docker Compose deployment with backup and restore. Scheduling starts in Phase 1.
+Status: Phase 0 (foundation) is scaffolded: accounts with required two-factor login for staff, centers and roles, a single permission module, an append-only audit log, accessible base pages, CI, and a Docker Compose deployment with backup and restore. Phase 1 has started with the scheduling core: terms, schedules, tutors' weekly hours, list-first booking with limits, group and repeating appointments, and confirmation emails with calendar files.
 
 ## Try it
 

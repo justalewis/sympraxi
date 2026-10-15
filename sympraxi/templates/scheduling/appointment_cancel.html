@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Cancel an appointment" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Cancel" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% if staff %}{% translate "Cancel this appointment?" %}{% elif appointment.capacity > 1 %}{% translate "Leave this group appointment?" %}{% else %}{% translate "Cancel your appointment?" %}{% endif %}</h1>
+  {% include "scheduling/_appointment_summary.html" %}
+  {% if error %}
+    <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+      <div class="usa-alert__body"><p class="usa-alert__text">{{ error }}</p></div>
+    </div>
+  {% endif %}
+  {% if allowed %}
+    {% if staff %}<p>{% translate "Everyone in it, and the tutor, will get an email." %}</p>{% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button usa-button--secondary" type="submit">{% if staff %}{% translate "Cancel the appointment" %}{% elif appointment.capacity > 1 %}{% translate "Leave the group" %}{% else %}{% translate "Cancel my appointment" %}{% endif %}</button>
+        <a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=appointment.pk %}">{% translate "Keep it" %}</a>
+      </div>
+    </form>
+  {% elif appointment.is_active %}
+    <p>{% blocktranslate with email=center.contact_email|default:center.name %}It's too close to the appointment to cancel online. Contact {{ email }}.{% endblocktranslate %}</p>
+  {% else %}
+    <p>{% translate "This appointment is already canceled." %}</p>
+  {% endif %}
+{% endblock content %}

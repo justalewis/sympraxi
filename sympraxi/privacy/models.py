@@ -19,6 +19,14 @@ ACTION_LABELS = {
     "access.membership_changed": _("Changed someone's role"),
     "access.membership_removed": _("Removed someone from the center"),
     "privacy.audit_log_viewed": _("Viewed the audit log"),
+    "scheduling.appointment_booked": _("Booked an appointment"),
+    "scheduling.appointment_joined": _("Added a student to a group appointment"),
+    "scheduling.appointment_changed": _("Changed an appointment"),
+    "scheduling.appointment_confirmed": _("Confirmed a tentative appointment"),
+    "scheduling.appointment_canceled": _("Canceled an appointment"),
+    "scheduling.appointment_left": _("Took a student out of a group appointment"),
+    "scheduling.exemption_added": _("Exempted a student from booking limits"),
+    "scheduling.exemption_revoked": _("Ended a booking-limit exemption"),
 }
 
 

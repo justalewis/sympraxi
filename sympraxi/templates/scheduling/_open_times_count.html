@@ -1,0 +1,1 @@
+{% load i18n %}{% if minutes %}{% blocktranslate with day=day|date:"l, F j" count n=rows|length %}{{ n }} open time on {{ day }}.{% plural %}{{ n }} open times on {{ day }}.{% endblocktranslate %}{% else %}{% translate "Check the date and length." %}{% endif %}

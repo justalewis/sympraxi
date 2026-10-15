@@ -1,0 +1,45 @@
+{% load i18n %}
+{% if htmx %}
+  {# Update the live region outside the list, so screen readers hear the new count. #}
+  <span id="open-times-status" hx-swap-oob="innerHTML">{% include "scheduling/_open_times_count.html" %}</span>
+{% endif %}
+{% if form.errors %}
+  <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+    <div class="usa-alert__body">
+      {% for field in form %}{% for error in field.errors %}<p class="usa-alert__text">{{ field.label }}: {{ error }}</p>{% endfor %}{% endfor %}
+    </div>
+  </div>
+{% else %}
+  <h2>{{ day|date:"l, F j, Y" }}</h2>
+  <nav class="sympraxi-day-nav" aria-label="{% translate 'Other days' %}">
+    {% if previous_url %}<a href="{{ previous_url }}">{% translate "Previous day" %}</a>{% else %}<span></span>{% endif %}
+    {% if next_url %}<a href="{{ next_url }}">{% translate "Next day" %}</a>{% endif %}
+  </nav>
+  {% if rows %}
+    <ul class="sympraxi-times">
+      {% for row in rows %}
+        {% with t=row.time %}
+          <li class="sympraxi-time">
+            <span class="sympraxi-time__when">
+              {% if show_zone %}{{ t.starts_at|time:"P T" }}{% else %}{{ t.starts_at|time }}{% endif %}
+              {% translate "to" %}
+              {% if show_zone %}{{ t.ends_at|time:"P T" }}{% else %}{{ t.ends_at|time }}{% endif %}
+            </span>
+            <span>{{ t.assignment.tutor.display_name }}</span>
+            <span>{% for m in t.modalities %}{% if m == "in_person" %}{% translate "In person" %}{% else %}{% translate "Online" %}{% endif %}{% if not forloop.last %} {% translate "or" %} {% endif %}{% endfor %}</span>
+            {% if t.appointment %}
+              <span class="usa-tag">{% blocktranslate count n=t.seats_left %}Group: {{ n }} place left{% plural %}Group: {{ n }} places left{% endblocktranslate %}</span>
+            {% endif %}
+            {% if row.book_url %}
+              <span class="sympraxi-time__action">
+                <a class="usa-button usa-button--outline" href="{{ row.book_url }}">{% if link_label %}{{ link_label }}{% elif t.appointment %}{% translate "Join" %}{% else %}{% translate "Book" %}{% endif %}<span class="usa-sr-only"> {{ t.starts_at|time }} {% translate "with" %} {{ t.assignment.tutor.display_name }}</span></a>
+              </span>
+            {% endif %}
+          </li>
+        {% endwith %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "No open times that day. Try another date or length." %}</p>
+  {% endif %}
+{% endif %}

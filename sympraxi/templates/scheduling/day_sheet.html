@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with name=schedule.name %}Day sheet for {{ name }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% translate "Day sheet" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with name=schedule.name %}{{ name }}: day sheet{% endblocktranslate %}</h1>
+  <form class="sympraxi-filters" method="get">
+    {% include "includes/field.html" with field=form.date %}
+    <button class="usa-button" type="submit">{% translate "Show" %}</button>
+  </form>
+  <h2>{{ day|date:"l, F j, Y" }}</h2>
+  <nav class="sympraxi-day-nav" aria-label="{% translate 'Other days' %}">
+    <a href="{{ previous_url }}">{% translate "Previous day" %}</a>
+    <a href="{{ next_url }}">{% translate "Next day" %}</a>
+  </nav>
+  {% if can_book %}
+    <p><a class="usa-button usa-button--outline" href="{% url 'scheduling:open_times' slug=center.slug schedule_id=schedule.pk %}?{{ open_times_query }}">{% translate "Book for a student" %}</a></p>
+  {% endif %}
+  {% if appointments %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% blocktranslate with day=day|date:"l, F j" %}Appointments on {{ day }}{% endblocktranslate %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Time" %}</th>
+          <th scope="col">{% translate "Tutor" %}</th>
+          <th scope="col">{% translate "Students" %}</th>
+          <th scope="col">{% translate "How" %}</th>
+          <th scope="col">{% translate "Status" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in appointments %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Time' %}"><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=a.pk %}">{% if show_zone %}{{ a.starts_at|time:"P T" }}{% else %}{{ a.starts_at|time }}{% endif %} {% translate "to" %} {% if show_zone %}{{ a.ends_at|time:"P T" }}{% else %}{{ a.ends_at|time }}{% endif %}</a></th>
+            <td data-label="{% translate 'Tutor' %}">{{ a.tutor.display_name }}</td>
+            <td data-label="{% translate 'Students' %}">{% for p in a.people %}{% if not p.canceled_at %}{{ p.student.display_name }}{% if not forloop.last %}, {% endif %}{% endif %}{% empty %}—{% endfor %}</td>
+            <td data-label="{% translate 'How' %}">{{ a.get_modality_display }}</td>
+            <td data-label="{% translate 'Status' %}">{% if not a.is_active %}{% translate "Canceled" %}{% elif a.is_tentative %}{% translate "Tentative" %}{% else %}{% translate "Booked" %}{% endif %}{% if a.is_walk_in %}, {% translate "walk-in" %}{% endif %}{% if a.is_placeholder %}, {% translate "placeholder" %}{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "No appointments that day." %}</p>
+  {% endif %}
+{% endblock content %}

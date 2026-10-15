@@ -17,6 +17,10 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "my_roles": sorted(roles_in(request.user, center)),
         "can_view_members": can(request.user, Action.VIEW_MEMBERS, center),
         "can_view_audit_log": can(request.user, Action.VIEW_AUDIT_LOG, center),
+        "can_view_schedules": can(request.user, Action.VIEW_SCHEDULES, center),
+        "can_book_own": can(request.user, Action.BOOK_OWN, center),
+        "can_tutor": can(request.user, Action.VIEW_OWN_TUTORING, center),
+        "can_manage_schedules": can(request.user, Action.MANAGE_SCHEDULES, center),
     }
     return render(request, "centers/center_detail.html", context)
 

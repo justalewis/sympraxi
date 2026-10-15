@@ -4,7 +4,7 @@
 
 - Python 3.12 or newer, and [uv](https://docs.astral.sh/uv/) (`pip install uv` works).
 - Node.js 24 (only to copy the USWDS and htmx files into place).
-- PostgreSQL 18. With Docker: `docker compose -f compose.dev.yaml up -d`. Without Docker, install it natively. The tests rely on PostgreSQL features (triggers now, range types and exclusion constraints in Phase 1), so SQLite isn't supported.
+- PostgreSQL 18. With Docker: `docker compose -f compose.dev.yaml up -d`. Without Docker, install it natively. The tests rely on PostgreSQL features (triggers, range types, and an exclusion constraint that needs the `btree_gist` extension), so SQLite isn't supported. `btree_gist` comes with the official Docker images and the Debian, Ubuntu and EDB Windows packages. Minimal builds, such as the one in the `pgserver` Python package, leave it out and can't run the migrations.
 
 ## First run
 
@@ -36,6 +36,12 @@ uv run pytest -m e2e                           # axe accessibility and CSP check
 
 The tests need `DATABASE_URL` set; they create and drop their own test database.
 
+The booking engine's property tests (`tests/test_booking_properties.py`) run a short set of random sequences by default. Before a release, or after changing a booking rule, run the long set:
+
+```bash
+HYPOTHESIS_PROFILE=thorough uv run pytest tests/test_booking_properties.py
+```
+
 ## Where things are
 
 | Path | What |
@@ -44,6 +50,9 @@ The tests need `DATABASE_URL` set; they create and drop their own test database.
 | `sympraxi/privacy/` | Audit log (append-only, enforced by a database trigger) |
 | `sympraxi/accounts/` | User model, sign-up rules, the staff two-factor gate |
 | `sympraxi/centers/` | Centers, roles, memberships |
+| `sympraxi/scheduling/services.py` | Every booking rule: limits, notice, cutoff, groups, locks |
+| `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions and closures |
+| `sympraxi/scheduling/timeutils.py` | Wall-clock times and daylight-saving rules |
 | `sympraxi/templates/allauth/` | Sign-in and account pages restyled with USWDS |
 | `tests/test_policy_matrix.py` | Every role against every action, written out by hand |
 | `tests/test_url_inventory.py` | Fails if a new URL isn't assigned a permission |

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with name=schedule.name %}Manage {{ name }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=schedule.name %}
+  <h1>{% blocktranslate with name=schedule.name %}Manage {{ name }}{% endblocktranslate %}</h1>
+  <p class="sympraxi-button-group">
+    <a class="usa-button" href="{% url 'scheduling:schedule_edit' slug=center.slug schedule_id=schedule.pk %}">{% translate "Edit settings and limits" %}</a>
+    <a class="usa-button usa-button--outline" href="{% url 'scheduling:open_times' slug=center.slug schedule_id=schedule.pk %}">{% translate "See open times" %}</a>
+    <a class="usa-button usa-button--outline" href="{% url 'scheduling:day_sheet' slug=center.slug schedule_id=schedule.pk %}">{% translate "Day sheet" %}</a>
+  </p>
+
+  <h2>{% translate "Settings" %}</h2>
+  <dl class="sympraxi-summary">
+    <dt>{% translate "Dates" %}</dt>
+    <dd>{{ schedule.starts_on|date:"F j, Y" }} {% translate "to" %} {{ schedule.ends_on|date:"F j, Y" }} ({{ schedule.term.name }})</dd>
+    <dt>{% translate "Hours" %}</dt>
+    <dd>{{ schedule.opens_at|time }} {% translate "to" %} {{ schedule.closes_at|time }}, {% blocktranslate with n=schedule.slot_minutes %}{{ n }}-minute slots{% endblocktranslate %}{% if schedule.buffer_minutes %}, {% blocktranslate with n=schedule.buffer_minutes %}{{ n }}-minute break after each appointment{% endblocktranslate %}{% endif %}</dd>
+    <dt>{% translate "Who can see it" %}</dt>
+    <dd>{{ schedule.get_visibility_display }}</dd>
+    <dt>{% translate "Students can book" %}</dt>
+    <dd>{% blocktranslate with notice=schedule.min_notice_minutes days=schedule.horizon_days cutoff=schedule.change_cutoff_minutes %}up to {{ days }} days ahead and at least {{ notice }} minutes before; they can cancel until {{ cutoff }} minutes before.{% endblocktranslate %}</dd>
+    <dt>{% translate "Limits" %}</dt>
+    <dd>
+      {% if schedule.max_per_day %}{% blocktranslate with n=schedule.max_per_day %}{{ n }} a day{% endblocktranslate %}. {% endif %}
+      {% if schedule.max_per_week %}{% blocktranslate with n=schedule.max_per_week %}{{ n }} a week{% endblocktranslate %}. {% endif %}
+      {% if schedule.max_per_term %}{% blocktranslate with n=schedule.max_per_term %}{{ n }} a term{% endblocktranslate %}. {% endif %}
+      {% if schedule.max_minutes_per_day %}{% blocktranslate with n=schedule.max_minutes_per_day %}{{ n }} minutes a day{% endblocktranslate %}. {% endif %}
+      {% if schedule.max_minutes_per_week %}{% blocktranslate with n=schedule.max_minutes_per_week %}{{ n }} minutes a week{% endblocktranslate %}. {% endif %}
+      {% if schedule.max_minutes_per_term %}{% blocktranslate with n=schedule.max_minutes_per_term %}{{ n }} minutes a term{% endblocktranslate %}. {% endif %}
+      {% if schedule.limits_span_center %}{% translate "Counted across every schedule in the center." %}{% endif %}
+      {% if not schedule.max_per_day and not schedule.max_per_week and not schedule.max_per_term and not schedule.max_minutes_per_day and not schedule.max_minutes_per_week and not schedule.max_minutes_per_term %}{% translate "None." %}{% endif %}
+    </dd>
+    {% if closures %}
+      <dt>{% translate "Closed" %}</dt>
+      <dd>{% for c in closures %}{{ c.label }} ({{ c.starts_on|date:"M j" }}{% if c.ends_on != c.starts_on %}–{{ c.ends_on|date:"M j" }}{% endif %}){% if not forloop.last %}, {% endif %}{% endfor %}</dd>
+    {% endif %}
+  </dl>
+
+  <h2>{% translate "Tutors" %}</h2>
+  <p><a class="usa-button" href="{% url 'scheduling:assignment_create' slug=center.slug schedule_id=schedule.pk %}">{% translate "Add a tutor" %}</a></p>
+  {% for a in assignments %}
+    <h3>{{ a.tutor.display_name }}{% if not a.is_active %} ({% translate "not taking appointments" %}){% endif %}</h3>
+    <p>
+      {% blocktranslate with min=a.min_minutes max=a.max_minutes %}{{ min }} to {{ max }} minutes{% endblocktranslate %}{% if a.offers_in_person %} · {% translate "in person" %}{% if a.room %} ({{ a.room.name }}){% endif %}{% endif %}{% if a.offers_online %} · {% translate "online" %}{% endif %}{% if a.capacity > 1 %} · {% blocktranslate with n=a.capacity %}groups of up to {{ n }}{% endblocktranslate %}{% endif %}{% if a.needs_confirmation %} · {% translate "staff confirm bookings" %}{% endif %}
+    </p>
+    <h4>{% translate "Weekly hours" %}</h4>
+    {% if a.weekly_hours.all %}
+      <ul class="usa-list">
+        {% for h in a.weekly_hours.all %}<li>{{ h.get_weekday_display }}: {{ h.starts_at|time }} {% translate "to" %} {{ h.ends_at|time }}</li>{% endfor %}
+      </ul>
+    {% else %}
+      <p>{% translate "None yet, so no one can book this tutor." %}</p>
+    {% endif %}
+    {% if a.exceptions.all %}
+      <h4>{% translate "Upcoming changes" %}</h4>
+      <ul class="usa-list">
+        {% for e in a.exceptions.all %}
+          <li>{{ e.get_kind_display }}: {{ e.starts_at|date:"M j" }}, {{ e.starts_at|time }} {% translate "to" %} {{ e.ends_at|date:"M j" }}, {{ e.ends_at|time }}{% if e.note %} ({{ e.note }}){% endif %} · <a href="{% url 'scheduling:exception_delete' slug=center.slug exception_id=e.pk %}">{% translate "Remove" %}<span class="usa-sr-only"> {{ e.get_kind_display }} {{ e.starts_at|date:"M j" }}</span></a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <ul class="usa-list">
+      <li><a href="{% url 'scheduling:hours' slug=center.slug assignment_id=a.pk %}">{% blocktranslate with name=a.tutor.display_name %}Edit {{ name }}'s weekly hours{% endblocktranslate %}</a></li>
+      <li><a href="{% url 'scheduling:exception_create' slug=center.slug assignment_id=a.pk %}">{% blocktranslate with name=a.tutor.display_name %}Add time off or extra hours for {{ name }}{% endblocktranslate %}</a></li>
+      <li><a href="{% url 'scheduling:assignment_edit' slug=center.slug assignment_id=a.pk %}">{% blocktranslate with name=a.tutor.display_name %}Change {{ name }}'s rules{% endblocktranslate %}</a></li>
+    </ul>
+  {% empty %}
+    <p>{% translate "No tutors on this schedule yet." %}</p>
+  {% endfor %}
+{% endblock content %}

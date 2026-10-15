@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  {% if intro %}<p>{{ intro }}</p>{% endif %}
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{{ submit }}</button>
+      <a href="{{ back }}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+{% endblock content %}

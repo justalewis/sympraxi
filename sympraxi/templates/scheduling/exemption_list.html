@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Exemptions from booking limits" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Exemptions" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Exemptions from booking limits" %}</h1>
+  <p>{% translate "Students listed here can book past a schedule's limits until their exemption ends. Notes are visible to directors only." %}</p>
+  <p><a class="usa-button" href="{% url 'scheduling:exemption_create' slug=center.slug %}">{% translate "Add an exemption" %}</a></p>
+  <h2>{% translate "In effect" %}</h2>
+  {% if active %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Exemptions in effect" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Student" %}</th>
+          <th scope="col">{% translate "Schedule" %}</th>
+          <th scope="col">{% translate "Through" %}</th>
+          <th scope="col">{% translate "Note" %}</th>
+          <th scope="col"><span class="usa-sr-only">{% translate "Actions" %}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in active %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Student' %}">{{ e.student.display_name }}</th>
+            <td data-label="{% translate 'Schedule' %}">{{ e.schedule.name|default:_("Every schedule") }}</td>
+            <td data-label="{% translate 'Through' %}">{{ e.expires_on|date:"F j, Y" }}</td>
+            <td data-label="{% translate 'Note' %}">{{ e.note|default:"—" }}</td>
+            <td data-label="{% translate 'Actions' %}"><a href="{% url 'scheduling:exemption_revoke' slug=center.slug exemption_id=e.pk %}">{% translate "End" %}<span class="usa-sr-only"> {{ e.student.display_name }}'s {% translate "exemption" %}</span></a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "None." %}</p>
+  {% endif %}
+  {% if ended %}
+    <h2>{% translate "Ended" %}</h2>
+    <ul class="usa-list">
+      {% for e in ended %}
+        <li>{{ e.student.display_name }}: {% if e.revoked_at %}{% blocktranslate with day=e.revoked_at|date:"F j, Y" %}ended {{ day }}{% endblocktranslate %}{% else %}{% blocktranslate with day=e.expires_on|date:"F j, Y" %}ran through {{ day }}{% endblocktranslate %}{% endif %}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

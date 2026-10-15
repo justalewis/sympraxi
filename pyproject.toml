@@ -22,6 +22,7 @@ dev = [
     "axe-playwright-python>=0.1.8",
     "django-stubs[compatible-mypy]>=6.1.2",
     "factory-boy>=3.3.3",
+    "hypothesis>=6.140",
     "mypy>=2.4.0",
     "pip-audit>=2.10.1",
     "pytest>=9.1.1",

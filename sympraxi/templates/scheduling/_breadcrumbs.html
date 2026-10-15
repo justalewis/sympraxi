@@ -1,0 +1,9 @@
+{% load i18n %}
+<nav aria-label="{% translate 'Breadcrumbs' %}" class="usa-breadcrumb">
+  <ol class="usa-breadcrumb__list">
+    {% for label, url in crumbs %}
+      <li class="usa-breadcrumb__list-item"><a class="usa-breadcrumb__link" href="{{ url }}"><span>{{ label }}</span></a></li>
+    {% endfor %}
+    <li class="usa-breadcrumb__list-item usa-current" aria-current="page"><span>{{ current }}</span></li>
+  </ol>
+</nav>

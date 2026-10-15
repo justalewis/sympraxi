@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with name=center.name %}Schedules at {{ name }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% translate "Schedules" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Schedules" %}</h1>
+  {% if can_book_own %}
+    <p><a href="{% url 'scheduling:my_appointments' slug=center.slug %}">{% translate "See your appointments" %}</a></p>
+  {% endif %}
+  {% if can_tutor %}
+    <p><a href="{% url 'scheduling:my_tutoring' slug=center.slug %}">{% translate "See your tutoring schedule" %}</a></p>
+  {% endif %}
+
+  {% if schedules %}
+    <ul class="usa-card-group">
+      {% for schedule in schedules %}
+        <li class="usa-card tablet:grid-col-6">
+          <div class="usa-card__container">
+            <div class="usa-card__header"><h2 class="usa-card__heading">{{ schedule.name }}</h2></div>
+            <div class="usa-card__body">
+              <p>{{ schedule.term.name }}: {{ schedule.starts_on|date:"M j" }} {% translate "to" %} {{ schedule.ends_on|date:"M j, Y" }}</p>
+              {% if schedule.description %}<p>{{ schedule.description }}</p>{% endif %}
+              {% if schedule.visibility != Visibility.EVERYONE %}<p><span class="usa-tag">{{ schedule.get_visibility_display }}</span></p>{% endif %}
+            </div>
+            <div class="usa-card__footer sympraxi-button-group">
+              <a class="usa-button" href="{% url 'scheduling:open_times' slug=center.slug schedule_id=schedule.pk %}">{% translate "See open times" %}<span class="usa-sr-only"> {% blocktranslate with name=schedule.name %}on {{ name }}{% endblocktranslate %}</span></a>
+              {% if can_see_day %}
+                <a class="usa-button usa-button--outline" href="{% url 'scheduling:day_sheet' slug=center.slug schedule_id=schedule.pk %}">{% translate "Day sheet" %}<span class="usa-sr-only"> {% blocktranslate with name=schedule.name %}for {{ name }}{% endblocktranslate %}</span></a>
+              {% endif %}
+              {% if can_manage %}
+                <a class="usa-button usa-button--outline" href="{% url 'scheduling:manage' slug=center.slug schedule_id=schedule.pk %}">{% translate "Manage" %}<span class="usa-sr-only"> {{ schedule.name }}</span></a>
+              {% endif %}
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "No schedules are open yet." %}</p>
+  {% endif %}
+
+  {% if can_manage or can_manage_exemptions %}
+    <h2>{% translate "Set up" %}</h2>
+    <ul class="usa-list">
+      {% if can_manage %}
+        <li><a href="{% url 'scheduling:schedule_create' slug=center.slug %}">{% translate "Add a schedule" %}</a></li>
+        <li><a href="{% url 'scheduling:terms' slug=center.slug %}">{% translate "Terms and closures" %}</a></li>
+        <li><a href="{% url 'scheduling:rooms' slug=center.slug %}">{% translate "Rooms" %}</a></li>
+      {% endif %}
+      {% if can_manage_exemptions %}
+        <li><a href="{% url 'scheduling:exemptions' slug=center.slug %}">{% translate "Exemptions from booking limits" %}</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+{% endblock content %}

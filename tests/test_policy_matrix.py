@@ -5,6 +5,8 @@ The expected results are written out by hand on purpose. Deriving them from
 an `Action`, this file fails until you decide, row by row, who gets it.
 """
 
+from datetime import timedelta
+
 import pytest
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
@@ -12,15 +14,32 @@ from django.http import Http404
 from sympraxi.centers.models import Center, Membership
 from sympraxi.core import policy
 from sympraxi.core.policy import Action
-from tests.factories import UserFactory
+from sympraxi.scheduling.models import Appointment, Participant, Visibility
+from tests.factories import MembershipFactory, UserFactory
+from tests.scheduling_world import build_world, make_schedule
 
-ACTIONS = [
+CENTER_ACTIONS = [
     Action.VIEW_CENTER,
     Action.MANAGE_CENTER,
     Action.VIEW_MEMBERS,
     Action.MANAGE_MEMBERS,
     Action.VIEW_AUDIT_LOG,
 ]
+
+SCHEDULING_ACTIONS = [
+    Action.VIEW_SCHEDULES,
+    Action.BOOK_OWN,
+    Action.BOOK_FOR_OTHERS,
+    Action.VIEW_APPOINTMENT,
+    Action.CANCEL_APPOINTMENT,
+    Action.CHANGE_APPOINTMENT,
+    Action.VIEW_ALL_APPOINTMENTS,
+    Action.VIEW_OWN_TUTORING,
+    Action.MANAGE_SCHEDULES,
+    Action.MANAGE_EXEMPTIONS,
+]
+
+ACTIONS = CENTER_ACTIONS + SCHEDULING_ACTIONS
 
 # fmt: off
 EXPECTED_IN_OWN_CENTER = {
@@ -33,12 +52,30 @@ EXPECTED_IN_OWN_CENTER = {
     "director":    (1,     1,      1,       1,       1),
     "site_admin":  (1,     1,      1,       1,       1),
 }
+
+# Asked about the center itself. "View", "cancel" and "change appointment" mean
+# "their own" for students and tutors; OWNERSHIP_CASES below checks that part.
+# Site administrators get none of these: appointments are student records.
+EXPECTED_SCHEDULING = {
+    #              view    book  book    view   cancel  change  view all  own       manage  manage
+    #              sched.  own   others  appt.  appt.   appt.   appts.    tutoring  sched.  exempt.
+    "none":        (0,     0,    0,      0,     0,      0,      0,        0,        0,         0),
+    "student":     (1,     1,    0,      1,     1,      1,      0,        0,        0,         0),
+    "tutor":       (1,     0,    0,      1,     0,      0,      0,        1,        0,         0),
+    "front_desk":  (1,     0,    1,      1,     1,      1,      1,        0,        0,         0),
+    "director":    (1,     0,    1,      1,     1,      1,      1,        0,        1,         1),
+    "site_admin":  (0,     0,    0,      0,     0,      0,      0,        0,        0,         0),
+}
 # fmt: on
 
 CASES = [
     (role, action, bool(expected[i]))
-    for role, expected in EXPECTED_IN_OWN_CENTER.items()
-    for i, action in enumerate(ACTIONS)
+    for table, actions in (
+        (EXPECTED_IN_OWN_CENTER, CENTER_ACTIONS),
+        (EXPECTED_SCHEDULING, SCHEDULING_ACTIONS),
+    )
+    for role, expected in table.items()
+    for i, action in enumerate(actions)
 ]
 
 
@@ -135,3 +172,115 @@ def test_objects_without_a_center_are_refused(db) -> None:
 )
 def test_is_staff_member(person_with_role, center, role, expected) -> None:
     assert policy.is_staff_member(person_with_role(role, center)) is expected
+
+
+# --- Grants limited to a person's own records ------------------------------------
+
+# (role, action, object, expected). "own" means the person is in the appointment
+# (students) or teaches it (tutors); "other" belongs to someone else in the center.
+# fmt: off
+OWNERSHIP_CASES = [
+    ("student",    Action.VIEW_APPOINTMENT,   "own_appointment",   True),
+    ("student",    Action.VIEW_APPOINTMENT,   "other_appointment", False),
+    ("student",    Action.CANCEL_APPOINTMENT, "own_appointment",   True),
+    ("student",    Action.CANCEL_APPOINTMENT, "other_appointment", False),
+    ("student",    Action.CHANGE_APPOINTMENT, "own_appointment",   True),
+    ("student",    Action.CHANGE_APPOINTMENT, "other_appointment", False),
+    ("student",    Action.VIEW_SCHEDULES,     "published",         True),
+    ("student",    Action.VIEW_SCHEDULES,     "staff_only",        False),
+    ("student",    Action.VIEW_SCHEDULES,     "hidden",            False),
+    ("student",    Action.BOOK_OWN,           "published",         True),
+    ("student",    Action.BOOK_OWN,           "staff_only",        False),
+    ("tutor",      Action.VIEW_APPOINTMENT,   "own_tutoring",      True),
+    ("tutor",      Action.VIEW_APPOINTMENT,   "other_appointment", False),
+    ("tutor",      Action.CANCEL_APPOINTMENT, "own_tutoring",      False),
+    ("tutor",      Action.CHANGE_APPOINTMENT, "own_tutoring",      False),
+    ("tutor",      Action.VIEW_SCHEDULES,     "published",         True),
+    ("tutor",      Action.VIEW_SCHEDULES,     "staff_only",        False),
+    ("front_desk", Action.VIEW_APPOINTMENT,   "other_appointment", True),
+    ("front_desk", Action.CANCEL_APPOINTMENT, "other_appointment", True),
+    ("front_desk", Action.CHANGE_APPOINTMENT, "other_appointment", True),
+    ("front_desk", Action.VIEW_SCHEDULES,     "staff_only",        True),
+    ("front_desk", Action.VIEW_SCHEDULES,     "hidden",            False),
+    ("front_desk", Action.BOOK_FOR_OTHERS,    "staff_only",        True),
+    ("front_desk", Action.BOOK_FOR_OTHERS,    "hidden",            False),
+    ("director",   Action.VIEW_APPOINTMENT,   "other_appointment", True),
+    ("director",   Action.VIEW_SCHEDULES,     "hidden",            True),
+    ("director",   Action.MANAGE_SCHEDULES,   "hidden",            True),
+    ("director",   Action.BOOK_FOR_OTHERS,    "hidden",            False),
+    ("site_admin", Action.VIEW_APPOINTMENT,   "other_appointment", False),
+    ("site_admin", Action.MANAGE_SCHEDULES,   "published",         False),
+]
+# fmt: on
+
+
+def _objects(center, user):
+    """One of each object, with `user` in or teaching the "own" appointments."""
+    world = build_world(center)
+    schedule = world.schedule
+    other = world.appointment
+
+    def appointment_with(**fields):
+        start = other.starts_at + timedelta(hours=fields.pop("hours"))
+        values = {
+            "schedule": schedule,
+            "assignment": world.assignment,
+            "tutor": world.tutor,
+            "starts_at": start,
+            "ends_at": start + timedelta(minutes=30),
+            "blocked_until": start + timedelta(minutes=30),
+            "modality": "in_person",
+        }
+        values.update(fields)
+        return Appointment.objects.create(**values)
+
+    own_appointment = appointment_with(hours=1)
+    Participant.objects.create(appointment=own_appointment, student=user)
+    own_tutoring = appointment_with(hours=2, tutor=user)
+    return {
+        "own_appointment": own_appointment,
+        "own_tutoring": own_tutoring,
+        "other_appointment": other,
+        "published": schedule,
+        "staff_only": make_schedule(
+            center, schedule.starts_on, schedule.ends_on, visibility=Visibility.STAFF
+        ),
+        "hidden": make_schedule(
+            center, schedule.starts_on, schedule.ends_on, visibility=Visibility.HIDDEN
+        ),
+    }
+
+
+@pytest.mark.parametrize(("role", "action", "name", "expected"), OWNERSHIP_CASES)
+def test_own_records(person_with_role, center, role, action, name, expected) -> None:
+    user = person_with_role(role, center)
+    obj = _objects(center, user)[name]
+    assert policy.can(user, action, obj) is expected
+
+
+def test_someone_elses_record_is_hidden_not_forbidden(person_with_role, center) -> None:
+    """A student who may see their own appointments gets a 404 for anyone else's."""
+    student = person_with_role("student", center)
+    other = _objects(center, student)["other_appointment"]
+    with pytest.raises(Http404):
+        policy.get_for_action(
+            student, Action.VIEW_APPOINTMENT, Appointment.objects.all(), pk=other.pk
+        )
+    tutor = person_with_role("tutor", center)
+    with pytest.raises(PermissionDenied):
+        policy.get_for_action(
+            tutor, Action.CANCEL_APPOINTMENT, Appointment.objects.all(), pk=other.pk
+        )
+
+
+def test_roles_combine(person_with_role, center) -> None:
+    """A tutor who is also a student here sees both what they teach and what they attend."""
+    user = person_with_role("tutor", center)
+    MembershipFactory(user=user, center=center, role="student")
+    user = type(user).objects.get(pk=user.pk)
+    objects = _objects(center, user)
+    assert policy.can(user, Action.VIEW_APPOINTMENT, objects["own_tutoring"])
+    assert policy.can(user, Action.VIEW_APPOINTMENT, objects["own_appointment"])
+    assert policy.can(user, Action.CANCEL_APPOINTMENT, objects["own_appointment"])
+    assert not policy.can(user, Action.CANCEL_APPOINTMENT, objects["own_tutoring"])
+    assert not policy.can(user, Action.VIEW_APPOINTMENT, objects["other_appointment"])
