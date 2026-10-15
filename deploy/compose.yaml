@@ -43,8 +43,15 @@ services:
   worker:
     <<: *app
     command: ["python", "manage.py", "db_worker"]
+    # The image's check calls the web server, which the worker doesn't run.
+    # Instead, confirm Django starts and can reach the database.
     healthcheck:
-      disable: true
+      test: ["CMD", "python", "manage.py", "check", "--database", "default"]
+      interval: 60s
+      timeout: 20s
+      start_period: 30s
+      start_interval: 5s
+      retries: 3
 
   caddy:
     image: caddy:2.11.7-alpine

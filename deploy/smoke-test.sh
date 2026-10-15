@@ -18,10 +18,20 @@ sed -i \
 
 bash install.sh
 
-echo "--- HTTPS through Caddy"
-curl --fail --silent --insecure --retry 10 --retry-delay 3 --retry-all-errors https://localhost/healthz
-curl --fail --silent --insecure https://localhost/ | grep -q "Smoke Test Center"
-curl --silent --output /dev/null --write-out '%{http_code}\n' http://localhost/ | grep -q 308
+fail() { echo "SMOKE TEST FAILED: $*" >&2; exit 1; }
+
+echo "--- Health check over HTTPS through Caddy"
+curl --fail --silent --show-error --insecure --retry 10 --retry-delay 3 --retry-all-errors \
+    https://localhost/healthz || fail "https://localhost/healthz did not answer"
+
+echo "--- Home page shows the configured site name"
+# Capture first, then search: piping into grep -q can break the pipe under pipefail.
+home="$(curl --fail --silent --show-error --insecure https://localhost/)" || fail "home page request failed"
+grep -q "Smoke Test Center" <<<"$home" || fail "home page does not show the site name"
+
+echo "--- Plain HTTP redirects to HTTPS"
+status="$(curl --silent --output /dev/null --write-out '%{http_code}' http://localhost/)"
+[ "$status" = "308" ] || fail "expected a 308 redirect from http://localhost/, got $status"
 
 echo "--- Back up, wipe, restore"
 manage() { docker compose exec -T web python manage.py "$@"; }
@@ -30,14 +40,14 @@ bash backup.sh
 manage shell -c "from sympraxi.centers.models import Center; Center.objects.all().delete()"
 latest="$(find ../backups -mindepth 1 -maxdepth 1 -type d | sort | tail -n 1)"
 bash restore.sh "$latest" --yes
-manage shell -c "from sympraxi.centers.models import Center; assert Center.objects.filter(slug='restore-me').exists(), 'restore lost data'"
+manage shell -c "from sympraxi.centers.models import Center; assert Center.objects.filter(slug='restore-me').exists(), 'restore lost data'" \
+    || fail "the center created before the backup is missing after restore"
 
 echo "--- Audit log is still append-only after restore"
 psql() { docker compose exec -T db psql -U sympraxi -d sympraxi -v ON_ERROR_STOP=1 "$@"; }
 psql -c "INSERT INTO privacy_auditevent (occurred_at, actor_label, action, target_type, target_id, user_agent, details) VALUES (now(), 'ci', 'ci.test', '', '', '', '{}');"
 if psql -c "UPDATE privacy_auditevent SET action = 'tampered';" >/dev/null 2>&1; then
-    echo "Audit log accepted an UPDATE after restore" >&2
-    exit 1
+    fail "the audit log accepted an UPDATE after restore"
 fi
 
 echo "Smoke test passed."
