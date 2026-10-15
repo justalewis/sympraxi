@@ -1,0 +1,277 @@
+# UNC Writing Center handouts (CC BY-NC-ND 4.0). Link and summary only in the
+# core catalog; whole, unmodified copies may go in the optional content pack.
+# UNC's robots.txt blocks AI crawlers and agents by name and asks all other
+# bots for a 10-second crawl delay. The link checker identifies itself and
+# keeps that delay.
+
+- id: unc-understanding-assignments
+  title: "Understanding Assignments"
+  url: https://writingcenter.unc.edu/tips-and-tools/understanding-assignments/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How to decode an assignment sheet: the parts most prompts have, what the
+    key task words are asking you to do, and questions about why the
+    assignment exists, who your audience is, and what kind of evidence you
+    need. Ends with a list of shortcuts that tend to backfire.
+  topics:
+    concern: [assignment:prompt, assignment:audience-purpose]
+    stage: [understanding-assignment]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-thesis-statements
+  title: "Thesis Statements"
+  url: https://writingcenter.unc.edu/tips-and-tools/thesis-statements/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What a thesis statement does in a college paper, how you arrive at one
+    by working through your material, and questions for testing whether a
+    draft thesis is strong. Examples show a weak thesis getting sharper.
+  topics:
+    concern: [argument:thesis]
+    stage: [planning, drafting, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-argument
+  title: "Argument"
+  url: https://writingcenter.unc.edu/tips-and-tools/argument/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Why most college papers need an argument even when the prompt never uses
+    the word, and what goes into one: a claim, evidence, a response to
+    counterarguments, and a sense of who you're trying to convince.
+  topics:
+    concern: [argument, argument:thesis, argument:counterargument]
+    stage: [understanding-assignment, planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-paragraphs
+  title: "Paragraphs"
+  url: https://writingcenter.unc.edu/tips-and-tools/paragraphs/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Builds a paragraph in five steps (topic sentence, elaboration, example,
+    explanation, and a close or transition), then troubleshoots common
+    problems, starting with a paragraph that has no topic sentence.
+  topics:
+    concern: [organization:paragraphs, argument:development]
+    stage: [drafting, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-transitions
+  title: "Transitions"
+  url: https://writingcenter.unc.edu/tips-and-tools/transitions/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How transitions show readers the logic connecting your ideas, signs that
+    a draft needs better ones (often a sign of an organization problem), and a
+    table of transitional words sorted by the relationship each one signals.
+  topics:
+    concern: [organization:transitions, organization:structure]
+    stage: [revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-introductions
+  title: "Introductions"
+  url: https://writingcenter.unc.edu/tips-and-tools/introductions/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What an introduction has to do, strategies for drafting one (writing it
+    after the body is fine), questions for judging your draft, and five kinds
+    of opening that tend to fall flat.
+  topics:
+    concern: [organization:introductions]
+    stage: [drafting, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-conclusions
+  title: "Conclusions"
+  url: https://writingcenter.unc.edu/tips-and-tools/conclusions/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What a conclusion is for, strategies for an ending that tells readers why
+    your paper matters, and four kinds of conclusion that don't work.
+  topics:
+    concern: [organization:conclusions]
+    stage: [drafting, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-quotations
+  title: "Quotations"
+  url: https://writingcenter.unc.edu/tips-and-tools/quotations/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    When a quotation is worth using and how to handle one: set it up, say who
+    said it, explain why it matters, and cite it. Also covers how much to
+    quote, punctuation around quotation marks, and when ellipses and brackets
+    are fair to use.
+  topics:
+    concern: [evidence:quoting, evidence:integrating-sources, grammar:punctuation]
+    stage: [drafting, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-literature-reviews
+  title: "Literature Reviews"
+  url: https://writingcenter.unc.edu/tips-and-tools/literature-reviews/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What a literature review is and how it differs from a research paper,
+    then the work itself: clarify the assignment, find models, narrow the
+    topic, and organize the review around a focus instead of one source at a
+    time. Covers the humanities, social sciences and sciences.
+  topics:
+    concern: [genre:literature-review, evidence:synthesis]
+    stage: [understanding-assignment, planning, drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-application-essays
+  title: "Application Essays"
+  url: https://writingcenter.unc.edu/tips-and-tools/application-essays/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    For the personal statements that graduate programs, internships and
+    special academic programs ask for. Read the instructions closely, think
+    about who will read the essay, find a voice that sounds like you without
+    overdoing the style, and revise with a reader's help.
+  topics:
+    concern: [genre:application-essay]
+    stage: [generating-ideas, drafting, revising]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-articles
+  title: "Articles"
+  url: https://writingcenter.unc.edu/tips-and-tools/articles/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Choosing a, an or the by asking two questions: are you pointing to one
+    particular thing, any single member of a group, or the whole category, and
+    can the noun be counted? Includes a flowchart and notes on uncountable and
+    proper nouns.
+  topics:
+    concern: [grammar:articles, grammar:word-forms, multilingual]
+    stage: [editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-writing-anxiety
+  title: "Writing Anxiety"
+  url: https://writingcenter.unc.edu/tips-and-tools/writing-anxiety/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Treats writer's block and writing anxiety as tied to particular
+    situations, not to who you are, and offers ways through: get support,
+    name your strengths, think of yourself as a learner, try new tactics when
+    you're stuck, and notice what's going well.
+  topics:
+    concern: [process:writing-anxiety, process:getting-started]
+    stage: [generating-ideas, drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-generative-ai
+  title: "Generative AI in Academic Writing"
+  url: https://writingcenter.unc.edu/tips-and-tools/generative-ai-in-academic-writing/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Opens with the first rule: your instructor's policy decides what's
+    allowed. Then it explains how text-generating AI tools work, how to
+    prompt them, where they might help, and the risks: confident but false
+    answers, made-up citations, bias, and academic integrity problems.
+  topics:
+    concern: [process:ai-tools, evidence:plagiarism]
+    stage: [generating-ideas, drafting, revising]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: unc-audience
+  title: "Audience"
+  url: https://writingcenter.unc.edu/tips-and-tools/audience/
+  publisher: UNC Writing Center
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Why your instructor usually isn't the only reader to write for, how to
+    work out who your reader is and how much to explain, and ways to reread
+    your own draft from that reader's side.
+  topics:
+    concern: [assignment:audience-purpose]
+    stage: [understanding-assignment, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200

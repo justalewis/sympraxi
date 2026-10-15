@@ -1,0 +1,236 @@
+# Excelsior OWL. The footer says CC BY 4.0 but the license link and badge say
+# CC BY-NC 4.0, so entries use CC BY-NC 4.0 until Excelsior confirms
+# (docs/03-resource-library.md, open questions). Link and summary only.
+
+- id: excelsior-owl-assignment-analysis
+  title: "Assignment Analysis"
+  url: https://owl.excelsior.edu/research/assignment-analysis/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Treats rhetoric as a practical tool for reading an assignment. Before you
+    start writing, work out the situation you're writing in: why, for whom,
+    and in what voice. Linked pages take purpose, audience and voice one at a
+    time.
+  topics:
+    concern: [assignment:prompt, assignment:audience-purpose]
+    stage: [understanding-assignment]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-topic-sentences
+  title: "Topic Sentences"
+  url: https://owl.excelsior.edu/writing-process/paragraphing/paragraphing-topic-sentences/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How a topic sentence previews a paragraph's idea and ties it back to your
+    thesis. A sample thesis is broken into topic sentences you could use as
+    the skeleton of an outline.
+  topics:
+    concern: [organization:paragraphs, organization:structure]
+    stage: [planning, drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-using-quotations
+  title: "Using Quotations"
+  url: https://owl.excelsior.edu/research/drafting-and-integrating/drafting-and-integrating-using-quotations/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    When a quotation is worth including (the exact wording matters, or you
+    need an expert behind a point you've already made) and why every quotation
+    needs your own explanation after it. Introduces the MEAL plan for building
+    a paragraph around a source.
+  topics:
+    concern: [evidence:quoting, argument:analysis, organization:paragraphs]
+    stage: [drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-literature-reviews
+  title: "Literature Reviews"
+  url: https://owl.excelsior.edu/research/literature-reviews/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What a literature review should show: that you know how research on your
+    topic developed, where the current debates are, and what work is still
+    left to do. Explains why a review pulls sources together instead of
+    listing them.
+  topics:
+    concern: [genre:literature-review, evidence:synthesis]
+    stage: [planning, drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-research-questions
+  title: "Research Questions"
+  url: https://owl.excelsior.edu/research/narrowing-and-developing/narrowing-and-developing-research-questions/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Turns a narrowed topic into a research question, showing how, why and
+    what versions of the same question and how you might combine or adjust
+    them as your research goes on.
+  topics:
+    concern: [research:questions, research:topic]
+    stage: [generating-ideas, planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-annotating
+  title: "Annotating"
+  url: https://owl.excelsior.edu/orc/what-to-do-while-reading/annotating/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    An introduction to annotating as part of active reading, with links to
+    lessons on building your own annotation system and on marking up essays,
+    textbooks, journal articles, fiction and visual aids.
+  topics:
+    concern: [reading:annotation]
+    stage: [generating-ideas]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-active-reading
+  title: "Active vs. Passive Reading"
+  url: https://owl.excelsior.edu/orc/introduction/active-reading/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    The difference between reading actively and just letting your eyes move
+    down the page. It's the entry point to Excelsior's reading lab, which has
+    strategies for before, during and after you read.
+  topics:
+    concern: [reading:comprehension]
+    stage: [generating-ideas]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-ai-and-plagiarism
+  title: "AI and Plagiarism"
+  url: https://owl.excelsior.edu/plagiarism/plagiarism-types-of-plagiarism/ai-and-plagiarism/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Takes a strict line: turning in text that ChatGPT or a similar tool wrote
+    counts as plagiarism. Also explains in plain terms how large language
+    models produce text and why that raises problems with sources. Your own
+    course's policy may differ, so check it.
+  topics:
+    concern: [process:ai-tools, evidence:plagiarism]
+    stage: [drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-apa-in-text
+  title: "APA In-Text Citations"
+  url: https://owl.excelsior.edu/citation-and-documentation/apa-style/apa-in-text-citations/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    A video, with transcript, on the basic setup of APA in-text citations and
+    why paraphrases and summaries need citations too, not only quotations.
+    Linked pages cover particular cases such as one author, group authors, no
+    author and secondary sources.
+  topics:
+    concern: [citation:apa, evidence:paraphrasing]
+    stage: [drafting, editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-mla-works-cited
+  title: "MLA Works Cited"
+  url: https://owl.excelsior.edu/citation-and-documentation/mla-style/mla-works-cited/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Explains MLA's container system: the set of core elements every Works
+    Cited entry draws on, in order, with the punctuation between them. Linked
+    pages give examples for books, articles, websites, social media and other
+    common sources.
+  topics:
+    concern: [citation:mla]
+    stage: [editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-academic-voice
+  title: "Academic Voice"
+  url: https://owl.excelsior.edu/writing-process/finding-your-voice/finding-your-voice-academic-voice/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What "academic voice" means in a research paper (reasoned, backed by
+    evidence, one thinker talking to another) and how detached it should
+    sound depending on whether your subject is personal.
+  topics:
+    concern: [style:tone]
+    stage: [drafting, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: excelsior-owl-pronoun-reference
+  title: "Pronoun Reference"
+  url: https://owl.excelsior.edu/grammar-essentials/common-errors/common-errors-pronoun-reference/
+  publisher: Excelsior OWL
+  license: CC-BY-NC-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Fixing a pronoun that could point to more than one person or thing, with
+    an example sentence rewritten two ways.
+  topics:
+    concern: [grammar:pronouns]
+    stage: [editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200

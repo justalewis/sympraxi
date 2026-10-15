@@ -1,0 +1,344 @@
+# Sympraxi topic vocabulary, version 1
+#
+# Dedicated to the public domain under CC0 1.0:
+# https://creativecommons.org/publicdomain/zero/1.0/
+#
+# Tutors tag each session on three separate axes, and catalog entries use the
+# same slugs so topic tags can suggest resources. Slugs are permanent: never
+# rename or reuse one. To retire a term, add `deprecated: true` and
+# `replaced_by: <slug>` and leave it in this file. Labels and definitions can
+# be reworded as long as the meaning stays the same.
+#
+# Slug rules: lowercase letters, digits and hyphens. Concern terms have a
+# parent and an optional child joined by one colon (citation:apa). Tagging a
+# parent alone means "this area, nothing more specific."
+#
+# Checked against the session-note question bank and the categorical fields of
+# the three session-note datasets in Modey, Cheatle and Giaimo (2022), cited
+# below. CHANGES.md lists what changed from draft 0 and why.
+
+version: 1
+released: 2026-10-14
+license: CC0-1.0
+
+references:
+  - key: modey-cheatle-giaimo-2022
+    citation: >-
+      Modey, C. A., Cheatle, J., & Giaimo, G. N. (2022). Writing Center Session
+      Note Data Repository [Data set]. University of Michigan Deep Blue Data.
+      https://doi.org/10.7302/25dd-as06
+    license: CC-BY-NC-4.0
+    used_for: >-
+      Checking coverage against the Session Note Question Bank (35 forms) and
+      the topic and stage fields of Session Note Datasets 1 to 3. No text from
+      the repository is reproduced here.
+
+axes:
+  concern:
+    label: Concern
+    definition: What the writing needed in this session; tag the need in the text, not the writer's background.
+    multiple: true
+    terms:
+      - slug: assignment
+        label: Understanding the assignment
+        definition: Working out what a writing task asks for and who it is for.
+      - slug: assignment:prompt
+        label: Reading the prompt
+        definition: Figuring out what the instructions ask the writer to do, including the key verbs, required parts and grading criteria.
+      - slug: assignment:audience-purpose
+        label: Audience and purpose
+        definition: Identifying who the writing is for and what it should accomplish, and choosing content to fit.
+      - slug: assignment:genre-conventions
+        label: Genre conventions
+        definition: Learning the moves, structure and tone that readers expect from the kind of document assigned.
+      - slug: assignment:format
+        label: Required format
+        definition: Meeting requirements such as length, headings, page layout, templates or file type.
+
+      - slug: argument
+        label: Ideas and argument
+        definition: The writer's main point and how the writing develops and supports it.
+      - slug: argument:thesis
+        label: Thesis, claim or focus
+        definition: Stating the main point or focus clearly enough that the rest of the piece can follow from it.
+      - slug: argument:development
+        label: Developing ideas
+        definition: Adding the explanation, examples and detail a point needs to be complete or convincing.
+      - slug: argument:analysis
+        label: Analysis
+        definition: Explaining what evidence or a text means and why it matters, rather than only describing or summarizing it.
+      - slug: argument:counterargument
+        label: Counterargument
+        definition: Acknowledging opposing views and answering them, conceding to them, or explaining why they fall short.
+
+      - slug: organization
+        label: Organization
+        definition: How the parts of the writing are arranged and connected.
+      - slug: organization:structure
+        label: Overall structure
+        definition: Ordering sections and main points so the whole piece follows a logical path.
+      - slug: organization:paragraphs
+        label: Paragraphs
+        definition: Keeping each paragraph on one idea, with a clear topic sentence and material that supports it.
+      - slug: organization:transitions
+        label: Transitions and flow
+        definition: Connecting sentences, paragraphs and sections so readers can see how the ideas relate.
+      - slug: organization:introductions
+        label: Introductions
+        definition: Opening the piece so it orients the reader and leads into the main point.
+      - slug: organization:conclusions
+        label: Conclusions
+        definition: Closing the piece so it pulls the main points together and shows why they matter.
+
+      - slug: evidence
+        label: Using sources and evidence
+        definition: Bringing in material from sources, connecting it to the writer's point and giving credit for it.
+      - slug: evidence:integrating-sources
+        label: Integrating sources
+        definition: Introducing source material with signal phrases and explaining how it connects to the writer's own point.
+      - slug: evidence:quoting
+        label: Quoting
+        definition: Deciding when a quotation is worth using and quoting accurately, briefly and with correct punctuation.
+      - slug: evidence:paraphrasing
+        label: Paraphrasing
+        definition: Restating a passage in new words and new sentence structure while keeping its meaning.
+      - slug: evidence:summarizing
+        label: Summarizing
+        definition: Condensing the main ideas of a source or passage into a shorter account in the writer's own words.
+      - slug: evidence:synthesis
+        label: Synthesis
+        definition: Putting several sources in conversation to show where they agree, disagree or build on each other.
+      - slug: evidence:plagiarism
+        label: Avoiding plagiarism
+        definition: Understanding what needs credit and how to give it, including common knowledge, patchwriting and reuse of the writer's own work.
+
+      - slug: citation
+        label: Citation style
+        definition: Following a documentation system's rules for in-text citations, the reference list and paper format.
+      - slug: citation:apa
+        label: APA style
+        definition: Following American Psychological Association style, usually in its 7th edition.
+      - slug: citation:mla
+        label: MLA style
+        definition: Following Modern Language Association style, usually in its 9th edition.
+      - slug: citation:chicago
+        label: Chicago style
+        definition: Following the Chicago Manual of Style in either its notes-bibliography or its author-date system.
+      - slug: citation:other
+        label: Other citation style
+        definition: Following any other system, such as IEEE, CSE, AMA, ASA, Bluebook, or a style set by an instructor or journal.
+
+      - slug: style
+        label: Style
+        definition: How readable and well suited the sentences are, apart from correctness.
+      - slug: style:clarity
+        label: Clarity
+        definition: Making sentences easy to follow by naming who does what and removing ambiguity.
+      - slug: style:concision
+        label: Concision
+        definition: Cutting words and phrases that repeat or add nothing.
+      - slug: style:tone
+        label: Tone and register
+        definition: Matching formality, voice and point of view to the audience and genre.
+      - slug: style:word-choice
+        label: Word choice
+        definition: Choosing precise and fitting words, including inclusive and bias-free language.
+
+      - slug: grammar
+        label: Grammar and punctuation
+        definition: Sentence-level correctness; tag the specific pattern below whenever one applies.
+      - slug: grammar:sentence-boundaries
+        label: Sentence boundaries
+        definition: Marking where sentences begin and end, which covers fragments, run-on sentences and comma splices.
+      - slug: grammar:sentence-structure
+        label: Sentence structure
+        definition: Getting word order and sentence logic right, including parallelism, modifier placement and mixed constructions.
+      - slug: grammar:verbs
+        label: Verb tense and form
+        definition: Choosing verb tenses and keeping them consistent, and forming verbs correctly, including modals and the passive voice.
+      - slug: grammar:subject-verb-agreement
+        label: Subject-verb agreement
+        definition: Making each verb agree in number with its subject.
+      - slug: grammar:pronouns
+        label: Pronouns
+        definition: Making pronouns agree with the words they stand for and point to them clearly, and choosing the right pronoun case.
+      - slug: grammar:articles
+        label: Articles
+        definition: Choosing a, an, the or no article before a noun.
+      - slug: grammar:prepositions
+        label: Prepositions
+        definition: Choosing prepositions of time, place and direction, and the prepositions that go with particular verbs and adjectives.
+      - slug: grammar:word-forms
+        label: Word forms and plurals
+        definition: Handling count and noncount nouns, singular and plural forms, and the right part of speech or word ending.
+      - slug: grammar:punctuation
+        label: Punctuation
+        definition: Using commas, semicolons, colons, apostrophes, quotation marks and other punctuation correctly.
+
+      - slug: multilingual
+        label: Writing across languages
+        definition: Needs that come from writing in a language other than the writer's first, apart from the grammar points listed under grammar.
+      - slug: multilingual:language-transfer
+        label: Language transfer and rhetorical conventions
+        definition: How patterns from another language or writing tradition show up in a draft, and deciding when to follow the conventions a reader expects.
+      - slug: multilingual:idioms
+        label: Idioms and collocations
+        definition: Using phrasal verbs, idioms and the word combinations that readers expect to see together.
+      - slug: multilingual:academic-vocabulary
+        label: Academic vocabulary
+        definition: Finding words for academic and disciplinary ideas and using them in the right contexts.
+
+      - slug: genre
+        label: Genre
+        definition: A kind of document whose conventions were the focus; leave it off for an ordinary course essay.
+      - slug: genre:literature-review
+        label: Literature review
+        definition: A review that surveys and synthesizes research on a question, alone or as part of a larger paper.
+      - slug: genre:annotated-bibliography
+        label: Annotated bibliography
+        definition: A list of sources, each followed by a note that summarizes it, evaluates it or explains its use.
+      - slug: genre:lab-report
+        label: Lab or scientific report
+        definition: A report of an experiment or study, usually organized as introduction, methods, results and discussion.
+      - slug: genre:application-essay
+        label: Personal statement or application essay
+        definition: Writing for an admissions, scholarship, fellowship or job application, including statements of purpose.
+      - slug: genre:resume-cover-letter
+        label: Resume, CV or cover letter
+        definition: Documents that present the writer's experience to an employer or program.
+      - slug: genre:thesis-dissertation
+        label: Thesis or dissertation
+        definition: An honors or senior thesis, master's thesis or doctoral dissertation, or one of its chapters or proposals.
+      - slug: genre:reflection
+        label: Reflection or response
+        definition: Writing that reflects on the writer's own learning or experience, or responds to a reading, including portfolio letters.
+      - slug: genre:creative
+        label: Creative writing
+        definition: Imaginative or personal writing such as fiction, poetry, drama, creative nonfiction or personal narrative.
+      - slug: genre:multimodal
+        label: Multimodal project
+        definition: A project that combines text with images, sound, video or layout, such as slides, posters, podcasts, videos or websites.
+
+      - slug: research
+        label: Research
+        definition: Finding and choosing the sources the writing will draw on.
+      - slug: research:topic
+        label: Narrowing a topic
+        definition: Turning a broad subject into one the writer can cover well in the space available.
+      - slug: research:questions
+        label: Research questions
+        definition: Writing a focused question that the research will try to answer.
+      - slug: research:finding-sources
+        label: Finding sources
+        definition: Searching library databases, catalogs and the web, including choosing keywords and search strategies.
+      - slug: research:evaluating-sources
+        label: Evaluating sources
+        definition: Judging a source's credibility, relevance, currency and fit for the writer's purpose.
+
+      - slug: reading
+        label: Reading
+        definition: Reading and understanding the texts the writing depends on.
+      - slug: reading:comprehension
+        label: Comprehension
+        definition: Understanding a text's main ideas, argument and unfamiliar vocabulary.
+      - slug: reading:annotation
+        label: Annotating and note-taking
+        definition: Marking up texts and taking notes in a form the writer can use later.
+
+      - slug: speaking
+        label: Speaking
+        definition: Spoken communication, prepared or conversational.
+      - slug: speaking:presentation
+        label: Oral presentation
+        definition: Planning, rehearsing and delivering a speech, talk or presentation.
+      - slug: speaking:conversation
+        label: Conversation and pronunciation
+        definition: Practicing spoken English, including fluency, pronunciation and listening.
+
+      - slug: process
+        label: Writing process
+        definition: How the writer works, apart from what the text says.
+      - slug: process:time-management
+        label: Time management
+        definition: Planning work across the time available and breaking long projects into steps.
+      - slug: process:getting-started
+        label: Getting started or unstuck
+        definition: Starting a draft, or starting again after writer's block.
+      - slug: process:writing-anxiety
+        label: Writing anxiety and confidence
+        definition: Worry, perfectionism or low confidence that gets in the way of writing.
+      - slug: process:using-feedback
+        label: Using feedback
+        definition: Making sense of comments from instructors, peers or tutors and deciding what to do with them.
+      - slug: process:ai-tools
+        label: Generative AI use
+        definition: Deciding whether and how to use generative AI tools within the course's rules, and disclosing that use.
+
+  stage:
+    label: Writing stage
+    definition: Where the writer was in the work when the session happened; pick every stage that applies.
+    multiple: true
+    terms:
+      - slug: understanding-assignment
+        label: Understanding the assignment
+        definition: The writer has the assignment but has not yet started generating ideas or drafting.
+      - slug: generating-ideas
+        label: Generating ideas
+        definition: The writer is brainstorming, freewriting, choosing a topic or exploring what to say.
+      - slug: planning
+        label: Planning
+        definition: The writer is outlining, organizing notes or sources, or deciding the order of points.
+      - slug: drafting
+        label: Drafting
+        definition: The writer is producing a first or partial draft.
+      - slug: revising
+        label: Revising
+        definition: The writer is reworking a complete or nearly complete draft at the level of ideas, structure and evidence.
+      - slug: editing
+        label: Editing and proofreading
+        definition: The writer is polishing sentences and checking for errors before submitting.
+      - slug: reflecting
+        label: Reflecting after feedback or a grade
+        definition: The writer is looking back at returned or graded work to understand the feedback and plan the next piece.
+
+  action:
+    label: Tutor action
+    definition: What happened in the session; pick every action that took up a real part of it.
+    multiple: true
+    terms:
+      - slug: asked-questions
+        label: Asked questions
+        definition: The tutor asked open questions that helped the writer explain, clarify or extend their thinking.
+      - slug: listened
+        label: Listened while the writer talked
+        definition: The writer talked through ideas while the tutor listened, took notes or reflected the ideas back.
+      - slug: read-aloud
+        label: Read aloud
+        definition: The tutor or the writer read the draft, or part of it, aloud.
+      - slug: explained
+        label: Explained a concept
+        definition: The tutor explained a rule, convention or strategy.
+      - slug: modeled
+        label: Modeled a revision
+        definition: The tutor demonstrated a revision on one passage for the writer to apply elsewhere.
+      - slug: writer-practiced
+        label: Writer practiced
+        definition: The writer applied a skill or strategy during the session while the tutor watched or coached.
+      - slug: drew-or-mapped
+        label: Drew, mapped or outlined
+        definition: The tutor or writer made a visual such as an outline, reverse outline, idea map or diagram.
+      - slug: worked-on-text
+        label: Worked directly on the text
+        definition: The tutor and writer revised or edited the draft together, line by line.
+      - slug: made-plan
+        label: Made a plan
+        definition: The tutor and writer set next steps, a revision plan or a schedule for the remaining work.
+      - slug: pointed-to-resources
+        label: Pointed to resources
+        definition: The tutor showed the writer a handout, guide, style manual or other resource to use later.
+      - slug: referred-elsewhere
+        label: Referred elsewhere
+        definition: The tutor referred the writer to another service, such as the library, a disability office or counseling.
+      - slug: used-another-language
+        label: Used another language
+        definition: The tutor and writer used a language other than the one the draft is written in, or moved between languages.

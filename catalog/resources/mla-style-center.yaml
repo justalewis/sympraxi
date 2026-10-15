@@ -1,0 +1,64 @@
+# MLA Style Center. Its terms ban indexing robots, so these entries are made
+# and checked by hand (link_check: manual) and the automated checker never
+# fetches them. The URLs were confirmed from search-engine results on
+# 2026-10-14 without visiting the site; last_checked stays empty until a
+# person opens each page and confirms the summary.
+
+- id: mla-using-mla-format
+  title: "Using MLA Format"
+  url: https://style.mla.org/mla-format/
+  publisher: MLA Style Center
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: manual
+  summary: >-
+    The MLA's own starting page for students, with links to its guides on
+    formatting a paper and citing sources, including the works-cited quick
+    guide. Go here when you want the official answer instead of someone
+    else's summary of it.
+  topics:
+    concern: [citation:mla]
+    stage: [drafting, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: null
+  last_status: null
+
+- id: mla-citing-generative-ai
+  title: "How do I cite generative AI in MLA style? (Updated and Revised)"
+  url: https://style.mla.org/citing-generative-ai-updated-revised/
+  publisher: MLA Style Center
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: manual
+  summary: >-
+    The MLA's current advice for citing text, images or other material that
+    an AI tool produced: when you need a citation, why the tool isn't treated
+    as the author, and how to record the prompt, tool, version, company and
+    date in a works-cited entry.
+  topics:
+    concern: [citation:mla, process:ai-tools]
+    stage: [drafting, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: null
+  last_status: null
+
+- id: mla-describing-ai-use
+  title: "Beyond Citation: Describing AI Use in Your Work"
+  url: https://style.mla.org/describing-ai-use/
+  publisher: MLA Style Center
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: manual
+  summary: >-
+    Goes past citation to a different question: how to tell readers what an
+    AI tool did in your project, for instance in a note, so they can tell its
+    contribution apart from yours.
+  topics:
+    concern: [process:ai-tools]
+    stage: [drafting, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: null
+  last_status: null

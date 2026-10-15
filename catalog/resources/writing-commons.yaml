@@ -1,0 +1,25 @@
+# Writing Commons. Its terms ban robots and copying, so entries are made and
+# checked by hand (link_check: manual). The site as a whole is all rights
+# reserved; some individual articles are CC BY-NC-ND 4.0, and a person should
+# check each article's notice before changing its license here. The URL below
+# was confirmed from search-engine results on 2026-10-14 without visiting the
+# site.
+
+- id: writing-commons-formulating-a-thesis
+  title: "Formulating a Thesis"
+  url: https://writingcommons.org/article/formulating-a-thesis/
+  publisher: Writing Commons
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: manual
+  summary: >-
+    How to push a thesis past summary or description toward a claim a
+    thoughtful reader could dispute, with questions for testing your draft
+    and an example thesis sharpened in stages.
+  topics:
+    concern: [argument:thesis, argument:analysis]
+    stage: [planning, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: null
+  last_status: null

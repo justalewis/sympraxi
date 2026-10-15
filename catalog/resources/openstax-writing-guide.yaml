@@ -1,0 +1,260 @@
+# Writing Guide with Handbook, by Michelle Bachelor Robinson and Maria Jerskey,
+# featuring Toby Fulwiler (OpenStax).
+#
+# `url` is the live openstax.org page students open. It has been CC BY-NC-SA
+# 4.0 since March 2026, so that is the entry's `license`. The same section in
+# openstax/osbooks-writing-guide at commit a6c9552 is CC BY 4.0 and cannot be
+# relicensed; `vendor_source` points there, and only that copy may go in the
+# content pack. Summaries were written from the a6c9552 text.
+
+- id: openstax-wgh-thesis-reasoning-evidence
+  title: "10.3 Glance at Genre: Thesis, Reasoning, and Evidence"
+  url: https://openstax.org/books/writing-guide/pages/10-3-glance-at-genre-thesis-reasoning-and-evidence
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00101/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    What a position argument needs: a thesis that takes a side on a question
+    people really disagree about, reasons and evidence chosen with your
+    audience in mind, and the classic appeals (ethos, logos, pathos, kairos),
+    each explained with examples.
+  topics:
+    concern: [argument:thesis, argument:development, assignment:audience-purpose]
+    stage: [planning, drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-paragraphs-and-transitions
+  title: "10.6 Editing Focus: Paragraphs and Transitions"
+  url: https://openstax.org/books/writing-guide/pages/10-6-editing-focus-paragraphs-and-transitions
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00104/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    How transition words tell readers whether your ideas build on each other
+    or pull against each other, with a sample paragraph and a reference table
+    of common transitions grouped by what they signal.
+  topics:
+    concern: [organization:transitions, organization:paragraphs]
+    stage: [revising, editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-integrating-research
+  title: "12.5 Writing Process: Integrating Research"
+  url: https://openstax.org/books/writing-guide/pages/12-5-writing-process-integrating-research
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00119/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    A full walk-through of an argumentative research essay: thesis templates,
+    working with sources, outlining, the difference between summary and
+    synthesis, quoting versus paraphrasing, openings and closings, and
+    answering counterarguments, with peer-review prompts along the way.
+  topics:
+    concern: [evidence:integrating-sources, evidence:synthesis, argument:counterargument]
+    stage: [planning, drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-integrating-sources-quotations
+  title: "12.6 Editing Focus: Integrating Sources and Quotations"
+  url: https://openstax.org/books/writing-guide/pages/12-6-editing-focus-integrating-sources-and-quotations
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00120/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    The mechanics of quoting well: pick a signal phrase that fits, work the
+    quotation into your sentence, cut or swap words without changing the
+    meaning, set long quotations off as blocks, and explain each quotation
+    after you use it.
+  topics:
+    concern: [evidence:quoting, evidence:integrating-sources]
+    stage: [revising, editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-where-to-look-for-sources
+  title: "13.1 The Research Process: Where to Look for Existing Sources"
+  url: https://openstax.org/books/writing-guide/pages/13-1-the-research-process-where-to-look-for-existing-sources
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00125/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    Where to look once you have a research question (keywords, library
+    catalogs, reference works, databases, government documents, archives,
+    interlibrary loan) and first checks for what you find, such as how recent
+    it is and whose perspective it gives.
+  topics:
+    concern: [research:finding-sources, research:evaluating-sources]
+    stage: [generating-ideas, planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-notes-synthesis-research-log
+  title: "13.5 Research Process: Making Notes, Synthesizing Information, and Keeping a Research Log"
+  url: https://openstax.org/books/writing-guide/pages/13-5-research-process-making-notes-synthesizing-information-and-keeping-a-research-log
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00129/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    How to keep a research log as you go: notes on where each source came
+    from, notes on what it says, and your quotations, paraphrases and
+    summaries, plus digital ways to organize it all so pulling sources
+    together is easier when you start drafting.
+  topics:
+    concern: [reading:annotation, evidence:synthesis, research]
+    stage: [planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-annotated-bibliography
+  title: "14.1 Compiling Sources for an Annotated Bibliography"
+  url: https://openstax.org/books/writing-guide/pages/14-1-compiling-sources-for-an-annotated-bibliography
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00132/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    Gathering sources for an annotated bibliography: the difference between
+    primary, secondary and tertiary sources, which kinds count as
+    authoritative, and the CRAAP test for judging whether a source is
+    credible.
+  topics:
+    concern: [genre:annotated-bibliography, research:evaluating-sources]
+    stage: [planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-multilingual-writers
+  title: "4.8 Spotlight on … Multilingual Writers"
+  url: https://openstax.org/books/writing-guide/pages/4-8-spotlight-on-multilingual-writers
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00046/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    For writers who work in more than one language: how expectations about
+    audience and persuasion shift across languages and cultures, and how you
+    might bring another language into a personal narrative (in dialogue, for
+    example) instead of only describing it. Ends with ideas for publishing
+    your work.
+  topics:
+    concern: [multilingual:language-transfer, genre:creative]
+    stage: [drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-writing-to-speak
+  title: "19.5 Writing Process: Writing to Speak"
+  url: https://openstax.org/books/writing-guide/pages/19-5-writing-process-writing-to-speak
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00171/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    Planning a talk and writing the notes you'll speak from: finding a voice
+    that sounds like you, narrowing the topic, outlining the opening, body and
+    close, and using signposts, tone, repetition and visuals so listeners can
+    follow along.
+  topics:
+    concern: [speaking:presentation]
+    stage: [planning, drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-portfolio-reflection
+  title: "20.5 Writing Process: Looking Back, Looking Forward"
+  url: https://openstax.org/books/writing-guide/pages/20-5-writing-process-looking-back-looking-forward
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00180/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    Guides you through a portfolio reflection and self-evaluation: rereading
+    your earlier work, setting your own measures of growth, and structuring
+    what you say about how your writing has changed.
+  topics:
+    concern: [genre:reflection]
+    stage: [reflecting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: openstax-wgh-multimodal-project
+  title: "18.5 Writing Process: Create a Multimodal Advocacy Project"
+  url: https://openstax.org/books/writing-guide/pages/18-5-writing-process-create-a-multimodal-advocacy-project
+  publisher: OpenStax
+  license: CC-BY-NC-SA-4.0
+  can_vendor: true
+  vendor_source:
+    url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00006/index.cnxml
+    license: CC-BY-4.0
+  link_check: auto
+  summary: >-
+    Planning a project that mixes text with images, sound or video to push
+    for change on an issue: set a purpose, gather information, choose your
+    modes and media, borrow from other genres, and compose. Includes
+    questions for peer feedback on topic, purpose, audience and culture.
+  topics:
+    concern: [genre:multimodal, assignment:audience-purpose]
+    stage: [planning, drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200

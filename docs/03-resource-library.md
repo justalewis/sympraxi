@@ -10,7 +10,7 @@ This document covers what we're allowed to do with each source, how the catalog 
 2. **Never iframe a source.** Purdue's policy is explicit: "Purdue OWL pages may not be presented in frames of any kind." MLA and APA terms also forbid framing, and many writing-center sites send headers that block it anyway. Framing would also load third-party trackers inside our app.
 3. **Never copy text from a source that isn't openly licensed,** including its meta descriptions. Write a fresh summary.
 4. **Copy openly licensed material only into the separate content pack,** with title, author, source and license recorded for each item, and only within that license's terms (§3).
-5. **The automated link checker obeys robots.txt and crawl delays,** and skips sites whose terms ban robots (Writing Commons, MLA). Those entries are checked by hand.
+5. **The automated link checker obeys robots.txt and crawl delays,** and skips sites whose terms ban robots (Writing Commons, MLA). Those entries are checked by hand. The checker's user agent starts with `Mozilla/5.0 (compatible; `, then names the checker. Pressbooks (openoregon.pressbooks.pub, which hosts *About Writing*) returns 403 to user agents without that prefix.
 
 ## 1. Sources and what we may do
 
@@ -20,12 +20,12 @@ This document covers what we're allowed to do with each source, how the catalog 
 |---|---|---|---|---|---|---|
 | **Purdue OWL** (owl.purdue.edu) | All rights reserved, under its own fair-use policy; no commercial use | Yes, deep links allowed without asking | Title and our summary | No | No | Asks, as a courtesy, for an email when you link. Sitemap with about 1,240 URLs and last-modified dates; crawl delay of 3 seconds; no API or RSS |
 | **Excelsior OWL** (owl.excelsior.edu) | **Unclear.** Footer text says CC BY 4.0; the license link and badge say CC BY-NC 4.0. Treat it as BY-NC until Excelsior confirms | Yes | Yes; WordPress API, sitemap, RSS | Not blocked, but don't | NonCommercial, with attribution | Has a Spanish section |
-| **UNC Writing Center handouts** | CC BY-NC-ND 4.0; reproduction must use the whole handout and credit UNC | Yes | Yes; WordPress API, sitemap | Not blocked, but don't | Whole and unmodified only, NonCommercial | About 94 handouts and 14 videos |
+| **UNC Writing Center handouts** | CC BY-NC-ND 4.0; reproduction must use the whole handout and credit UNC | Yes | Yes; page sitemap only | Not blocked, but don't | Whole and unmodified only, NonCommercial | About 94 handouts and 14 videos. robots.txt blocks AI crawlers and agents by name (ClaudeBot, anthropic-ai, ChatGPT-User, GPTBot and others), disallows `/wp-json/` for every bot it doesn't name, and sets a 10-second crawl delay |
 | **UW–Madison Writer's Handbook** | CC BY-NC-SA 4.0 | Yes | Yes; WordPress API, sitemap | Not blocked, but don't | NonCommercial; adaptations must keep the same license | |
 | **Writing Commons** | Site all rights reserved; some articles CC BY-NC-ND 4.0 | Yes; terms allow linking | **Manual entry only**; terms ban robots and copying | No | Only the individually licensed articles, verbatim, NonCommercial | Leave out of automated link checks |
 | **Writing Spaces**, vols. 1–6 | CC BY-NC-ND 4.0 (older printings 3.0), subject to its own terms of use | Yes; essay PDFs available | Yes | No (blocked) | Verbatim, NonCommercial | Terms-of-use page returned an error; *unverified* |
 | **OpenStax *Writing Guide with Handbook*** | **CC BY-NC-SA 4.0 since March 2026.** The previous version in the openstax/osbooks-writing-guide repository (commit a6c9552) is **CC BY 4.0**, and CC licenses can't be revoked | Yes | Yes | Not blocked, but don't | From the a6c9552 snapshot: freely, with attribution. From the current version: NonCommercial, share-alike | OpenStax now also bars using the book to train AI models without permission. Don't use OpenStax or Rice names or logos |
-| ***About Writing: A Guide*** (Jeffrey, Open Oregon) | CC BY (version not confirmed) | Yes | Yes | n/a | **Freely, with attribution** | Has a section for multilingual writers; reviewers call it dated |
+| ***About Writing: A Guide*** (Jeffrey, Open Oregon) | CC BY 4.0 | Yes | Yes | n/a | **Freely, with attribution** | Has a section for multilingual writers; reviewers call it dated |
 | ***The Word on College Reading and Writing*** | CC BY-NC (version not confirmed) | Yes | Yes | Unknown | NonCommercial | |
 | ***A Guide to Rhetoric, Genre, and Success in First-Year Writing*** | CC BY-NC-SA 4.0, except where noted | Yes | Yes | Not blocked | NonCommercial, share-alike | No longer updated |
 | ***Write What Matters*** | CC BY-NC-SA 4.0 (*unverified*; publisher page blocked) | Yes | Yes | Unknown | NonCommercial, share-alike | Some readings licensed chapter by chapter |
@@ -79,7 +79,8 @@ Validation in CI rejects entries with no license, no summary, or a summary that 
 | Source | Discovery feed |
 |---|---|
 | Purdue OWL | `owl.purdue.edu/sitemap.xml` (use last-modified dates to spot changed pages) |
-| Excelsior, UNC, UW–Madison | WordPress REST API (`/wp-json/wp/v2/pages`), sitemaps, RSS. The oEmbed responses include staff author names; don't display them |
+| Excelsior, UW–Madison | WordPress REST API (`/wp-json/wp/v2/pages`), sitemaps, RSS. The oEmbed responses include staff author names; don't display them |
+| UNC | `writingcenter.unc.edu/page-sitemap.xml`. robots.txt disallows `/wp-json/`, so don't use the WordPress API |
 | Open Textbook Library | `open.umn.edu/opentextbooks/textbooks/<slug>.json`, which includes a license field |
 | OpenStax | The book's GitHub repository |
 | Writing Commons, MLA | None allowed; enter by hand |
@@ -121,7 +122,7 @@ No shared writing-center topic vocabulary exists. Researchers have criticized th
 
 Next steps for the vocabulary:
 
-1. Check it against the session-note question bank in the **Writing Center Session Note Data Repository** (Modey, Cheatle and Giaimo, University of Michigan Deep Blue Data, 2022, DOI 10.7302/25dd-as06, CC BY-NC 4.0). The repository holds notes from 63 institutions and was funded by IWCA. Its files haven't been downloaded yet.
+1. Check it against the session-note question bank in the **Writing Center Session Note Data Repository** (Modey, Cheatle and Giaimo, University of Michigan Deep Blue Data, 2022, DOI 10.7302/25dd-as06, CC BY-NC 4.0). The repository holds notes from 63 institutions and was funded by IWCA. Deep Blue's robots.txt blocks ClaudeBot, anthropic-ai and Claude-Web, so the files were downloaded by hand on October 14, 2026.
 2. Circulate it to a few writing-center directors for comments.
 3. Release version 1 under CC0, citing the repository.
 
@@ -132,7 +133,7 @@ Possible outside frameworks for the top level, such as the WPA Outcomes Statemen
 - Excelsior OWL's actual license (footer and license link disagree).
 - Writing Spaces terms of use (the page returned an error).
 - APA terms of use (behind a bot check).
-- License versions for *About Writing* and *The Word on College Reading and Writing*.
+- License version for *The Word on College Reading and Writing*.
 - Whether Walden's writing center is still public.
 - Purdue's courtesy email about linking, now that the project has a name.
 

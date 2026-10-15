@@ -1,0 +1,277 @@
+# UW-Madison Writing Center, The Writer's Handbook (CC BY-NC-SA 4.0).
+# Link and summary only in the core catalog.
+
+- id: uw-madison-interpreting-assignments
+  title: "Interpreting Writing Assignments from Your Courses"
+  url: https://writing.wisc.edu/handbook/processandstructure/interpreting-writing-assignments-from-your-courses/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How to read an assignment closely enough: read it several times, find the
+    central task, treat a key plural noun in the prompt (reasons, causes,
+    effects) as a hint about structure, learn the basics of the genre, study
+    successful models, and ask your instructor specific questions.
+  topics:
+    concern: [assignment:prompt, assignment:genre-conventions]
+    stage: [understanding-assignment]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-thesis
+  title: "Developing a Thesis Statement"
+  url: https://writing.wisc.edu/handbook/processandstructure/thesis/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What a thesis promises your reader, then a path from a broad assignment
+    to a topic, from the topic to one focused angle, and from there to a main
+    point you can support. Sample assignments show each step. Not every paper
+    needs a thesis, so check with your instructor.
+  topics:
+    concern: [argument:thesis, research:topic]
+    stage: [generating-ideas, planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-introductions
+  title: "Invest in Your Introduction"
+  url: https://writing.wisc.edu/handbook/processandstructure/introductions/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    When to write your introduction (first, midway or last), ways to open
+    that suit different fields, and what an introduction should promise the
+    reader. Sample introductions come from history, engineering and law.
+  topics:
+    concern: [organization:introductions]
+    stage: [drafting, revising]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-conclusions
+  title: "Make Your Last Words Count"
+  url: https://writing.wisc.edu/handbook/processandstructure/conclusions/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What a conclusion can do besides sum up (connect your findings to a larger
+    conversation, point to implications, raise questions for more research)
+    and how much summary a paper of your length really needs. Sample
+    conclusions come from engineering, gender and women's studies, and law.
+  topics:
+    concern: [organization:conclusions]
+    stage: [drafting, revising]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-quoting-paraphrasing
+  title: "Quoting and Paraphrasing"
+  url: https://writing.wisc.edu/handbook/academicwriting/quotingsources/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What you have to cite and what counts as common knowledge, how to choose
+    between quoting and paraphrasing, and methods for paraphrasing a hard
+    text. Side-by-side examples set a successful paraphrase next to versions
+    that slide into plagiarism.
+  topics:
+    concern: [evidence:quoting, evidence:paraphrasing, evidence:plagiarism]
+    stage: [drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-literature-review
+  title: "Learn How to Write a Review of Literature"
+  url: https://writing.wisc.edu/handbook/academicwriting/reviewofliterature/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What a review of literature is for and what belongs in its introduction,
+    body and conclusion, with sample reviews. Useful whether the review
+    stands alone or opens a thesis, grant proposal or research study.
+  topics:
+    concern: [genre:literature-review, evidence:synthesis]
+    stage: [planning, drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-annotated-bibliography
+  title: "Writing an Annotated Bibliography"
+  url: https://writing.wisc.edu/handbook/academicwriting/annotatedbibliography/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    The kinds of annotation an instructor might ask for (indicative,
+    informative, evaluative or a mix) and the styles you can write them in,
+    from clipped phrases to full paragraphs, with linked examples.
+  topics:
+    concern: [genre:annotated-bibliography, evidence:summarizing]
+    stage: [planning]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-apa-orientation
+  title: "A Quick Orientation to APA Style"
+  url: https://writing.wisc.edu/handbook/citation/docapa/a-quick-orientation-to-apa/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    A starting point for APA: what the style is for, what every in-text
+    citation needs (author and year, plus a page number for a quotation),
+    which formatting rules matter most in a class paper, and how to use the
+    handbook's more detailed APA pages.
+  topics:
+    concern: [citation:apa]
+    stage: [drafting, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-mla-orientation
+  title: "A Quick Orientation to MLA"
+  url: https://writing.wisc.edu/handbook/citation/docmla/orientation/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    A starting point for MLA: what goes in an in-text citation, the basic
+    page format, which fields use the style, and how to find your way around
+    the handbook's longer MLA section. Your instructor's directions come
+    first.
+  topics:
+    concern: [citation:mla]
+    stage: [drafting, editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-personal-statements-undergraduate
+  title: "Writing Personal Statements for Academic Programs within an Undergraduate College"
+  url: https://writing.wisc.edu/handbook/professionalwriting/writing-personal-statements-for-academic-programs/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    For applying to a program inside your college, such as business or
+    nursing. Brainstorming questions help you connect your experiences, and
+    what you learned from them, to what the program says it values.
+  topics:
+    concern: [genre:application-essay]
+    stage: [generating-ideas, drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-generating-ideas
+  title: "Generating Ideas for Your Paper"
+  url: https://writing.wisc.edu/handbook/processandstructure/generatingideas/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    A long menu of ways to come up with ideas at any point in a project:
+    analyzing the assignment, rereading, listing, freewriting (including
+    invisible and looped freewriting), talking it through, mind mapping,
+    notecards and outlining.
+  topics:
+    concern: [process:getting-started]
+    stage: [generating-ideas]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-revising-argument
+  title: "Revising an Argumentative Paper"
+  url: https://writing.wisc.edu/handbook/processandstructure/revisingargument/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Eight ways to strengthen an argument once you have a full draft, such as
+    outlining your claims and evidence, testing your assumptions, looking for
+    places where the draft pulls against itself, trying a deliberately bold
+    rewrite, and asking others to push back.
+  topics:
+    concern: [argument, argument:counterargument, organization:structure]
+    stage: [revising]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-proofreading
+  title: "Proofreading"
+  url: https://writing.wisc.edu/handbook/processandstructure/proofreading/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Tips for before and during proofreading: finish the big revisions first,
+    take a break, cut extra words, keep a list of the errors you usually make,
+    work from a printout and read aloud. Also notes what computer checking
+    tools can and can't catch.
+  topics:
+    concern: [grammar, style:concision]
+    stage: [editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: uw-madison-seeking-feedback
+  title: "Seeking Feedback from Others"
+  url: https://writing.wisc.edu/handbook/seeking-feedback/
+  publisher: UW-Madison Writer's Handbook
+  license: CC-BY-NC-SA-4.0
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How to get feedback you can use: decide what you want from this revision
+    first, pick readers who suit the task, give them specific questions and a
+    format, leave enough time, and thank them.
+  topics:
+    concern: [process:using-feedback]
+    stage: [drafting, revising]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200

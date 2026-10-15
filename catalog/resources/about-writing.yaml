@@ -1,0 +1,175 @@
+# About Writing: A Guide, by Robin Jeffrey (Open Oregon Educational Resources).
+# CC BY 4.0, as docs/03-resource-library.md records it. On 2026-10-14 every
+# chapter page fetched here stated CC BY 4.0; see publishers.yaml.
+
+- id: about-writing-understanding-the-assignment
+  title: "Understanding the Assignment"
+  url: https://openoregon.pressbooks.pub/aboutwriting/chapter/understanding-the-assignment/
+  publisher: "About Writing: A Guide"
+  license: CC-BY-4.0
+  can_vendor: true
+  link_check: auto
+  summary: >-
+    Four things to work out before you write: what the assignment is for, how
+    to answer the how and why questions it asks, the questions it implies
+    without stating, and what your discipline expects.
+  topics:
+    concern: [assignment:prompt, assignment:genre-conventions]
+    stage: [understanding-assignment]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: about-writing-test-your-thesis
+  title: "Test Your Thesis"
+  url: https://openoregon.pressbooks.pub/aboutwriting/chapter/test-your-thesis/
+  publisher: "About Writing: A Guide"
+  license: CC-BY-4.0
+  can_vendor: true
+  link_check: auto
+  summary: >-
+    Five quick checks for a draft thesis before you build a paper on it:
+    whether it stakes out a position, gives you enough to say, leaves room for
+    a reader to disagree, has evidence behind it, and points to an essay
+    someone would want to read.
+  topics:
+    concern: [argument:thesis]
+    stage: [planning, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: about-writing-countering-opposing-arguments
+  title: "Countering Opposing Arguments"
+  url: https://openoregon.pressbooks.pub/aboutwriting/chapter/countering-opposing-arguments/
+  publisher: "About Writing: A Guide"
+  license: CC-BY-4.0
+  can_vendor: true
+  link_check: auto
+  summary: >-
+    Two sets of questions. The first helps you find the objections a reader
+    might raise; the second helps you plan your answer, whether that means
+    conceding a point, questioning the other side's evidence, or showing why
+    your view still holds.
+  topics:
+    concern: [argument:counterargument]
+    stage: [planning, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: about-writing-how-to-write-a-summary
+  title: "How to: Write a Summary"
+  url: https://openoregon.pressbooks.pub/aboutwriting/chapter/how-to-write-a-summary/
+  publisher: "About Writing: A Guide"
+  license: CC-BY-4.0
+  can_vendor: true
+  link_check: auto
+  summary: >-
+    A short checklist for summarizing a reading: open with the title, author
+    and main point, stay neutral, write in third person and present tense,
+    and stick to the main points in your own words.
+  topics:
+    concern: [evidence:summarizing]
+    stage: [drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: about-writing-articles-for-common-nouns
+  title: "Articles for Common Nouns"
+  url: https://openoregon.pressbooks.pub/aboutwriting/chapter/articles-for-common-nouns/
+  publisher: "About Writing: A Guide"
+  license: CC-BY-4.0
+  can_vendor: true
+  link_check: auto
+  summary: >-
+    Four rules for choosing the, a or an, a quantity word like "some," or no
+    article at all, each with example sentences marked as count or noncount.
+  topics:
+    concern: [grammar:articles, multilingual]
+    stage: [editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: about-writing-non-count-nouns
+  title: "Non-count Nouns"
+  url: https://openoregon.pressbooks.pub/aboutwriting/chapter/non-count-nouns/
+  publisher: "About Writing: A Guide"
+  license: CC-BY-4.0
+  can_vendor: true
+  link_check: auto
+  summary: >-
+    A reference list of common nouns that English treats as uncountable,
+    grouped into food, materials, abstract ideas and everyday words such as
+    homework and advice. Check here before you add an -s.
+  topics:
+    concern: [grammar:word-forms, multilingual]
+    stage: [editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: about-writing-meaning-of-modals
+  title: "The Meaning of Modals"
+  url: https://openoregon.pressbooks.pub/aboutwriting/chapter/the-meaning-of-modals/
+  publisher: "About Writing: A Guide"
+  license: CC-BY-4.0
+  can_vendor: true
+  link_check: auto
+  summary: >-
+    What can, could, may, might, must, should and will each signal (ability,
+    permission, possibility, necessity, advice and so on), with example
+    sentences for each.
+  topics:
+    concern: [grammar:verbs, multilingual]
+    stage: [editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: about-writing-keyword-searching
+  title: "Keyword Searching: Do it Better!"
+  url: https://openoregon.pressbooks.pub/aboutwriting/chapter/keyword-searching-do-it-better/
+  publisher: "About Writing: A Guide"
+  license: CC-BY-4.0
+  can_vendor: true
+  link_check: auto
+  summary: >-
+    Search tricks that work in library databases and on the web: quotation
+    marks for an exact phrase, AND and NOT to require or rule out a term, an
+    asterisk to catch different word endings, and a few more.
+  topics:
+    concern: [research:finding-sources]
+    stage: [generating-ideas, planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: about-writing-active-reading
+  title: "Active Reading"
+  url: https://openoregon.pressbooks.pub/aboutwriting/chapter/active-reading/
+  publisher: "About Writing: A Guide"
+  license: CC-BY-4.0
+  can_vendor: true
+  link_check: auto
+  summary: >-
+    Questions to ask before, during and after you read: what kind of text it
+    is, its purpose, audience and argument, what surprises or confuses you,
+    and what you notice on a second pass.
+  topics:
+    concern: [reading:comprehension, reading:annotation]
+    stage: [generating-ideas]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200

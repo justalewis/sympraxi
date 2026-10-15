@@ -1,0 +1,4 @@
+# Source-page text fetched by validate.py --fetch. It is third-party text and
+# must never be committed.
+.cache/
+__pycache__/

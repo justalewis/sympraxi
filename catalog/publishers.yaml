@@ -1,0 +1,116 @@
+# Publishers in the catalog and the terms each one sets.
+#
+# This file mirrors the license table in docs/03-resource-library.md, section 1.
+# validate.py requires every entry's `license`, `can_vendor` and `link_check`
+# to agree with its publisher here, so a license change happens in one place:
+# update the docs table, then this file, then the entries.
+#
+# license_as_documented copies the table's License column word for word.
+# license is the code entries must use. "all-rights-reserved" covers any
+# publisher-specific terms that are not an open license.
+
+- name: Purdue OWL
+  hosts: [owl.purdue.edu]
+  license: all-rights-reserved
+  license_as_documented: "All rights reserved, under its own fair-use policy; no commercial use"
+  can_vendor: false
+  link_check: auto
+  notes: >-
+    Deep links are allowed without asking. Never copy text (including meta
+    descriptions) and never frame pages. A paid host should contact Purdue
+    before including OWL links. Purdue asks, as a courtesy, for an email when
+    a site links to it; that email has not been sent yet. robots.txt sets a
+    3-second crawl delay.
+
+- name: UNC Writing Center
+  hosts: [writingcenter.unc.edu]
+  license: CC-BY-NC-ND-4.0
+  license_as_documented: "CC BY-NC-ND 4.0; reproduction must use the whole handout and credit UNC"
+  can_vendor: false
+  link_check: auto
+  notes: >-
+    Whole, unmodified handouts may go in the optional content pack. robots.txt
+    blocks AI crawlers and agents by name (ClaudeBot, anthropic-ai, GPTBot,
+    ChatGPT-User and others), disallows /wp-json/ for every bot it doesn't
+    name, and sets a 10-second crawl delay. Find pages through
+    /page-sitemap.xml, which robots.txt allows.
+
+- name: UW-Madison Writer's Handbook
+  hosts: [writing.wisc.edu]
+  license: CC-BY-NC-SA-4.0
+  license_as_documented: "CC BY-NC-SA 4.0"
+  can_vendor: false
+  link_check: auto
+
+- name: Excelsior OWL
+  hosts: [owl.excelsior.edu]
+  license: CC-BY-NC-4.0
+  license_as_documented: >-
+    Unclear. Footer text says CC BY 4.0; the license link and badge say CC
+    BY-NC 4.0. Treat it as BY-NC until Excelsior confirms
+  can_vendor: false
+  link_check: auto
+  notes: >-
+    On 2026-10-14 every Excelsior page fetched for this catalog carried a
+    rel="license" link to CC BY-NC 4.0.
+
+- name: "About Writing: A Guide"
+  hosts: [openoregon.pressbooks.pub]
+  license: CC-BY-4.0
+  license_as_documented: "CC BY 4.0"
+  can_vendor: true
+  link_check: auto
+  attribution: >-
+    About Writing: A Guide by Robin Jeffrey, Open Oregon Educational
+    Resources, https://openoregon.pressbooks.pub/aboutwriting/
+  notes: >-
+    On 2026-10-14 every chapter page fetched for this catalog stated "licensed
+    under a Creative Commons Attribution 4.0 International License, except
+    where otherwise noted," and the docs table now records CC BY 4.0.
+    Pressbooks returns 403 to user agents that don't start with
+    "Mozilla/5.0 (compatible; "; validate.py's user agent follows that form.
+
+- name: OpenStax
+  hosts: [openstax.org]
+  license: CC-BY-NC-SA-4.0
+  license_as_documented: >-
+    CC BY-NC-SA 4.0 since March 2026. The previous version in the
+    openstax/osbooks-writing-guide repository (commit a6c9552) is CC BY 4.0,
+    and CC licenses can't be revoked
+  can_vendor: true
+  link_check: auto
+  vendor_source:
+    repository: https://github.com/openstax/osbooks-writing-guide
+    commit: a6c95528390e3a2936f5bf87c49ac1a4995a0a6e
+    license: CC-BY-4.0
+  attribution: >-
+    Writing Guide with Handbook by Michelle Bachelor Robinson and Maria
+    Jerskey, featuring Toby Fulwiler, OpenStax, CC BY 4.0, from
+    openstax/osbooks-writing-guide at commit a6c9552. Access for free at
+    https://openstax.org/books/writing-guide
+  notes: >-
+    Entries link to the live openstax.org page (CC BY-NC-SA 4.0) and name the
+    CC BY 4.0 module at commit a6c9552 in vendor_source. Copy only from that
+    commit. OpenStax bars using the book to train AI models without
+    permission, and its name and logo may not be used beyond attribution.
+
+- name: MLA Style Center
+  hosts: [style.mla.org]
+  license: all-rights-reserved
+  license_as_documented: "MLA Network terms: personal, noncommercial use"
+  can_vendor: false
+  link_check: manual
+  notes: >-
+    Manual entry only; the terms ban indexing robots. Never frame pages.
+
+- name: Writing Commons
+  hosts: [writingcommons.org]
+  license: all-rights-reserved
+  license_as_documented: "Site all rights reserved; some articles CC BY-NC-ND 4.0"
+  also_allowed: [CC-BY-NC-ND-4.0]
+  can_vendor: false
+  link_check: manual
+  notes: >-
+    Manual entry only; the terms ban robots and copying. An article that
+    carries its own CC BY-NC-ND 4.0 notice may be recorded with that license
+    after a person checks the notice.

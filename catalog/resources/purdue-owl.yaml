@@ -1,0 +1,677 @@
+# Purdue OWL entries. Link and summary only: Purdue forbids copying its text,
+# framing its pages, and commercial use. See docs/03-resource-library.md.
+
+- id: purdue-owl-understanding-writing-assignments
+  title: "Understanding Writing Assignments"
+  url: https://owl.purdue.edu/owl/general_writing/common_writing_assignments/understanding_writing_assignments.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    A short routine for taking apart an assignment sheet. Mark the due date,
+    length, source and format requirements, number the questions the prompt
+    asks, decide which ones matter most, and check purpose and audience before
+    you start. Sample prompts show the routine in use.
+  topics:
+    concern: [assignment:prompt, assignment:audience-purpose]
+    stage: [understanding-assignment]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-thesis-statement-tips
+  title: "Tips and Examples for Writing Thesis Statements"
+  url: https://owl.purdue.edu/owl/general_writing/the_writing_process/thesis_statement_tips.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How a thesis changes depending on whether your paper analyzes, explains or
+    argues, with a sample thesis for each kind. Also covers where a thesis
+    usually goes and why you may need to rewrite it once the draft is done.
+  topics:
+    concern: [argument:thesis]
+    stage: [planning, drafting, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-how-to-outline
+  title: "Why and How to Create a Useful Outline"
+  url: https://owl.purdue.edu/owl/general_writing/the_writing_process/developing_an_outline/how_to_outline.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Builds an outline step by step: settle your purpose, audience and thesis,
+    list your ideas, group the ones that belong together, order them from
+    general to specific, and add headings. Most useful when you have plenty of
+    material and can't yet see how it fits together.
+  topics:
+    concern: [organization:structure]
+    stage: [planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-reverse-outlining
+  title: "Reverse Outlining: An Exercise for Taking Notes and Revising Your Work"
+  url: https://owl.purdue.edu/owl/general_writing/the_writing_process/reverse_outlining.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Outline a draft after you've written it. Note each paragraph's topic in one
+    margin and what it does for the argument in the other. A paragraph you
+    can't sum up in a few words, or one that seems out of order, is the place
+    to start revising. Works for notes on a reading, too.
+  topics:
+    concern: [organization:structure, organization:paragraphs, reading:annotation]
+    stage: [revising]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-paragraphing
+  title: "On Paragraphs"
+  url: https://owl.purdue.edu/owl/general_writing/academic_writing/paragraphs_and_paragraphing/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Makes the case for one idea per paragraph and names what holds a paragraph
+    together (unity, coherence, a topic sentence, enough development). Also
+    covers how to tell when it's time to start a new paragraph.
+  topics:
+    concern: [organization:paragraphs, argument:development]
+    stage: [drafting, revising]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-rebuttal-sections
+  title: "Rebuttal Sections"
+  url: https://owl.purdue.edu/owl/general_writing/common_writing_assignments/argument_papers/rebuttal_sections.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Why an argument should deal with the other side, written with undecided
+    readers in mind. Gives a step-by-step way to set up a rebuttal section that
+    states an objection fairly before you answer it.
+  topics:
+    concern: [argument:counterargument]
+    stage: [planning, drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-quoting-paraphrasing-summarizing
+  title: "Quoting, Paraphrasing, and Summarizing"
+  url: https://owl.purdue.edu/owl/research_and_citation/using_research/quoting_paraphrasing_and_summarizing/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Sorts out the three ways of bringing a source into your paper (how close
+    each stays to the original, how much of it you use) and when each one
+    makes sense. A short practice passage is included at the end.
+  topics:
+    concern: [evidence:quoting, evidence:paraphrasing, evidence:summarizing]
+    stage: [drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-paraphrasing
+  title: "Paraphrase: Write It in Your Own Words"
+  url: https://owl.purdue.edu/owl/research_and_citation/using_research/quoting_paraphrasing_and_summarizing/paraphrasing.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Six steps for a paraphrase that is really yours, then one source passage
+    handled three ways: an acceptable paraphrase, an acceptable summary, and a
+    version that counts as plagiarism.
+  topics:
+    concern: [evidence:paraphrasing, evidence:plagiarism]
+    stage: [drafting]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-signal-phrases
+  title: "Signal and Lead-in Phrases"
+  url: https://owl.purdue.edu/owl/research_and_citation/using_research/quoting_paraphrasing_and_summarizing/signal_and_lead_in_phrases.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    A bank of ways to introduce a quotation or paraphrase so every source
+    doesn't open with "According to." There are past-tense versions for APA,
+    present-tense versions for MLA, and options for when you disagree with the
+    source.
+  topics:
+    concern: [evidence:integrating-sources, citation:apa, citation:mla]
+    stage: [drafting, revising]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-synthesizing-sources
+  title: "Synthesizing Sources"
+  url: https://owl.purdue.edu/owl/research_and_citation/conducting_research/research_overview/synthesizing_sources.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How synthesis differs from summary. Instead of reporting on one source at a
+    time, you group your sources by topic, notice where they agree and where
+    they clash, and draw a conclusion of your own. Two worked examples show
+    what that looks like on the page.
+  topics:
+    concern: [evidence:synthesis, genre:literature-review]
+    stage: [planning, drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-plagiarism-best-practices
+  title: "Best Practices to Avoid Plagiarism"
+  url: https://owl.purdue.edu/owl/avoiding_plagiarism/best_practices.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Habits that keep you from plagiarizing by accident, grouped by stage of the
+    work: keeping notes tied to their sources, interviewing, paraphrasing and
+    quoting, writing about other people's ideas, and a final check before you
+    turn the paper in.
+  topics:
+    concern: [evidence:plagiarism]
+    stage: [planning, drafting, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-evaluating-sources
+  title: "Evaluating Sources: General Guidelines"
+  url: https://owl.purdue.edu/owl/research_and_citation/conducting_research/evaluating_sources_of_information/general_guidelines.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Questions to ask before you rely on a source: who wrote it and what they
+    know, who it was written for, whether it reports fact or opinion, how
+    strong its evidence is, how current it is, and what it cites.
+  topics:
+    concern: [research:evaluating-sources]
+    stage: [generating-ideas, planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-literature-review
+  title: "Writing a Literature Review"
+  url: https://owl.purdue.edu/owl/research_and_citation/conducting_research/writing_a_literature_review.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    What a literature review is for, where you might be asked to write one,
+    and how expectations shift from field to field. Covers the usual parts,
+    a few ways to organize the sources, and practical tips for getting them to
+    talk to each other instead of lining them up one by one.
+  topics:
+    concern: [genre:literature-review, evidence:synthesis]
+    stage: [planning, drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-annotated-bibliographies
+  title: "Annotated Bibliographies"
+  url: https://owl.purdue.edu/owl/general_writing/common_writing_assignments/annotated_bibliographies/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Defines an annotated bibliography and the three jobs an annotation can do
+    (summarize the source, assess it, reflect on how you'll use it), then
+    covers format. Related pages have sample entries.
+  topics:
+    concern: [genre:annotated-bibliography, evidence:summarizing, research:evaluating-sources]
+    stage: [planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-apa-general-format
+  title: "General Format (APA)"
+  url: https://owl.purdue.edu/owl/research_and_citation/apa_style/apa_formatting_and_style_guide/general_format.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How to set up a student or professional paper in APA 7: margins, spacing,
+    font, the page header, the title page and the abstract. A good first stop
+    before you get into individual citations.
+  topics:
+    concern: [citation:apa, assignment:format]
+    stage: [drafting, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-apa-in-text-basics
+  title: "In-Text Citations: The Basics (APA)"
+  url: https://owl.purdue.edu/owl/research_and_citation/apa_style/apa_formatting_and_style_guide/in_text_citations_the_basics.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How APA's author-and-year citations work inside your sentences: when to add
+    a page number, how to handle short quotations and block quotations, what to
+    do when a source has no page numbers, and how to cite a paraphrase.
+  topics:
+    concern: [citation:apa, evidence:quoting]
+    stage: [drafting, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-apa-reference-list-basics
+  title: "Reference List: Basic Rules (APA)"
+  url: https://owl.purdue.edu/owl/research_and_citation/apa_style/apa_formatting_and_style_guide/reference_list_basic_rules.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    The ground rules for an APA 7 reference list: where it goes, how to format
+    and order the entries, and the extra rules that apply to journal articles.
+    Every source you cite in the paper needs a matching entry here.
+  topics:
+    concern: [citation:apa]
+    stage: [editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-apa-sample-paper
+  title: "APA Sample Paper"
+  url: https://owl.purdue.edu/owl/research_and_citation/apa_style/apa_formatting_and_style_guide/apa_sample_paper.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Two complete APA 7 sample papers, one in student format and one in
+    professional format, with margin comments that explain the formatting and
+    citation choices. Handy for checking your own paper against a model.
+  topics:
+    concern: [citation:apa, assignment:format]
+    stage: [editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-mla-general-format
+  title: "MLA General Format"
+  url: https://owl.purdue.edu/owl/research_and_citation/mla_style/mla_formatting_and_style_guide/mla_general_format.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How to format a paper in MLA 9: page size, spacing, margins, the heading on
+    the first page, the title, and section headings if your paper uses them.
+  topics:
+    concern: [citation:mla, assignment:format]
+    stage: [drafting, editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-mla-in-text-basics
+  title: "MLA In-Text Citations: The Basics"
+  url: https://owl.purdue.edu/owl/research_and_citation/mla_style/mla_formatting_and_style_guide/mla_in_text_citations_the_basics.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How MLA's author-and-page citations work, with examples for the cases that
+    trip people up: an organization as author, no known author, classic works
+    with many editions, pieces in an anthology, authors who share a last name,
+    and the Bible.
+  topics:
+    concern: [citation:mla]
+    stage: [drafting, editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-mla-works-cited-basics
+  title: "MLA Works Cited Page: Basic Format"
+  url: https://owl.purdue.edu/owl/research_and_citation/mla_style/mla_formatting_and_style_guide/mla_works_cited_page_basic_format.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Setting up the Works Cited page in MLA 9: where it goes, hanging indents,
+    page ranges, capitalization, and how to list authors, several works by one
+    author, and works with no author.
+  topics:
+    concern: [citation:mla]
+    stage: [editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-chicago-general-format
+  title: "General Format (Chicago)"
+  url: https://owl.purdue.edu/owl/research_and_citation/chicago_manual_18th_edition/cmos_formatting_and_style_guide/general_format.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Chicago style for class papers, filled in with Turabian's guidelines. It
+    explains the difference between the notes-bibliography and author-date
+    systems and shows how to set up the title page, body, notes, headings,
+    tables, and the bibliography or reference list.
+  topics:
+    concern: [citation:chicago, assignment:format]
+    stage: [drafting, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-using-articles
+  title: "Using Articles"
+  url: https://owl.purdue.edu/owl/general_writing/grammar/using_articles.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    When to use a, an, the or no article, explained through the difference
+    between a specific thing and any thing of its kind. Also covers count and
+    noncount nouns and the place names that take "the."
+  topics:
+    concern: [grammar:articles, multilingual]
+    stage: [editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-count-noncount-nouns
+  title: "Count and Noncount Nouns: Basic Rules"
+  url: https://owl.purdue.edu/owl/general_writing/grammar/count_and_noncount_nouns/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How to tell nouns you can count (chairs, ideas) from nouns you usually
+    can't (advice, furniture), and which words go with each kind: much or many,
+    little or few, some and any.
+  topics:
+    concern: [grammar:word-forms, grammar:articles, multilingual]
+    stage: [editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-prepositions
+  title: "Prepositions for Time, Place, and Introducing Objects"
+  url: https://owl.purdue.edu/owl/general_writing/grammar/prepositions/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Which prepositions English uses for a point in time (on, at, in), for a
+    stretch of time, and for location, plus short lists of verbs that are
+    always followed by a particular preposition.
+  topics:
+    concern: [grammar:prepositions, multilingual:idioms]
+    stage: [editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-verb-tense-consistency
+  title: "Verb Tense Consistency"
+  url: https://owl.purdue.edu/owl/general_writing/grammar/verb_tenses/verb_tense_consistency.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How to keep tenses steady across a paragraph or essay, and when a real
+    change in time calls for a different tense. Includes guidelines for the
+    perfect tenses and sample paragraphs with the fixes marked.
+  topics:
+    concern: [grammar:verbs]
+    stage: [revising, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-phrasal-verbs
+  title: "Overview of Two-Part (Phrasal) Verbs (Idioms)"
+  url: https://owl.purdue.edu/owl/general_writing/mechanics/two_part_phrasal_verbs_idioms/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Verbs like "give up" and "run into" take their meaning from the small word
+    that follows them. This page explains how they work and which ones can be
+    split apart, which can't, and which never take an object.
+  topics:
+    concern: [multilingual:idioms]
+    stage: [editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-subject-verb-agreement
+  title: "Making Subjects and Verbs Agree"
+  url: https://owl.purdue.edu/owl/general_writing/grammar/subject_verb_agreement.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    A numbered list of agreement rules for the tricky cases, such as subjects
+    joined by "and" or "or," phrases that sit between the subject and the verb,
+    words like "each" and "everyone," and group nouns.
+  topics:
+    concern: [grammar:subject-verb-agreement]
+    stage: [editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-run-on-sentences
+  title: "Run-ons, Comma Splices, Fused Sentences"
+  url: https://owl.purdue.edu/owl/general_writing/punctuation/independent_and_dependent_clauses/runonsentences.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Two patterns for joining complete sentences correctly (a comma plus a word
+    like "and" or "but," or a semicolon), with wrong and corrected examples of
+    run-ons and comma splices.
+  topics:
+    concern: [grammar:sentence-boundaries, grammar:punctuation]
+    stage: [editing]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-conciseness
+  title: "Concision"
+  url: https://owl.purdue.edu/owl/general_writing/academic_writing/conciseness/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Ways to tighten your sentences: trade several vague words for one exact
+    one, ask whether each word is doing any work, and combine sentences that
+    repeat each other. Each move comes with a before-and-after example.
+  topics:
+    concern: [style:concision]
+    stage: [revising, editing]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-north-american-college-writing
+  title: "Tips for Writing in North American Colleges: The Basics"
+  url: https://owl.purdue.edu/owl/multilingual/multilingual_students/tips_for_writing_in_north_american_colleges/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    For students new to North American colleges, an overview of expectations
+    that may differ from schools elsewhere: getting to your point directly,
+    neutral wording, questioning your sources, and citation and plagiarism
+    rules. Each topic links to a longer page.
+  topics:
+    concern: [multilingual:language-transfer, assignment:genre-conventions, evidence:plagiarism]
+    stage: [understanding-assignment, drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-personal-statement
+  title: "Writing the Personal Statement"
+  url: https://owl.purdue.edu/owl/job_search_writing/preparing_an_application/writing_the_personal_statement/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    For graduate, law, medical and business school applications. Starts with
+    questions to answer for yourself before you draft (what sets you apart,
+    how you came to the field, what you've learned from it), then gives general
+    advice on answering the prompt you were actually given.
+  topics:
+    concern: [genre:application-essay]
+    stage: [generating-ideas, drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-writers-block
+  title: "Symptoms and Cures for Writer's Block"
+  url: https://owl.purdue.edu/owl/general_writing/the_writing_process/writers_block/index.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Matches common kinds of writer's block (no starting point, a topic that
+    bores you, fear of getting it wrong, polishing every sentence, stress,
+    distraction) with strategies to try for each.
+  topics:
+    concern: [process:getting-started, process:writing-anxiety]
+    stage: [generating-ideas, drafting]
+  audience: [undergraduate, graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-long-assignments
+  title: "Time Management: Conquering Long Assignments"
+  url: https://owl.purdue.edu/owl/general_writing/the_writing_process/time_management_conquering_long_assignments.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    How to pace a long assignment: put every due date on your calendar, ask
+    your instructor questions early (is there a rubric?), use the help your
+    campus offers, and keep to a schedule you can actually follow.
+  topics:
+    concern: [process:time-management]
+    stage: [understanding-assignment, planning]
+  audience: [undergraduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
+
+- id: purdue-owl-thesis-dissertation-overview
+  title: "Thesis & Dissertation Overview"
+  url: https://owl.purdue.edu/owl/graduate_writing/thesis_and_dissertation/thesis_and_dissertation_overview.html
+  publisher: Purdue OWL
+  license: all-rights-reserved
+  can_vendor: false
+  link_check: auto
+  summary: >-
+    Sets up a do-it-yourself writing retreat for a thesis or dissertation,
+    with videos and handouts for planning a few focused days of work when your
+    campus doesn't run a retreat of its own.
+  topics:
+    concern: [genre:thesis-dissertation, process:time-management]
+    stage: [drafting]
+  audience: [graduate]
+  language: en
+  last_checked: 2026-10-14
+  last_status: 200
