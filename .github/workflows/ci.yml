@@ -1,9 +1,10 @@
 name: CI
 
 on:
+  # Every pushed branch gets checked, not only main.
   push:
-    branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
