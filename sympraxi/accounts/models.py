@@ -54,6 +54,14 @@ class User(AbstractUser):
     student_id = models.CharField(
         _("student ID"), max_length=64, blank=True, null=True, unique=True
     )
+    # Reminder emails before appointments: on for students, off for tutors
+    # unless they turn them on.
+    reminders_for_appointments = models.BooleanField(
+        _("email me before appointments I booked"), default=True
+    )
+    reminders_for_tutoring = models.BooleanField(
+        _("email me before appointments I'm tutoring"), default=False
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: ClassVar[list[str]] = ["full_name"]

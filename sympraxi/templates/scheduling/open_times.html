@@ -5,6 +5,7 @@
   {% include "scheduling/_breadcrumbs.html" with current=schedule.name %}
   <h1>{{ schedule.name }}</h1>
   {% if schedule.description %}<p>{{ schedule.description }}</p>{% endif %}
+  {% include "scheduling/_block_notice.html" %}
 
   {% if not open_for_booking %}
     <div class="usa-alert usa-alert--info usa-alert--slim">

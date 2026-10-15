@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Attendance to check" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Attendance to check" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Attendance to check" %}</h1>
+  <p>{% translate "No one marked these students as here, and their appointments are past the schedule's grace period. For each one, say whether they came. Nothing counts as a no-show until someone confirms it, and confirming one sends the student a short email." %}</p>
+  {% if rows %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Possible no-shows" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "When" %}</th>
+          <th scope="col">{% translate "Student" %}</th>
+          <th scope="col">{% translate "Tutor" %}</th>
+          <th scope="col">{% translate "Schedule" %}</th>
+          <th scope="col">{% translate "Did they come?" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in rows %}
+          {% with a=p.appointment %}
+            <tr>
+              <th scope="row" data-label="{% translate 'When' %}"><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=a.pk %}">{{ a.starts_at|date:"D, M j" }}, {{ a.starts_at|time }}</a></th>
+              <td data-label="{% translate 'Student' %}">{{ p.student.display_name }}</td>
+              <td data-label="{% translate 'Tutor' %}">{{ a.tutor.display_name }}</td>
+              <td data-label="{% translate 'Schedule' %}">{{ a.schedule.name }}</td>
+              <td data-label="{% translate 'Did they come?' %}">
+                <form method="post" action="{% url 'scheduling:attendance' slug=center.slug appointment_id=a.pk %}" class="sympraxi-button-group">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ here }}">
+                  <button class="usa-button usa-button--outline" type="submit" name="attendance-{{ p.student_id }}" value="attended">{% translate "Came" %}<span class="usa-sr-only">: {{ p.student.display_name }}, {{ a.starts_at|date:"M j" }} {{ a.starts_at|time }}</span></button>
+                  <button class="usa-button usa-button--outline" type="submit" name="attendance-{{ p.student_id }}" value="no_show">{% translate "No-show" %}<span class="usa-sr-only">: {{ p.student.display_name }}, {{ a.starts_at|date:"M j" }} {{ a.starts_at|time }}</span></button>
+                  <button class="usa-button usa-button--unstyled" type="submit" name="attendance-{{ p.student_id }}" value="">{% translate "Clear the flag" %}<span class="usa-sr-only">: {{ p.student.display_name }}, {{ a.starts_at|date:"M j" }} {{ a.starts_at|time }}</span></button>
+                </form>
+              </td>
+            </tr>
+          {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Nothing to check right now." %}</p>
+  {% endif %}
+
+  {% if may_waive %}
+    <h2>{% blocktranslate count days=recent_days %}No-shows and late cancellations, last {{ days }} day{% plural %}No-shows and late cancellations, last {{ days }} days{% endblocktranslate %}</h2>
+    {% if recent %}
+      <table class="usa-table usa-table--borderless usa-table--stacked">
+        <caption class="usa-sr-only">{% translate "Recent no-shows and late cancellations" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "When" %}</th>
+            <th scope="col">{% translate "Student" %}</th>
+            <th scope="col">{% translate "What" %}</th>
+            <th scope="col">{% translate "Waiver" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in recent %}
+            {% with a=p.appointment %}
+              <tr>
+                <th scope="row" data-label="{% translate 'When' %}"><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=a.pk %}">{{ a.starts_at|date:"D, M j" }}, {{ a.starts_at|time }}</a></th>
+                <td data-label="{% translate 'Student' %}">{{ p.student.display_name }}</td>
+                <td data-label="{% translate 'What' %}">{% if p.late_cancel %}{% translate "Canceled late" %}{% else %}{% translate "No-show" %}{% endif %}</td>
+                <td data-label="{% translate 'Waiver' %}">
+                  {% if p.waived_at %}{% blocktranslate with day=p.waived_at|date:"M j" %}Waived {{ day }}{% endblocktranslate %}
+                  {% else %}<a href="{% url 'scheduling:waive' slug=center.slug appointment_id=a.pk %}?student={{ p.student_id }}&amp;next={{ here|urlencode }}">{% translate "Waive" %}<span class="usa-sr-only"> {% blocktranslate with name=p.student.display_name day=a.starts_at|date:"M j" %}for {{ name }}, {{ day }}{% endblocktranslate %}</span></a>{% endif %}
+                </td>
+              </tr>
+            {% endwith %}
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>{% translate "None." %}</p>
+    {% endif %}
+  {% endif %}
+  {% if can_manage_blocks %}
+    <p><a href="{% url 'scheduling:blocks' slug=center.slug %}">{% translate "See booking blocks" %}</a></p>
+  {% endif %}
+{% endblock content %}

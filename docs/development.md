@@ -25,6 +25,18 @@ Single sign-on is off until its variables are set (see `.env.example` and "Singl
 
 Emails print to the console in development. Set `SYMPRAXI_QUEUE_EMAIL=false` to send them inline, or run `uv run python manage.py db_worker` alongside `runserver` to process the queue.
 
+`seed_demo` also gives the demo student a late cancellation and a possible no-show, and gives a second demo student, `student2@demo.test`, three no-shows and a booking block.
+
+## The scheduler
+
+Reminder emails and possible no-show flags come from a third process, beside `runserver` and `db_worker`:
+
+```bash
+uv run python manage.py scheduler
+```
+
+It sweeps at the start of every minute until you stop it. `--once` runs one sweep and exits. It needs `SYMPRAXI_BASE_URL` in `.env` (for development, `http://localhost:8000`), because reminder links are written outside a page request. Running two at once is safe: neither sends anything the other already sent.
+
 ## Checks
 
 ```bash
@@ -56,6 +68,10 @@ HYPOTHESIS_PROFILE=thorough uv run pytest tests/test_booking_properties.py
 | `sympraxi/scheduling/services.py` | Every booking rule: limits, notice, cutoff, groups, locks |
 | `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions and closures |
 | `sympraxi/scheduling/timeutils.py` | Wall-clock times and daylight-saving rules |
+| `sympraxi/scheduling/attendance.py` | Marking attendance, possible no-shows, waivers, late-cancellation window |
+| `sympraxi/scheduling/blocks.py` | Counting no-shows and late cancellations, and setting and lifting booking blocks |
+| `sympraxi/scheduling/reminders.py` | Which reminders are due, and sending each one once |
+| `sympraxi/scheduling/scheduler.py` | The minute-by-minute loop behind `manage.py scheduler`; `sympraxi/healthcheck.py` checks its heartbeat |
 | `sympraxi/templates/allauth/` | Sign-in and account pages restyled with USWDS |
 | `sympraxi/records/models.py` | Session records, amendments, writing projects, topics and resources |
 | `sympraxi/records/services.py` | Saving, finalizing and amending records, and group copies |
@@ -67,6 +83,7 @@ HYPOTHESIS_PROFILE=thorough uv run pytest tests/test_booking_properties.py
 | `tests/test_policy_matrix.py` | Every role against every action, written out by hand |
 | `tests/test_url_inventory.py` | Fails if a new URL isn't assigned a permission |
 | `tests/records_world.py` | Builders for session-record tests: topics, resources, appointments, records |
+| `tests/attendance_world.py` | A no-show, a possible no-show and a booking block, for attendance page tests |
 | `tests/sso_idp.py` | A fake Entra ID and Google for SSO tests; nothing goes over the network |
 | `tests/e2e/` | Browser tests: axe accessibility and Content Security Policy |
 | `deploy/` | Production Compose stack, Caddy, install, backup, restore, upgrade |

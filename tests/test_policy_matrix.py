@@ -15,7 +15,14 @@ from sympraxi.centers.models import Center, Membership, Role
 from sympraxi.core import policy
 from sympraxi.core.policy import Action
 from sympraxi.records.models import SessionRecord, WritingProject
-from sympraxi.scheduling.models import Appointment, AppointmentStatus, Participant, Visibility
+from sympraxi.scheduling.models import (
+    Appointment,
+    AppointmentStatus,
+    Block,
+    BlockReason,
+    Participant,
+    Visibility,
+)
 from tests.factories import MembershipFactory, UserFactory
 from tests.records_world import appointment_for, membership, standalone
 from tests.scheduling_world import build_world, make_member, make_schedule
@@ -41,6 +48,12 @@ SCHEDULING_ACTIONS = [
     Action.MANAGE_EXEMPTIONS,
 ]
 
+ATTENDANCE_ACTIONS = [
+    Action.MARK_ATTENDANCE,
+    Action.WAIVE_ATTENDANCE,
+    Action.MANAGE_BLOCKS,
+]
+
 RECORDS_ACTIONS = [
     Action.VIEW_RECORD_STATUS,
     Action.WRITE_RECORDS,
@@ -50,7 +63,7 @@ RECORDS_ACTIONS = [
     Action.MANAGE_RECORDS,
 ]
 
-ACTIONS = CENTER_ACTIONS + SCHEDULING_ACTIONS + RECORDS_ACTIONS
+ACTIONS = CENTER_ACTIONS + SCHEDULING_ACTIONS + ATTENDANCE_ACTIONS + RECORDS_ACTIONS
 
 # fmt: off
 EXPECTED_IN_OWN_CENTER = {
@@ -78,6 +91,21 @@ EXPECTED_SCHEDULING = {
     "site_admin":  (0,     0,    0,      0,     0,      0,      0,        0,        0,         0),
 }
 
+# Attendance, asked about the center. "Mark attendance" means "for appointments
+# they teach" for tutors; OWNERSHIP_CASES checks that part. Front desk staff waive
+# late cancellations and no-shows; only directors see and lift booking blocks.
+# Site administrators get none: attendance is part of the student's record.
+EXPECTED_ATTENDANCE = {
+    #              mark        waive  manage
+    #              attendance         blocks
+    "none":        (0,         0,     0),
+    "student":     (0,         0,     0),
+    "tutor":       (1,         0,     0),
+    "front_desk":  (1,         1,     0),
+    "director":    (1,         1,     1),
+    "site_admin":  (0,         0,     0),
+}
+
 # Session records, asked about the center. "Write records" and "view records"
 # mean "for the students they tutor" for tutors, and "own writing" means a
 # student's own final records; RECORD_CASES below checks those parts. Front desk
@@ -100,6 +128,7 @@ CASES = [
     for table, actions in (
         (EXPECTED_IN_OWN_CENTER, CENTER_ACTIONS),
         (EXPECTED_SCHEDULING, SCHEDULING_ACTIONS),
+        (EXPECTED_ATTENDANCE, ATTENDANCE_ACTIONS),
         (EXPECTED_RECORDS, RECORDS_ACTIONS),
     )
     for role, expected in table.items()
@@ -238,6 +267,20 @@ OWNERSHIP_CASES = [
     ("director",   Action.BOOK_FOR_OTHERS,    "hidden",            False),
     ("site_admin", Action.VIEW_APPOINTMENT,   "other_appointment", False),
     ("site_admin", Action.MANAGE_SCHEDULES,   "published",         False),
+    ("student",    Action.MARK_ATTENDANCE,    "own_appointment",   False),
+    ("student",    Action.WAIVE_ATTENDANCE,   "own_appointment",   False),
+    ("tutor",      Action.MARK_ATTENDANCE,    "own_tutoring",      True),
+    ("tutor",      Action.MARK_ATTENDANCE,    "other_appointment", False),
+    ("tutor",      Action.WAIVE_ATTENDANCE,   "own_tutoring",      False),
+    ("front_desk", Action.MARK_ATTENDANCE,    "other_appointment", True),
+    ("front_desk", Action.MARK_ATTENDANCE,    "hidden_appointment", True),
+    ("front_desk", Action.WAIVE_ATTENDANCE,   "other_appointment", True),
+    ("front_desk", Action.MANAGE_BLOCKS,      "block",             False),
+    ("director",   Action.MARK_ATTENDANCE,    "other_appointment", True),
+    ("director",   Action.WAIVE_ATTENDANCE,   "other_appointment", True),
+    ("director",   Action.MANAGE_BLOCKS,      "block",             True),
+    ("site_admin", Action.MARK_ATTENDANCE,    "other_appointment", False),
+    ("site_admin", Action.MANAGE_BLOCKS,      "block",             False),
 ]
 # fmt: on
 
@@ -265,7 +308,20 @@ def _objects(center, user):
     own_appointment = appointment_with(hours=1)
     Participant.objects.create(appointment=own_appointment, student=user)
     own_tutoring = appointment_with(hours=2, tutor=user)
+    hidden = make_schedule(
+        center, schedule.starts_on, schedule.ends_on, visibility=Visibility.HIDDEN
+    )
+    hidden_appointment = appointment_with(hours=3, schedule=hidden)
     return {
+        "hidden_appointment": hidden_appointment,
+        "block": Block.objects.create(
+            center=center,
+            student=world.student,
+            reason=BlockReason.NO_SHOWS,
+            count=2,
+            limit=2,
+            ends_on=schedule.ends_on,
+        ),
         "own_appointment": own_appointment,
         "own_tutoring": own_tutoring,
         "other_appointment": other,

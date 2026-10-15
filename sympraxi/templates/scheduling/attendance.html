@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Attendance" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Attendance" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Who came?" %}</h1>
+  {% include "scheduling/_appointment_summary.html" %}
+  {% if error %}
+    <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+      <div class="usa-alert__body"><p class="usa-alert__text">{{ error }}</p></div>
+    </div>
+  {% endif %}
+  {% if not appointment.is_active %}
+    <p>{% translate "This appointment was canceled, so there's no attendance to mark." %}</p>
+  {% elif not participants %}
+    <p>{% translate "No students are in this appointment." %}</p>
+  {% elif not started %}
+    <p>{% translate "You can mark attendance once the appointment starts." %}</p>
+  {% else %}
+    <p>{% translate "Marking a student as a no-show sends them a short email, and it may count toward a pause on their online booking. A student with a final session record came, so they're marked as here." %}</p>
+    <form class="usa-form usa-form--large" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ back }}">
+      {% for p in participants %}
+        <fieldset class="usa-fieldset sympraxi-attendance">
+          <legend class="usa-legend">{{ p.student.display_name }}</legend>
+          {% if p.is_possible_no_show %}
+            <p class="usa-hint">{% blocktranslate with time=p.flagged_at|time %}Flagged as a possible no-show at {{ time }}. Choosing any answer clears the flag.{% endblocktranslate %}</p>
+          {% endif %}
+          {% if p.has_final_record %}
+            <p class="usa-hint">{% translate "Has a final session record." %}</p>
+          {% endif %}
+          {% if p.waived_at %}
+            <p class="usa-hint">{% translate "A no-show here was waived." %}</p>
+          {% endif %}
+          {% for radio in p.field %}
+            <div class="usa-radio">
+              <input class="usa-radio__input" type="radio" id="{{ radio.id_for_label }}" name="{{ radio.data.name }}" value="{{ radio.data.value }}"{% if radio.data.selected %} checked{% endif %}{% if p.has_final_record and radio.data.value != "attended" %} disabled{% endif %}>
+              <label class="usa-radio__label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+            </div>
+          {% endfor %}
+        </fieldset>
+      {% endfor %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Save attendance" %}</button>
+        <a href="{{ back }}">{% translate "Go back" %}</a>
+      </div>
+    </form>
+  {% endif %}
+{% endblock content %}

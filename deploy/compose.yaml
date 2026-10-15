@@ -53,6 +53,23 @@ services:
       start_interval: 5s
       retries: 3
 
+  scheduler:
+    <<: *app
+    # Sends reminder emails and flags possible no-shows, once a minute. Run one
+    # copy; a second sends nothing twice but does no good either.
+    command: ["python", "manage.py", "scheduler"]
+    # Healthy only if a sweep finished in the last three minutes, so a scheduler
+    # that can't reach the database shows as unhealthy, not only a dead one.
+    healthcheck:
+      test: ["CMD", "python", "-m", "sympraxi.healthcheck", "scheduler"]
+      interval: 60s
+      timeout: 10s
+      start_period: 60s
+      start_interval: 5s
+      retries: 3
+    # On `docker compose stop` it finishes the sweep in progress, then exits.
+    stop_grace_period: 30s
+
   caddy:
     image: caddy:2.11.7-alpine
     restart: unless-stopped

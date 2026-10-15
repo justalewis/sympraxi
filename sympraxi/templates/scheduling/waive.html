@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Waive" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Waive" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  {% if participant and participant.late_cancel %}
+    <h1>{% blocktranslate with name=participant.student.display_name %}Waive {{ name }}'s late cancellation?{% endblocktranslate %}</h1>
+  {% elif participant %}
+    <h1>{% blocktranslate with name=participant.student.display_name %}Waive {{ name }}'s no-show?{% endblocktranslate %}</h1>
+  {% else %}
+    <h1>{% translate "Waive a late cancellation or no-show" %}</h1>
+  {% endif %}
+  {% include "scheduling/_appointment_summary.html" %}
+  {% if participant is None %}
+    <p>{% translate "That student isn't in this appointment." %}</p>
+  {% elif participant.waived_at %}
+    <p>{% blocktranslate with day=participant.waived_at|date:"F j, Y" who=participant.waived_by.display_name|default:_("someone") %}This was waived on {{ day }} by {{ who }}.{% endblocktranslate %}</p>
+    <p>{% translate "Reason:" %} {{ participant.waiver_reason }}</p>
+  {% elif not participant.can_be_waived %}
+    <p>{% blocktranslate with name=participant.student.display_name %}There's nothing to waive for {{ name }}: no late cancellation or no-show is recorded here.{% endblocktranslate %}</p>
+  {% else %}
+    <p>{% translate "Waiving keeps it on the student's record, but it no longer counts toward a pause on their online booking. It doesn't lift a pause that's already in effect; a director can do that from the booking blocks page." %}</p>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="student" value="{{ participant.student_id }}">
+      <input type="hidden" name="next" value="{{ back }}">
+      {% include "includes/form_fields.html" %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Waive it" %}</button>
+        <a href="{{ back }}">{% translate "Go back" %}</a>
+      </div>
+    </form>
+  {% endif %}
+{% endblock content %}

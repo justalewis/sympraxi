@@ -48,7 +48,7 @@ from sympraxi.records.models import (
     Topic,
     WritingProject,
 )
-from sympraxi.scheduling.models import Appointment, AppointmentStatus, Participant
+from sympraxi.scheduling.models import Appointment, AppointmentStatus, Block, Participant
 from sympraxi.scheduling.views import appointment_for, center_for, signed_in
 
 # How far back the "records to write" list looks.
@@ -710,6 +710,9 @@ def export_page(request: HttpRequest, slug: str, membership_id: UUID) -> HttpRes
         "projects": WritingProject.objects.filter(center=center, student=student),
         "participations": export.participations(membership),
         "records": export.records(membership),
+        "blocks": Block.objects.filter(center=center, student=student)
+        .select_related("schedule", "term", "lifted_by")
+        .order_by("created_at"),
         "crumbs": _crumbs(
             membership.center,
             (

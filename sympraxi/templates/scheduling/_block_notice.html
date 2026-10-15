@@ -1,0 +1,24 @@
+{% load i18n %}
+{% if my_blocks %}
+  <div class="usa-alert usa-alert--warning">
+    <div class="usa-alert__body">
+      <h2 class="usa-alert__heading">{% translate "You can't book online right now" %}</h2>
+      {% for booking_block in my_blocks %}
+        <p class="usa-alert__text">
+          {% if booking_block.counted_from %}{% blocktranslate with day=booking_block.counted_from|date:"F j, Y" asvar window %}since {{ day }}{% endblocktranslate %}{% else %}{% translate "this term" as window %}{% endif %}
+          {% if booking_block.reason == "no_shows" %}
+            {% blocktranslate count n=booking_block.count with window=window %}Online booking is paused because {{ n }} of your appointments {{ window }} was recorded as missed.{% plural %}Online booking is paused because {{ n }} of your appointments {{ window }} were recorded as missed.{% endblocktranslate %}
+          {% else %}
+            {% blocktranslate count n=booking_block.count with window=window %}Online booking is paused because {{ n }} of your cancellations {{ window }} was late.{% plural %}Online booking is paused because {{ n }} of your cancellations {{ window }} were late.{% endblocktranslate %}
+          {% endif %}
+          {% if booking_block.schedule %}{% blocktranslate with name=booking_block.schedule.name %}This applies to {{ name }} only.{% endblocktranslate %}{% endif %}
+          {% blocktranslate with day=booking_block.first_free_day|date:"l, F j, Y" %}You can book online again starting {{ day }}.{% endblocktranslate %}
+        </p>
+      {% endfor %}
+      <p class="usa-alert__text">
+        {% translate "Your appointments are still on, and you can still cancel or move them." %}
+        {% if center.contact_email %}{% blocktranslate with email=center.contact_email %}To book a new time, or to ask to have the pause lifted, write to {{ email }}. The center can book for you.{% endblocktranslate %}{% else %}{% translate "To book a new time, or to ask to have the pause lifted, contact the center. The center can book for you." %}{% endif %}
+      </p>
+    </div>
+  </div>
+{% endif %}

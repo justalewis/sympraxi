@@ -3,6 +3,7 @@ import zoneinfo
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -51,6 +52,28 @@ class Center(models.Model):
             "The email that tells a student their summary is ready also includes the summary "
             "and next steps. Otherwise it only links to them."
         ),
+    )
+    # Booking blocks across every schedule in the center. Each schedule can also
+    # set its own limits, which count only that schedule.
+    no_show_block_limit = models.PositiveSmallIntegerField(
+        _("pause online booking after this many no-shows"),
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(1)],
+        help_text=_("Counts every schedule in the center. Leave empty for no limit."),
+    )
+    late_cancel_block_limit = models.PositiveSmallIntegerField(
+        _("pause online booking after this many late cancellations"),
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(1)],
+        help_text=_("Counts every schedule in the center. Leave empty for no limit."),
+    )
+    block_count_from = models.DateField(
+        _("count from this date"),
+        null=True,
+        blank=True,
+        help_text=_("Leave empty to count within each term."),
     )
     created_at = models.DateTimeField(auto_now_add=True)
 

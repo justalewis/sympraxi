@@ -13,8 +13,19 @@
   {% endif %}
   {% if allowed %}
     {% if staff %}<p>{% translate "Everyone in it, and the tutor, will get an email." %}</p>{% endif %}
-    <form method="post">
+    {% if late_warning %}
+      <div class="usa-alert usa-alert--warning usa-alert--slim">
+        <div class="usa-alert__body">
+          <p class="usa-alert__text">
+            {% blocktranslate with window=late_warning.window %}The appointment starts in less than {{ window }}, so canceling now is recorded as a late cancellation.{% endblocktranslate %}
+            {% with standing=late_warning.standing %}{% if standing.limit %}{% if standing.since %}{% blocktranslate with day=standing.since|date:"F j, Y" asvar window %}since {{ day }}{% endblocktranslate %}{% else %}{% translate "this term" as window %}{% endif %}{% blocktranslate count n=standing.count with window=window limit=standing.limit %}You have {{ n }} late cancellation {{ window }} so far. Once there are {{ limit }}, online booking is paused until the term ends.{% plural %}You have {{ n }} late cancellations {{ window }} so far. Once there are {{ limit }}, online booking is paused until the term ends.{% endblocktranslate %}{% endif %}{% endwith %}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+    <form method="post"{% if ask_staff %} class="usa-form usa-form--large"{% endif %}>
       {% csrf_token %}
+      {% if ask_staff %}{% include "includes/field.html" with field=form.student_asked %}<p class="usa-hint">{{ form.student_asked.help_text }}</p>{% endif %}
       <div class="sympraxi-form-actions">
         <button class="usa-button usa-button--secondary" type="submit">{% if staff %}{% translate "Cancel the appointment" %}{% elif appointment.capacity > 1 %}{% translate "Leave the group" %}{% else %}{% translate "Cancel my appointment" %}{% endif %}</button>
         <a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=appointment.pk %}">{% translate "Keep it" %}</a>

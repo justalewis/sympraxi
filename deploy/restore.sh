@@ -14,7 +14,7 @@ if [ "${2:-}" != "--yes" ]; then
     [ "$answer" = "restore" ] || { echo "Cancelled."; exit 1; }
 fi
 
-docker compose stop caddy web worker
+docker compose stop caddy web worker scheduler
 docker compose up -d --wait db
 
 docker compose exec -T db dropdb -U sympraxi --if-exists sympraxi

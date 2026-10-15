@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Booking block" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Block" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with name=booking_block.student.display_name %}Booking block for {{ name }}{% endblocktranslate %}</h1>
+  <dl class="sympraxi-summary">
+    <dt>{% translate "Covers" %}</dt>
+    <dd>{{ booking_block.schedule.name|default:_("Every schedule") }}</dd>
+    <dt>{% translate "Why" %}</dt>
+    <dd>{% include "scheduling/_block_reason.html" %}</dd>
+    <dt>{% translate "Set on" %}</dt>
+    <dd>{{ booking_block.created_at|date:"F j, Y" }}</dd>
+    <dt>{% translate "Last day" %}</dt>
+    <dd>{{ booking_block.ends_on|date:"l, F j, Y" }}</dd>
+    {% if booking_block.lifted_at %}
+      <dt>{% translate "Lifted" %}</dt>
+      <dd>{% blocktranslate with day=booking_block.lifted_at|date:"F j, Y" who=booking_block.lifted_by.display_name|default:_("someone") %}{{ day }}, by {{ who }}{% endblocktranslate %}{% if booking_block.lift_note %}: {{ booking_block.lift_note }}{% endif %}</dd>
+    {% endif %}
+  </dl>
+
+  <h2>{% translate "What counts now" %}</h2>
+  {% if counted %}
+    <ul class="usa-list">
+      {% for p in counted %}
+        <li><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=p.appointment.pk %}">{{ p.appointment.starts_at|date:"D, M j, Y" }}, {{ p.appointment.starts_at|time }}</a>, {{ p.appointment.schedule.name }}{% if p.late_cancel %} · {% translate "canceled late" %}{% else %} · {% translate "no-show" %}{% endif %}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "Nothing counts toward this limit now. Everything that set it was waived or changed." %}</p>
+  {% endif %}
+  <p>{% translate "Waived ones aren't listed. To waive one, open its appointment." %}</p>
+
+  {% if booking_block.lifted_at %}
+  {% elif not is_active %}
+    <p>{% translate "This block has already ended." %}</p>
+  {% else %}
+    <h2>{% translate "Lift the block" %}</h2>
+    <p>{% translate "The student can book online again right away. If they reach the limit again, a new block starts." %}</p>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      {% include "includes/form_fields.html" %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Lift the block" %}</button>
+        <a href="{{ back }}">{% translate "Go back" %}</a>
+      </div>
+    </form>
+  {% endif %}
+{% endblock content %}

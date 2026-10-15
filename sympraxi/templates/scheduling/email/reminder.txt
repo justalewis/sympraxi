@@ -1,0 +1,16 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=recipient.display_name %}Hello {{ name }},{% endblocktranslate %}
+
+{% if for_tutor %}{% translate "This is a reminder of an appointment you're tutoring." %}{% else %}{% blocktranslate with center=center.name %}This is a reminder of your appointment at {{ center }}.{% endblocktranslate %}{% endif %}
+
+{% translate "When:" %} {{ appointment.starts_at|date:"l, F j, Y" }}, {{ appointment.starts_at|time }} {% translate "to" %} {{ appointment.ends_at|time:"P T" }}
+{% if not for_tutor %}{% translate "With:" %} {{ appointment.tutor.display_name }}
+{% endif %}{% translate "Where:" %} {{ location }}
+
+{% if for_tutor %}{% translate "Sign in to see who it is:" %} {{ url }}{% elif can_cancel %}{% translate "See it, or cancel it if you can't make it:" %} {{ url }}{% else %}{% translate "See it:" %} {{ url }}{% if center.contact_email %}
+{% blocktranslate with email=center.contact_email %}If you can't make it, let the center know at {{ email }}.{% endblocktranslate %}{% endif %}{% endif %}
+
+{% if for_tutor %}{% translate "You get these reminders because you turned them on. To turn them off:" %}{% else %}{% translate "To stop getting reminders like this one:" %}{% endif %} {{ settings_url }}
+
+{{ center.name }}{% if center.contact_email %}
+{{ center.contact_email }}{% endif %}
+{% endautoescape %}

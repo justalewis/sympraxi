@@ -21,6 +21,11 @@ for appointments they teach. A student sees only their own final records, and
 only the parts written for them. Front desk staff see whether a record exists,
 never what it says. A record "about a student" in a center is checked against
 the student's `Membership` there, which carries both the student and the center.
+
+Attendance follows the appointments: a tutor marks who came to appointments
+they teach, and front desk staff and directors mark any. Front desk staff and
+directors waive late cancellations and no-shows. Only directors see and lift
+booking blocks.
 """
 
 from collections.abc import Callable
@@ -69,6 +74,12 @@ class Action(StrEnum):
     MANAGE_SCHEDULES = "scheduling.manage_schedules"
     # Exemptions often record accommodations, so only directors see them.
     MANAGE_EXEMPTIONS = "scheduling.manage_exemptions"
+    # Mark students as here or a no-show, and confirm or clear possible no-shows.
+    MARK_ATTENDANCE = "scheduling.mark_attendance"
+    # Waive a late cancellation or no-show, so it doesn't count toward a block.
+    WAIVE_ATTENDANCE = "scheduling.waive_attendance"
+    # See and lift booking blocks, and set the center's block limits.
+    MANAGE_BLOCKS = "scheduling.manage_blocks"
     # Whether a session record exists and is final, without what it says.
     VIEW_RECORD_STATUS = "records.view_status"
     # Write, finalize and amend session records; start and edit writing projects.
@@ -101,6 +112,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_SCHEDULES,
             Action.VIEW_APPOINTMENT,
             Action.VIEW_OWN_TUTORING,
+            Action.MARK_ATTENDANCE,
             Action.VIEW_RECORD_STATUS,
             Action.WRITE_RECORDS,
             Action.VIEW_RECORDS,
@@ -116,6 +128,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.CANCEL_APPOINTMENT,
             Action.CHANGE_APPOINTMENT,
             Action.VIEW_ALL_APPOINTMENTS,
+            Action.MARK_ATTENDANCE,
+            Action.WAIVE_ATTENDANCE,
             Action.VIEW_RECORD_STATUS,
         }
     ),
@@ -134,6 +148,9 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_ALL_APPOINTMENTS,
             Action.MANAGE_SCHEDULES,
             Action.MANAGE_EXEMPTIONS,
+            Action.MARK_ATTENDANCE,
+            Action.WAIVE_ATTENDANCE,
+            Action.MANAGE_BLOCKS,
             Action.VIEW_RECORD_STATUS,
             Action.WRITE_RECORDS,
             Action.VIEW_RECORDS,
@@ -233,6 +250,7 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.STUDENT, Action.CHANGE_APPOINTMENT): _participant,
     (Role.TUTOR, Action.VIEW_SCHEDULES): _published,
     (Role.TUTOR, Action.VIEW_APPOINTMENT): _tutor_of,
+    (Role.TUTOR, Action.MARK_ATTENDANCE): _tutor_of,
     (Role.TUTOR, Action.VIEW_RECORD_STATUS): _tutor_of,
     (Role.TUTOR, Action.WRITE_RECORDS): _writes_for,
     (Role.TUTOR, Action.VIEW_RECORDS): _reads_student,

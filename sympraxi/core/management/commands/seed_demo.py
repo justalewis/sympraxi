@@ -16,8 +16,11 @@ from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership, Role
 from sympraxi.records import services as records
 from sympraxi.records.models import Resource, SessionRecord, Topic
+from sympraxi.scheduling import attendance, services
 from sympraxi.scheduling.models import (
     Appointment,
+    Attendance,
+    Block,
     Modality,
     Participant,
     Schedule,
@@ -32,6 +35,7 @@ DEMO_PEOPLE = [
     ("frontdesk@demo.test", "Felix Frontdesk", Role.FRONT_DESK),
     ("tutor@demo.test", "Tomás Tutor", Role.TUTOR),
     ("student@demo.test", "Sam Student", Role.STUDENT),
+    ("student2@demo.test", "Robin Student", Role.STUDENT),
 ]
 
 
@@ -63,12 +67,17 @@ class Command(BaseCommand):
         assignment = self._schedule(center)
         call_command("load_catalog", stdout=self.stdout)
         self._records(center, assignment)
+        self._attendance(center, assignment)
         self.stdout.write(self.style.SUCCESS(f"Demo center ready at /centers/{center.slug}/"))
         self.stdout.write("Accounts: " + ", ".join(e for e, _, _ in DEMO_PEOPLE))
         if options["password"] is None:
             self.stdout.write(f"Password for new accounts: {password}")
         self.stdout.write(
             "Staff accounts will be asked to set up two-factor login on first sign-in."
+        )
+        self.stdout.write(
+            "Run `manage.py scheduler` alongside the server to send reminders and flag "
+            "possible no-shows."
         )
 
     def _schedule(self, center: Center) -> TutorAssignment:
@@ -90,6 +99,7 @@ class Command(BaseCommand):
                 "starts_on": max(today, term.starts_on),
                 "ends_on": min(today + timedelta(days=90), term.ends_on),
                 "max_per_week": 2,
+                "late_cancel_minutes": 120,
             },
         )
         tutor = User.objects.get(email="tutor@demo.test")
@@ -191,3 +201,61 @@ class Command(BaseCommand):
         )
         # Yesterday's session has no record yet, so it shows on "records to write".
         past_session(1)
+
+    def _attendance(self, center: Center, assignment: TutorAssignment) -> None:
+        """A late cancellation and a possible no-show for Sam, and three no-shows and a
+        booking block for Robin, under the center's limit of three."""
+        robin = User.objects.get(email="student2@demo.test")
+        if Block.objects.filter(center=center, student=robin).exists():
+            return
+        center.no_show_block_limit = 3
+        center.late_cancel_block_limit = 3
+        center.save(update_fields=["no_show_block_limit", "late_cancel_block_limit"])
+        schedule = assignment.schedule
+        schedule.late_cancel_minutes = 120
+        schedule.save(update_fields=["late_cancel_minutes"])
+        sam = User.objects.get(email="student@demo.test")
+        desk = User.objects.get(email="frontdesk@demo.test")
+        tz = zoneinfo.ZoneInfo(center.time_zone)
+        today = timezone.localdate(timezone=tz)
+
+        def session(student: User, days_ago: int, hour: int) -> Appointment:
+            start = first_instant(today - timedelta(days=days_ago), time(hour), tz)
+            appointment = Appointment.objects.create(
+                schedule=schedule,
+                assignment=assignment,
+                tutor=assignment.tutor,
+                starts_at=start,
+                ends_at=start + timedelta(minutes=30),
+                blocked_until=start + timedelta(minutes=30),
+                modality=Modality.IN_PERSON,
+            )
+            Participant.objects.create(appointment=appointment, student=student)
+            return appointment
+
+        # Sam canceled 90 minutes before a session five days ago: late, since the
+        # schedule counts anything within two hours.
+        late = session(sam, 5, 15)
+        services.cancel(
+            actor=sam,
+            appointment=late,
+            as_staff=False,
+            now=late.starts_at - timedelta(minutes=90),
+            notify=False,
+        )
+        # Yesterday afternoon no one marked Sam, so it waits on "Attendance to check".
+        missed = session(sam, 1, 14)
+        Participant.objects.filter(appointment=missed).update(
+            flagged_at=missed.starts_at + timedelta(minutes=15)
+        )
+        # Robin missed three sessions; the front desk confirmed each, and the third
+        # paused Robin's online booking until the end of the term.
+        for days_ago in (8, 6, 4):
+            appointment = session(robin, days_ago, 13)
+            attendance.mark(
+                actor=desk,
+                appointment=appointment,
+                marks={robin.pk: Attendance.NO_SHOW},
+                now=appointment.starts_at + timedelta(minutes=20),
+                notify=False,
+            )

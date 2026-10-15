@@ -40,7 +40,7 @@
     <p>{% translate "No schedules are open yet." %}</p>
   {% endif %}
 
-  {% if can_manage or can_manage_exemptions %}
+  {% if can_manage or can_manage_exemptions or can_manage_blocks %}
     <h2>{% translate "Set up" %}</h2>
     <ul class="usa-list">
       {% if can_manage %}
@@ -50,6 +50,9 @@
       {% endif %}
       {% if can_manage_exemptions %}
         <li><a href="{% url 'scheduling:exemptions' slug=center.slug %}">{% translate "Exemptions from booking limits" %}</a></li>
+      {% endif %}
+      {% if can_manage_blocks %}
+        <li><a href="{% url 'scheduling:blocks' slug=center.slug %}">{% translate "Booking blocks for no-shows and late cancellations" %}</a></li>
       {% endif %}
     </ul>
   {% endif %}

@@ -16,7 +16,7 @@ two requests can't break them:
 
 import uuid
 import zoneinfo
-from datetime import time, timedelta
+from datetime import date, time, timedelta
 from functools import cached_property
 from typing import Any
 
@@ -130,6 +130,22 @@ class Visibility(models.TextChoices):
     HIDDEN = "hidden", _("Hidden (archived)")
 
 
+# How long before an appointment a reminder can go out. The shortest gap between
+# two choices (30 minutes) is longer than the reminder catch-up window, so two
+# reminders for one appointment are never due in the same sweep.
+REMINDER_CHOICES = [
+    (30, _("30 minutes before")),
+    (60, _("1 hour before")),
+    (120, _("2 hours before")),
+    (180, _("3 hours before")),
+    (240, _("4 hours before")),
+    (360, _("6 hours before")),
+    (720, _("12 hours before")),
+    (1440, _("24 hours before")),
+    (2880, _("48 hours before")),
+]
+
+
 class Schedule(models.Model):
     """A bookable calendar: its dates, hours, slot size and booking rules."""
 
@@ -201,6 +217,56 @@ class Schedule(models.Model):
     max_minutes_per_term = models.PositiveIntegerField(
         _("most minutes per term"), null=True, blank=True
     )
+
+    # Attendance. See `sympraxi.scheduling.attendance`.
+    late_cancel_minutes = models.PositiveIntegerField(
+        _("late cancellation window, in minutes"),
+        default=0,
+        help_text=_(
+            "A cancellation this close to the start is recorded as late, and the student gets "
+            "an email saying so. Staff can waive it. 0 turns this off."
+        ),
+    )
+    no_show_grace_minutes = models.PositiveSmallIntegerField(
+        _("minutes before a possible no-show is flagged"),
+        default=15,
+        validators=[MaxValueValidator(240)],
+        help_text=_(
+            "If no one has marked a student as here by this many minutes after the start, staff "
+            "are asked to check. Nothing counts as a no-show until staff confirm it."
+        ),
+    )
+    no_show_block_limit = models.PositiveSmallIntegerField(
+        _("pause online booking on this schedule after this many no-shows"),
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(1)],
+        help_text=_("Counts only this schedule. Leave empty for no limit."),
+    )
+    late_cancel_block_limit = models.PositiveSmallIntegerField(
+        _("pause online booking on this schedule after this many late cancellations"),
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(1)],
+        help_text=_("Counts only this schedule. Leave empty for no limit."),
+    )
+    block_count_from = models.DateField(
+        _("count no-shows and late cancellations from this date"),
+        null=True,
+        blank=True,
+        help_text=_("Leave empty to count within the term."),
+    )
+
+    # Reminder emails, sent by the scheduler (`manage.py scheduler`).
+    reminder_1_minutes = models.PositiveIntegerField(
+        _("first reminder"), choices=REMINDER_CHOICES, null=True, blank=True, default=1440
+    )
+    reminder_2_minutes = models.PositiveIntegerField(
+        _("second reminder"), choices=REMINDER_CHOICES, null=True, blank=True, default=60
+    )
+    reminder_3_minutes = models.PositiveIntegerField(
+        _("third reminder"), choices=REMINDER_CHOICES, null=True, blank=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -234,12 +300,27 @@ class Schedule(models.Model):
     def accepts_bookings(self) -> bool:
         return self.visibility != Visibility.HIDDEN and self.center.is_active
 
+    def reminder_offsets(self) -> set[int]:
+        """Minutes before each appointment that a reminder goes out."""
+        return {
+            m
+            for m in (self.reminder_1_minutes, self.reminder_2_minutes, self.reminder_3_minutes)
+            if m
+        }
+
     def clean(self) -> None:
         errors: dict[str, Any] = {}
         if self.starts_on and self.ends_on and self.ends_on < self.starts_on:
             errors["ends_on"] = _("The last day can't be before the first day.")
         if self.opens_at and self.closes_at and self.closes_at <= self.opens_at:
             errors["closes_at"] = _("Closing time must be after opening time.")
+        reminders = [
+            m
+            for m in (self.reminder_1_minutes, self.reminder_2_minutes, self.reminder_3_minutes)
+            if m
+        ]
+        if len(reminders) != len(set(reminders)):
+            errors["reminder_2_minutes"] = _("Choose a different time for each reminder.")
         if self.term_id and self.center_id:
             if self.term.center_id != self.center_id:
                 errors["term"] = _("Choose a term in this center.")
@@ -540,8 +621,19 @@ class Appointment(models.Model):
         return self.participants.filter(canceled_at__isnull=True)
 
 
+class Attendance(models.TextChoices):
+    UNMARKED = "", _("Not marked")
+    ATTENDED = "attended", _("Came")
+    NO_SHOW = "no_show", _("No-show")
+
+
 class Participant(models.Model):
-    """A student in an appointment. A group appointment has several."""
+    """A student in an appointment. A group appointment has several.
+
+    Attendance is kept here, per student, because in a group some students come
+    and some don't. The appointment's own status says only whether its time is
+    still held (see `sympraxi.scheduling.attendance`).
+    """
 
     appointment = models.ForeignKey(
         Appointment, on_delete=models.CASCADE, related_name="participants"
@@ -555,6 +647,32 @@ class Participant(models.Model):
     )
     # Set when the student leaves a group, or when the whole appointment is canceled.
     canceled_at = models.DateTimeField(null=True, blank=True)
+    # The student asked to cancel inside the schedule's late cancellation window.
+    late_cancel = models.BooleanField(default=False)
+
+    attendance = models.CharField(
+        _("attendance"), max_length=10, choices=Attendance.choices, blank=True, default=""
+    )
+    attendance_marked_at = models.DateTimeField(null=True, blank=True)
+    attendance_marked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+    # Set by the scheduler when no one marked the student by the end of the
+    # schedule's grace period. Staff confirm it (a no-show), mark the student as
+    # here, or clear it. It never becomes a no-show on its own.
+    flagged_at = models.DateTimeField(null=True, blank=True)
+    flag_cleared_at = models.DateTimeField(null=True, blank=True)
+    flag_cleared_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+
+    # A waived late cancellation or no-show stays on the record but no longer
+    # counts toward a booking block.
+    waived_at = models.DateTimeField(null=True, blank=True)
+    waived_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+    waiver_reason = models.TextField(_("reason"), blank=True)
 
     class Meta:
         ordering = ["added_at"]
@@ -562,10 +680,46 @@ class Participant(models.Model):
             models.UniqueConstraint(
                 fields=["appointment", "student"], name="scheduling_participant_unique"
             ),
+            models.CheckConstraint(
+                condition=Q(attendance__in=["", "attended", "no_show"]),
+                name="scheduling_participant_attendance_valid",
+            ),
+            models.CheckConstraint(
+                condition=Q(late_cancel=False) | Q(canceled_at__isnull=False),
+                name="scheduling_participant_late_is_canceled",
+            ),
+            models.CheckConstraint(
+                condition=Q(waived_at__isnull=True) | ~Q(waiver_reason=""),
+                name="scheduling_participant_waiver_has_reason",
+            ),
+        ]
+        indexes = [
+            models.Index(
+                fields=["flagged_at"],
+                condition=Q(flagged_at__isnull=False, flag_cleared_at__isnull=True, attendance=""),
+                name="scheduling_part_flagged",
+            ),
         ]
 
     def __str__(self) -> str:
         return f"{self.student} in {self.appointment_id}"
+
+    @property
+    def is_possible_no_show(self) -> bool:
+        return (
+            self.flagged_at is not None
+            and self.flag_cleared_at is None
+            and self.attendance == Attendance.UNMARKED
+            and self.canceled_at is None
+        )
+
+    @property
+    def is_no_show(self) -> bool:
+        return self.attendance == Attendance.NO_SHOW and self.canceled_at is None
+
+    @property
+    def can_be_waived(self) -> bool:
+        return self.waived_at is None and (self.late_cancel or self.is_no_show)
 
 
 class Exemption(models.Model):
@@ -604,3 +758,97 @@ class Exemption(models.Model):
 
     def __str__(self) -> str:
         return f"{self.student} until {self.expires_on}"
+
+
+class BlockReason(models.TextChoices):
+    NO_SHOWS = "no_shows", _("No-shows")
+    LATE_CANCELS = "late_cancels", _("Late cancellations")
+
+
+class Block(models.Model):
+    """A pause on a student's online booking, set when they reach a center's or
+    schedule's limit of no-shows or late cancellations.
+
+    While a block is in effect the student can't book for themselves (on every
+    schedule in the center, or on `schedule` only). Staff can still book for
+    them, and their existing appointments stay. A block ends after `ends_on`,
+    the last day of the term by default, or when a director lifts it.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    center = models.ForeignKey(Center, on_delete=models.CASCADE, related_name="booking_blocks")
+    schedule = models.ForeignKey(
+        Schedule,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="booking_blocks",
+        help_text=_("Empty when the block covers every schedule in the center."),
+    )
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="booking_blocks"
+    )
+    reason = models.CharField(max_length=20, choices=BlockReason.choices)
+    # What was counted when the block was set: how many, the limit, and the window.
+    count = models.PositiveSmallIntegerField()
+    limit = models.PositiveSmallIntegerField()
+    term = models.ForeignKey(
+        Term, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+    counted_from = models.DateField(null=True, blank=True)
+    # The last day of the block, in the center's time zone.
+    ends_on = models.DateField(_("last day"))
+    created_at = models.DateTimeField(auto_now_add=True)
+    lifted_at = models.DateTimeField(null=True, blank=True)
+    lifted_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+    lift_note = models.TextField(_("note"), blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["student", "center", "ends_on"], name="scheduling_block_student"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.student} until {self.ends_on}"
+
+    def is_active(self, today: date) -> bool:
+        return self.lifted_at is None and self.ends_on >= today
+
+    @property
+    def first_free_day(self) -> date:
+        """The first day the student can book online again."""
+        return self.ends_on + timedelta(days=1)
+
+
+class Reminder(models.Model):
+    """One reminder email sent, so it is never sent twice.
+
+    The unique constraint is what stops two scheduler processes, or one that
+    restarts mid-sweep, from sending the same reminder: the second insert fails
+    and nothing is queued. `starts_at` is part of the key, so an appointment
+    that moves gets reminders for its new time.
+    """
+
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name="reminders")
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
+    )
+    minutes_before = models.PositiveIntegerField()
+    starts_at = models.DateTimeField()
+    due_at = models.DateTimeField()
+    sent_at = models.DateTimeField()
+
+    class Meta:
+        ordering = ["sent_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["appointment", "recipient", "minutes_before", "starts_at"],
+                name="scheduling_reminder_once",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.minutes_before} min before {self.appointment_id} to {self.recipient_id}"

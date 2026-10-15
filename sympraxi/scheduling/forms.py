@@ -9,8 +9,10 @@ from django.utils.translation import gettext_lazy as _
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Role
 from sympraxi.scheduling.models import (
+    REMINDER_CHOICES,
     Appointment,
     AppointmentStatus,
+    Attendance,
     AvailabilityException,
     Closure,
     ExceptionKind,
@@ -249,18 +251,43 @@ class ScheduleForm(forms.ModelForm):
             "max_minutes_per_day",
             "max_minutes_per_week",
             "max_minutes_per_term",
+            "reminder_1_minutes",
+            "reminder_2_minutes",
+            "reminder_3_minutes",
+            "late_cancel_minutes",
+            "no_show_grace_minutes",
+            "no_show_block_limit",
+            "late_cancel_block_limit",
+            "block_count_from",
         ]
         widgets = {
             "starts_on": DateInput(),
             "ends_on": DateInput(),
             "opens_at": TimeInput(),
             "closes_at": TimeInput(),
+            "block_count_from": DateInput(),
             "description": forms.Textarea(attrs={"rows": 3}),
         }
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         choice_field(self, "term").queryset = Term.objects.filter(center=self.instance.center)
+        for name in ("reminder_1_minutes", "reminder_2_minutes", "reminder_3_minutes"):
+            cast(forms.ChoiceField, self.fields[name]).choices = [
+                ("", _("No reminder")),
+                *REMINDER_CHOICES,
+            ]
+        # Left empty, these take their defaults: no late window, 15 minutes' grace.
+        for name in ("late_cancel_minutes", "no_show_grace_minutes"):
+            self.fields[name].required = False
+
+    def clean_late_cancel_minutes(self) -> int:
+        value = self.cleaned_data.get("late_cancel_minutes")
+        return 0 if value is None else int(value)
+
+    def clean_no_show_grace_minutes(self) -> int:
+        value = self.cleaned_data.get("no_show_grace_minutes")
+        return 15 if value is None else int(value)
 
 
 class AssignmentForm(forms.ModelForm):
@@ -364,3 +391,80 @@ class ExemptionForm(forms.ModelForm):
 
 class ConfirmForm(forms.Form):
     """A POST with nothing but the CSRF token, for "Are you sure?" pages."""
+
+
+class StaffCancelForm(forms.Form):
+    student_asked = forms.BooleanField(
+        label=_("The student asked to cancel"),
+        required=False,
+        help_text=_(
+            "Inside the late cancellation window, this records a late cancellation for the "
+            "student. Leave it unchecked when the center is canceling."
+        ),
+    )
+
+
+# --- Attendance -------------------------------------------------------------------
+
+
+def attendance_field_name(student_id: Any) -> str:
+    return f"attendance-{student_id}"
+
+
+class AttendanceForm(forms.Form):
+    """One set of choices per student in the appointment. Students left unanswered
+    aren't changed, so a list page can post one student's mark on its own."""
+
+    CHOICES = [
+        (Attendance.ATTENDED.value, _("Came")),
+        (Attendance.NO_SHOW.value, _("No-show")),
+        (Attendance.UNMARKED.value, _("Not marked")),
+    ]
+
+    def __init__(self, *args: Any, participants: list[Any], **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.participants = participants
+        for p in participants:
+            name = attendance_field_name(p.student_id)
+            self.fields[name] = forms.ChoiceField(
+                label=p.student.display_name,
+                choices=self.CHOICES,
+                widget=forms.RadioSelect,
+                required=False,
+                initial=p.attendance,
+            )
+            p.field = self[name]
+
+    def marks(self) -> dict[Any, str]:
+        """The marks that were posted, by student ID."""
+        return {
+            p.student_id: self.cleaned_data[attendance_field_name(p.student_id)]
+            for p in self.participants
+            if attendance_field_name(p.student_id) in self.data
+        }
+
+
+class WaiveForm(forms.Form):
+    reason = forms.CharField(
+        label=_("Why it's being waived"),
+        widget=forms.Textarea(attrs={"rows": 3}),
+        max_length=1000,
+        help_text=_("Kept with the student's record. They can ask to see it."),
+    )
+
+
+class LiftBlockForm(forms.Form):
+    note = forms.CharField(
+        label=_("Note (optional)"),
+        widget=forms.Textarea(attrs={"rows": 3}),
+        max_length=1000,
+        required=False,
+        help_text=_("Kept with the block. The student can ask to see it."),
+    )
+
+
+class CenterBlockForm(forms.ModelForm):
+    class Meta:
+        model = Center
+        fields = ["no_show_block_limit", "late_cancel_block_limit", "block_count_from"]
+        widgets = {"block_count_from": DateInput()}

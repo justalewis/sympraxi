@@ -1,6 +1,10 @@
+from typing import Any
+
 from django import forms
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
+
+from sympraxi.accounts.models import User
 
 
 class SignupForm(forms.Form):
@@ -28,3 +32,16 @@ class SignupForm(forms.Form):
     def signup(self, request: HttpRequest, user: object) -> None:
         # Required by allauth; the adapter has already saved these fields.
         pass
+
+
+class ReminderSettingsForm(forms.ModelForm):
+    """Reminder emails before appointments. Tutors see the tutoring choice only."""
+
+    class Meta:
+        model = User
+        fields = ["reminders_for_appointments", "reminders_for_tutoring"]
+
+    def __init__(self, *args: Any, tutor: bool, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        if not tutor:
+            del self.fields["reminders_for_tutoring"]

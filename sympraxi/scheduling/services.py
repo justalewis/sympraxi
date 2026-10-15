@@ -16,10 +16,14 @@ tutor; if it, a deadlock or a serialization failure stops a write anyway, the
 person is told the time was just taken.
 
 Students booking for themselves are held to the schedule's notice, horizon,
-change cutoff and limits. Staff booking for someone (`as_staff=True`) are not
-held to notice, horizon or cutoff, and may override limits and caps; overrides
-are recorded in the audit log. Nobody can book outside a tutor's hours or on top
-of another appointment.
+change cutoff and limits, and can't book while a booking block is in effect
+(`blocks`). Staff booking for someone (`as_staff=True`) are not held to notice,
+horizon, cutoff or blocks, and may override limits and caps; overrides are
+recorded in the audit log. Nobody can book outside a tutor's hours or on top of
+another appointment.
+
+A student who cancels inside the schedule's late cancellation window is recorded
+as canceling late (`attendance.is_late`).
 """
 
 import uuid
@@ -39,11 +43,12 @@ from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership, Role
 from sympraxi.core.policy import Action, can
 from sympraxi.privacy.audit import AuditAction, record
-from sympraxi.scheduling import notifications
+from sympraxi.scheduling import attendance, blocks, notifications
 from sympraxi.scheduling.availability import fits_availability
 from sympraxi.scheduling.models import (
     Appointment,
     AppointmentStatus,
+    BlockReason,
     Exemption,
     Modality,
     Participant,
@@ -127,6 +132,11 @@ def book(
                     _check_tutor_caps(assignment, starts_at)
 
             for membership in memberships:
+                if not as_staff and blocks.in_effect(membership.user, schedule, now=now):
+                    raise BookingError(
+                        "blocked",
+                        _("Online booking is paused for you. Contact the center to book."),
+                    )
                 _check_student_free(membership.user, starts_at, ends_at)
                 if not override_limits:
                     _check_limits(schedule, membership.user, starts_at, minutes)
@@ -341,6 +351,7 @@ def cancel(
     actor: User,
     appointment: Appointment,
     as_staff: bool,
+    student_asked: bool = False,
     now: datetime | None = None,
     request: HttpRequest | None = None,
     notify: bool = True,
@@ -349,9 +360,23 @@ def cancel(
 
     Staff cancel the whole appointment and every student in it is told. The tutor
     is told whenever the appointment itself is canceled.
+
+    A student canceling inside the schedule's late cancellation window is recorded
+    as canceling late, gets a late-cancellation email instead of the usual one,
+    and may reach a booking block. Staff canceling for a student who asked
+    (`student_asked`, one-student appointments only) are held to the same window.
+    Staff canceling for the center's own reasons never record a late cancellation.
     """
     now = now or timezone.now()
+    if not as_staff:
+        student_asked = True
+    asking: list[User] = []
     with transaction.atomic():
+        if student_asked:
+            # A late cancellation can set a block, so the students' memberships
+            # are locked first, as when booking.
+            asking = [actor] if not as_staff else _students_in(appointment)
+            blocks.lock_students(appointment.schedule.center, [s.pk for s in asking])
         current = (
             Appointment.objects.select_for_update(of=("self",))
             .select_related("schedule__center")
@@ -371,8 +396,16 @@ def cancel(
             if actor not in students:
                 raise BookingError("not_allowed", _("You aren't in this appointment."))
             told = [actor]
+        late = student_asked and bool(told) and attendance.is_late(current, now)
+        if late and len(told) > 1:
+            raise BookingError(
+                "late_group",
+                _("A late cancellation is recorded for one student at a time."),
+            )
+        if late and {s.pk for s in told} - {s.pk for s in asking}:
+            raise BookingError("changed", _("Someone changed this appointment. Try again."))
         current.participants.filter(student__in=told, canceled_at__isnull=True).update(
-            canceled_at=now
+            canceled_at=now, late_cancel=late
         )
         whole = not current.active_participants().exists()
         if whole:
@@ -381,11 +414,35 @@ def cancel(
             current.canceled_by = actor
             current.sequence += 1
             current.save()
-            _audit(AuditAction.APPOINTMENT_CANCELED, actor, current, request, staff=as_staff)
+            _audit(
+                AuditAction.APPOINTMENT_CANCELED, actor, current, request, staff=as_staff, late=late
+            )
         else:
-            _audit(AuditAction.APPOINTMENT_LEFT, actor, current, request, student=str(actor.pk))
+            _audit(
+                AuditAction.APPOINTMENT_LEFT,
+                actor,
+                current,
+                request,
+                student=str(actor.pk),
+                late=late,
+            )
+        if late:
+            for student in told:
+                blocks.evaluate(
+                    student=student,
+                    appointment=current,
+                    reason=BlockReason.LATE_CANCELS,
+                    actor=actor,
+                    request=request,
+                    now=now,
+                )
     if notify and not current.is_placeholder:
-        _notify_on_commit(notifications.CANCELED, current, request, only=told, tutor=whole)
+        if late:
+            _notify_on_commit(notifications.LATE_CANCELED, current, request, only=told, tutor=False)
+            if whole:
+                _notify_on_commit(notifications.CANCELED, current, request, only=[], tutor=True)
+        else:
+            _notify_on_commit(notifications.CANCELED, current, request, only=told, tutor=whole)
     return current
 
 

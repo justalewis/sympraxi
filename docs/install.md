@@ -140,9 +140,25 @@ Site administrators keep a break-glass sign-in with their password and two-facto
 | `caddy` | HTTPS, certificates, compression |
 | `web` | The Django application (Gunicorn) |
 | `worker` | Background jobs, such as sending email |
+| `scheduler` | Each minute, sends reminder emails and flags possible no-shows |
 | `db` | PostgreSQL 18 |
 
 Data lives in Docker volumes: `pgdata` (the database), `media` (uploads), and `caddy_data` (certificates).
+
+## Reminders and attendance
+
+The `scheduler` service sends reminder emails and flags students no one marked as here, once a minute. `install.sh` starts it with everything else. Links in reminders start with `https://` and your `SYMPRAXI_DOMAIN`; set `SYMPRAXI_BASE_URL` in `deploy/.env` only if people reach the site at a different address.
+
+Its health check passes only if a sweep finished in the last three minutes. Check it with:
+
+```bash
+docker compose ps scheduler
+docker compose logs scheduler --tail 50
+```
+
+If it was down for a while, it sends only the reminders that are less than 15 minutes late when it comes back, never a backlog. `upgrade.sh` and `restore.sh` stop it while the database changes and start it again afterward.
+
+Each schedule sets its reminders, its late-cancellation window and how long after the start a student is flagged as a possible no-show (on the schedule's edit page). Directors set the center's limits for booking blocks under **Booking blocks**. Students turn reminders off, and tutors turn them on, under **Account** → **Email reminders**.
 
 ## Backups
 
@@ -189,5 +205,6 @@ Sympraxi is licensed under the AGPL. If you run a modified version, set `SYMPRAX
 ```bash
 docker compose ps
 docker compose logs web --tail 100
+docker compose logs scheduler --tail 100
 docker compose exec web python manage.py check --deploy
 ```

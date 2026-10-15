@@ -4,6 +4,8 @@
 export covers the student's account details, their appointments, every
 session record about them (drafts too, with staff notes and every amendment),
 attached resources with the tutors' notes, and their writing projects.
+Appointments include attendance: no-shows, late cancellations and waivers with
+their reasons. Booking blocks are listed with any director's note.
 
 Other students are left out. A group appointment shows how many students it
 had, never who they were (99.12: when a record holds information about more
@@ -19,7 +21,7 @@ from django.utils import timezone
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Membership
 from sympraxi.records.models import SessionRecord, WritingProject
-from sympraxi.scheduling.models import Participant
+from sympraxi.scheduling.models import Block, Participant
 
 FORMAT = "sympraxi.student-record"
 VERSION = 1
@@ -49,6 +51,12 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
         ],
         "appointments": [_appointment(p) for p in participations(membership)],
         "session_records": [_record(r) for r in records(membership)],
+        "booking_blocks": [
+            _block(b)
+            for b in Block.objects.filter(center=center, student=student)
+            .select_related("schedule", "lifted_by")
+            .order_by("created_at")
+        ],
     }
 
 
@@ -72,7 +80,13 @@ def participations(membership: Membership) -> QuerySet[Participant]:
         Participant.objects.filter(
             student=membership.user, appointment__schedule__center=membership.center
         )
-        .select_related("appointment__tutor", "appointment__schedule", "appointment__room")
+        .select_related(
+            "appointment__tutor",
+            "appointment__schedule",
+            "appointment__room",
+            "attendance_marked_by",
+            "waived_by",
+        )
         .annotate(group_size=Count("appointment__participants"))
         .order_by("appointment__starts_at")
     )
@@ -95,6 +109,31 @@ def _appointment(p: Participant) -> dict[str, Any]:
         "group_size": getattr(p, "group_size", 1),
         "joined_at": _when(p.added_at),
         "left_at": _when(p.canceled_at),
+        "late_cancellation": p.late_cancel,
+        "attendance": p.attendance or None,
+        "attendance_marked_at": _when(p.attendance_marked_at),
+        "attendance_marked_by": _person(p.attendance_marked_by),
+        "flagged_as_possible_no_show_at": _when(p.flagged_at),
+        "flag_cleared_at": _when(p.flag_cleared_at),
+        "waived_at": _when(p.waived_at),
+        "waived_by": _person(p.waived_by),
+        "waiver_reason": p.waiver_reason,
+    }
+
+
+def _block(b: Block) -> dict[str, Any]:
+    return {
+        "id": str(b.pk),
+        "reason": b.reason,
+        "schedule": b.schedule.name if b.schedule else None,
+        "count": b.count,
+        "limit": b.limit,
+        "counted_from": b.counted_from.isoformat() if b.counted_from else None,
+        "set_at": _when(b.created_at),
+        "last_day": b.ends_on.isoformat(),
+        "lifted_at": _when(b.lifted_at),
+        "lifted_by": _person(b.lifted_by),
+        "lift_note": b.lift_note,
     }
 
 

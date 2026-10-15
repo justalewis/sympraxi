@@ -32,7 +32,11 @@ CSRF_TRUSTED_ORIGINS = env.list("SYMPRAXI_CSRF_TRUSTED_ORIGINS", default=[])
 SYMPRAXI_SITE_NAME = env.str("SYMPRAXI_SITE_NAME", default="Sympraxi")
 # The address people use to reach this site, e.g. "https://writing.college.edu".
 # Links in emails sent outside a page request (reminders, the worker) start with it.
-SYMPRAXI_BASE_URL = env.str("SYMPRAXI_BASE_URL", default="")
+# The production stack sets SYMPRAXI_DOMAIN, so it is used when this isn't set.
+_domain = env.str("SYMPRAXI_DOMAIN", default="")
+SYMPRAXI_BASE_URL = env.str(
+    "SYMPRAXI_BASE_URL", default=f"https://{_domain}" if _domain else ""
+).rstrip("/")
 # AGPL section 13: if you run a modified copy, point this at your modified source.
 SYMPRAXI_SOURCE_CODE_URL = env.str(
     "SYMPRAXI_SOURCE_CODE_URL", default="https://github.com/sympraxi/sympraxi"

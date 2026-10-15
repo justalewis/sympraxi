@@ -22,6 +22,9 @@
       <div class="usa-alert__body"><p class="usa-alert__text">{% translate "The center confirms bookings with this tutor. You'll get an email when it's confirmed." %}</p></div>
     </div>
   {% endif %}
+  {% if my_blocks %}
+    {% include "scheduling/_block_notice.html" %}
+  {% else %}
   <form class="usa-form usa-form--large" method="post">
     {% csrf_token %}
     {% include "includes/form_fields.html" %}
@@ -30,4 +33,5 @@
       <a href="{% url 'scheduling:open_times' slug=center.slug schedule_id=schedule.pk %}?date={{ time.starts_at|date:'Y-m-d' }}">{% translate "Choose another time" %}</a>
     </div>
   </form>
+  {% endif %}
 {% endblock content %}

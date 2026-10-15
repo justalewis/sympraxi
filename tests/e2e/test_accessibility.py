@@ -13,10 +13,12 @@ from axe_playwright_python.sync_playwright import Axe
 from django.utils.csp import CSP
 
 from sympraxi.accounts import sso_config
-from sympraxi.centers.models import Role
+from sympraxi.centers.models import Membership, Role
 from sympraxi.records.models import RecordStatus, SessionRecord
+from sympraxi.scheduling.models import Attendance, Block, Participant
 from sympraxi.scheduling.timeutils import local_date
 from tests import sso_idp
+from tests.attendance_world import add_attendance
 from tests.factories import CenterFactory, MembershipFactory, UserFactory, give_mfa
 from tests.records_world import add_records
 from tests.scheduling_world import build_world
@@ -28,7 +30,9 @@ pytestmark = [pytest.mark.e2e, pytest.mark.django_db(transaction=True)]
 # {term}, {closure}, {room}, {exemption}, {slot} (a free time) and {tomorrow};
 # and its records (tests/records_world.py): {past_appointment}, {record} (final,
 # amended), {draft}, {unwritten} (past, no record), {project}, {resource} and
-# {student_membership}.
+# {student_membership}; and its attendance (tests/attendance_world.py): {missed}
+# (a no-show by {blocked_student}) and {block}. "blocked_student" signs in as a
+# student whose online booking is paused.
 PAGES = [
     (None, "/"),
     (None, "/accounts/login/"),
@@ -98,6 +102,22 @@ PAGES = [
     ("director", "/centers/{slug}/resources/new/"),
     ("director", "/centers/{slug}/resources/{resource}/edit/"),
     ("director", "/centers/{slug}/records/settings/"),
+    # Attendance, booking blocks and reminders
+    ("tutor", "/centers/{slug}/appointments/{unwritten}/attendance/"),
+    ("tutor", "/centers/{slug}/appointments/{past_appointment}/attendance/"),
+    ("tutor", "/centers/{slug}/attendance/"),
+    ("front_desk", "/centers/{slug}/attendance/"),
+    ("front_desk", "/centers/{slug}/appointments/{unwritten}/"),
+    ("front_desk", "/centers/{slug}/appointments/{appointment}/cancel/"),
+    ("front_desk", "/centers/{slug}/appointments/{missed}/waive/?student={blocked_student}"),
+    ("director", "/centers/{slug}/blocks/"),
+    ("director", "/centers/{slug}/blocks/settings/"),
+    ("director", "/centers/{slug}/blocks/{block}/lift/"),
+    ("student", "/accounts/reminders/"),
+    ("tutor", "/accounts/reminders/"),
+    ("blocked_student", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
+    ("blocked_student", "/centers/{slug}/appointments/"),
+    ("blocked_student", "/centers/{slug}/appointments/{missed}/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -113,7 +133,12 @@ SSO_PAGES = [
 ]
 ALL_PAGES = [(who, path, None) for who, path in PAGES] + SSO_PAGES
 
-ROLES = {"student": Role.STUDENT, "tutor": Role.TUTOR, "front_desk": Role.FRONT_DESK}
+ROLES = {
+    "student": Role.STUDENT,
+    "blocked_student": Role.STUDENT,
+    "tutor": Role.TUTOR,
+    "front_desk": Role.FRONT_DESK,
+}
 
 # WCAG 2.0, 2.1 and 2.2 at levels A and AA, plus axe's general best practices.
 AXE_OPTIONS = {
@@ -154,13 +179,20 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
                 extra_data={"id_token": sso_idp.entra_claims(email=user.email)},
             )
         sign_in(context, user)
-    world = add_records(
-        build_world(
-            center,
-            student=user if who == "student" else None,
-            tutor=user if who == "tutor" else None,
+    world = add_attendance(
+        add_records(
+            build_world(
+                center,
+                student=user if who == "student" else None,
+                tutor=user if who == "tutor" else None,
+            )
         )
     )
+    if who == "blocked_student":
+        Membership.objects.filter(user=world.blocked_student).delete()
+        Participant.objects.filter(student=world.blocked_student).update(student=user)
+        Block.objects.filter(student=world.blocked_student).update(student=user)
+        world.blocked_student = user
     tomorrow = local_date(world.appointment.starts_at, world.schedule.tz)
     url = live_server.url + path.format(
         slug=center.slug,
@@ -181,6 +213,9 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         project=world.project.pk,
         resource=world.resource.pk,
         student_membership=world.student_membership.pk,
+        missed=world.missed.pk,
+        block=world.block.pk,
+        blocked_student=world.blocked_student.pk,
     )
     page = context.new_page()
     return context, page, url
@@ -386,5 +421,22 @@ def test_resource_search_updates_without_reloading(browser, live_server, sign_in
     assert "Our thesis handout" in page.locator("#resource-results").inner_text()
     assert "1 resource matches your search." in page.locator("#resource-status").inner_text()
     assert page.evaluate("window.notReloaded") is True
+    context.close()
+    assert problems == []
+
+
+def test_front_desk_confirms_a_possible_no_show_by_keyboard(browser, live_server, sign_in) -> None:
+    """Tab to "No-show" on the list of possible no-shows, press Enter, and it's recorded."""
+    context, page, url = open_page(
+        browser, live_server, sign_in, "front_desk", "/centers/{slug}/attendance/"
+    )
+    problems = watch_for_csp_problems(page)
+    page.goto(url)
+    tab_to(page, lambda label: label.startswith("No-show:"))
+    page.keyboard.press("Enter")
+    page.wait_for_selector("text=Attendance saved.")
+    assert "Nothing to check right now." in page.locator("main").inner_text()
+    flagged = Participant.objects.get(flagged_at__isnull=False)
+    assert flagged.attendance == Attendance.NO_SHOW
     context.close()
     assert problems == []

@@ -10,6 +10,15 @@
       <div class="usa-alert__body"><p class="usa-alert__text">{% translate "You left this group appointment." %}</p></div>
     </div>
   {% endif %}
+  {% if mine and mine.late_cancel %}
+    <div class="usa-alert usa-alert--info usa-alert--slim">
+      <div class="usa-alert__body"><p class="usa-alert__text">{% if mine.waived_at %}{% translate "You canceled this appointment late. The center waived it, so it doesn't count toward a pause on online booking." %}{% else %}{% translate "You canceled this appointment late, so it's recorded as a late cancellation. If something came up that you couldn't plan for, contact the center." %}{% endif %}</p></div>
+    </div>
+  {% elif mine and mine.is_no_show %}
+    <div class="usa-alert usa-alert--info usa-alert--slim">
+      <div class="usa-alert__body"><p class="usa-alert__text">{% if mine.waived_at %}{% translate "This appointment is recorded as missed. The center waived it, so it doesn't count toward a pause on online booking." %}{% else %}{% translate "This appointment is recorded as missed. If you did come, or something kept you away, contact the center." %}{% endif %}</p></div>
+    </div>
+  {% endif %}
   {% include "scheduling/_appointment_summary.html" %}
 
   {% if people is not None %}
@@ -17,7 +26,7 @@
     {% if people %}
       <ul class="usa-list">
         {% for p in people %}
-          <li>{{ p.student.display_name }}{% if p.student.pronouns %} ({{ p.student.pronouns }}){% endif %}{% if p.canceled_at %} · {% translate "left or canceled" %}{% endif %}</li>
+          <li>{{ p.student.display_name }}{% if p.student.pronouns %} ({{ p.student.pronouns }}){% endif %}{% if p.attendance_label %} · {{ p.attendance_label }}{% endif %}{% if p.waived_at and p.late_cancel %} ({% translate "waived" %}){% endif %}{% if may_waive and p.can_be_waived %} · <a href="{% url 'scheduling:waive' slug=center.slug appointment_id=appointment.pk %}?student={{ p.student_id }}">{% translate "Waive" %}<span class="usa-sr-only"> {% blocktranslate with name=p.student.display_name %}for {{ name }}{% endblocktranslate %}</span></a>{% endif %}</li>
         {% endfor %}
       </ul>
     {% else %}
@@ -36,6 +45,9 @@
   <ul class="usa-list">
     {% if appointment.is_active %}
       <li><a href="{% url 'scheduling:appointment_ics' slug=center.slug appointment_id=appointment.pk %}">{% translate "Add to your calendar (.ics file)" %}</a></li>
+    {% endif %}
+    {% if may_mark %}
+      <li><a href="{% url 'scheduling:attendance' slug=center.slug appointment_id=appointment.pk %}">{% translate "Mark who came" %}</a></li>
     {% endif %}
     {% if may_confirm %}
       <li><a href="{% url 'scheduling:appointment_confirm' slug=center.slug appointment_id=appointment.pk %}">{% translate "Confirm this appointment" %}</a></li>

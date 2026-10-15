@@ -1,0 +1,11 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=recipient.display_name %}Hello {{ name }},{% endblocktranslate %}
+
+{% blocktranslate with center=center.name day=appointment.starts_at|date:"l, F j" time=appointment.starts_at|time:"P T" tutor=appointment.tutor.display_name %}We missed you at your appointment at {{ center }} on {{ day }} at {{ time }} with {{ tutor }}, so the center has recorded it as missed.{% endblocktranslate %}{% include "scheduling/email/_standing.txt" %}
+
+{% translate "If you did come, or something kept you away, reply to this email and let the center know." %}
+{% if not standing.blocked %}
+{% translate "You're welcome to book another time:" %} {{ book_url }}
+{% endif %}
+{{ center.name }}{% if center.contact_email %}
+{{ center.contact_email }}{% endif %}
+{% endautoescape %}

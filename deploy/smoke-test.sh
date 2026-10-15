@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # CI check of the real production stack: install, serve over HTTPS through Caddy,
-# back up, wipe, restore, and confirm the data came back. Runs on a throwaway VM.
+# back up, wipe, restore, and confirm the data came back; then check that the
+# scheduler is healthy and sends a reminder that falls due. Runs on a throwaway VM.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -49,5 +50,56 @@ psql -c "INSERT INTO privacy_auditevent (occurred_at, actor_label, action, targe
 if psql -c "UPDATE privacy_auditevent SET action = 'tampered';" >/dev/null 2>&1; then
     fail "the audit log accepted an UPDATE after restore"
 fi
+
+echo "--- The scheduler is healthy"
+status=""
+for _ in $(seq 1 30); do
+    status="$(docker inspect --format '{{.State.Health.Status}}' "$(docker compose ps -q scheduler)")"
+    [ "$status" = "healthy" ] && break
+    sleep 5
+done
+[ "$status" = "healthy" ] || fail "the scheduler's health check says ${status:-nothing}"
+docker compose exec -T scheduler python -m sympraxi.healthcheck scheduler     || fail "the scheduler hasn't finished a sweep in the last three minutes"
+
+echo "--- The scheduler sends a reminder when it falls due"
+# An appointment 61 minutes away on a schedule that reminds an hour before: the
+# reminder falls due in a minute, and the next sweep should send it.
+manage shell <<'PY'
+from datetime import time, timedelta
+from django.utils import timezone
+from sympraxi.accounts.models import User
+from sympraxi.centers.models import Center, Membership, Role
+from sympraxi.scheduling.models import (
+    Appointment, Participant, Schedule, Term, TutorAssignment,
+)
+center = Center.objects.create(name="Reminder check", slug="reminder-check")
+today = timezone.localdate()
+term = Term.objects.create(
+    center=center, name="Check", starts_on=today - timedelta(days=1), ends_on=today + timedelta(days=2)
+)
+schedule = Schedule.objects.create(
+    center=center, term=term, name="Check", starts_on=term.starts_on, ends_on=term.ends_on,
+    opens_at=time(0), closes_at=time(23, 59), reminder_1_minutes=60, reminder_2_minutes=None,
+)
+tutor = User.objects.create_user("tutor@reminder-check.test", full_name="Check Tutor")
+student = User.objects.create_user("student@reminder-check.test", full_name="Check Student")
+Membership.objects.create(user=tutor, center=center, role=Role.TUTOR)
+Membership.objects.create(user=student, center=center, role=Role.STUDENT)
+assignment = TutorAssignment.objects.create(schedule=schedule, tutor=tutor)
+start = timezone.now() + timedelta(minutes=61)
+end = start + timedelta(minutes=30)
+appointment = Appointment.objects.create(
+    schedule=schedule, assignment=assignment, tutor=tutor, starts_at=start, ends_at=end,
+    blocked_until=end, modality="in_person",
+)
+Participant.objects.create(appointment=appointment, student=student)
+PY
+sent=""
+for _ in $(seq 1 40); do
+    sent="$(psql -At -c "SELECT count(*) FROM scheduling_reminder r JOIN accounts_user u ON u.id = r.recipient_id WHERE u.email = 'student@reminder-check.test';")"
+    [ "$sent" = "1" ] && break
+    sleep 5
+done
+[ "$sent" = "1" ] || fail "the scheduler didn't send the reminder within three minutes (found ${sent:-0})"
 
 echo "Smoke test passed."

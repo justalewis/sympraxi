@@ -5,6 +5,11 @@
   {% translate "Your appointments" as current %}
   {% include "scheduling/_breadcrumbs.html" with current=current %}
   <h1>{% translate "Your appointments" %}</h1>
+  {% include "scheduling/_block_notice.html" %}
+  <p>
+    {% if user.reminders_for_appointments %}{% translate "You get email reminders before your appointments." %}{% else %}{% translate "Email reminders are off." %}{% endif %}
+    <a href="{% url 'accounts:reminders' %}">{% translate "Change email reminders" %}</a>
+  </p>
   {% if schedules %}
     <h2>{% translate "Book an appointment" %}</h2>
     <ul class="usa-list">
@@ -34,7 +39,7 @@
       {% for a in past %}
         <li>
           <a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=a.pk %}">{{ a.starts_at|date:"F j, Y" }}, {{ a.starts_at|time }}</a>
-          {% blocktranslate with tutor=a.tutor.display_name %}with {{ tutor }}{% endblocktranslate %}{% if not a.is_active or a.mine.0.canceled_at %} · {% translate "canceled" %}{% endif %}
+          {% blocktranslate with tutor=a.tutor.display_name %}with {{ tutor }}{% endblocktranslate %}{% with mine=a.mine.0 %}{% if mine.late_cancel %} · {% translate "canceled late" %}{% if mine.waived_at %} ({% translate "waived" %}){% endif %}{% elif not a.is_active or mine.canceled_at %} · {% translate "canceled" %}{% elif mine.attendance == "no_show" %} · {% translate "missed" %}{% if mine.waived_at %} ({% translate "waived" %}){% endif %}{% endif %}{% endwith %}
         </li>
       {% endfor %}
     </ul>

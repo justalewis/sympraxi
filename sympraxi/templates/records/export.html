@@ -31,6 +31,7 @@
         <th scope="col">{% translate "Instructor" %}</th>
         <th scope="col">{% translate "Due" %}</th>
         <th scope="col">{% translate "Status" %}</th>
+        <th scope="col">{% translate "Attendance" %}</th>
       </tr></thead>
       <tbody>
         {% for p in projects %}
@@ -68,11 +69,23 @@
               <td data-label="{% translate 'Schedule' %}">{{ a.schedule.name }}</td>
               <td data-label="{% translate 'How' %}">{{ a.get_modality_display }}{% if p.group_size > 1 %}, {% blocktranslate with n=p.group_size %}group of {{ n }}{% endblocktranslate %}{% endif %}</td>
               <td data-label="{% translate 'Status' %}">{% if not a.is_active %}{% translate "Canceled" %}{% elif p.canceled_at %}{% translate "Left the group" %}{% else %}{% translate "Booked" %}{% endif %}{% if a.is_walk_in %}, {% translate "walk-in" %}{% endif %}</td>
+              <td data-label="{% translate 'Attendance' %}">{% if p.late_cancel %}{% translate "Canceled late" %}{% elif p.attendance == "attended" %}{% translate "Came" %}{% elif p.attendance == "no_show" %}{% translate "No-show" %}{% elif p.flagged_at and not p.flag_cleared_at %}{% translate "Possible no-show, not confirmed" %}{% else %}{% translate "Not marked" %}{% endif %}{% if p.waived_at %}. {% blocktranslate with day=p.waived_at|date:"M j, Y" who=p.waived_by.display_name|default:_("someone") reason=p.waiver_reason %}Waived {{ day }} by {{ who }}: {{ reason }}{% endblocktranslate %}{% endif %}</td>
             </tr>
           {% endwith %}
         {% endfor %}
       </tbody>
     </table>
+  {% else %}
+    <p>{% translate "None." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Booking blocks" %}</h2>
+  {% if blocks %}
+    <ul class="usa-list">
+      {% for booking_block in blocks %}
+        <li>{% include "scheduling/_block_reason.html" %}. {% blocktranslate with day=booking_block.created_at|date:"M j, Y" last=booking_block.ends_on|date:"M j, Y" %}Set {{ day }}, through {{ last }}.{% endblocktranslate %}{% if booking_block.schedule %} {% blocktranslate with name=booking_block.schedule.name %}Covers {{ name }}.{% endblocktranslate %}{% endif %}{% if booking_block.lifted_at %} {% blocktranslate with day=booking_block.lifted_at|date:"M j, Y" who=booking_block.lifted_by.display_name|default:_("someone") %}Lifted {{ day }} by {{ who }}.{% endblocktranslate %}{% if booking_block.lift_note %} {{ booking_block.lift_note }}{% endif %}{% endif %}</li>
+      {% endfor %}
+    </ul>
   {% else %}
     <p>{% translate "None." %}</p>
   {% endif %}

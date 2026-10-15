@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Booking blocks" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Booking blocks" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Booking blocks" %}</h1>
+  <p>{% translate "A student reaches a block when they pass a limit on no-shows or late cancellations. Until it ends, they can't book online. Staff can still book for them, and the appointments they already have stay. A block ends after its last day, or when you lift it." %}</p>
+  <ul class="usa-list">
+    <li><a href="{% url 'scheduling:block_settings' slug=center.slug %}">{% translate "Set the center's limits" %}</a></li>
+    <li><a href="{% url 'scheduling:attendance_list' slug=center.slug %}">{% translate "Attendance to check, and recent no-shows and late cancellations" %}</a></li>
+  </ul>
+  <p>{% translate "Each schedule can also set limits that count only that schedule, on the schedule's edit page." %}</p>
+
+  <h2>{% translate "In effect" %}</h2>
+  {% if active %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Blocks in effect" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Student" %}</th>
+          <th scope="col">{% translate "Covers" %}</th>
+          <th scope="col">{% translate "Why" %}</th>
+          <th scope="col">{% translate "Set on" %}</th>
+          <th scope="col">{% translate "Last day" %}</th>
+          <th scope="col"><span class="usa-sr-only">{% translate "Actions" %}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking_block in active %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Student' %}">{{ booking_block.student.display_name }}</th>
+            <td data-label="{% translate 'Covers' %}">{{ booking_block.schedule.name|default:_("Every schedule") }}</td>
+            <td data-label="{% translate 'Why' %}">{% include "scheduling/_block_reason.html" %}</td>
+            <td data-label="{% translate 'Set on' %}">{{ booking_block.created_at|date:"M j, Y" }}</td>
+            <td data-label="{% translate 'Last day' %}">{{ booking_block.ends_on|date:"M j, Y" }}</td>
+            <td data-label="{% translate 'Actions' %}"><a href="{% url 'scheduling:block_lift' slug=center.slug block_id=booking_block.pk %}">{% translate "Review or lift" %}<span class="usa-sr-only"> {% blocktranslate with name=booking_block.student.display_name %}the block on {{ name }}{% endblocktranslate %}</span></a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "None." %}</p>
+  {% endif %}
+
+  {% if ended %}
+    <h2>{% translate "Ended" %}</h2>
+    <ul class="usa-list">
+      {% for booking_block in ended %}
+        <li>
+          <a href="{% url 'scheduling:block_lift' slug=center.slug block_id=booking_block.pk %}">{{ booking_block.student.display_name }}</a>:
+          {% include "scheduling/_block_reason.html" %}.
+          {% if booking_block.lifted_at %}{% blocktranslate with day=booking_block.lifted_at|date:"M j, Y" who=booking_block.lifted_by.display_name|default:_("someone") %}Lifted {{ day }} by {{ who }}.{% endblocktranslate %}{% else %}{% blocktranslate with day=booking_block.ends_on|date:"M j, Y" %}Ran through {{ day }}.{% endblocktranslate %}{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

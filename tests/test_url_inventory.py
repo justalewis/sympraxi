@@ -12,12 +12,17 @@ from django.urls import URLPattern, URLResolver, get_resolver, reverse
 
 from sympraxi.core import policy
 from sympraxi.core.policy import Action
+from tests.attendance_world import add_attendance
 from tests.records_world import add_records
 from tests.scheduling_world import World, build_world
 
 # accounts:local_login is the break-glass password sign-in. It is public like the
 # regular sign-in page; AccountAdapter.pre_login() decides who may use it.
 PUBLIC = {"core:home", "core:healthz", "core:source", "accounts:local_login"}
+
+# Pages about the signed-in person's own account, outside any center. Anyone
+# signed in may use them; they show and change only that person's settings.
+LOGIN_REQUIRED = {"accounts:reminders"}
 
 # Center-scoped pages, the action each one requires, and the object the action is
 # checked against ("center", or an attribute of the test World).
@@ -58,6 +63,13 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "scheduling:exemptions": (Action.MANAGE_EXEMPTIONS, "center"),
     "scheduling:exemption_create": (Action.MANAGE_EXEMPTIONS, "center"),
     "scheduling:exemption_revoke": (Action.MANAGE_EXEMPTIONS, "exemption"),
+    # Attendance and booking blocks
+    "scheduling:attendance": (Action.MARK_ATTENDANCE, "appointment"),
+    "scheduling:attendance_list": (Action.MARK_ATTENDANCE, "center"),
+    "scheduling:waive": (Action.WAIVE_ATTENDANCE, "appointment"),
+    "scheduling:blocks": (Action.MANAGE_BLOCKS, "center"),
+    "scheduling:block_settings": (Action.MANAGE_BLOCKS, "center"),
+    "scheduling:block_lift": (Action.MANAGE_BLOCKS, "block"),
     # Session records. "record" is final, "draft" is a draft.
     "records:start": (Action.WRITE_RECORDS, "appointment"),
     "records:to_write": (Action.VIEW_RECORD_STATUS, "center"),
@@ -94,12 +106,13 @@ URL_KWARGS = {
     "student_membership": "membership_id",
     "project": "project_id",
     "resource": "resource_id",
+    "block": "block_id",
 }
 
 # Pages that need a chosen open time in the query string.
 NEEDS_SLOT = {"scheduling:book", "scheduling:staff_book"}
 # Pages that name the student in the query string.
-NEEDS_STUDENT = {"records:start"}
+NEEDS_STUDENT = {"records:start", "scheduling:waive"}
 
 ROLES = ["none", "student", "tutor", "front_desk", "director", "site_admin"]
 
@@ -136,15 +149,31 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return add_records(build_world(center))
+    return add_attendance(add_records(build_world(center)))
 
 
 def test_every_url_is_classified() -> None:
-    assert sympraxi_url_names() == PUBLIC | set(CENTER_PAGES)
+    assert sympraxi_url_names() == PUBLIC | LOGIN_REQUIRED | set(CENTER_PAGES)
 
 
 @pytest.mark.parametrize("name", sorted(PUBLIC - {"core:source"}))
 def test_public_pages_load_anonymously(client, db, name) -> None:
+    assert client.get(reverse(name)).status_code == 200
+
+
+@pytest.mark.parametrize("name", sorted(LOGIN_REQUIRED))
+def test_account_pages_need_sign_in(client, db, name) -> None:
+    response = client.get(reverse(name))
+    assert response.status_code == 302
+    assert response["Location"].startswith(reverse("account_login"))
+
+
+@pytest.mark.parametrize("role", ROLES)
+@pytest.mark.parametrize("name", sorted(LOGIN_REQUIRED))
+def test_account_pages_open_for_everyone_signed_in(
+    client, person_with_role, center, name, role
+) -> None:
+    client.force_login(person_with_role(role, center))
     assert client.get(reverse(name)).status_code == 200
 
 

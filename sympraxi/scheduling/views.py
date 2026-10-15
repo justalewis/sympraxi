@@ -6,11 +6,12 @@ only the list and announces how many times are open.
 """
 
 from collections.abc import Sequence
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any, cast
 from urllib.parse import urlencode
 from uuid import UUID
 
+from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch, QuerySet
@@ -26,7 +27,7 @@ from sympraxi.centers.views import HtmxHttpRequest
 from sympraxi.core.policy import Action, can, get_for_action
 from sympraxi.records import brief
 from sympraxi.records.models import SessionRecord
-from sympraxi.scheduling import ics, notifications, services
+from sympraxi.scheduling import attendance, blocks, ics, notifications, services
 from sympraxi.scheduling.availability import OpenTime, lengths_offered, open_times
 from sympraxi.scheduling.forms import (
     BookForm,
@@ -35,11 +36,14 @@ from sympraxi.scheduling.forms import (
     OpenTimesForm,
     SlotForm,
     StaffBookForm,
+    StaffCancelForm,
     format_start,
 )
 from sympraxi.scheduling.models import (
     Appointment,
     AppointmentStatus,
+    Attendance,
+    BlockReason,
     Participant,
     Schedule,
     TutorAssignment,
@@ -112,6 +116,7 @@ def schedule_list(request: HttpRequest, slug: str) -> HttpResponse:
         "schedules": schedules,
         "can_manage": can(user, Action.MANAGE_SCHEDULES, center),
         "can_manage_exemptions": can(user, Action.MANAGE_EXEMPTIONS, center),
+        "can_manage_blocks": can(user, Action.MANAGE_BLOCKS, center),
         "can_see_day": can(user, Action.VIEW_ALL_APPOINTMENTS, center),
         "can_book_own": can(user, Action.BOOK_OWN, center),
         "can_tutor": can(user, Action.VIEW_OWN_TUTORING, center),
@@ -219,10 +224,12 @@ def open_times_page(request: HtmxHttpRequest, slug: str, schedule_id: UUID) -> H
     user = request.user
     as_staff = can(user, Action.BOOK_FOR_OTHERS, schedule)
     kwargs = {"slug": slug, "schedule_id": schedule.pk}
+    my_blocks = []
     if as_staff:
         book_url = reverse("scheduling:staff_book", kwargs=kwargs)
     elif can(user, Action.BOOK_OWN, schedule):
-        book_url = reverse("scheduling:book", kwargs=kwargs)
+        my_blocks = blocks.in_effect(signed_in(request), schedule)
+        book_url = "" if my_blocks else reverse("scheduling:book", kwargs=kwargs)
     else:
         book_url = ""
     context = {
@@ -233,6 +240,7 @@ def open_times_page(request: HtmxHttpRequest, slug: str, schedule_id: UUID) -> H
         **_open_times_context(request, schedule, as_staff=as_staff, link_base=book_url),
         "as_staff": as_staff,
         "can_see_day": can(user, Action.VIEW_ALL_APPOINTMENTS, schedule),
+        "my_blocks": my_blocks,
     }
     template = "scheduling/_open_times.html" if request.htmx else "scheduling/open_times.html"
     with timezone.override(schedule.center.time_zone):
@@ -331,6 +339,7 @@ def book(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpResponse:
         "crumbs": schedule_crumbs(schedule),
         "time": chosen,
         "form": form,
+        "my_blocks": blocks.in_effect(signed_in(request), schedule),
     }
     with timezone.override(schedule.center.time_zone):
         return render(request, "scheduling/book.html", context)
@@ -424,7 +433,11 @@ def _detail_crumbs(user: Any, appointment: Appointment) -> list[tuple[str, str]]
 def _people(user: Any, appointment: Appointment, center: Center) -> list[Participant] | None:
     """Who is in the appointment, for staff and the tutor. Students never see other students."""
     if can(user, Action.VIEW_ALL_APPOINTMENTS, center) or appointment.tutor_id == user.pk:
-        return list(appointment.participants.select_related("student"))
+        people: list[Any] = list(appointment.participants.select_related("student"))
+        now = timezone.now()
+        for person in people:
+            person.attendance_label = attendance_label(person, appointment, now)
+        return people
     return None
 
 
@@ -441,6 +454,7 @@ def appointment_detail(request: HttpRequest, slug: str, appointment_id: UUID) ->
     in_it = mine is not None and mine.canceled_at is None
     taken = appointment.active_participants().count()
     within_cutoff = not staff and not services.can_change(appointment)
+    may_mark = appointment.is_active and can(user, Action.MARK_ATTENDANCE, appointment)
     context = {
         "center": center,
         "appointment": appointment,
@@ -456,6 +470,8 @@ def appointment_detail(request: HttpRequest, slug: str, appointment_id: UUID) ->
         "may_confirm": staff and appointment.is_active and appointment.is_tentative,
         "is_tutor": appointment.tutor_id == user.pk,
         "location": ics.location(appointment),
+        "may_mark": may_mark and taken > 0 and appointment.starts_at <= timezone.now(),
+        "may_waive": can(user, Action.WAIVE_ATTENDANCE, appointment),
         **brief.appointment_context(request, appointment),
     }
     with timezone.override(center.time_zone):
@@ -467,14 +483,19 @@ def appointment_cancel(request: HttpRequest, slug: str, appointment_id: UUID) ->
     appointment = appointment_for(request, Action.CANCEL_APPOINTMENT, slug, appointment_id)
     center = appointment.schedule.center
     staff = can(request.user, Action.BOOK_FOR_OTHERS, center)
-    form = ConfirmForm(request.POST or None)
+    late_now = appointment.is_active and attendance.is_late(appointment, timezone.now())
+    # Staff record a late cancellation only for a one-student appointment, when asked.
+    ask_staff = staff and late_now and appointment.active_participants().count() == 1
+    data = request.POST if request.method == "POST" else None
+    form: forms.Form = StaffCancelForm(data) if ask_staff else ConfirmForm(data)
     error = ""
-    if request.method == "POST":
+    if request.method == "POST" and form.is_valid():
         try:
             services.cancel(
                 actor=signed_in(request),
                 appointment=appointment,
                 as_staff=staff,
+                student_asked=bool(form.cleaned_data.get("student_asked")),
                 request=request,
             )
         except services.BookingError as exc:
@@ -482,11 +503,19 @@ def appointment_cancel(request: HttpRequest, slug: str, appointment_id: UUID) ->
         else:
             messages.success(request, _("Canceled. A confirmation email is on its way."))
             return redirect("scheduling:appointment", slug=slug, appointment_id=appointment.pk)
+    late_warning = None
+    if late_now and not staff:
+        late_warning = {
+            "window": notifications.duration_words(appointment.schedule.late_cancel_minutes),
+            "standing": blocks.standing(signed_in(request), appointment, BlockReason.LATE_CANCELS),
+        }
     context = {
         "center": center,
         "appointment": appointment,
         "crumbs": _detail_crumbs(request.user, appointment),
         "form": form,
+        "ask_staff": ask_staff,
+        "late_warning": late_warning,
         "error": error,
         "staff": staff,
         "allowed": appointment.is_active and (staff or services.can_change(appointment)),
@@ -644,10 +673,13 @@ def my_appointments(request: HttpRequest, slug: str) -> HttpResponse:
         .order_by("starts_at")
     )
     upcoming, past = _upcoming_first(rows)
+    my_blocks = blocks.in_center(signed_in(request), center)
+    # A block on one schedule hides only that schedule's link.
+    blocked = {b.schedule_id for b in my_blocks}
     schedules = [
         s
         for s in Schedule.objects.filter(center=center, visibility=Visibility.EVERYONE)
-        if can(request.user, Action.BOOK_OWN, s)
+        if can(request.user, Action.BOOK_OWN, s) and None not in blocked and s.pk not in blocked
     ]
     context = {
         "center": center,
@@ -655,6 +687,7 @@ def my_appointments(request: HttpRequest, slug: str) -> HttpResponse:
         "upcoming": upcoming,
         "past": past,
         "schedules": schedules,
+        "my_blocks": my_blocks,
     }
     with timezone.override(center.time_zone):
         return render(request, "scheduling/my_appointments.html", context)
@@ -691,6 +724,21 @@ def my_tutoring(request: HttpRequest, slug: str) -> HttpResponse:
         return render(request, "scheduling/my_tutoring.html", context)
 
 
+def attendance_label(participant: Participant, appointment: Appointment, now: datetime) -> str:
+    """One student's attendance in a word or two, for staff lists."""
+    if participant.canceled_at is not None:
+        return _("canceled late") if participant.late_cancel else _("canceled")
+    if participant.attendance == Attendance.ATTENDED:
+        return _("came")
+    if participant.attendance == Attendance.NO_SHOW:
+        return _("no-show, waived") if participant.waived_at else _("no-show")
+    if participant.is_possible_no_show:
+        return _("possible no-show")
+    if appointment.starts_at <= now and appointment.is_active:
+        return _("not marked")
+    return ""
+
+
 @login_required
 def day_sheet(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpResponse:
     """Every appointment on one schedule for one day, for the front desk."""
@@ -713,6 +761,10 @@ def day_sheet(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpRespons
         .order_by("starts_at", "tutor__full_name")
     )
     appointments = list(rows)
+    now = timezone.now()
+    for appointment in appointments:
+        for person in getattr(appointment, "people", []):
+            person.attendance_label = attendance_label(person, appointment, now)
     show_records = can(request.user, Action.VIEW_RECORD_STATUS, schedule.center)
     if show_records:
         _add_record_status(appointments)

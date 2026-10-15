@@ -6,12 +6,14 @@
   {% if my_roles %}
     <p>{% translate "Your roles here:" %} {% for role in my_roles %}<span class="usa-tag">{{ role.label }}</span> {% endfor %}</p>
   {% endif %}
-  {% if can_view_schedules or can_book_own or can_tutor %}
+  {% if can_view_schedules or can_book_own or can_tutor or can_mark_attendance %}
     <h2>{% translate "Appointments" %}</h2>
     <ul class="usa-list">
       {% if can_view_schedules %}<li><a href="{% url 'scheduling:schedules' slug=center.slug %}">{% if can_book_own %}{% translate "Book an appointment" %}{% else %}{% translate "Schedules" %}{% endif %}</a></li>{% endif %}
       {% if can_book_own %}<li><a href="{% url 'scheduling:my_appointments' slug=center.slug %}">{% translate "Your appointments" %}</a></li>{% endif %}
       {% if can_tutor %}<li><a href="{% url 'scheduling:my_tutoring' slug=center.slug %}">{% translate "Your tutoring schedule" %}</a></li>{% endif %}
+      {% if can_mark_attendance %}<li><a href="{% url 'scheduling:attendance_list' slug=center.slug %}">{% translate "Attendance to check" %}</a></li>{% endif %}
+      {% if can_book_own or can_tutor %}<li><a href="{% url 'accounts:reminders' %}">{% translate "Email reminders" %}</a></li>{% endif %}
     </ul>
   {% endif %}
   {% if can_see_own_writing or can_see_records_to_write %}
@@ -22,10 +24,11 @@
       {% if can_write_records %}<li><a href="{% url 'records:new' slug=center.slug %}">{% translate "Record a meeting that wasn't booked" %}</a></li>{% endif %}
     </ul>
   {% endif %}
-  {% if can_view_members or can_view_audit_log or can_manage_schedules or can_manage_records %}
+  {% if can_view_members or can_view_audit_log or can_manage_schedules or can_manage_records or can_manage_blocks %}
     <h2>{% translate "Center tools" %}</h2>
     <ul class="usa-list">
       {% if can_manage_schedules %}<li><a href="{% url 'scheduling:schedules' slug=center.slug %}">{% translate "Set up schedules, terms and rooms" %}</a></li>{% endif %}
+      {% if can_manage_blocks %}<li><a href="{% url 'scheduling:blocks' slug=center.slug %}">{% translate "Booking blocks for no-shows and late cancellations" %}</a></li>{% endif %}
       {% if can_manage_records %}<li><a href="{% url 'records:resources' slug=center.slug %}">{% translate "Your center's resources" %}</a></li>{% endif %}
       {% if can_manage_records %}<li><a href="{% url 'records:settings' slug=center.slug %}">{% translate "Session record settings" %}</a></li>{% endif %}
       {% if can_view_members %}<li><a href="{% url 'centers:members' slug=center.slug %}">{% translate "People in this center" %}</a></li>{% endif %}

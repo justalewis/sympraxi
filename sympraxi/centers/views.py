@@ -25,6 +25,8 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_see_records_to_write": can(request.user, Action.VIEW_RECORD_STATUS, center),
         "can_write_records": can(request.user, Action.WRITE_RECORDS, center),
         "can_manage_records": can(request.user, Action.MANAGE_RECORDS, center),
+        "can_mark_attendance": can(request.user, Action.MARK_ATTENDANCE, center),
+        "can_manage_blocks": can(request.user, Action.MANAGE_BLOCKS, center),
     }
     return render(request, "centers/center_detail.html", context)
 
