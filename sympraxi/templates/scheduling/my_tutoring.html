@@ -5,6 +5,7 @@
   {% translate "Your tutoring" as current %}
   {% include "scheduling/_breadcrumbs.html" with current=current %}
   <h1>{% translate "Your tutoring schedule" %}</h1>
+  <p class="sympraxi-no-print"><a href="{% url 'notify:calendar' %}">{% translate "See these in your own calendar app" %}</a></p>
   <ul class="usa-list">
     <li><a href="{% url 'scheduling:attendance_list' slug=center.slug %}">{% translate "Attendance to check" %}</a></li>
     <li><a href="{% url 'accounts:reminders' %}">{% if user.reminders_for_tutoring %}{% translate "Email reminders before your tutoring are on. Change" %}{% else %}{% translate "Turn on email reminders before your tutoring" %}{% endif %}</a></li>

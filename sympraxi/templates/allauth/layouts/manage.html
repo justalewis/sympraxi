@@ -7,6 +7,7 @@
   {% url 'mfa_index' as mfa_url %}
   {% url 'socialaccount_connections' as linked_url %}
   {% url 'accounts:reminders' as reminders_url %}
+  {% url 'notify:calendar' as calendar_url %}
   {% get_providers as sso_providers %}
   <nav class="tablet:grid-col-3 margin-bottom-4" aria-label="{% translate 'Account settings' %}">
     <ul class="usa-sidenav">
@@ -24,6 +25,9 @@
       </li>
       <li class="usa-sidenav__item">
         <a href="{{ reminders_url }}" {% if request.path == reminders_url %}class="usa-current" aria-current="page"{% endif %}>{% translate "Email reminders" %}</a>
+      </li>
+      <li class="usa-sidenav__item">
+        <a href="{{ calendar_url }}" {% if request.path == calendar_url %}class="usa-current" aria-current="page"{% endif %}>{% translate "Calendar feed" %}</a>
       </li>
       {% if sso_providers %}
         <li class="usa-sidenav__item">

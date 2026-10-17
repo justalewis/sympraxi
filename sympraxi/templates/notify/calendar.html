@@ -1,0 +1,43 @@
+{% extends "allauth/layouts/manage.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Calendar feed" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "Calendar feed" %}</h1>
+  <p>{% translate "Subscribe to your appointments in Google Calendar, Outlook or Apple Calendar. The feed lists appointments you booked and appointments you tutor, from a month ago to six months ahead, and your calendar app keeps it up to date, usually within a few hours." %}</p>
+  <p>{% translate "Events say when and where, not who: your calendar app keeps a copy on its company's servers, so a tutor's feed never names students. Each event links to the appointment in Sympraxi." %}</p>
+
+  {% if address %}
+    <div class="usa-alert usa-alert--success" role="status">
+      <div class="usa-alert__body">
+        <h2 class="usa-alert__heading">{% translate "Your feed's address" %}</h2>
+        <p class="usa-alert__text">{% translate "Copy it now. It's shown only once; if you lose it, make a new one." %}</p>
+      </div>
+    </div>
+    <label class="usa-label" for="feed-address">{% translate "Feed address" %}</label>
+    <input class="usa-input sympraxi-feed-address" id="feed-address" type="text" value="{{ address }}" readonly>
+    <h2>{% translate "Adding it to your calendar" %}</h2>
+    <ul class="usa-list">
+      <li>{% translate "Google Calendar: Other calendars, then From URL. Paste the address." %}</li>
+      <li>{% translate "Outlook: Add calendar, then Subscribe from web. Paste the address." %}</li>
+      <li>{% translate "Apple Calendar: File, then New Calendar Subscription. Paste the address." %}</li>
+    </ul>
+  {% endif %}
+
+  <h2>{% translate "Your feed" %}</h2>
+  {% if feed %}
+    <p>{% blocktranslate with day=feed.created_at|date:"F j, Y" %}Your feed has been on since {{ day }}.{% endblocktranslate %}
+      {% if feed.last_used_at %}{% blocktranslate with when=feed.last_used_at|date:"F j, Y, g A" %}A calendar app last fetched it around {{ when }}.{% endblocktranslate %}{% else %}{% translate "No calendar app has fetched it yet." %}{% endif %}</p>
+    <p>{% translate "Anyone with the address can see when and where your appointments are. If you shared it by mistake, replace it: the old address stops working." %}</p>
+    <form method="post" class="sympraxi-form-actions">
+      {% csrf_token %}
+      <button class="usa-button usa-button--outline" type="submit" name="action" value="replace">{% translate "Replace the address" %}</button>
+      <button class="usa-button usa-button--secondary" type="submit" name="action" value="off">{% translate "Turn the feed off" %}</button>
+    </form>
+  {% else %}
+    <p>{% translate "Your feed is off." %}</p>
+    <form method="post" class="sympraxi-form-actions">
+      {% csrf_token %}
+      <button class="usa-button" type="submit" name="action" value="start">{% translate "Turn on a calendar feed" %}</button>
+    </form>
+  {% endif %}
+{% endblock content %}

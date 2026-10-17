@@ -95,6 +95,21 @@ def calendar(
     base_url: str = "",
     now: datetime | None = None,
 ) -> str:
+    return calendar_of(
+        ((a, for_tutor) for a in appointments), method=method, base_url=base_url, now=now
+    )
+
+
+def calendar_of(
+    appointments: Iterable[tuple[Appointment, bool]],
+    *,
+    method: str = "PUBLISH",
+    base_url: str = "",
+    now: datetime | None = None,
+    name: str = "",
+) -> str:
+    """A calendar of (appointment, whether the reader is its tutor) pairs. `name` is
+    what calendar apps call a subscribed calendar."""
     now = now or datetime.now(UTC)
     lines = [
         "BEGIN:VCALENDAR",
@@ -103,7 +118,9 @@ def calendar(
         "CALSCALE:GREGORIAN",
         f"METHOD:{method}",
     ]
-    for appointment in appointments:
+    if name:
+        lines.append(f"X-WR-CALNAME:{escape(name)}")
+    for appointment, for_tutor in appointments:
         url = appointment_url(appointment, base_url)
         lines += [
             "BEGIN:VEVENT",

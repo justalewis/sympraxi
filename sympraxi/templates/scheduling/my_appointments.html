@@ -5,6 +5,7 @@
   {% translate "Your appointments" as current %}
   {% include "scheduling/_breadcrumbs.html" with current=current %}
   <h1>{% translate "Your appointments" %}</h1>
+  <p class="sympraxi-no-print"><a href="{% url 'notify:calendar' %}">{% translate "See these in your own calendar app" %}</a></p>
   {% include "scheduling/_block_notice.html" %}
   <p>
     {% if user.reminders_for_appointments %}{% translate "You get email reminders before your appointments." %}{% else %}{% translate "Email reminders are off." %}{% endif %}

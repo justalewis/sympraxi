@@ -26,6 +26,7 @@ from sympraxi.core import policy
 from sympraxi.core.policy import Action
 from sympraxi.forms import surveys
 from sympraxi.forms.models import SurveyInvitation
+from sympraxi.notify import feeds
 from tests.attendance_world import add_attendance
 from tests.factories import CenterFactory
 from tests.forms_world import SURVEY_ANSWERS, add_forms, values
@@ -47,7 +48,7 @@ PUBLIC = {
 
 # Pages about the signed-in person's own account, outside any center. Anyone
 # signed in may use them; they show and change only that person's settings.
-LOGIN_REQUIRED = {"accounts:profile", "accounts:reminders"}
+LOGIN_REQUIRED = {"accounts:profile", "accounts:reminders", "notify:calendar"}
 
 # Center-scoped pages, the action each one requires, and the object the action is
 # checked against ("center", or an attribute of the test World).
@@ -178,6 +179,25 @@ def _stopped_survey_token(world: World) -> str:
     return world.survey_token
 
 
+def _replaced_feed_token(world: World) -> str:
+    old = feeds.start_feed(world.student)
+    feeds.start_feed(world.student)
+    return old
+
+
+def _turned_off_feed_token(world: World) -> str:
+    token = feeds.start_feed(world.student)
+    feeds.stop_feed(world.student)
+    return token
+
+
+def _feed_of_turned_off_account(world: World) -> str:
+    token = feeds.start_feed(world.student)
+    world.student.is_active = False
+    world.student.save(update_fields=["is_active"])
+    return token
+
+
 TOKEN_PAGES: dict[str, TokenPage] = {
     "survey:answer": TokenPage(
         valid=lambda world: world.survey_token,
@@ -185,6 +205,14 @@ TOKEN_PAGES: dict[str, TokenPage] = {
             "used": _used_survey_token,
             "expired": _expired_survey_token,
             "survey stopped": _stopped_survey_token,
+        },
+    ),
+    "notify:feed": TokenPage(
+        valid=lambda world: feeds.start_feed(world.student),
+        dead={
+            "replaced": _replaced_feed_token,
+            "turned off": _turned_off_feed_token,
+            "account turned off": _feed_of_turned_off_account,
         },
     ),
 }

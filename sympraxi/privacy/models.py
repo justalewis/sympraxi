@@ -64,6 +64,9 @@ ACTION_LABELS = {
     "staff.entry_added": _("Added time for someone"),
     "staff.entry_changed": _("Changed someone's time"),
     "staff.entry_removed": _("Removed someone's time"),
+    "notify.calendar_feed_started": _("Turned on a calendar feed"),
+    "notify.calendar_feed_replaced": _("Gave a calendar feed a new address"),
+    "notify.calendar_feed_turned_off": _("Turned off a calendar feed"),
 }
 
 

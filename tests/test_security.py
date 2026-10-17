@@ -126,6 +126,9 @@ def test_survey_link_tokens_are_scrubbed() -> None:
     assert scrub("/survey/thanks/") == "/survey/thanks/"
     results = "/centers/writing/forms/surveys/results/"
     assert scrub(results) == results
+    feed = f"GET /calendar/{SURVEY_TOKEN}.ics HTTP/1.1"
+    assert scrub(feed) == "GET /calendar/[link].ics HTTP/1.1"
+    assert scrub("/accounts/calendar/") == "/accounts/calendar/"
 
 
 @pytest.mark.django_db

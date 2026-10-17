@@ -184,6 +184,10 @@ Nothing to set up on the server. Directors add people on the center's **People**
 
 Someone new gets an account with no password. With single sign-on they just sign in; otherwise they choose "Forgot your password?" on the sign-in page. When `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` is set, only addresses at those domains can be added. The optional welcome email goes out through the `worker` service.
 
+## Calendar feeds
+
+Nothing to set up on the server. Anyone can turn on a private calendar feed under **Account** → **Calendar feed** and subscribe to it in their calendar app. Feed addresses start with the site's address, so calendar apps outside the campus network need to reach the server. If yours is reachable only on campus, feeds work only on campus. The access logs hide each feed's secret part.
+
 ## Time clock
 
 Nothing to set up on the server. Tutors, front desk staff and directors clock in and out under **Time clock** on the center page, and directors see **Timesheets** there, which download for payroll as CSV or a spreadsheet. The `scheduler` service clocks out anyone still clocked in at midnight, in the center's time zone, so it must be running.

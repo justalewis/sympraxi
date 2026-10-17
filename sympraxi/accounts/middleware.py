@@ -13,8 +13,9 @@ from sympraxi.core import policy
 
 # Pages a staff member can reach before setting up two-factor login:
 # the account and 2FA screens themselves, logout, static files and health checks.
-# Survey links open without signing in and never look at who is signed in.
-EXEMPT_PREFIXES = ("/accounts/", "/static/", "/healthz", "/source/", "/survey/")
+# Survey links and calendar feeds open without signing in and never look at who
+# is signed in.
+EXEMPT_PREFIXES = ("/accounts/", "/static/", "/healthz", "/source/", "/survey/", "/calendar/")
 STRONG_FACTORS = (Authenticator.Type.TOTP, Authenticator.Type.WEBAUTHN)
 
 

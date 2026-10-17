@@ -149,6 +149,8 @@ PAGES = [
     ("director", "/centers/{slug}/blocks/{block}/lift/"),
     ("student", "/accounts/reminders/"),
     ("student", "/accounts/profile/"),
+    ("student", "/accounts/calendar/"),
+    ("tutor", "/accounts/calendar/"),
     ("tutor", "/accounts/reminders/"),
     ("blocked_student", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
     ("blocked_student", "/centers/{slug}/appointments/"),
@@ -1182,6 +1184,21 @@ def test_a_director_adds_people_from_a_file_by_keyboard(browser, live_server, si
     page.keyboard.press("Enter")
     page.wait_for_selector("h1:has-text('Turn off a role for everyone')")
     assert "student roles" in page.content()
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+def test_turning_on_a_calendar_feed_by_keyboard(browser, live_server, sign_in) -> None:
+    """The page shows a new feed's address once, after a form, so axe checks it here."""
+    context, page, url = open_page(
+        browser, live_server, sign_in, "student", "/accounts/calendar/", bypass_csp=True
+    )
+    page.goto(url)
+    page.get_by_role("button", name="Turn on a calendar feed").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("#feed-address")
+    assert page.input_value("#feed-address").endswith(".ics")
     results = Axe().run(page, options=AXE_OPTIONS)
     context.close()
     assert results.violations_count == 0, results.generate_report()

@@ -74,6 +74,9 @@ class AuditAction(StrEnum):
     TIME_ENTRY_ADDED = "staff.entry_added"
     TIME_ENTRY_CHANGED = "staff.entry_changed"
     TIME_ENTRY_REMOVED = "staff.entry_removed"
+    CALENDAR_FEED_STARTED = "notify.calendar_feed_started"
+    CALENDAR_FEED_REPLACED = "notify.calendar_feed_replaced"
+    CALENDAR_FEED_TURNED_OFF = "notify.calendar_feed_turned_off"
 
 
 def client_ip(request: HttpRequest) -> str | None:

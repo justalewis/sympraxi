@@ -14,6 +14,7 @@ handler429 = "sympraxi.core.views.too_many_requests"
 urlpatterns = [
     path("", include("sympraxi.core.urls")),
     path("", include("sympraxi.privacy.urls")),
+    path("", include("sympraxi.notify.urls")),
     path("centers/", include("sympraxi.centers.urls")),
     path("centers/<slug:slug>/", include("sympraxi.scheduling.urls")),
     path("centers/<slug:slug>/", include("sympraxi.records.urls")),
