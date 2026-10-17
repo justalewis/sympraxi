@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
+    # allauth's passkey list loads its template tags.
+    "django.contrib.humanize",
     "allauth",
     "allauth.account",
     "allauth.mfa",

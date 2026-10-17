@@ -79,3 +79,16 @@ def test_passwords_are_hashed_with_argon2_in_production() -> None:
     from sympraxi import settings as production
 
     assert production.PASSWORD_HASHERS[0].endswith("Argon2PasswordHasher")
+
+
+@pytest.mark.django_db
+def test_the_passkey_list_opens(client) -> None:
+    """allauth's template loads django.contrib.humanize's tags."""
+    from allauth.mfa.webauthn.internal.auth import WebAuthn
+
+    user = UserFactory()
+    WebAuthn.add(user, "Work laptop", {})
+    client.force_login(user)
+    response = client.get(reverse("mfa_list_webauthn"))
+    assert response.status_code == 200
+    assert "Work laptop" in response.content.decode()
