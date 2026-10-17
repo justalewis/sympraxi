@@ -2,6 +2,7 @@ from typing import Any
 
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.core.exceptions import ImmediateHttpResponse
+from allauth.mfa.adapter import DefaultMFAAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.providers.base.constants import AuthError
@@ -12,7 +13,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
-from sympraxi.accounts import sso
+from sympraxi.accounts import encryption, sso
 from sympraxi.privacy.audit import AuditAction, record
 
 MFA_STAGE = "allauth.mfa.stages.AuthenticateStage"
@@ -66,6 +67,17 @@ class AccountAdapter(DefaultAccountAdapter):
             "sympraxi.accounts.stages.AuthenticateStage" if stage == MFA_STAGE else stage
             for stage in super().get_login_stages()
         ]
+
+
+class MFAAdapter(DefaultMFAAdapter):
+    """Encrypts the TOTP secret and the recovery-code seed before allauth stores
+    them. allauth's own adapter stores them as they are (encryption.py)."""
+
+    def encrypt(self, text: str) -> str:
+        return encryption.encrypt(text)
+
+    def decrypt(self, encrypted_text: str) -> str:
+        return encryption.decrypt(encrypted_text)
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):

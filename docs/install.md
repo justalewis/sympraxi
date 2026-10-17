@@ -198,6 +198,38 @@ bash restore.sh ../backups/20270115T021500Z
 
 The script checks the checksums, asks you to confirm, replaces the database and uploads, applies any newer migrations, and restarts. **Test a restore every term** on a spare VM so you know your backups work.
 
+## Keys and passwords
+
+`SYMPRAXI_SECRET_KEY` in `deploy/.env` signs sign-in sessions and password-reset links. It also encrypts what Sympraxi stores for each authenticator app and set of recovery codes, so a copy of the database can't be used to make anyone's two-factor codes. Backups don't include `deploy/.env`. To restore a backup you need the secret key that was in use when it was made: without it, nobody's authenticator app or recovery codes work. Passkeys still do, because Sympraxi stores only their public keys.
+
+### Changing the secret key
+
+Change it if it may have leaked, or when someone who had a copy of `deploy/.env` no longer should.
+
+1. Make a new key:
+   ```bash
+   LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 60; echo
+   ```
+2. In `deploy/.env`, add a line `SYMPRAXI_SECRET_KEY_FALLBACKS=` with the current key after the `=`, and put the new key in `SYMPRAXI_SECRET_KEY`.
+3. Restart with `docker compose up -d`. Everything keeps working: Sympraxi reads secrets written under either key, and people stay signed in.
+4. Rewrite the two-factor secrets under the new key:
+   ```bash
+   docker compose run --rm web python manage.py reencrypt_mfa_secrets
+   ```
+5. Delete the `SYMPRAXI_SECRET_KEY_FALLBACKS` line and run `docker compose up -d` again. Anyone who hasn't opened a page since step 3 is signed out, and password-reset links sent before step 3 stop working.
+
+If the old key may have leaked, do step 5 as soon as step 4 finishes. While the fallback is set, links made with the old key still work.
+
+### If the secret key is lost
+
+Put a new key in `SYMPRAXI_SECRET_KEY`, restart, and remove the authenticators no key can read:
+
+```bash
+docker compose run --rm web python manage.py reencrypt_mfa_secrets --remove-unreadable
+```
+
+Each removal goes in the audit log. Staff are asked to set up two-factor login again at their next sign-in, and students who had turned it on can sign in without it until they set it up again. Until the command runs, anyone with an authenticator app gets an error page when they enter a code.
+
 ## Upgrading
 
 ```bash

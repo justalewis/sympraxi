@@ -24,6 +24,10 @@ if ENV_FILE.is_file():
 
 DEBUG = env.bool("SYMPRAXI_DEBUG", default=False)
 SECRET_KEY = env.str("SYMPRAXI_SECRET_KEY")
+# Earlier secret keys, comma-separated, while changing SYMPRAXI_SECRET_KEY. Two-factor
+# secrets written under one still decrypt until `manage.py reencrypt_mfa_secrets`
+# rewrites them (docs/install.md, "Keys and passwords").
+SECRET_KEY_FALLBACKS = env.list("SYMPRAXI_SECRET_KEY_FALLBACKS", default=[])
 ALLOWED_HOSTS = env.list(
     "SYMPRAXI_ALLOWED_HOSTS", default=["localhost", "127.0.0.1"] if DEBUG else []
 )
@@ -169,6 +173,7 @@ ACCOUNT_PREVENT_ENUMERATION = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http" if DEBUG else "https"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = f"[{SYMPRAXI_SITE_NAME}] "
 
+MFA_ADAPTER = "sympraxi.accounts.adapter.MFAAdapter"
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_TOTP_ISSUER = SYMPRAXI_SITE_NAME

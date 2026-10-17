@@ -2,6 +2,16 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Fixes from the security and accessibility drafts (October 2026)
+
+Drafting the HECVAT answers (`docs/security-questionnaire.md`) and the accessibility notes (`docs/accessibility.md`) turned up gaps that could be closed in code. These are the choices made in closing them.
+
+**Two-factor secrets are encrypted in the database.** allauth stores each authenticator app's TOTP secret, and the seed the recovery codes are made from, in `mfa_authenticator.data`, and its default MFA adapter stores them as they are. Anyone with a database dump or a backup could then make any person's codes, and a site administrator could read them in the Django admin. `MFAAdapter` now encrypts them with Fernet (AES-128 in CBC mode with an HMAC-SHA256 tag, from the `cryptography` package) before allauth saves them (`sympraxi/accounts/encryption.py`). Accounts migration 0004 encrypts the ones stored before it and skips any that are already encrypted. Passkeys hold only a public key and aren't changed. The secret allauth keeps in the session while someone is setting up an app isn't covered: it can't sign anyone in until they confirm a code, and allauth drops it then.
+
+**The key comes from SECRET_KEY.** A separate key would sit next to SECRET_KEY in `deploy/.env`, with the same readers, so it would protect nothing more and be one more thing to lose. The Fernet key is derived from SECRET_KEY with HKDF and a label used for nothing else, so it never equals the key Django signs with. The cost: a backup restored without the SECRET_KEY it was made under leaves every authenticator app and recovery code unreadable. That is what the encryption is for, and install.md says to keep the key.
+
+**Changing the key uses Django's fallbacks.** `SYMPRAXI_SECRET_KEY_FALLBACKS` sets `SECRET_KEY_FALLBACKS`. Secrets written under a fallback still decrypt, and `manage.py reencrypt_mfa_secrets` rewrites them under the current key, after which the fallback can go. Django uses the same setting to keep sessions and reset links working during the change. A secret no key can read makes the code check fail with a server error whose log message names the setting, instead of quietly calling every code wrong. If the old key is lost, `--remove-unreadable` deletes those authenticators and records each removal in the audit log, and their owners set up two-factor login again.
+
 ## Phase 1: session-report questions and surveys (October 2026)
 
 **Report answers belong to the record.** A center has one set of session-report questions, built like its other forms. They show on the record form below the fixed fields, and the tutor answers them. Each record has at most one response (`Response.record`), about the record's student, stored by question and option key like every other answer, so reports can count them across versions.
