@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Forms" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Forms" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Forms" %}</h1>
+  <p>{% translate "Questions your center asks students. The registration form is asked once, the first time a student books. Intake forms are asked each time a student books." %}</p>
+  <p>{% translate "Every change is saved as a new version. Answers already given keep the wording the student saw." %}</p>
+  {% if rows %}
+    <table class="usa-table usa-table--borderless">
+      <caption class="usa-sr-only">{% translate "Your center's forms" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Form" %}</th>
+          <th scope="col">{% translate "Published" %}</th>
+          <th scope="col">{% translate "Draft" %}</th>
+          <th scope="col">{% translate "Asked" %}</th>
+          <th scope="col">{% translate "Responses" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            <th scope="row"><a href="{% url 'forms:detail' slug=center.slug form_id=row.form.pk %}">{{ row.form.title }}</a></th>
+            <td>{% if row.published %}{% blocktranslate with n=row.published.number when=row.published.published_at|date:"F j, Y" %}Version {{ n }}, {{ when }}{% endblocktranslate %}{% else %}{% translate "Not yet" %}{% endif %}</td>
+            <td>{% if row.draft %}{% blocktranslate with n=row.draft.number %}Version {{ n }}{% endblocktranslate %}{% else %}{% translate "None" %}{% endif %}</td>
+            <td>{% if row.form.is_active %}{% translate "Yes" %}{% else %}{% translate "No, stopped" %}{% endif %}</td>
+            <td>{{ row.form.answered }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Your center doesn't ask any questions yet." %}</p>
+  {% endif %}
+  {% if can_add %}
+    <p><a class="usa-button" href="{% url 'forms:create' slug=center.slug %}">{% translate "Add a form" %}</a></p>
+  {% endif %}
+{% endblock content %}

@@ -286,3 +286,67 @@
     break-inside: avoid;
   }
 }
+
+/* --- Forms ---------------------------------------------------------------- */
+
+/* Questions being answered: a little room between them. */
+.sympraxi-question {
+  margin-top: 1.5rem;
+}
+
+.sympraxi-form-intro {
+  margin-top: 1rem;
+}
+
+/* Answers shown back: the question, then the answer under it. */
+.sympraxi-answers-list dt {
+  font-weight: 700;
+  margin-top: 0.75rem;
+}
+
+.sympraxi-answers-list dd {
+  margin-left: 0;
+}
+
+/* The builder's list of questions, one block each with its buttons. */
+.sympraxi-question-list {
+  max-width: none;
+  padding-left: 1.5rem;
+}
+
+.sympraxi-question-item {
+  max-width: none;
+  padding: 0.75rem 0 1rem;
+  border-bottom: 1px solid #dfe1e2;
+}
+
+.sympraxi-question-item p {
+  margin: 0.25rem 0;
+}
+
+.sympraxi-question-item .sympraxi-button-group {
+  margin-top: 0.5rem;
+}
+
+.sympraxi-button-group form {
+  margin: 0;
+}
+
+.sympraxi-button-group .usa-button {
+  margin: 0;
+}
+
+.sympraxi-option-row {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #dfe1e2;
+}
+
+.sympraxi-details {
+  margin-top: 1.5rem;
+}
+
+.sympraxi-details summary {
+  cursor: pointer;
+  color: #005ea2;
+  text-decoration: underline;
+}

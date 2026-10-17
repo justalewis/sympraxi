@@ -14,6 +14,7 @@ from uuid import UUID
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.db.models import Prefetch, QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -25,6 +26,9 @@ from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center
 from sympraxi.centers.views import HtmxHttpRequest
 from sympraxi.core.policy import Action, can, get_for_action
+from sympraxi.forms import booking as form_questions
+from sympraxi.forms import display as form_answers
+from sympraxi.forms.answering import follow_up_message
 from sympraxi.records import brief
 from sympraxi.records.models import SessionRecord
 from sympraxi.scheduling import attendance, blocks, ics, notifications, services
@@ -300,29 +304,51 @@ def _gone(request: HttpRequest, schedule: Schedule) -> HttpResponseRedirect:
 
 @login_required
 def book(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpResponse:
-    """A student books an open time for themselves."""
+    """A student books an open time for themselves.
+
+    The page also asks the center's registration questions, the first time the
+    student books here, and the schedule's intake questions. The booking and the
+    answers are saved together or not at all.
+    """
     schedule = schedule_for(request, Action.BOOK_OWN, slug, schedule_id)
-    data = request.POST if request.method == "POST" else request.GET
+    posted = request.POST if request.method == "POST" else None
+    data = posted if posted is not None else request.GET
     slot, chosen = _chosen_time(schedule, data, as_staff=False)
     if chosen is None:
         return _gone(request, schedule)
+    student = signed_in(request)
     form = BookForm(
-        request.POST if request.method == "POST" else None,
+        posted,
         modalities=chosen.modalities,
         initial={**slot.cleaned_data, "start": format_start(chosen.starts_at)},
     )
-    if request.method == "POST" and form.is_valid():
+    questions = form_questions.for_student(schedule, student, posted)
+    form_status = ""
+    if posted is not None and questions.needs_another_look(posted):
+        # The Continue step: show the follow-ups the answers call for, save nothing.
+        form = BookForm(None, modalities=chosen.modalities, initial=form_initial(form, posted))
+        if "continue" not in posted:
+            form_status = follow_up_message(_("Book it"))
+        questions = questions.again()
+    elif posted is not None and all([form.is_valid(), questions.is_valid()]):
         try:
-            appointment = services.book(
-                actor=signed_in(request),
-                assignment=chosen.assignment,
-                starts_at=chosen.starts_at,
-                minutes=chosen.minutes,
-                modality=form.cleaned_data["modality"],
-                students=[signed_in(request)],
-                as_staff=False,
-                request=request,
-            )
+            with transaction.atomic():
+                appointment = services.book(
+                    actor=student,
+                    assignment=chosen.assignment,
+                    starts_at=chosen.starts_at,
+                    minutes=chosen.minutes,
+                    modality=form.cleaned_data["modality"],
+                    students=[student],
+                    as_staff=False,
+                    request=request,
+                )
+                questions.save(
+                    appointments=[appointment],
+                    student=student,
+                    answered_by=student,
+                    request=request,
+                )
         except services.BookingError as exc:
             form.add_error(None, exc.message)
         else:
@@ -339,48 +365,82 @@ def book(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpResponse:
         "crumbs": schedule_crumbs(schedule),
         "time": chosen,
         "form": form,
-        "my_blocks": blocks.in_effect(signed_in(request), schedule),
+        "questions": questions,
+        "form_status": form_status or questions.status,
+        "refresh_url": request.get_full_path(),
+        "my_blocks": blocks.in_effect(student, schedule),
     }
     with timezone.override(schedule.center.time_zone):
         return render(request, "scheduling/book.html", context)
+
+
+def form_initial(form: forms.Form, posted: Any) -> dict[str, Any]:
+    """A booking form's fields as posted, to redraw it without error messages."""
+    initial: dict[str, Any] = {}
+    for name, field in form.fields.items():
+        if isinstance(field, forms.BooleanField):
+            initial[name] = bool(posted.get(name))
+        elif name in posted:
+            initial[name] = posted.get(name)
+    return initial
 
 
 @login_required
 def staff_book(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpResponse:
     """Front desk and directors book for a student, or hold time with a placeholder."""
     schedule = schedule_for(request, Action.BOOK_FOR_OTHERS, slug, schedule_id)
-    data = request.POST if request.method == "POST" else request.GET
+    posted = request.POST if request.method == "POST" else None
+    data = posted if posted is not None else request.GET
     slot, chosen = _chosen_time(schedule, data, as_staff=True)
     if chosen is None:
         return _gone(request, schedule)
+    initial = {**slot.cleaned_data, "start": format_start(chosen.starts_at), "weeks": 1}
     form = StaffBookForm(
-        request.POST if request.method == "POST" else None,
-        center=schedule.center,
-        modalities=chosen.modalities,
-        initial={**slot.cleaned_data, "start": format_start(chosen.starts_at), "weeks": 1},
+        posted, center=schedule.center, modalities=chosen.modalities, initial=initial
     )
+    questions = form_questions.for_staff(schedule, posted)
+    form_status = ""
+    if posted is not None and questions.needs_another_look(posted):
+        # The Continue step: show the follow-ups the answers call for, save nothing.
+        form = StaffBookForm(
+            None,
+            center=schedule.center,
+            modalities=chosen.modalities,
+            initial={**initial, **form_initial(form, posted)},
+        )
+        if "continue" not in posted:
+            form_status = follow_up_message(_("Book"))
+        questions = questions.again()
     if chosen.appointment is not None:
         # Joining a group: placeholders and repeats don't apply.
         for name in ("is_placeholder", "weeks"):
             form.fields[name].disabled = True
-    if request.method == "POST" and form.is_valid():
+    if form.is_bound and all([form.is_valid(), questions.is_valid()]):
         student = form.cleaned_data["student"]
         try:
-            booked = services.book_series(
-                weeks=form.cleaned_data["weeks"] or 1,
-                actor=signed_in(request),
-                assignment=chosen.assignment,
-                starts_at=chosen.starts_at,
-                minutes=chosen.minutes,
-                modality=form.cleaned_data["modality"],
-                students=[student] if student else [],
-                as_staff=True,
-                is_walk_in=form.cleaned_data["is_walk_in"],
-                is_placeholder=form.cleaned_data["is_placeholder"],
-                is_tentative=form.cleaned_data["is_tentative"],
-                override_limits=form.cleaned_data["override_limits"],
-                request=request,
-            )
+            with transaction.atomic():
+                booked = services.book_series(
+                    weeks=form.cleaned_data["weeks"] or 1,
+                    actor=signed_in(request),
+                    assignment=chosen.assignment,
+                    starts_at=chosen.starts_at,
+                    minutes=chosen.minutes,
+                    modality=form.cleaned_data["modality"],
+                    students=[student] if student else [],
+                    as_staff=True,
+                    is_walk_in=form.cleaned_data["is_walk_in"],
+                    is_placeholder=form.cleaned_data["is_placeholder"],
+                    is_tentative=form.cleaned_data["is_tentative"],
+                    override_limits=form.cleaned_data["override_limits"],
+                    request=request,
+                )
+                if student is not None:
+                    questions.save(
+                        appointments=booked,
+                        student=student,
+                        answered_by=signed_in(request),
+                        request=request,
+                    )
         except services.BookingError as exc:
             form.add_error(None, exc.message)
         else:
@@ -397,6 +457,10 @@ def staff_book(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpRespon
         "crumbs": schedule_crumbs(schedule),
         "time": chosen,
         "form": form,
+        "questions": questions,
+        "form_status": form_status or questions.status,
+        "refresh_url": request.get_full_path(),
+        "staff": True,
     }
     with timezone.override(schedule.center.time_zone):
         return render(request, "scheduling/staff_book.html", context)
@@ -473,6 +537,7 @@ def appointment_detail(request: HttpRequest, slug: str, appointment_id: UUID) ->
         "may_mark": may_mark and taken > 0 and appointment.starts_at <= timezone.now(),
         "may_waive": can(user, Action.WAIVE_ATTENDANCE, appointment),
         **brief.appointment_context(request, appointment),
+        **form_answers.own_answers(user, appointment),
     }
     with timezone.override(center.time_zone):
         return render(request, "scheduling/appointment_detail.html", context)

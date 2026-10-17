@@ -13,6 +13,7 @@ from django.urls import URLPattern, URLResolver, get_resolver, reverse
 from sympraxi.core import policy
 from sympraxi.core.policy import Action
 from tests.attendance_world import add_attendance
+from tests.forms_world import add_forms
 from tests.records_world import add_records
 from tests.scheduling_world import World, build_world
 
@@ -89,6 +90,18 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "records:resources": (Action.MANAGE_RECORDS, "center"),
     "records:resource_create": (Action.MANAGE_RECORDS, "center"),
     "records:resource_edit": (Action.MANAGE_RECORDS, "resource"),
+    # Forms. "form" is the default intake form, with a draft; "question" is in the draft.
+    "forms:list": (Action.MANAGE_FORMS, "center"),
+    "forms:create": (Action.MANAGE_FORMS, "center"),
+    "forms:detail": (Action.MANAGE_FORMS, "form"),
+    "forms:question_create": (Action.MANAGE_FORMS, "form"),
+    "forms:preview": (Action.MANAGE_FORMS, "form"),
+    "forms:publish": (Action.MANAGE_FORMS, "form"),
+    "forms:question_edit": (Action.MANAGE_FORMS, "question"),
+    "forms:question_remove": (Action.MANAGE_FORMS, "question"),
+    "forms:my_registration": (Action.ANSWER_OWN_FORMS, "center"),
+    "forms:intake": (Action.ANSWER_OWN_FORMS, "appointment"),
+    "forms:student_registration": (Action.VIEW_REGISTRATION, "student_membership"),
 }
 
 # The URL keyword for each kind of object.
@@ -107,6 +120,8 @@ URL_KWARGS = {
     "project": "project_id",
     "resource": "resource_id",
     "block": "block_id",
+    "form": "form_id",
+    "question": "question_id",
 }
 
 # Pages that need a chosen open time in the query string.
@@ -149,7 +164,7 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return add_attendance(add_records(build_world(center)))
+    return add_forms(add_attendance(add_records(build_world(center))))
 
 
 def test_every_url_is_classified() -> None:

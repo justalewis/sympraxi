@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Remove a question" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Remove a question" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Remove this question from the draft?" %}</h1>
+  <p><strong>{{ question.label }}</strong></p>
+  {% if error %}
+    <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+      <div class="usa-alert__body"><p class="usa-alert__text">{{ error }}</p></div>
+    </div>
+  {% endif %}
+  {% if followers %}
+    <p>{% translate "These questions follow up on it. Change or remove them first:" %}</p>
+    <ul class="usa-list">{% for f in followers %}<li>{{ f.label }}</li>{% endfor %}</ul>
+    <p><a href="{{ back }}">{% translate "Go back" %}</a></p>
+  {% else %}
+    {% if was_published %}
+      <p>{% translate "Answers already given to it are kept, with the wording students saw. Once you publish the draft, nobody is asked it anymore." %}</p>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button usa-button--secondary" type="submit">{% translate "Remove it" %}</button>
+        <a href="{{ back }}">{% translate "Keep it" %}</a>
+      </div>
+    </form>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% load i18n %}
+{# Answers in the wording of the version answered. See sympraxi/forms/display.py. #}
+{% if shown.answers %}
+  <dl class="sympraxi-answers-list">
+    {% for a in shown.answers %}
+      <dt>{{ a.question }}</dt>
+      <dd>{{ a.answer|linebreaksbr }}</dd>
+    {% endfor %}
+  </dl>
+{% else %}
+  <p>{% translate "No questions were answered." %}</p>
+{% endif %}
+<p class="usa-hint">{% blocktranslate with when=shown.response.created_at|date:"F j, Y" number=shown.response.version.number %}Answered {{ when }}, on version {{ number }} of the form.{% endblocktranslate %}{% if shown.by_staff %} {% blocktranslate with name=shown.response.answered_by.display_name %}Entered by {{ name }}.{% endblocktranslate %}{% endif %}</p>

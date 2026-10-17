@@ -5,7 +5,9 @@ export covers the student's account details, their appointments, every
 session record about them (drafts too, with staff notes and every amendment),
 attached resources with the tutors' notes, and their writing projects.
 Appointments include attendance: no-shows, late cancellations and waivers with
-their reasons. Booking blocks are listed with any director's note.
+their reasons, and every set of intake answers given for them. The student's
+registration answers are included, earlier ones too (sympraxi/forms/export.py).
+Booking blocks are listed with any director's note.
 
 Other students are left out. A group appointment shows how many students it
 had, never who they were (99.12: when a record holds information about more
@@ -20,16 +22,19 @@ from django.utils import timezone
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Membership
+from sympraxi.forms import export as form_export
 from sympraxi.records.models import SessionRecord, WritingProject
 from sympraxi.scheduling.models import Block, Participant
 
 FORMAT = "sympraxi.student-record"
-VERSION = 1
+# Version 2 added registration answers and each appointment's intake answers.
+VERSION = 2
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
     center = membership.center
     student = membership.user
+    intake = form_export.intake_by_appointment(membership)
     return {
         "format": FORMAT,
         "version": VERSION,
@@ -49,7 +54,12 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
         "writing_projects": [
             _project(p) for p in WritingProject.objects.filter(center=center, student=student)
         ],
-        "appointments": [_appointment(p) for p in participations(membership)],
+        "registration_answers": [
+            form_export.response_data(r) for r in form_export.registration(membership)
+        ],
+        "appointments": [
+            _appointment(p, intake.get(p.appointment_id, [])) for p in participations(membership)
+        ],
         "session_records": [_record(r) for r in records(membership)],
         "booking_blocks": [
             _block(b)
@@ -92,7 +102,7 @@ def participations(membership: Membership) -> QuerySet[Participant]:
     )
 
 
-def _appointment(p: Participant) -> dict[str, Any]:
+def _appointment(p: Participant, intake: list[Any]) -> dict[str, Any]:
     a = p.appointment
     return {
         "id": str(a.pk),
@@ -118,6 +128,7 @@ def _appointment(p: Participant) -> dict[str, Any]:
         "waived_at": _when(p.waived_at),
         "waived_by": _person(p.waived_by),
         "waiver_reason": p.waiver_reason,
+        "intake_answers": [form_export.response_data(r) for r in intake],
     }
 
 

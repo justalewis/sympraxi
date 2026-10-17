@@ -1,0 +1,11 @@
+{% load i18n %}
+{# One student's answers for staff on the appointment page. `level` is the heading level. #}
+{% if row.intake %}
+  <h{{ level }}>{% translate "Intake answers" %}</h{{ level }}>
+  {% include "forms/_shown_response.html" with shown=row.intake %}
+{% endif %}
+{% if row.registration %}
+  <h{{ level }}>{% translate "Registration answers" %}</h{{ level }}>
+  {% include "forms/_shown_response.html" with shown=row.registration %}
+  <p><a href="{{ row.registration_url }}">{% blocktranslate with name=row.student.display_name %}{{ name }}'s registration answers{% endblocktranslate %}</a></p>
+{% endif %}

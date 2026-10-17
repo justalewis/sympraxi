@@ -21,6 +21,15 @@
     <dt>{% translate "In this center since" %}</dt><dd>{{ membership.created_at|date:"F j, Y" }}{% if not membership.is_active %} ({% translate "no longer active" %}){% endif %}</dd>
   </dl>
 
+  <h2>{% translate "Registration answers" %}</h2>
+  {% for shown in registration %}
+    <section class="sympraxi-record" aria-label="{% blocktranslate with when=shown.response.created_at|date:'F j, Y' %}Registration answers from {{ when }}{% endblocktranslate %}">
+      {% include "forms/_shown_response.html" %}
+    </section>
+  {% empty %}
+    <p>{% translate "None." %}</p>
+  {% endfor %}
+
   <h2>{% translate "Writing projects" %}</h2>
   {% if projects %}
     <table class="usa-table usa-table--borderless usa-table--stacked">
@@ -78,6 +87,16 @@
   {% else %}
     <p>{% translate "None." %}</p>
   {% endif %}
+
+  <h2>{% translate "Intake answers" %}</h2>
+  {% for row in intake %}
+    <section class="sympraxi-record" aria-labelledby="intake-{{ row.appointment.pk }}">
+      <h3 id="intake-{{ row.appointment.pk }}">{% blocktranslate with when=row.appointment.starts_at|date:"l, F j, Y" time=row.appointment.starts_at|time tutor=row.appointment.tutor.display_name %}{{ when }}, {{ time }}, with {{ tutor }}{% endblocktranslate %}</h3>
+      {% for shown in row.responses %}{% include "forms/_shown_response.html" %}{% endfor %}
+    </section>
+  {% empty %}
+    <p>{% translate "None." %}</p>
+  {% endfor %}
 
   <h2>{% translate "Booking blocks" %}</h2>
   {% if blocks %}

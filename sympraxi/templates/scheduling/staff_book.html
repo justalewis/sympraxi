@@ -15,11 +15,13 @@
       <dd>{% blocktranslate count n=time.seats_left %}{{ n }} place left{% plural %}{{ n }} places left{% endblocktranslate %}</dd>
     {% endif %}
   </dl>
-  <form class="usa-form usa-form--large" method="post">
+  <form class="usa-form usa-form--large" method="post" novalidate>
     {% csrf_token %}
     {% include "includes/form_fields.html" %}
+    {% include "forms/_booking_questions.html" %}
     <div class="sympraxi-form-actions">
       <button class="usa-button" type="submit">{% translate "Book" %}</button>
+      {% include "forms/_continue.html" with has_follow_ups=questions.has_follow_ups %}
       <a href="{% url 'scheduling:open_times' slug=center.slug schedule_id=schedule.pk %}?date={{ time.starts_at|date:'Y-m-d' }}">{% translate "Choose another time" %}</a>
     </div>
   </form>

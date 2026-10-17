@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ form.title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=form.title %}
+  <h1>{{ form.title }}</h1>
+  <p>
+    {% if form.kind == "registration" %}{% translate "Asked once, the first time a student books in this center. Students can change their answers later." %}{% elif form.schedule %}{% blocktranslate with name=form.schedule.name %}Asked each time a student books on {{ name }}.{% endblocktranslate %}{% else %}{% translate "Asked each time a student books on a schedule that doesn't have its own intake form." %}{% endif %}
+    {% if not form.is_active %}<strong>{% translate "These questions aren't being asked right now." %}</strong>{% endif %}
+  </p>
+  <div id="builder-status" class="sympraxi-status" role="status">{% if status %}<div class="usa-alert usa-alert--info usa-alert--slim"><div class="usa-alert__body"><p class="usa-alert__text">{{ status }}</p></div></div>{% endif %}</div>
+
+  {% url 'forms:detail' slug=center.slug form_id=form.pk as detail_url %}
+  {% if draft %}
+    <h2 id="draft">{% blocktranslate with n=draft.number %}Draft: version {{ n }}{% endblocktranslate %}</h2>
+    {% if published %}
+      <p>{% blocktranslate with n=published.number %}Students answer version {{ n }} until you publish this draft.{% endblocktranslate %}</p>
+    {% else %}
+      <p>{% translate "Nobody is asked these questions until you publish them." %}</p>
+    {% endif %}
+
+    <h3>{% translate "Introduction" %}</h3>
+    <form class="usa-form usa-form--large" method="post" action="{{ detail_url }}">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="intro">
+      {% include "includes/field.html" with field=intro_form.intro %}
+      <button class="usa-button usa-button--outline" type="submit">{% translate "Save the introduction" %}</button>
+    </form>
+
+    <h3>{% translate "Questions" %}</h3>
+    {% include "forms/_draft_questions.html" %}
+    <p><a class="usa-button" href="{% url 'forms:question_create' slug=center.slug form_id=form.pk %}">{% translate "Add a question" %}</a></p>
+
+    <h3>{% translate "Publish" %}</h3>
+    {% if problems %}
+      <p>{% translate "Fix these before publishing:" %}</p>
+      <ul class="usa-list">{% for p in problems %}<li>{{ p }}</li>{% endfor %}</ul>
+    {% else %}
+      <p>{% translate "Publishing makes this draft the version students answer from now on." %}</p>
+    {% endif %}
+    <div class="sympraxi-button-group">
+      <a class="usa-button usa-button--outline" href="{% url 'forms:preview' slug=center.slug form_id=form.pk %}">{% translate "Preview the draft" %}</a>
+      {% if not problems %}<a class="usa-button" href="{% url 'forms:publish' slug=center.slug form_id=form.pk %}">{% translate "Publish the draft" %}</a>{% endif %}
+    </div>
+    <details class="sympraxi-details">
+      <summary>{% translate "Throw away the draft" %}</summary>
+      <form method="post" action="{{ detail_url }}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="discard">
+        <p>{% if published %}{% translate "Every change in the draft is lost. The published version stays as it is." %}{% else %}{% translate "Every question in the draft is removed." %}{% endif %}</p>
+        <button class="usa-button usa-button--secondary" type="submit">{% translate "Throw away the draft" %}</button>
+      </form>
+    </details>
+  {% elif published %}
+    <h2 id="draft">{% blocktranslate with n=published.number when=published.published_at|date:"F j, Y" %}Version {{ n }}, published {{ when }}{% endblocktranslate %}</h2>
+    <p>{% translate "A published version can't change. Making changes starts a draft that copies it." %}</p>
+    <form method="post" action="{{ detail_url }}">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="start_draft">
+      <button class="usa-button" type="submit">{% translate "Make changes" %}</button>
+    </form>
+    <ol class="sympraxi-question-list">
+      {% for row in published_rows %}
+        <li class="sympraxi-question-item">{% include "forms/_question_summary.html" %}</li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+
+  <h2>{% translate "Asking" %}</h2>
+  <form method="post" action="{{ detail_url }}">
+    {% csrf_token %}
+    {% if form.is_active %}
+      <input type="hidden" name="action" value="stop">
+      <p>{% translate "Stop asking these questions. Answers already given are kept." %}</p>
+      <button class="usa-button usa-button--outline" type="submit">{% translate "Stop asking" %}</button>
+    {% else %}
+      <input type="hidden" name="action" value="start">
+      <p>{% translate "These questions aren't asked right now." %}</p>
+      <button class="usa-button usa-button--outline" type="submit">{% translate "Start asking again" %}</button>
+    {% endif %}
+  </form>
+
+  <h2>{% translate "Published versions" %}</h2>
+  {% if versions %}
+    <table class="usa-table usa-table--borderless">
+      <caption class="usa-sr-only">{% translate "Published versions of this form" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Version" %}</th>
+          <th scope="col">{% translate "Published" %}</th>
+          <th scope="col">{% translate "By" %}</th>
+          <th scope="col">{% translate "Responses" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in versions %}
+          <tr>
+            <th scope="row"><a href="{% url 'forms:preview' slug=center.slug form_id=form.pk %}?version={{ v.number }}">{% blocktranslate with n=v.number %}Version {{ n }}{% endblocktranslate %}</a></th>
+            <td>{{ v.published_at|date:"F j, Y" }}</td>
+            <td>{{ v.published_by.display_name }}</td>
+            <td>{{ v.answered }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "None yet." %}</p>
+  {% endif %}
+  <p><a href="{% url 'forms:list' slug=center.slug %}">{% translate "All forms" %}</a></p>
+{% endblock content %}

@@ -160,6 +160,10 @@ If it was down for a while, it sends only the reminders that are less than 15 mi
 
 Each schedule sets its reminders, its late-cancellation window and how long after the start a student is flagged as a possible no-show (on the schedule's edit page). Directors set the center's limits for booking blocks under **Booking blocks**. Students turn reminders off, and tutors turn them on, under **Account** → **Email reminders**.
 
+## Registration and intake forms
+
+Nothing to set up on the server. Directors build their center's forms in Sympraxi, under **Registration and intake forms** on the center page: a registration form, asked once when a student first books, and intake forms, asked at each booking (one per schedule, or a default for every schedule). A form's questions reach students only after a director publishes them. Each later change is published as a new version, and earlier answers keep the wording students saw.
+
 ## Backups
 
 ```bash
@@ -175,7 +179,7 @@ Each backup is a folder under `backups/` containing the database dump, the uploa
 
 To keep encrypted copies off the server, install [restic](https://restic.net) and set `RESTIC_REPOSITORY` and `RESTIC_PASSWORD` in `backup.env`.
 
-Session records are FERPA education records, and backups contain them. Two consequences:
+Session records and students' form answers are FERPA education records, and backups contain them. Two consequences:
 
 - Keep backup retention in line with your records-retention policy. A record your center purges still exists in every backup until that backup expires.
 - Store off-site copies only where the college controls access: campus storage, or a provider under a contract that meets FERPA's school-official requirements.

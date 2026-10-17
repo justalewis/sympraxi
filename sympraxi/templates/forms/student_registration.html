@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Registration answers" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Registration answers" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with name=student.display_name %}{{ name }}'s registration answers{% endblocktranslate %}</h1>
+  {% if sees_all %}
+    <p>{% translate "Directors see every answer. Tutors and front desk staff see only the answers to questions marked for staff." %}</p>
+  {% else %}
+    <p>{% translate "You see the answers to questions the center's directors marked for staff." %}</p>
+  {% endif %}
+  {% if shown %}
+    <h2>{% translate "Current answers" %}</h2>
+    {% include "forms/_shown_response.html" %}
+  {% else %}
+    <p>{% translate "No answers to show." %}</p>
+  {% endif %}
+  {% if earlier %}
+    <h2>{% translate "Earlier answers" %}</h2>
+    {% for shown in earlier %}
+      <section class="sympraxi-panel" aria-label="{% blocktranslate with when=shown.response.created_at|date:'F j, Y' %}Answers from {{ when }}{% endblocktranslate %}">
+        {% include "forms/_shown_response.html" %}
+      </section>
+    {% endfor %}
+  {% endif %}
+{% endblock content %}

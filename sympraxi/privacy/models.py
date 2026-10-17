@@ -44,6 +44,11 @@ ACTION_LABELS = {
     "records.project_saved": _("Saved a writing project"),
     "records.resource_saved": _("Saved one of the center's resources"),
     "records.settings_changed": _("Changed the session record settings"),
+    "forms.form_created": _("Added a form"),
+    "forms.form_changed": _("Started or stopped asking a form's questions"),
+    "forms.form_published": _("Published a new version of a form"),
+    "forms.answered": _("Answered a registration or intake form"),
+    "forms.answers_viewed": _("Read a student's registration or intake answers"),
 }
 
 

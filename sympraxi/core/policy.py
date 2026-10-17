@@ -26,6 +26,13 @@ Attendance follows the appointments: a tutor marks who came to appointments
 they teach, and front desk staff and directors mark any. Front desk staff and
 directors waive late cancellations and no-shows. Only directors see and lift
 booking blocks.
+
+Forms: directors build them. Students answer their center's registration form
+and the intake form for appointments they are in, and see their own answers.
+Intake answers are read by the appointment's tutor, front desk staff and
+directors. Registration answers are read in full only by directors; tutors (for
+students they tutor) and front desk staff see the answers to questions a
+director marked for staff, which `sympraxi/forms/display.py` filters.
 """
 
 from collections.abc import Callable
@@ -37,6 +44,7 @@ from django.db.models import Model, QuerySet
 from django.http import Http404
 
 from sympraxi.centers.models import STAFF_ROLES, Center, Membership, Role
+from sympraxi.forms.models import Response
 from sympraxi.records.models import RecordStatus, SessionRecord, WritingProject
 from sympraxi.scheduling.models import (
     Appointment,
@@ -92,6 +100,17 @@ class Action(StrEnum):
     EXPORT_STUDENT_RECORD = "records.export_student"
     # The center's own link-only resources and its session-record settings.
     MANAGE_RECORDS = "records.manage"
+    # Build, preview and publish the center's registration and intake forms.
+    MANAGE_FORMS = "forms.manage"
+    # Answer the center's registration form and the intake form for your own
+    # appointments, and see your own answers.
+    ANSWER_OWN_FORMS = "forms.answer_own"
+    # Read the intake answers students gave for appointments.
+    VIEW_INTAKE = "forms.view_intake"
+    # Read a student's registration answers to questions marked for staff.
+    VIEW_REGISTRATION = "forms.view_registration"
+    # Read every registration answer, including questions not marked for staff.
+    VIEW_ALL_REGISTRATION = "forms.view_all_registration"
 
 
 ROLE_GRANTS: dict[Role, frozenset[Action]] = {
@@ -104,6 +123,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.CANCEL_APPOINTMENT,
             Action.CHANGE_APPOINTMENT,
             Action.VIEW_OWN_WRITING,
+            Action.ANSWER_OWN_FORMS,
         }
     ),
     Role.TUTOR: frozenset(
@@ -116,6 +136,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_RECORD_STATUS,
             Action.WRITE_RECORDS,
             Action.VIEW_RECORDS,
+            Action.VIEW_INTAKE,
+            Action.VIEW_REGISTRATION,
         }
     ),
     Role.FRONT_DESK: frozenset(
@@ -131,6 +153,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.MARK_ATTENDANCE,
             Action.WAIVE_ATTENDANCE,
             Action.VIEW_RECORD_STATUS,
+            Action.VIEW_INTAKE,
+            Action.VIEW_REGISTRATION,
         }
     ),
     Role.DIRECTOR: frozenset(
@@ -156,6 +180,10 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_RECORDS,
             Action.EXPORT_STUDENT_RECORD,
             Action.MANAGE_RECORDS,
+            Action.MANAGE_FORMS,
+            Action.VIEW_INTAKE,
+            Action.VIEW_REGISTRATION,
+            Action.VIEW_ALL_REGISTRATION,
         }
     ),
 }
@@ -240,6 +268,35 @@ def _own_final_record(user: UserLike, obj: Model) -> bool:
     )
 
 
+def _answers_own(user: UserLike, obj: Model) -> bool:
+    """A student answers for appointments they're still in, and about themselves."""
+    if isinstance(obj, Appointment):
+        return Participant.objects.filter(
+            appointment=obj, student=user, canceled_at__isnull=True
+        ).exists()
+    if isinstance(obj, Response):
+        return obj.student_id == user.pk
+    if isinstance(obj, Membership):
+        return obj.user_id == user.pk and obj.role == Role.STUDENT
+    return False
+
+
+def _intake_of_own_tutoring(user: UserLike, obj: Model) -> bool:
+    if isinstance(obj, Appointment):
+        return obj.tutor_id == user.pk
+    if isinstance(obj, Response):
+        return obj.appointment is not None and obj.appointment.tutor_id == user.pk
+    return False
+
+
+def _registration_of_tutored(user: UserLike, obj: Model) -> bool:
+    if isinstance(obj, Membership):
+        return obj.role == Role.STUDENT and has_tutored(user, obj.user_id, obj.center_id)
+    if isinstance(obj, Response):
+        return has_tutored(user, obj.student_id, obj.center_id)
+    return False
+
+
 # Limits on a role's grant when the object isn't the center itself. A role with
 # no entry here gets the action on everything in its center.
 OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
@@ -255,6 +312,9 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.TUTOR, Action.WRITE_RECORDS): _writes_for,
     (Role.TUTOR, Action.VIEW_RECORDS): _reads_student,
     (Role.STUDENT, Action.VIEW_OWN_WRITING): _own_final_record,
+    (Role.STUDENT, Action.ANSWER_OWN_FORMS): _answers_own,
+    (Role.TUTOR, Action.VIEW_INTAKE): _intake_of_own_tutoring,
+    (Role.TUTOR, Action.VIEW_REGISTRATION): _registration_of_tutored,
     (Role.FRONT_DESK, Action.VIEW_SCHEDULES): _not_hidden,
     (Role.FRONT_DESK, Action.BOOK_FOR_OTHERS): _not_hidden,
     (Role.DIRECTOR, Action.BOOK_FOR_OTHERS): _not_hidden,

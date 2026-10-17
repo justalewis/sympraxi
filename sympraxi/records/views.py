@@ -26,6 +26,8 @@ from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership, Role
 from sympraxi.centers.views import HtmxHttpRequest
 from sympraxi.core.policy import Action, can, get_for_action
+from sympraxi.forms import display as form_display
+from sympraxi.forms import export as form_export
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.records import export, services, suggestions
 from sympraxi.records.display import by_project, topic_axes, topics_by_axis
@@ -709,6 +711,8 @@ def export_page(request: HttpRequest, slug: str, membership_id: UUID) -> HttpRes
         "exported_at": timezone.now(),
         "projects": WritingProject.objects.filter(center=center, student=student),
         "participations": export.participations(membership),
+        "intake": _intake_rows(membership),
+        "registration": [form_display.show(r) for r in form_export.registration(membership)],
         "records": export.records(membership),
         "blocks": Block.objects.filter(center=center, student=student)
         .select_related("schedule", "term", "lifted_by")
@@ -726,6 +730,19 @@ def export_page(request: HttpRequest, slug: str, membership_id: UUID) -> HttpRes
     }
     with timezone.override(membership.center.time_zone):
         return render(request, "records/export.html", context)
+
+
+def _intake_rows(membership: Membership) -> list[dict[str, Any]]:
+    """Each appointment that has intake answers, with every set given, oldest first."""
+    found = form_export.intake_by_appointment(membership)
+    return [
+        {
+            "appointment": p.appointment,
+            "responses": [form_display.show(r) for r in found[p.appointment_id]],
+        }
+        for p in export.participations(membership)
+        if p.appointment_id in found
+    ]
 
 
 @login_required

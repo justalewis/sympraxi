@@ -1,0 +1,20 @@
+{% load i18n %}
+{# Registration and intake questions on the booking pages. See sympraxi/forms/booking.py. #}
+{% if questions.groups %}
+  {% include "forms/_form_status.html" %}
+  {% if questions.registration %}
+    <h2>{% translate "About you" %}</h2>
+    <p>{% translate "The center asks these once, the first time you book. You can change your answers later from the center's page." %}</p>
+    {% include "forms/_questions.html" with group=questions.registration %}
+  {% endif %}
+  {% if questions.intake %}
+    {% if staff %}
+      <h2>{% translate "Intake questions" %}</h2>
+      <p>{% translate "Answer them with the student, or leave them all blank to skip them. The student can answer them later from the appointment page." %}</p>
+    {% else %}
+      <h2>{% translate "About this appointment" %}</h2>
+    {% endif %}
+    {% include "forms/_questions.html" with group=questions.intake %}
+  {% endif %}
+  {% include "forms/_continue_hint.html" with has_follow_ups=questions.has_follow_ups %}
+{% endif %}

@@ -4,6 +4,7 @@ import secrets
 import zoneinfo
 from datetime import time, timedelta
 from typing import Any
+from uuid import UUID
 
 from allauth.account.models import EmailAddress
 from django.conf import settings
@@ -14,6 +15,10 @@ from django.utils import timezone
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership, Role
+from sympraxi.forms import builder as form_builder
+from sympraxi.forms import services as form_services
+from sympraxi.forms.builder import QuestionData
+from sympraxi.forms.models import Form, FormKind, FormVersion
 from sympraxi.records import services as records
 from sympraxi.records.models import Resource, SessionRecord, Topic
 from sympraxi.scheduling import attendance, services
@@ -68,6 +73,7 @@ class Command(BaseCommand):
         call_command("load_catalog", stdout=self.stdout)
         self._records(center, assignment)
         self._attendance(center, assignment)
+        self._forms(center)
         self.stdout.write(self.style.SUCCESS(f"Demo center ready at /centers/{center.slug}/"))
         self.stdout.write("Accounts: " + ", ".join(e for e, _, _ in DEMO_PEOPLE))
         if options["password"] is None:
@@ -258,4 +264,150 @@ class Command(BaseCommand):
                 marks={robin.pk: Attendance.NO_SHOW},
                 now=appointment.starts_at + timedelta(minutes=20),
                 notify=False,
+            )
+
+    def _forms(self, center: Center) -> None:
+        """A registration form and an intake form with a follow-up question. Sam answered
+        both; the intake form was reworded after Sam's first answers, so version 1 and
+        version 2 both have answers."""
+        if Form.objects.filter(center=center).exists():
+            return
+        director = User.objects.get(email="director@demo.test")
+        sam = User.objects.get(email="student@demo.test")
+
+        def add(draft: FormVersion, label: str, kind: str = "short_text", **fields: Any) -> None:
+            options: list[tuple[UUID | None, str]] = [(None, o) for o in fields.pop("options", [])]
+            condition = None
+            if "follows" in fields:
+                source_label, option_label = fields.pop("follows")
+                source = draft.questions.get(label=source_label)
+                condition = (source.key, source.options.get(label=option_label).key)
+            form_builder.save_question(
+                draft=draft,
+                question=None,
+                data=QuestionData(
+                    kind=kind, label=label, options=options, condition=condition, **fields
+                ),
+            )
+
+        def answers(version: FormVersion, by_label: dict[str, Any]) -> dict[Any, Any]:
+            found: dict[Any, Any] = {}
+            for q in version.ordered_questions():
+                if q.label in by_label:
+                    value = by_label[q.label]
+                    if q.is_choice:
+                        labels = {o.label: o.key for o in q.options.all()}
+                        value = [labels[v] for v in ([value] if isinstance(value, str) else value)]
+                    found[q.key] = value
+            return found
+
+        registration = form_builder.create_form(
+            actor=director, center=center, kind=FormKind.REGISTRATION
+        )
+        draft = registration.versions.get()  # the new form's empty draft
+        draft.intro = (
+            "A few questions the first time you book. Tutors and front desk staff see "
+            "only your major and year."
+        )
+        draft.save(update_fields=["intro"])
+        add(draft, "What is your major or program?", shown_to_staff=True)
+        add(
+            draft,
+            "What year are you in?",
+            "one_choice",
+            options=["First year", "Second year", "Third year", "Fourth year or later", "Graduate"],
+            shown_to_staff=True,
+        )
+        add(draft, "Is English your first language?", "yes_no", is_demographic=True)
+        add(
+            draft,
+            "Are you the first in your family to go to college?",
+            "yes_no",
+            is_demographic=True,
+        )
+        reg_version = form_builder.publish(actor=director, draft=draft)
+
+        intake = form_builder.create_form(actor=director, center=center, kind=FormKind.INTAKE)
+        draft = intake.versions.get()
+        add(draft, "What course is this for?", required=True, help_text="For example ENG 101.")
+        add(
+            draft,
+            "What are you working on?",
+            "one_choice",
+            options=["An essay or paper", "A lab report", "An application", "Something else"],
+            required=True,
+        )
+        add(draft, "What is it?", follows=("What are you working on?", "Something else"))
+        add(
+            draft,
+            "What would you like to focus on?",
+            "several_choices",
+            options=["Ideas and argument", "Organization", "Using sources", "Citations"],
+        )
+        add(draft, "When is it due?", "date")
+        add(draft, "Anything else your tutor should know?", "long_text")
+        first_version = form_builder.publish(actor=director, draft=draft)
+
+        form_services.save_response(
+            version=reg_version,
+            values=answers(
+                reg_version,
+                {
+                    "What is your major or program?": "Environmental science",
+                    "What year are you in?": "Second year",
+                    "Is English your first language?": "Yes",
+                },
+            ),
+            answered_by=sam,
+            student=sam,
+        )
+        sessions = list(
+            Appointment.objects.filter(schedule__center=center, participants__student=sam)
+            .exclude(status="canceled")
+            .order_by("starts_at")
+        )
+        if sessions:
+            form_services.save_response(
+                version=first_version,
+                values=answers(
+                    first_version,
+                    {
+                        "What course is this for?": "ENG 101",
+                        "What are you working on?": "An essay or paper",
+                        "What would you like to focus on?": ["Ideas and argument"],
+                    },
+                ),
+                answered_by=sam,
+                student=sam,
+                appointment=sessions[0],
+            )
+        # The director reworded a question, so later answers use version 2.
+        draft = form_builder.start_draft(actor=director, form=intake)
+        working = draft.questions.get(label="What are you working on?")
+        form_builder.save_question(
+            draft=draft,
+            question=working,
+            data=QuestionData(
+                kind=working.kind,
+                label="What are you writing?",
+                required=True,
+                options=[(o.key, o.label) for o in working.options.all()],
+            ),
+        )
+        second_version = form_builder.publish(actor=director, draft=draft)
+        if len(sessions) > 1:
+            form_services.save_response(
+                version=second_version,
+                values=answers(
+                    second_version,
+                    {
+                        "What course is this for?": "ENG 101",
+                        "What are you writing?": "An essay or paper",
+                        "What would you like to focus on?": ["Using sources", "Citations"],
+                        "Anything else your tutor should know?": "Same essay as last time.",
+                    },
+                ),
+                answered_by=sam,
+                student=sam,
+                appointment=sessions[-1],
             )

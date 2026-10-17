@@ -54,6 +54,11 @@ class AuditAction(StrEnum):
     PROJECT_SAVED = "records.project_saved"
     RESOURCE_SAVED = "records.resource_saved"
     RECORD_SETTINGS_CHANGED = "records.settings_changed"
+    FORM_CREATED = "forms.form_created"
+    FORM_CHANGED = "forms.form_changed"
+    FORM_PUBLISHED = "forms.form_published"
+    FORM_ANSWERED = "forms.answered"
+    ANSWERS_VIEWED = "forms.answers_viewed"
 
 
 def client_ip(request: HttpRequest) -> str | None:

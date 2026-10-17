@@ -7,6 +7,7 @@ from django_htmx.middleware import HtmxDetails
 
 from sympraxi.centers.models import Center, Membership
 from sympraxi.core.policy import Action, can, get_for_action, roles_in
+from sympraxi.forms.models import Form, FormKind
 
 
 @login_required
@@ -27,6 +28,14 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_manage_records": can(request.user, Action.MANAGE_RECORDS, center),
         "can_mark_attendance": can(request.user, Action.MARK_ATTENDANCE, center),
         "can_manage_blocks": can(request.user, Action.MANAGE_BLOCKS, center),
+        "can_manage_forms": can(request.user, Action.MANAGE_FORMS, center),
+        "asks_registration": can(request.user, Action.ANSWER_OWN_FORMS, center)
+        and Form.objects.filter(
+            center=center,
+            kind=FormKind.REGISTRATION,
+            is_active=True,
+            versions__published_at__isnull=False,
+        ).exists(),
     }
     return render(request, "centers/center_detail.html", context)
 

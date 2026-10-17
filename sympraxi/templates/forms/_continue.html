@@ -1,0 +1,5 @@
+{% load i18n %}
+{# Without JavaScript, follow-up questions appear after this button. With htmx they appear on their own. #}
+{% if has_follow_ups %}
+  <button class="usa-button usa-button--outline" type="submit" name="continue" value="1" aria-describedby="continue-hint">{% translate "Continue" %}</button>
+{% endif %}

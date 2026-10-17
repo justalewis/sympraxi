@@ -14,12 +14,14 @@ from django.utils.csp import CSP
 
 from sympraxi.accounts import sso_config
 from sympraxi.centers.models import Membership, Role
+from sympraxi.forms.models import Answer, Question
 from sympraxi.records.models import RecordStatus, SessionRecord
 from sympraxi.scheduling.models import Attendance, Block, Participant
 from sympraxi.scheduling.timeutils import local_date
 from tests import sso_idp
 from tests.attendance_world import add_attendance
 from tests.factories import CenterFactory, MembershipFactory, UserFactory, give_mfa
+from tests.forms_world import add_forms
 from tests.records_world import add_records
 from tests.scheduling_world import build_world
 
@@ -31,8 +33,10 @@ pytestmark = [pytest.mark.e2e, pytest.mark.django_db(transaction=True)]
 # and its records (tests/records_world.py): {past_appointment}, {record} (final,
 # amended), {draft}, {unwritten} (past, no record), {project}, {resource} and
 # {student_membership}; and its attendance (tests/attendance_world.py): {missed}
-# (a no-show by {blocked_student}) and {block}. "blocked_student" signs in as a
-# student whose online booking is paused.
+# (a no-show by {blocked_student}) and {block}; and its forms (tests/forms_world.py):
+# {form} (the default intake form, with a draft) and {question} (in that draft).
+# "blocked_student" signs in as a student whose online booking is paused, and
+# "new_student" as one who hasn't answered the registration questions yet.
 PAGES = [
     (None, "/"),
     (None, "/accounts/login/"),
@@ -118,6 +122,21 @@ PAGES = [
     ("blocked_student", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
     ("blocked_student", "/centers/{slug}/appointments/"),
     ("blocked_student", "/centers/{slug}/appointments/{missed}/"),
+    # Forms
+    ("director", "/centers/{slug}/forms/"),
+    ("director", "/centers/{slug}/forms/new/"),
+    ("director", "/centers/{slug}/forms/{form}/"),
+    ("director", "/centers/{slug}/forms/{form}/questions/new/"),
+    ("director", "/centers/{slug}/form-questions/{question}/edit/"),
+    ("director", "/centers/{slug}/form-questions/{question}/remove/"),
+    ("director", "/centers/{slug}/forms/{form}/preview/"),
+    ("director", "/centers/{slug}/forms/{form}/publish/"),
+    ("director", "/centers/{slug}/appointments/{appointment}/"),
+    ("director", "/centers/{slug}/students/{student_membership}/registration/"),
+    ("tutor", "/centers/{slug}/students/{student_membership}/registration/"),
+    ("student", "/centers/{slug}/registration/"),
+    ("student", "/centers/{slug}/appointments/{appointment}/intake/"),
+    ("new_student", "/centers/{slug}/schedules/{schedule}/book/?{slot}"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -136,6 +155,7 @@ ALL_PAGES = [(who, path, None) for who, path in PAGES] + SSO_PAGES
 ROLES = {
     "student": Role.STUDENT,
     "blocked_student": Role.STUDENT,
+    "new_student": Role.STUDENT,
     "tutor": Role.TUTOR,
     "front_desk": Role.FRONT_DESK,
 }
@@ -179,12 +199,14 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
                 extra_data={"id_token": sso_idp.entra_claims(email=user.email)},
             )
         sign_in(context, user)
-    world = add_attendance(
-        add_records(
-            build_world(
-                center,
-                student=user if who == "student" else None,
-                tutor=user if who == "tutor" else None,
+    world = add_forms(
+        add_attendance(
+            add_records(
+                build_world(
+                    center,
+                    student=user if who == "student" else None,
+                    tutor=user if who == "tutor" else None,
+                )
             )
         )
     )
@@ -216,6 +238,8 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         missed=world.missed.pk,
         block=world.block.pk,
         blocked_student=world.blocked_student.pk,
+        form=world.form.pk,
+        question=world.question.pk,
     )
     page = context.new_page()
     return context, page, url
@@ -343,9 +367,14 @@ def test_a_student_books_a_time(browser, live_server, sign_in) -> None:
     page.goto(url)
     page.locator(".sympraxi-time__action a").first.click()
     page.wait_for_selector("text=Book this appointment?")
+    # The center's intake questions are on the page; two are required.
+    page.get_by_label("What course is this for?").fill("ENG 101")
+    # USWDS draws its own radio buttons and keeps the real input off-screen; click the label.
+    page.get_by_text("Essay", exact=True).click()
     page.click("button:has-text('Book it')")
     page.wait_for_selector("text=You're booked")
     assert "/appointments/" in page.url
+    page.wait_for_selector("text=Your answers for this appointment")
     context.close()
 
 
@@ -438,5 +467,62 @@ def test_front_desk_confirms_a_possible_no_show_by_keyboard(browser, live_server
     assert "Nothing to check right now." in page.locator("main").inner_text()
     flagged = Participant.objects.get(flagged_at__isnull=False)
     assert flagged.attendance == Attendance.NO_SHOW
+    context.close()
+    assert problems == []
+
+
+def test_follow_up_questions_appear_in_place_by_keyboard(browser, live_server, sign_in) -> None:
+    """Choosing "Something else" with the space bar shows its follow-up without a reload."""
+    context, page, url = open_page(
+        browser,
+        live_server,
+        sign_in,
+        "student",
+        "/centers/{slug}/schedules/{schedule}/book/?{slot}",
+    )
+    problems = watch_for_csp_problems(page)
+    page.goto(url)
+    page.evaluate("window.notReloaded = true")
+    assert page.get_by_label("What kind of writing, then?").count() == 0
+    page.get_by_label("What course is this for?").fill("ENG 101")
+    other = page.get_by_label("Something else")
+    other.focus()
+    page.keyboard.press("Space")
+    page.wait_for_selector("text=What kind of writing, then?")
+    assert "1 follow-up question appeared." in page.locator("#form-status").inner_text()
+    # Focus stays on the choice that was made, and what was typed is kept.
+    assert page.evaluate("document.activeElement.value") == other.get_attribute("value")
+    assert page.get_by_label("What course is this for?").input_value() == "ENG 101"
+    page.get_by_label("What kind of writing, then?").fill("A zine")
+    assert page.evaluate("window.notReloaded") is True
+    page.click("button:has-text('Book it')")
+    page.wait_for_selector("text=You're booked")
+    saved = Answer.objects.get(question__label="What kind of writing, then?")
+    assert saved.text == "A zine"
+    context.close()
+    assert problems == []
+
+
+def test_a_director_reorders_questions_by_keyboard(browser, live_server, sign_in) -> None:
+    """Tab to "Move down", press Enter: the list changes in place and focus stays on the button."""
+    context, page, url = open_page(
+        browser, live_server, sign_in, "director", "/centers/{slug}/forms/{form}/"
+    )
+    problems = watch_for_csp_problems(page)
+    page.goto(url)
+    page.evaluate("window.notReloaded = true")
+    tab_to(page, lambda label: label.startswith("Move down: What course is this for?"))
+    focused = page.evaluate("document.activeElement.id")
+    page.keyboard.press("Enter")
+    page.wait_for_selector("#builder-status >> text=Moved “What course is this for?” down.")
+    assert page.evaluate("document.activeElement.id") == focused
+    assert page.evaluate("window.notReloaded") is True
+    first = page.locator("#questions li").first.inner_text()
+    assert first.startswith("What kind of writing is it?")
+    draft = Question.objects.get(pk=focused.removeprefix("down-")).version
+    assert [q.label for q in draft.ordered_questions()][:2] == [
+        "What kind of writing is it?",
+        "What course is this for?",
+    ]
     context.close()
     assert problems == []

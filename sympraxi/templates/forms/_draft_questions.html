@@ -1,0 +1,32 @@
+{% load i18n %}
+{# The draft's questions with their buttons. With htmx, moving one swaps this list in place; #}
+{# each button keeps its id, so focus stays on it. #}
+<div id="questions">
+  {% if draft_rows %}
+    <ol class="sympraxi-question-list">
+      {% for row in draft_rows %}
+        <li id="question-{{ row.question.pk }}" class="sympraxi-question-item">
+          {% include "forms/_question_summary.html" %}
+          <div class="sympraxi-button-group">
+            <form method="post" action="{{ detail_url }}" hx-post="{{ detail_url }}" hx-target="#questions" hx-select="#questions" hx-swap="outerHTML" hx-select-oob="#builder-status:innerHTML">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="up">
+              <input type="hidden" name="question" value="{{ row.question.pk }}">
+              <button class="usa-button usa-button--outline" type="submit" id="up-{{ row.question.pk }}"{% if row.first %} aria-disabled="true"{% endif %}>{% translate "Move up" %}<span class="usa-sr-only">: {{ row.question.label }}</span></button>
+            </form>
+            <form method="post" action="{{ detail_url }}" hx-post="{{ detail_url }}" hx-target="#questions" hx-select="#questions" hx-swap="outerHTML" hx-select-oob="#builder-status:innerHTML">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="down">
+              <input type="hidden" name="question" value="{{ row.question.pk }}">
+              <button class="usa-button usa-button--outline" type="submit" id="down-{{ row.question.pk }}"{% if row.last %} aria-disabled="true"{% endif %}>{% translate "Move down" %}<span class="usa-sr-only">: {{ row.question.label }}</span></button>
+            </form>
+            <a href="{% url 'forms:question_edit' slug=center.slug question_id=row.question.pk %}">{% translate "Change" %}<span class="usa-sr-only">: {{ row.question.label }}</span></a>
+            <a href="{% url 'forms:question_remove' slug=center.slug question_id=row.question.pk %}">{% translate "Remove" %}<span class="usa-sr-only">: {{ row.question.label }}</span></a>
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p>{% translate "No questions yet." %}</p>
+  {% endif %}
+</div>

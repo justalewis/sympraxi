@@ -27,6 +27,8 @@ Emails print to the console in development. Set `SYMPRAXI_QUEUE_EMAIL=false` to 
 
 `seed_demo` also gives the demo student a late cancellation and a possible no-show, and gives a second demo student, `student2@demo.test`, three no-shows and a booking block.
 
+It also sets up a registration form and an intake form with a follow-up question (under **Registration and intake forms** on the center page). The demo student answered both, and the intake form was reworded afterward, so the student's earlier answers show the wording of version 1 and the later ones version 2.
+
 ## The scheduler
 
 Reminder emails and possible no-show flags come from a third process, beside `runserver` and `db_worker`:
@@ -99,10 +101,18 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/records/suggestions.py` | Which resources are suggested for a record's topics, and catalog search |
 | `sympraxi/records/brief.py` | Record status and the pre-session brief on the appointment page |
 | `sympraxi/records/export.py` | One student's complete record, for a FERPA inspection request |
+| `sympraxi/forms/models.py` | Forms, versions, questions and options with permanent keys, responses and answers |
+| `sympraxi/forms/builder.py` | What directors do to a form: drafts, questions, moving, publishing, and the rules that keep earlier answers meaningful |
+| `sympraxi/forms/answering.py` | A form version on a page: follow-up questions, the Continue step, required questions, typed answers |
+| `sympraxi/forms/services.py` | Which form applies where (registration once, intake by schedule) and saving answers |
+| `sympraxi/forms/display.py` | Showing answers in the wording answered, who sees which registration answers, audited reads |
+| `sympraxi/forms/booking.py` | The registration and intake questions on the booking pages |
+| `sympraxi/forms/migrations/0002_versions_frozen.py` | The triggers that freeze published versions and keep answers append-only |
 | `tests/test_policy_matrix.py` | Every role against every action, written out by hand |
 | `tests/test_url_inventory.py` | Fails if a new URL isn't assigned a permission |
 | `tests/records_world.py` | Builders for session-record tests: topics, resources, appointments, records |
 | `tests/attendance_world.py` | A no-show, a possible no-show and a booking block, for attendance page tests |
+| `tests/forms_world.py` | Builders for form tests: forms from question specs, answers by label, posted form data |
 | `tests/sso_idp.py` | A fake Entra ID and Google for SSO tests; nothing goes over the network |
 | `tests/e2e/` | Browser tests: axe accessibility and Content Security Policy |
 | `tests/load/` | The first-Monday load test (`python -m tests.load run`) and its own checks |

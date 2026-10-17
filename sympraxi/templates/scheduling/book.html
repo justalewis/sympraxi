@@ -25,11 +25,13 @@
   {% if my_blocks %}
     {% include "scheduling/_block_notice.html" %}
   {% else %}
-  <form class="usa-form usa-form--large" method="post">
+  <form class="usa-form usa-form--large" method="post" novalidate>
     {% csrf_token %}
     {% include "includes/form_fields.html" %}
+    {% include "forms/_booking_questions.html" %}
     <div class="sympraxi-form-actions">
       <button class="usa-button" type="submit">{% translate "Book it" %}</button>
+      {% include "forms/_continue.html" with has_follow_ups=questions.has_follow_ups %}
       <a href="{% url 'scheduling:open_times' slug=center.slug schedule_id=schedule.pk %}?date={{ time.starts_at|date:'Y-m-d' }}">{% translate "Choose another time" %}</a>
     </div>
   </form>

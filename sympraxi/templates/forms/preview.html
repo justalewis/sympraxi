@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Preview a form" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Preview" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with form=form.title n=version.number %}Preview: {{ form }}, version {{ n }}{% endblocktranslate %}</h1>
+  <div class="usa-alert usa-alert--info usa-alert--slim">
+    <div class="usa-alert__body"><p class="usa-alert__text">{% if version.is_published %}{% translate "This is how students saw this version. Nothing you enter here is saved." %}{% else %}{% translate "This is how students will see the draft. Nothing you enter here is saved." %}{% endif %}</p></div>
+  </div>
+  {% if result %}
+    <div class="usa-alert usa-alert--success usa-alert--slim" role="status">
+      <div class="usa-alert__body"><p class="usa-alert__text">{{ result }}</p></div>
+    </div>
+  {% endif %}
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "forms/_form_status.html" %}
+    {% include "forms/_questions.html" with group=questions refresh_url=request.get_full_path %}
+    {% include "forms/_continue_hint.html" with has_follow_ups=questions.has_follow_ups %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Try it" %}</button>
+      {% include "forms/_continue.html" with has_follow_ups=questions.has_follow_ups %}
+      <a href="{{ back }}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+{% endblock content %}

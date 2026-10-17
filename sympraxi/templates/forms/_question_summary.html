@@ -1,0 +1,12 @@
+{% load i18n %}
+{# What the builder says about one question (a row from forms.views.describe). #}
+<p class="sympraxi-question-item__label"><strong>{{ row.question.label }}</strong></p>
+<p class="usa-hint">
+  {{ row.question.get_kind_display }}.
+  {% if row.question.required %}{% translate "Required." %}{% else %}{% translate "Optional." %}{% endif %}
+  {% if row.question.is_demographic %}{% translate "About who the student is." %}{% endif %}
+  {% if is_registration %}{% if row.question.shown_to_staff %}{% translate "Tutors and front desk staff see the answer." %}{% else %}{% translate "Only directors see the answer." %}{% endif %}{% endif %}
+</p>
+{% if row.question.help_text %}<p>{% translate "Hint:" %} {{ row.question.help_text }}</p>{% endif %}
+{% if row.options %}<p>{% translate "Options:" %} {{ row.options|join:"; " }}</p>{% endif %}
+{% if row.condition %}<p>{{ row.condition }}</p>{% endif %}

@@ -14,6 +14,7 @@ from django.http import Http404
 from sympraxi.centers.models import Center, Membership, Role
 from sympraxi.core import policy
 from sympraxi.core.policy import Action
+from sympraxi.forms.models import FormKind
 from sympraxi.records.models import SessionRecord, WritingProject
 from sympraxi.scheduling.models import (
     Appointment,
@@ -24,6 +25,13 @@ from sympraxi.scheduling.models import (
     Visibility,
 )
 from tests.factories import MembershipFactory, UserFactory
+from tests.forms_world import (
+    INTAKE_ANSWERS,
+    REGISTRATION,
+    REGISTRATION_ANSWERS,
+    answer,
+    make_form,
+)
 from tests.records_world import appointment_for, membership, standalone
 from tests.scheduling_world import build_world, make_member, make_schedule
 
@@ -63,7 +71,15 @@ RECORDS_ACTIONS = [
     Action.MANAGE_RECORDS,
 ]
 
-ACTIONS = CENTER_ACTIONS + SCHEDULING_ACTIONS + ATTENDANCE_ACTIONS + RECORDS_ACTIONS
+FORMS_ACTIONS = [
+    Action.MANAGE_FORMS,
+    Action.ANSWER_OWN_FORMS,
+    Action.VIEW_INTAKE,
+    Action.VIEW_REGISTRATION,
+    Action.VIEW_ALL_REGISTRATION,
+]
+
+ACTIONS = CENTER_ACTIONS + SCHEDULING_ACTIONS + ATTENDANCE_ACTIONS + RECORDS_ACTIONS + FORMS_ACTIONS
 
 # fmt: off
 EXPECTED_IN_OWN_CENTER = {
@@ -121,6 +137,23 @@ EXPECTED_RECORDS = {
     "director":    (1,     1,       1,       0,       1,       1),
     "site_admin":  (0,     0,       0,       0,       0,       0),
 }
+
+# Forms, asked about the center. "Answer own" means a student's own registration
+# and their own appointments' intake (FORM_CASES checks that part); "view intake"
+# means appointments they teach, and "view registration" students they tutor, for
+# tutors. Registration answers in full are for directors only; tutors and front
+# desk staff see the questions marked for staff. Site administrators get nothing:
+# the answers are student records.
+EXPECTED_FORMS = {
+    #              manage  answer  view    view    view all
+    #              forms   own     intake  regist. regist.
+    "none":        (0,     0,      0,      0,      0),
+    "student":     (0,     1,      0,      0,      0),
+    "tutor":       (0,     0,      1,      1,      0),
+    "front_desk":  (0,     0,      1,      1,      0),
+    "director":    (1,     0,      1,      1,      1),
+    "site_admin":  (0,     0,      0,      0,      0),
+}
 # fmt: on
 
 CASES = [
@@ -130,6 +163,7 @@ CASES = [
         (EXPECTED_SCHEDULING, SCHEDULING_ACTIONS),
         (EXPECTED_ATTENDANCE, ATTENDANCE_ACTIONS),
         (EXPECTED_RECORDS, RECORDS_ACTIONS),
+        (EXPECTED_FORMS, FORMS_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)
@@ -515,3 +549,106 @@ def test_record_access_ends_when_the_appointment_is_canceled(person_with_role, c
     Appointment.objects.filter(pk=appointment.pk).update(status=AppointmentStatus.CANCELED)
     assert not policy.can(tutor, Action.VIEW_RECORDS, rec)
     assert not policy.can(tutor, Action.VIEW_RECORDS, membership(center, student))
+
+
+# --- Forms ----------------------------------------------------------------------------
+
+# (role, action, object, expected). For a student, "own" things are about them and
+# "left" is a group they left. For a tutor, "my student" is a student they have an
+# appointment with, and "own tutoring" an appointment they teach.
+# fmt: off
+FORM_CASES = [
+    ("student",    Action.ANSWER_OWN_FORMS,      "own_appointment",            True),
+    ("student",    Action.ANSWER_OWN_FORMS,      "left_appointment",           False),
+    ("student",    Action.ANSWER_OWN_FORMS,      "other_appointment",          False),
+    ("student",    Action.ANSWER_OWN_FORMS,      "own_registration",           True),
+    ("student",    Action.ANSWER_OWN_FORMS,      "other_registration",         False),
+    ("student",    Action.ANSWER_OWN_FORMS,      "own_membership",             True),
+    ("student",    Action.ANSWER_OWN_FORMS,      "other_student",              False),
+    ("student",    Action.VIEW_INTAKE,           "own_appointment",            False),
+    ("student",    Action.VIEW_REGISTRATION,     "own_membership",             False),
+    ("tutor",      Action.VIEW_INTAKE,           "own_tutoring",               True),
+    ("tutor",      Action.VIEW_INTAKE,           "other_appointment",          False),
+    ("tutor",      Action.VIEW_INTAKE,           "intake_of_own_tutoring",     True),
+    ("tutor",      Action.VIEW_INTAKE,           "other_intake",               False),
+    ("tutor",      Action.VIEW_REGISTRATION,     "my_student",                 True),
+    ("tutor",      Action.VIEW_REGISTRATION,     "other_student",              False),
+    ("tutor",      Action.VIEW_REGISTRATION,     "registration_of_my_student", True),
+    ("tutor",      Action.VIEW_REGISTRATION,     "other_registration",         False),
+    ("tutor",      Action.VIEW_ALL_REGISTRATION, "my_student",                 False),
+    ("tutor",      Action.MANAGE_FORMS,          "form",                       False),
+    ("front_desk", Action.VIEW_INTAKE,           "other_appointment",          True),
+    ("front_desk", Action.VIEW_INTAKE,           "other_intake",               True),
+    ("front_desk", Action.VIEW_REGISTRATION,     "other_student",              True),
+    ("front_desk", Action.VIEW_ALL_REGISTRATION, "other_student",              False),
+    ("front_desk", Action.ANSWER_OWN_FORMS,      "other_appointment",          False),
+    ("front_desk", Action.MANAGE_FORMS,          "form",                       False),
+    ("director",   Action.MANAGE_FORMS,          "form",                       True),
+    ("director",   Action.VIEW_INTAKE,           "other_intake",               True),
+    ("director",   Action.VIEW_REGISTRATION,     "other_student",              True),
+    ("director",   Action.VIEW_ALL_REGISTRATION, "other_student",              True),
+    ("director",   Action.VIEW_ALL_REGISTRATION, "other_registration",         True),
+    ("director",   Action.ANSWER_OWN_FORMS,      "other_appointment",          False),
+    ("site_admin", Action.MANAGE_FORMS,          "form",                       False),
+    ("site_admin", Action.VIEW_INTAKE,           "other_intake",               False),
+    ("site_admin", Action.VIEW_ALL_REGISTRATION, "other_student",              False),
+]
+# fmt: on
+
+
+def _form_objects(center, user):
+    """Forms, answers, appointments and students around `user`, one of each kind."""
+    world = build_world(center)
+    registration = make_form(center, FormKind.REGISTRATION, questions=REGISTRATION)
+    intake = make_form(center)
+    other_registration = answer(registration, world.student, REGISTRATION_ANSWERS)
+    other_intake = answer(intake, world.student, INTAKE_ANSWERS, appointment=world.appointment)
+
+    # The user's own appointments as a student: one they're in, one group they left.
+    own_appointment = appointment_for(world, user, days=2)
+    left = appointment_for(world, [user, make_member(center, Role.STUDENT)], days=3, capacity=4)
+    Participant.objects.filter(appointment=left, student=user).update(canceled_at=left.starts_at)
+
+    # A student the user tutors, with intake and registration answers.
+    mine = make_member(center, Role.STUDENT)
+    own_tutoring = appointment_for(world, mine, days=4, tutor=user)
+    objects = {
+        "form": intake,
+        "own_appointment": own_appointment,
+        "left_appointment": left,
+        "other_appointment": world.appointment,
+        "own_tutoring": own_tutoring,
+        "other_registration": other_registration,
+        "other_intake": other_intake,
+        "intake_of_own_tutoring": answer(intake, mine, INTAKE_ANSWERS, appointment=own_tutoring),
+        "registration_of_my_student": answer(registration, mine, REGISTRATION_ANSWERS),
+        "my_student": membership(center, mine),
+        "other_student": membership(center, world.student),
+    }
+    own = Membership.objects.filter(user=user, center=center, role=Role.STUDENT).first()
+    if own is not None:
+        objects["own_membership"] = own
+        objects["own_registration"] = answer(registration, user, REGISTRATION_ANSWERS)
+    return objects
+
+
+@pytest.mark.parametrize(("role", "action", "name", "expected"), FORM_CASES)
+def test_form_access(person_with_role, center, role, action, name, expected) -> None:
+    user = person_with_role(role, center)
+    obj = _form_objects(center, user)[name]
+    assert policy.can(user, action, obj) is expected
+
+
+def test_someone_elses_answers_are_hidden_not_forbidden(person_with_role, center) -> None:
+    """A tutor who may read some students' registration answers gets a 404 for others'."""
+    tutor = person_with_role("tutor", center)
+    other = _form_objects(center, tutor)["other_student"]
+    with pytest.raises(Http404):
+        policy.get_for_action(
+            tutor, Action.VIEW_REGISTRATION, Membership.objects.all(), pk=other.pk
+        )
+    student = person_with_role("student", center)
+    with pytest.raises(PermissionDenied):
+        policy.get_for_action(
+            student, Action.VIEW_REGISTRATION, Membership.objects.all(), pk=other.pk
+        )

@@ -7,6 +7,11 @@
   their open writing projects. Reading the brief is a read of the student's
   history, so each one shown is audited.
 - A student in the appointment gets a link to their own summary once it's final.
+
+The brief also carries what each student answered when booking: their intake
+answers for this appointment and the registration answers this viewer may see
+(sympraxi/forms/display.py). Staff who get no brief, such as the front desk,
+see those answers in a section of their own (`answer_rows`).
 """
 
 from dataclasses import dataclass, field
@@ -18,6 +23,7 @@ from django.urls import reverse
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Membership, Role
 from sympraxi.core.policy import Action, can
+from sympraxi.forms import display as form_answers
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.records.models import RecordStatus, SessionRecord, WritingProject
 from sympraxi.records.services import active_students
@@ -41,12 +47,18 @@ class Brief:
     recent: list[SessionRecord] = field(default_factory=list)
     projects: list[WritingProject] = field(default_factory=list)
     history_url: str = ""
+    answers: form_answers.StudentAnswers | None = None
 
 
 def appointment_context(request: HttpRequest, appointment: Appointment) -> dict[str, Any]:
     user = cast(User, request.user)
     center = appointment.schedule.center
-    context: dict[str, Any] = {"record_rows": None, "briefs": [], "my_record_url": ""}
+    context: dict[str, Any] = {
+        "record_rows": None,
+        "briefs": [],
+        "my_record_url": "",
+        "answer_rows": [],
+    }
     students = active_students(appointment)
     records = {
         r.student_id: r
@@ -84,6 +96,10 @@ def appointment_context(request: HttpRequest, appointment: Appointment) -> dict[
         rows.append(row)
     context["record_rows"] = rows
 
+    answers: dict[Any, form_answers.StudentAnswers] = {}
+    if can(user, Action.VIEW_INTAKE, appointment) or can(user, Action.VIEW_REGISTRATION, center):
+        answers = form_answers.for_appointment(request, appointment, students)
+
     memberships = {
         m.user_id: m
         for m in Membership.objects.filter(
@@ -115,6 +131,7 @@ def appointment_context(request: HttpRequest, appointment: Appointment) -> dict[
                 "records:student_history",
                 kwargs={"slug": center.slug, "membership_id": membership.pk},
             ),
+            answers=answers.get(student.pk),
         )
         record(
             AuditAction.HISTORY_VIEWED,
@@ -127,4 +144,8 @@ def appointment_context(request: HttpRequest, appointment: Appointment) -> dict[
             records=[str(r.pk) for r in brief.recent],
         )
         context["briefs"].append(brief)
+    with_brief = {b.student.pk for b in context["briefs"]}
+    context["answer_rows"] = [
+        row for pk, row in answers.items() if row.any and pk not in with_brief
+    ]
     return context

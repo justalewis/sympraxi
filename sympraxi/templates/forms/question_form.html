@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% blocktranslate with n=draft.number form=form.title %}In the draft of {{ form }} (version {{ n }}). Nobody sees the change until you publish the draft.{% endblocktranslate %}</p>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% if qform.non_field_errors %}
+      <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+        <div class="usa-alert__body"><p class="usa-alert__text">{{ qform.non_field_errors|join:" " }}</p></div>
+      </div>
+    {% endif %}
+    {% include "includes/field.html" with field=qform.label %}
+    {% include "includes/field.html" with field=qform.help_text %}
+    {% include "includes/field.html" with field=qform.kind %}
+
+    {% if is_yes_no and kind_locked %}
+      <p>{% translate "Yes or no questions always offer Yes and No." %}</p>
+    {% else %}
+      <fieldset class="usa-fieldset sympraxi-subfields">
+        <legend class="usa-legend">{% translate "Options" %}</legend>
+        <p class="usa-hint">{% translate "For “Choose one” and “Choose any that apply” questions. Rewording an option keeps the answers already given to it. Yes or no questions always offer Yes and No." %}</p>
+        {% for row in option_rows %}
+          <div class="sympraxi-option-row">
+            {% include "includes/field.html" with field=row.label %}
+            {% include "includes/field.html" with field=row.place %}
+            {% include "includes/field.html" with field=row.remove %}
+          </div>
+        {% endfor %}
+        {% include "includes/field.html" with field=qform.new_options %}
+      </fieldset>
+    {% endif %}
+
+    {% include "includes/field.html" with field=qform.required %}
+    {% include "includes/field.html" with field=qform.is_demographic %}
+    <p class="usa-hint">{{ qform.is_demographic.help_text }}</p>
+    {% if qform.shown_to_staff %}
+      {% include "includes/field.html" with field=qform.shown_to_staff %}
+      <p class="usa-hint">{{ qform.shown_to_staff.help_text }}</p>
+    {% endif %}
+    {% include "includes/field.html" with field=qform.condition %}
+
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Save the question" %}</button>
+      <a href="{{ back }}">{% translate "Go back without saving" %}</a>
+    </div>
+  </form>
+{% endblock content %}

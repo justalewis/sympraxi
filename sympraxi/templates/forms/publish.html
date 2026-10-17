@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Publish a form" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Publish" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with n=draft.number %}Publish version {{ n }}?{% endblocktranslate %}</h1>
+  <p>{{ form.title }}</p>
+  {% if error %}
+    <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+      <div class="usa-alert__body"><p class="usa-alert__text">{{ error }}</p></div>
+    </div>
+  {% endif %}
+  {% if problems %}
+    <p>{% translate "Fix these first:" %}</p>
+    <ul class="usa-list">{% for p in problems %}<li>{{ p }}</li>{% endfor %}</ul>
+    <p><a href="{{ back }}">{% translate "Go back to the draft" %}</a></p>
+  {% else %}
+    {% if published %}
+      <h2>{% blocktranslate with n=published.number %}What changes from version {{ n }}{% endblocktranslate %}</h2>
+      {% if changes.added or changes.removed or changes.changed or changes.moved %}
+        <ul class="usa-list">
+          {% for label in changes.added %}<li>{% blocktranslate %}Added: {{ label }}{% endblocktranslate %}</li>{% endfor %}
+          {% for label in changes.removed %}<li>{% blocktranslate %}Removed: {{ label }}{% endblocktranslate %}</li>{% endfor %}
+          {% for label in changes.changed %}<li>{% blocktranslate %}Changed: {{ label }}{% endblocktranslate %}</li>{% endfor %}
+          {% for note in changes.moved %}<li>{{ note }}</li>{% endfor %}
+        </ul>
+      {% else %}
+        <p>{% translate "Nothing. The draft is the same as the published version." %}</p>
+      {% endif %}
+      <p>{% translate "Answers already given keep the wording students saw. A question keeps its answers when it's moved or reworded." %}</p>
+    {% endif %}
+    <p>{% translate "Students answering from now on see this version. A published version can't change; later edits start a new draft." %}</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Publish" %}</button>
+        <a href="{{ back }}">{% translate "Go back to the draft" %}</a>
+      </div>
+    </form>
+  {% endif %}
+{% endblock content %}

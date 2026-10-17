@@ -1,0 +1,6 @@
+{# One form version's questions on a page. With htmx, this whole block is swapped when follow-ups appear or go. #}
+<div id="answers-{{ group.prefix }}" class="sympraxi-answers">
+  <input type="hidden" name="{{ group.shown_name }}" value="{{ group.shown_value }}">
+  {% if group.version.intro %}<div class="sympraxi-form-intro">{{ group.version.intro|linebreaks }}</div>{% endif %}
+  {% for row in group.rows %}{% include "forms/_question.html" %}{% endfor %}
+</div>

@@ -1,0 +1,23 @@
+{% load i18n %}
+{# Intake and registration answers on the appointment page. See sympraxi/forms/display.py for who sees what. #}
+{% if my_answers or intake_url %}
+  <h2>{% translate "Your answers for this appointment" %}</h2>
+  {% if my_answers %}
+    {% include "forms/_shown_response.html" with shown=my_answers %}
+  {% else %}
+    <p>{% translate "You haven't answered the questions for this appointment yet." %}</p>
+  {% endif %}
+  {% if intake_url %}
+    <p><a href="{{ intake_url }}">{% if my_answers %}{% translate "Change your answers" %}{% else %}{% translate "Answer the questions" %}{% endif %}</a></p>
+  {% endif %}
+{% endif %}
+
+{% if answer_rows %}
+  <h2>{% translate "Answers from booking" %}</h2>
+  {% for row in answer_rows %}
+    <section aria-labelledby="answers-{{ row.student.pk }}">
+      <h3 id="answers-{{ row.student.pk }}">{{ row.student.display_name }}</h3>
+      {% include "forms/_student_answers.html" with level=4 %}
+    </section>
+  {% endfor %}
+{% endif %}

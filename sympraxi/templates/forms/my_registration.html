@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Your registration answers" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Your registration answers" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Your registration answers" %}</h1>
+  {% if questions %}
+    <p>{% translate "The center asks these questions once. Change any answer and save; the center keeps your earlier answers too." %}</p>
+    {% if saved_at %}<p>{% blocktranslate with when=saved_at|date:"F j, Y" %}Last saved {{ when }}.{% endblocktranslate %}</p>{% endif %}
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      {% include "forms/_form_status.html" %}
+      {% include "forms/_questions.html" with group=questions refresh_url=request.get_full_path %}
+      {% include "forms/_continue_hint.html" with has_follow_ups=questions.has_follow_ups %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Save your answers" %}</button>
+        {% include "forms/_continue.html" with has_follow_ups=questions.has_follow_ups %}
+        <a href="{{ center.get_absolute_url }}">{% translate "Go back" %}</a>
+      </div>
+    </form>
+  {% elif latest %}
+    <p>{% translate "The center isn't asking registration questions right now. These are the answers you gave." %}</p>
+    {% include "forms/_shown_response.html" with shown=latest %}
+  {% else %}
+    <p>{% translate "This center doesn't ask any registration questions." %}</p>
+  {% endif %}
+{% endblock content %}

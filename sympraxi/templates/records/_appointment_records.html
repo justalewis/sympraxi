@@ -22,6 +22,7 @@
 {% for brief in briefs %}
   <section class="sympraxi-brief" aria-labelledby="brief-{{ brief.student.pk }}">
     <h2 id="brief-{{ brief.student.pk }}">{% blocktranslate with name=brief.student.display_name %}Before the session: {{ name }}{% endblocktranslate %}</h2>
+    {% if brief.answers.any %}{% include "forms/_student_answers.html" with row=brief.answers level=3 %}{% endif %}
     <h3>{% translate "Open writing projects" %}</h3>
     {% if brief.projects %}
       <ul class="usa-list">
