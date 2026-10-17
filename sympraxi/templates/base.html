@@ -24,8 +24,10 @@
         <button type="button" class="usa-menu-btn">{% translate "Menu" %}</button>
       </div>
       <nav aria-label="{% translate 'Main' %}" class="usa-nav">
+        {# The name is hidden text, not the icon's alt: in forced colors USWDS hides the image and draws its own. #}
         <button type="button" class="usa-nav__close">
-          <img src="{% static 'vendor/uswds/img/usa-icons/close.svg' %}" alt="{% translate 'Close menu' %}">
+          <img src="{% static 'vendor/uswds/img/usa-icons/close.svg' %}" alt="">
+          <span class="usa-sr-only">{% translate "Close menu" %}</span>
         </button>
         <ul class="usa-nav__primary usa-accordion">
           {% block nav_items %}

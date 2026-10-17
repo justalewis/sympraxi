@@ -5,7 +5,7 @@ A draft conformance report for a pilot campus's accessibility and IT review, lai
 | | |
 |---|---|
 | Product | Sympraxi, scheduling and session records for college writing centers |
-| Version | No release yet. Branch `phase-0-foundation` at commit `1dd462c`, with the fixes made on October 17 for issues this draft found (decisions.md, "Fixes from the security and accessibility drafts"). The statistics and export pages being built that day aren't covered |
+| Version | No release yet. Branch `phase-0-foundation` at commit `1dd462c`, with the fixes made on October 17 for issues this draft found (decisions.md, "Fixes from the security and accessibility drafts") and the checks added later that day (decisions.md, "Accessibility checks on phones, after htmx updates and with emulated settings"). The statistics and export pages being built that day aren't covered |
 | Report date | October 17, 2026 (draft) |
 | Contact | To fill in before the repository goes public |
 | Standard | WCAG 2.2, Levels A and AA. Level AAA isn't reported |
@@ -16,9 +16,9 @@ Sympraxi aims at WCAG 2.2 AA (02-build-plan.md §1 and §7), which includes the 
 
 What is known today:
 
-- Every page in the browser tests' lists passes axe's automated WCAG 2.2 A and AA rules (results below). Since October 17 the lists include the rest of allauth's account pages, the error pages, and five forms sent back with errors.
-- Nine scripted browser tests drive key flows by keyboard or check the text of a status line.
-- No one has tested Sympraxi with a screen reader, by keyboard alone across every page, at 400% zoom, with reduced motion, or in forced-colors mode. So almost every criterion below is "Not Evaluated." The manual review planned at the end decides the real levels.
+- Every page in the browser tests' lists passes axe's automated WCAG 2.2 A and AA rules (results below). Since October 17 the lists include the rest of allauth's account pages, the error pages, five forms sent back with errors, eight student pages at phone size with the menu open, the content htmx swaps into seven pages, and eight pages with forced colors and with reduced motion emulated.
+- Ten scripted browser tests drive key flows by keyboard or check the text of a status line.
+- No one has tested Sympraxi with a screen reader, by keyboard alone across every page, at 400% zoom, or with a real contrast theme or reduce-motion setting (the browser tests only emulate those two). So almost every criterion below is "Not Evaluated." The manual review planned at the end decides the real levels.
 
 ## Terms
 
@@ -38,9 +38,9 @@ A finished VPAT 2.5 allows "Not Evaluated" only for Level AAA criteria. This dra
 
 `tests/e2e/test_accessibility.py` opens each page in Chromium through Playwright, signed in as the right role, and runs axe-core 4.12.1 (bundled with `axe-playwright-python`) with the rule tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa` and `best-practice`. Any violation fails the test. CI runs it on every push (the `test` job in `.github/workflows/ci.yml`). A rule in `CONTRIBUTING.md` and step 5 of "Adding a page" in [development.md](development.md) put every new page on the list.
 
-Run for this draft on October 16 and 17, 2026: all 240 browser tests passed, in 52 minutes, in a checkout that also held another slice's uncommitted statistics work. After the October 17 fixes, all 295 passed, in 47 minutes, without that work. That is axe and the CSP check on the 115 page views of the main list and on the 21 account pages; axe and the CSP check on 5 error pages; axe on the expired-form page and on 5 forms sent back with errors; and the keyboard, status and booking tests described later (12 in all, one of them axe on a dead survey link). Both runs used Chromium on Windows 11 with PostgreSQL 18.6.
+Run for this draft on October 16 and 17, 2026: all 240 browser tests passed, in 52 minutes, in a checkout that also held another slice's uncommitted statistics work. After the October 17 fixes, all 295 passed, in 47 minutes, without that work. That is axe and the CSP check on the 115 page views of the main list and on the 21 account pages; axe and the CSP check on 5 error pages; axe on the expired-form page and on 5 forms sent back with errors; and the keyboard, status and booking tests described later (12 in all, one of them axe on a dead survey link). With the checks added later that day, all 329 passed, in 43 minutes: those 295; axe on 8 student pages at phone size, each as it loads and with the menu open; axe on 7 pages after htmx updates; axe on 8 pages and on the open phone menu with forced colors and, separately, with reduced motion (18 tests); and the keyboard test of the phone menu. All three runs used Chromium on Windows 11 with PostgreSQL 18.6.
 
-The main list holds 115 page views: 108 pages and 7 variants that change once single sign-on is set up. Three more lists, added on October 17, are after the table.
+The main list holds 115 page views: 108 pages and 7 variants that change once single sign-on is set up. Six more lists, added on October 17, are after the table.
 
 | Signed in as | Pages |
 |---|---|
@@ -57,18 +57,23 @@ The main list holds 115 page views: 108 pages and 7 variants that change once si
 | allauth's account pages (21) | Not signed in: the password-reset steps after the email (the notice, the form the link opens, and the last page); the email-confirmation notice and a confirmation link; an inactive account; a failed SSO sign-in. Signed in as a student: signing out; reauthenticating with a password; setting a password on an account made by SSO; the two-factor code at sign-in; setting up an authenticator app; adding a passkey. Signed in as a student with an authenticator app, recovery codes and a passkey: two-factor settings; reauthenticating with a code; turning the app off; recovery codes, and making new ones; the passkey list; editing and removing a passkey |
 | Error pages (7) | Page not found, signed out and for a student opening an appointment that doesn't exist; not part of your role (403); something went wrong (500), signed out and signed in; a form that expired (a failed CSRF check); a dead survey link |
 | Forms sent back with errors (5) | Sign-up with a short password; sign-in with a wrong password; booking without the required intake answers; a demographic question marked required (a checkbox's error); name and pronouns with a blank full name |
+| On a phone, 375 by 812 CSS pixels (8) | Not signed in: sign in. As a student: My centers; the center page; open times for a day; booking a time; my appointments; one appointment; one session on My writing. Each is checked as it loads and again with the menu open, and the test fails if the page scrolls sideways |
+| After htmx updates part of a page (7 pages, 8 states) | Open times after changing the date, on a schedule's page and on the page for moving an appointment; the booking page after choosing an answer that brings up a follow-up question; the record form after tagging a topic brings up suggestions, and again after attaching one; the record form's resource search; the members search; the form builder after moving a question |
+| With emulated settings (8 pages, plus the open phone menu, each twice) | Sign in; the center page; open times for a day; booking a time; one appointment; a tutor starting a record; the front desk's day sheet; the form builder. Each with forced colors on and, separately, with reduced motion on. axe's two color rules are off under forced colors (see below) |
 
 The pages on the main list, the account pages and the first five error pages also load under the real Content Security Policy, and a test fails on any policy error (`test_page_has_no_csp_violations`, `test_an_account_page_has_no_csp_violations`, `test_an_error_page_passes_axe_and_the_csp`). Another test fails if any template has a `style=` attribute, an `on...=` event attribute or an inline `<script>` (`test_templates_have_no_inline_styles_or_scripts` in `tests/test_security.py`). For accessibility this means all behavior comes from htmx and the published USWDS components, with no custom widgets of Sympraxi's own to break, and no inline styles for a person's own style sheet to work around.
 
 ### What axe doesn't cover
 
-Automated rules find only some kinds of failure, and the tests see each page only as it first loads, or as it comes back after one failed submission, at Playwright's default desktop size, in light mode. They never see:
+Automated rules find only some kinds of failure. The tests see most pages only as they first load, at Playwright's default desktop size, in light mode; the lists above add a failed submission on five forms, htmx updates on seven pages, a phone-sized screen on eight student pages, and emulated forced colors and reduced motion on eight pages. They never see:
 
-- error messages on forms other than the five above;
-- content htmx swaps in after someone acts (new open times, follow-up questions, suggestions);
-- the mobile menu opened, or any narrow screen;
-- hover and focus states, forced colors, zoom or changed text spacing;
+- error messages on forms other than the five above, or htmx updates other than the eight above;
+- staff pages, and student pages not listed above, on a phone-sized screen, or any page at 320 CSS pixels, the width WCAG's reflow criterion uses;
+- hover and focus states, zoom or changed text spacing;
+- a real Windows contrast theme. Chromium's emulation switches the forced-colors styles on, but axe can't judge contrast under it: it compares the page's own text colors with the forced background, not the colors the browser draws, so its `color-contrast` and `link-in-text-block` rules are off in those runs. Screenshots taken under emulation showed field borders, radio buttons, checkboxes and the menu's close button drawn in the theme's colors, but no test checks that;
 - whether names, headings, titles and messages make sense.
+
+With the menu open, axe marks its `aria-hidden-focus` rule as needing review: USWDS hides the page behind the menu from screen readers with `aria-hidden`, and its links can still take focus. USWDS's focus trap keeps Tab inside the menu, and a scripted test checks that (below).
 
 These pages aren't on the list at all:
 
@@ -91,6 +96,7 @@ These tests in `tests/e2e/test_accessibility.py` pass with the axe run above. So
 | `test_open_times_update_without_reloading` | Changing the date shows that day's times in place, and the live region outside the list announces the new count |
 | `test_resource_search_updates_without_reloading` | Typing in the resource search updates the results, and the status line gives the count |
 | `test_member_search_updates_results_without_reloading` | The members search updates its results in place |
+| `test_the_phone_menu_keeps_focus_inside_until_closed` | On a phone-sized screen, Tab reaches "Menu" and Enter opens the menu with focus on its close button; Tab and Shift+Tab stay inside the menu; Escape closes it, focus returns to "Menu", and nothing on the page is left hidden from screen readers |
 
 Two more browser tests (`test_a_student_books_a_time` and `test_a_dead_survey_link_passes_axe`) check the booking flow with the mouse and the dead-link page with axe.
 
@@ -102,8 +108,8 @@ For this draft the templates were read for the things a page's structure decides
 - Every field's label is tied to it. Hints and errors are tied with `aria-describedby`, and a field with an error gets `aria-invalid` (`sympraxi/core/templatetags/sympraxi_forms.py`, `sympraxi/templates/includes/field.html`). Since October 17 that includes checkboxes, and a test checks that `aria-describedby` never names an element missing from the page (`tests/test_field_rendering.py`). Form questions with choices are fieldsets with legends (`sympraxi/templates/forms/_question.html`).
 - Booking is a list of times, not a grid (02-build-plan.md §7). The week grid the plan describes isn't built, so neither are its sticky headers.
 - Nothing uses dragging. Questions move with Move up and Move down buttons, and options with a Place menu (decisions.md, Phase 1 forms).
-- No audio, video, iframes or canvas, and one image: the menu's close icon, with alt text.
-- Sympraxi's own stylesheet (`sympraxi/static/sympraxi/sympraxi.css`) uses only USWDS colors, removes no focus outlines, and has no sticky or fixed positioning, animation, or rules for reduced motion or forced colors. The USWDS stylesheet it builds on has 5 media queries for `prefers-reduced-motion` and about 100 for `forced-colors`.
+- No audio, video, iframes or canvas, and one image: the menu's close icon, which is decorative. The close button's name is hidden text, because USWDS hides the image under forced colors (fixed October 17).
+- Sympraxi's own stylesheet (`sympraxi/static/sympraxi/sympraxi.css`) uses only USWDS colors, removes no focus outlines, and has no sticky or fixed positioning, animation, or rules for reduced motion or forced colors. The USWDS stylesheet it builds on has 5 media queries for `prefers-reduced-motion` and about 100 for `forced-colors`. Three of the reduced-motion ones apply to Sympraxi's pages: they stop the mobile menu sliding in, the overlay behind it fading in, and the skip link sliding down when it gets focus.
 
 ### USWDS components
 
@@ -113,7 +119,7 @@ Pages use these USWDS 3.14 components as published: header with basic navigation
 
 | Criterion | Level | Remarks |
 |---|---|---|
-| 1.1.1 Non-text Content | Not Evaluated | The only image has alt text; USWDS's decorative icons come from CSS. axe's image and name rules pass. A reviewer should confirm no icon or color carries meaning without text |
+| 1.1.1 Non-text Content | Not Evaluated | The only image, the menu's close icon, is decorative, and its button is named by hidden text; USWDS's other icons come from CSS. axe's image and name rules pass, including with the menu open under forced colors. A reviewer should confirm no icon or color carries meaning without text |
 | 1.2.1 Audio-only and Video-only (Prerecorded) | Not Applicable | No audio or video on any page. Phase 2 adds video sessions through Jitsi; evaluate them then |
 | 1.2.2 Captions (Prerecorded) | Not Applicable | As 1.2.1 |
 | 1.2.3 Audio Description or Media Alternative (Prerecorded) | Not Applicable | As 1.2.1 |
@@ -123,14 +129,14 @@ Pages use these USWDS 3.14 components as published: header with basic navigation
 | 1.4.1 Use of Color | Not Evaluated | Design rule: color is never the only signal (02-build-plan.md §7). Statuses are words (alerts, tags). axe's rule for links in text passes in each page's first state |
 | 1.4.2 Audio Control | Not Applicable | No audio |
 | 2.1.1 Keyboard | Not Evaluated | Every control is a native link, button or field; there are no custom widgets. The keyboard tests above pass. No keyboard-only pass of every page yet |
-| 2.1.2 No Keyboard Trap | Not Evaluated | No dialogs of Sympraxi's own; the USWDS mobile menu is the only overlay |
+| 2.1.2 No Keyboard Trap | Not Evaluated | No dialogs of Sympraxi's own; the USWDS mobile menu is the only overlay. It keeps focus inside while open, and Escape closes it and puts focus back on "Menu" (tested by keyboard on a phone-sized screen) |
 | 2.1.4 Character Key Shortcuts | Not Applicable | Sympraxi defines no keyboard shortcuts, and no template handles key events |
 | 2.2.1 Timing Adjustable | Not Evaluated | **Known issue:** a sign-in lasts 8 hours by default (`SYMPRAXI_SESSION_SECONDS`) with no warning before it ends. A form posted after that goes to the sign-in page, and what was typed, such as a tutor's notes, is lost. A campus can set 72,000 seconds (20 hours) or more to meet the criterion's 20-hour exception. The sign-in steps themselves expire after 15 minutes (allauth's `ACCOUNT_LOGIN_TIMEOUT`), so someone slow to enter a two-factor code starts again. Survey links last 14 days |
 | 2.2.2 Pause, Stop, Hide | Not Applicable | Nothing moves, blinks, scrolls or updates by itself. Pages change only when the person acts; no htmx request runs on a timer |
 | 2.3.1 Three Flashes or Below Threshold | Not Applicable | Nothing flashes |
 | 2.4.1 Bypass Blocks | Not Evaluated | "Skip to main content" is the first link on every page, and pages have landmarks. axe's `bypass` and `region` rules pass |
 | 2.4.2 Page Titled | Not Evaluated | Every title is "page \| site name"; axe's `document-title` passes. Whether each describes its page needs a person |
-| 2.4.3 Focus Order | Not Evaluated | Source order matches the layout. Where htmx updates part of a page, focus stays where it was (open times, follow-up questions and reordering; the last two are tested) |
+| 2.4.3 Focus Order | Not Evaluated | Source order matches the layout. Where htmx updates part of a page, focus stays where it was (open times, follow-up questions and reordering; the last two are tested). Opening the mobile menu moves focus to its close button, and closing it moves focus back to "Menu" (tested) |
 | 2.4.4 Link Purpose (In Context) | Not Evaluated | Repeated "Book" links carry the time and tutor as hidden text (`sympraxi/templates/scheduling/_open_times.html`); links to outside resources say they open in a new tab. axe's `link-name` passes |
 | 2.5.1 Pointer Gestures | Not Applicable | Everything works with a single click or tap; there are no multi-finger or path gestures |
 | 2.5.2 Pointer Cancellation | Not Evaluated | Native links and buttons, which act when released; Sympraxi adds no pointer handlers |
@@ -144,7 +150,7 @@ Pages use these USWDS 3.14 components as published: header with basic navigation
 | 3.3.2 Labels or Instructions | Not Evaluated | Every field has a visible label; optional fields say "(optional)", and record fields needed to finalize say so. A checkbox's hint shows under its label (fixed October 17) |
 | 3.3.7 Redundant Entry | Not Evaluated | Registration questions are asked once, at the first booking (decisions.md, Phase 1 forms). A booking page that comes back for a follow-up keeps what was typed (tested) |
 | 4.1.1 Parsing | Not Applicable | Removed from WCAG 2.2. For a WCAG 2.1 report, W3C's errata treat it as always met for HTML |
-| 4.1.2 Name, Role, Value | Not Evaluated | Native controls and USWDS components. At the ends of a list, Move up and Move down stay focusable and are marked `aria-disabled` (decisions.md, Phase 1 forms). axe's name and ARIA rules pass. Needs screen-reader checks, especially the mobile menu and the parts htmx updates |
+| 4.1.2 Name, Role, Value | Not Evaluated | Native controls and USWDS components. At the ends of a list, Move up and Move down stay focusable and are marked `aria-disabled` (decisions.md, Phase 1 forms). axe's name and ARIA rules pass, also after htmx updates, with the mobile menu open, and under emulated forced colors. Under forced colors the menu's close button had no name until October 17 (Known issues). Needs screen-reader checks, especially the mobile menu and the parts htmx updates |
 
 ## Table 2: Success Criteria, Level AA
 
@@ -154,10 +160,10 @@ Pages use these USWDS 3.14 components as published: header with basic navigation
 | 1.2.5 Audio Description (Prerecorded) | Not Applicable | No video |
 | 1.3.4 Orientation | Not Evaluated | Nothing locks orientation; USWDS layouts are responsive |
 | 1.3.5 Identify Input Purpose | Not Evaluated | Name fields have `autocomplete="name"` and `"nickname"` (`sympraxi/accounts/forms.py`); allauth's email and password fields have their own. axe's `autocomplete-valid` passes. Questions directors write, for example asking for a phone number, get no `autocomplete` value |
-| 1.4.3 Contrast (Minimum) | Not Evaluated | USWDS colors throughout. axe's `color-contrast` passes for text as each page loads; hover, focus, error and selected states aren't checked |
+| 1.4.3 Contrast (Minimum) | Not Evaluated | USWDS colors throughout. axe's `color-contrast` passes for text as each page loads, on eight student pages at phone size, after htmx updates on seven pages, and on five forms with errors; hover, focus and selected states aren't checked. axe can't check contrast under forced colors (see "What axe doesn't cover") |
 | 1.4.4 Resize Text | Not Evaluated | USWDS sizes in rem; zoom isn't blocked. Needs a 200% check |
 | 1.4.5 Images of Text | Not Applicable | No images of text |
-| 1.4.10 Reflow | Not Evaluated | USWDS's responsive grid. Wide tables, such as the day sheet and the export, may need horizontal scrolling at 320 CSS pixels, which the criterion allows for data tables. Needs a 400% check |
+| 1.4.10 Reflow | Not Evaluated | USWDS's responsive grid. Eight student pages don't scroll sideways at 375 CSS pixels (tested); nothing is checked at 320. Wide tables, such as the day sheet and the export, may need horizontal scrolling at 320 CSS pixels, which the criterion allows for data tables. Needs a 400% check |
 | 1.4.11 Non-text Contrast | Not Evaluated | USWDS field borders and focus ring. axe has no rule for this |
 | 1.4.12 Text Spacing | Not Evaluated | No inline styles anywhere (tested), so nothing sets spacing inline with `!important`, which is what axe checks. Whether text clips with wider spacing needs a manual check |
 | 1.4.13 Content on Hover or Focus | Not Evaluated | No tooltips or hover menus in the templates; a reviewer should confirm nothing appears on hover or focus |
@@ -166,7 +172,7 @@ Pages use these USWDS 3.14 components as published: header with basic navigation
 | 2.4.7 Focus Visible | Not Evaluated | USWDS's focus outline; Sympraxi's stylesheet doesn't remove it. axe has no rule for this |
 | 2.4.11 Focus Not Obscured (Minimum) | Not Evaluated | No sticky or fixed elements in Sympraxi's stylesheet; the USWDS basic header scrolls with the page. Check with the mobile menu and at high zoom |
 | 2.5.7 Dragging Movements | Not Applicable | Nothing uses dragging; reordering uses buttons and a menu (tested by keyboard) |
-| 2.5.8 Target Size (Minimum) | Not Evaluated | USWDS buttons and controls; axe's `target-size` rule passes on every page tested. Check small links such as "Previous day" and "Next day" on a phone |
+| 2.5.8 Target Size (Minimum) | Not Evaluated | USWDS buttons and controls; axe's `target-size` rule passes on every page tested, including eight student pages at phone size. Check small links such as "Previous day" and "Next day" on a real phone |
 | 3.1.2 Language of Parts | Not Evaluated | The interface is in English. Text people type (notes, questions, center names) may be in another language and isn't marked. A Spanish translation is planned for Phase 5 |
 | 3.2.3 Consistent Navigation | Not Evaluated | One base layout for every page; center pages share the side navigation |
 | 3.2.4 Consistent Identification | Not Evaluated | The same components and words for the same actions across pages |
@@ -180,9 +186,9 @@ Pages use these USWDS 3.14 components as published: header with basic navigation
 Found while writing this draft, from the code. None has been confirmed with assistive technology.
 
 1. The 8-hour sign-in ends without a warning, and work in a form posted after it is lost (2.2.1). The two-factor step at sign-in expires after 15 minutes.
-2. axe never sees content htmx adds, narrow screens or forced colors, and sees error states on only five forms.
+2. axe sees error states on five forms, htmx updates on seven pages and a phone-sized screen on eight student pages, and on no others. It can't judge contrast under forced colors at all.
 
-Fixed on October 17, 2026, after the first draft: checkboxes showed no hint or error (1.3.1, 3.3.1, 3.3.2); the two-factor pages and the rest of allauth's pages weren't axe-tested, and adding them showed that the passkey list failed with a server error; error pages were Django's plain ones, without the site's layout or a way back.
+Fixed on October 17, 2026, after the first draft: checkboxes showed no hint or error (1.3.1, 3.3.1, 3.3.2); the two-factor pages and the rest of allauth's pages weren't axe-tested, and adding them showed that the passkey list failed with a server error; error pages were Django's plain ones, without the site's layout or a way back. Later that day, axe on the open phone menu under forced colors found that the menu's close button had no accessible name (4.1.2): its name was the alt text of its X image, which USWDS hides in that mode. The button is now named by hidden text. The other new runs found nothing.
 
 ## Plan for the manual review
 
@@ -216,4 +222,4 @@ The Phase 1 exit criteria require a WCAG 2.2 AA review of every student-facing f
 
 **Recording.** For each flow and setup: the date, browser, assistive technology and versions, what failed, and which criterion it maps to. Fix what fails, retest, and then replace "Not Evaluated" in the tables above with real levels. After the student flows, the same review should cover the tutor, front desk and director flows, since staff are users too. Each release then ships a finished Accessibility Conformance Report in the VPAT 2.5 format (02-build-plan.md §7).
 
-**Automated checks to add.** The remaining allauth pages and five forms after a failed submission joined the axe run on October 17. Still to add, from "What axe doesn't cover": a pass at a phone-sized viewport with the menu open, axe after htmx updates part of a page, and runs with Playwright's `forced_colors="active"` and `reduced_motion="reduce"` emulation. These catch regressions between manual reviews; they don't replace them.
+**Automated checks to add.** On October 17 the axe run gained the remaining allauth pages, five forms after a failed submission, eight student pages at phone size with the menu open, eight states that htmx swaps in, and runs with Playwright's `forced_colors="active"` and `reduced_motion="reduce"` emulation. Still to add, from "What axe doesn't cover": a check for sideways scrolling at 320 CSS pixels on the student pages; the tutor's record form and the front desk's pages at phone size; and a check that each control shows a focus outline when it has focus. These catch regressions between manual reviews; they don't replace them.

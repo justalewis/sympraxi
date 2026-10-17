@@ -4,7 +4,9 @@ Run with: uv run pytest -m e2e  (after `npm --prefix frontend run build` and
 `uv run playwright install chromium`). Add each new page to PAGES, or to
 SSO_PAGES if it only looks different once single sign-on is set up. allauth's
 own pages are in ACCOUNT_PAGES, forms sent back with errors in FORMS_WITH_ERRORS,
-and error pages in ERROR_PAGES.
+and error pages in ERROR_PAGES. Some pages are also checked on a phone with the
+menu open (PHONE_PAGES), after htmx swaps content in (HTMX_SWAPS), and with forced
+colors and reduced motion emulated (EMULATED_PAGES).
 """
 
 from datetime import date, timedelta
@@ -405,13 +407,102 @@ def test_sso_button_works_from_the_keyboard_under_the_csp(
     assert problems == []
 
 
+# Steps that make htmx swap content into a page. The tests below that drive the
+# same parts by keyboard use them, and so does test_swapped_in_content_passes_axe.
+
+
+def show_the_last_open_day(page) -> str:
+    """Change the date to the last one open; htmx swaps in that day's times.
+
+    Returns the day as the date field's value.
+    """
+    later = page.locator("#id_date").get_attribute("max")
+    assert later
+    day = date.fromisoformat(later)
+    page.fill("#id_date", later)
+    page.dispatch_event("#id_date", "change")
+    page.wait_for_selector(f"#open-times h2:has-text('{day_heading(day)}')")
+    return later
+
+
+def day_heading(day: date) -> str:
+    return f"{day:%A}, {day:%B} {day.day}"
+
+
+def choose_something_else(page) -> None:
+    """Choose "Something else" with the space bar; htmx swaps in its follow-up question."""
+    page.get_by_label("What course is this for?").fill("ENG 101")
+    page.get_by_label("Something else").focus()
+    page.keyboard.press("Space")
+    page.wait_for_selector("text=What kind of writing, then?")
+
+
+def tag_thesis(page) -> None:
+    """Open "Ideas and argument" and check "Thesis" by keyboard; htmx swaps in suggestions."""
+    page.focus("summary:has-text('Ideas and argument')")
+    page.keyboard.press("Enter")
+    page.focus("#topic-argument--thesis")
+    page.keyboard.press("Space")
+    page.wait_for_selector("#resource-results >> text=Our thesis handout")
+
+
+def attach_the_thesis_handout(page) -> None:
+    """Tab to the suggestion's Attach button and press Enter; htmx adds the attached row."""
+    tab_to(page, lambda label: label.startswith("Attach Our thesis handout"))
+    page.keyboard.press("Enter")
+    page.wait_for_selector("#attached-resources >> text=Our thesis handout")
+    # htmx applies the swapped-in class after its settle delay (20 ms), so wait for it.
+    page.wait_for_selector("#attached-empty", state="hidden")
+
+
+def search_resources(page) -> None:
+    page.fill("#resource-search", "handout")
+    page.wait_for_selector("#resource-results >> text=Matching “handout”")
+
+
+def search_members(page) -> None:
+    page.fill("#member-search", "zzz-nobody")
+    page.wait_for_selector("text=Nobody matches")
+
+
+def move_a_question_down(page) -> str:
+    """Tab to "Move down" on the first question and press Enter; htmx swaps in the new order.
+
+    Returns the button's ID.
+    """
+    tab_to(page, lambda label: label.startswith("Move down: What course is this for?"))
+    button = page.evaluate("document.activeElement.id")
+    page.keyboard.press("Enter")
+    page.wait_for_selector("#builder-status >> text=Moved “What course is this for?” down.")
+    return button
+
+
+def wait_for_htmx(page) -> None:
+    """Wait until no request is out and the last swap has settled."""
+    page.wait_for_function(
+        "!document.querySelector('.htmx-request, .htmx-swapping, .htmx-settling, .htmx-added')"
+    )
+
+
+def tab_to(page, matches, *, limit: int = 60) -> None:
+    """Press Tab until the focused element's text or value satisfies `matches`."""
+    for _ in range(limit):
+        page.keyboard.press("Tab")
+        label = page.evaluate(
+            "(document.activeElement.textContent || '').trim() + ' ' + "
+            "(document.activeElement.value || '')"
+        )
+        if matches(label):
+            return
+    pytest.fail("The Tab key never reached the control")
+
+
 def test_member_search_updates_results_without_reloading(browser, live_server, sign_in) -> None:
     context, page, url = open_page(
         browser, live_server, sign_in, "director", "/centers/{slug}/members/"
     )
     page.goto(url)
-    page.fill("#member-search", "zzz-nobody")
-    page.wait_for_selector("text=Nobody matches")
+    search_members(page)
     assert page.url.endswith("?q=zzz-nobody")
     context.close()
 
@@ -422,13 +513,8 @@ def test_open_times_update_without_reloading(browser, live_server, sign_in) -> N
     )
     page.goto(url)
     page.evaluate("window.notReloaded = true")
-    later = page.locator("#id_date").get_attribute("max")
-    assert later
-    day = date.fromisoformat(later)
-    heading = f"{day:%A}, {day:%B} {day.day}"
-    page.fill("#id_date", later)
-    page.dispatch_event("#id_date", "change")
-    page.wait_for_selector(f"#open-times h2:has-text('{heading}')")
+    later = show_the_last_open_day(page)
+    heading = day_heading(date.fromisoformat(later))
     page.wait_for_function(f"location.search.includes('date={later}')")
     # The live region outside the list announces the new day's count.
     assert heading in page.locator("#open-times-status").inner_text()
@@ -458,19 +544,6 @@ def test_a_student_books_a_time(browser, live_server, sign_in) -> None:
     context.close()
 
 
-def tab_to(page, matches, *, limit: int = 60) -> None:
-    """Press Tab until the focused element's text or value satisfies `matches`."""
-    for _ in range(limit):
-        page.keyboard.press("Tab")
-        label = page.evaluate(
-            "(document.activeElement.textContent || '').trim() + ' ' + "
-            "(document.activeElement.value || '')"
-        )
-        if matches(label):
-            return
-    pytest.fail("The Tab key never reached the control")
-
-
 def test_a_tutor_writes_and_finalizes_a_record_by_keyboard(browser, live_server, sign_in) -> None:
     """Tag a topic, see a suggestion, attach it and finalize, without a mouse or a reload."""
     context, page, url = open_page(
@@ -487,23 +560,14 @@ def test_a_tutor_writes_and_finalizes_a_record_by_keyboard(browser, live_server,
     page.get_by_label("Yes", exact=True).focus()
     page.keyboard.press("Space")
 
-    # Open the "Ideas and argument" group and check "Thesis" with the space bar.
-    page.focus("summary:has-text('Ideas and argument')")
-    page.keyboard.press("Enter")
-    page.focus("#topic-argument--thesis")
-    page.keyboard.press("Space")
+    # Check "Thesis" with the space bar. The suggestions follow the topic, and the
+    # status line says so.
+    tag_thesis(page)
     assert page.is_checked("#topic-argument--thesis")
-
-    # The suggestions follow the topic, and the status line says so.
-    page.wait_for_selector("#resource-results >> text=Our thesis handout")
     assert "suggestion" in page.locator("#resource-status").inner_text()
 
-    tab_to(page, lambda label: label.startswith("Attach Our thesis handout"))
-    page.keyboard.press("Enter")
-    page.wait_for_selector("#attached-resources >> text=Our thesis handout")
+    attach_the_thesis_handout(page)
     assert "Attached Our thesis handout" in page.locator("#resource-status").inner_text()
-    # htmx applies the swapped-in class after its settle delay (20 ms), so wait for it.
-    page.wait_for_selector("#attached-empty", state="hidden")
 
     # The new row's note box is the next thing to type in.
     page.focus("#attached-resources textarea")
@@ -530,8 +594,7 @@ def test_resource_search_updates_without_reloading(browser, live_server, sign_in
     problems = watch_for_csp_problems(page)
     page.goto(url)
     page.evaluate("window.notReloaded = true")
-    page.fill("#resource-search", "handout")
-    page.wait_for_selector("#resource-results >> text=Matching “handout”")
+    search_resources(page)
     assert "Our thesis handout" in page.locator("#resource-results").inner_text()
     assert "1 resource matches your search." in page.locator("#resource-status").inner_text()
     assert page.evaluate("window.notReloaded") is True
@@ -569,11 +632,8 @@ def test_follow_up_questions_appear_in_place_by_keyboard(browser, live_server, s
     page.goto(url)
     page.evaluate("window.notReloaded = true")
     assert page.get_by_label("What kind of writing, then?").count() == 0
-    page.get_by_label("What course is this for?").fill("ENG 101")
+    choose_something_else(page)
     other = page.get_by_label("Something else")
-    other.focus()
-    page.keyboard.press("Space")
-    page.wait_for_selector("text=What kind of writing, then?")
     assert "1 follow-up question appeared." in page.locator("#form-status").inner_text()
     # Focus stays on the choice that was made, and what was typed is kept.
     assert page.evaluate("document.activeElement.value") == other.get_attribute("value")
@@ -596,10 +656,7 @@ def test_a_director_reorders_questions_by_keyboard(browser, live_server, sign_in
     problems = watch_for_csp_problems(page)
     page.goto(url)
     page.evaluate("window.notReloaded = true")
-    tab_to(page, lambda label: label.startswith("Move down: What course is this for?"))
-    focused = page.evaluate("document.activeElement.id")
-    page.keyboard.press("Enter")
-    page.wait_for_selector("#builder-status >> text=Moved “What course is this for?” down.")
+    focused = move_a_question_down(page)
     assert page.evaluate("document.activeElement.id") == focused
     assert page.evaluate("window.notReloaded") is True
     first = page.locator("#questions li").first.inner_text()
@@ -840,6 +897,215 @@ def test_a_dead_survey_link_passes_axe(browser, live_server) -> None:
     assert response is not None and response.status == 404
     assert "doesn't open a survey" in page.locator("main").inner_text()
     results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+# Key student pages on a phone: (who, path). axe checks each as it loads and
+# again with the USWDS menu open.
+PHONE_SIZE = {"width": 375, "height": 812}
+PHONE = {"viewport": PHONE_SIZE, "is_mobile": True, "has_touch": True}
+PHONE_PAGES = [
+    (None, "/accounts/login/"),
+    ("student", "/"),
+    ("student", "/centers/{slug}/"),
+    ("student", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
+    ("student", "/centers/{slug}/schedules/{schedule}/book/?{slot}"),
+    ("student", "/centers/{slug}/appointments/"),
+    ("student", "/centers/{slug}/appointments/{appointment}/"),
+    ("student", "/centers/{slug}/my-writing/{record}/"),
+]
+
+
+@pytest.mark.parametrize(
+    ("who", "path"), PHONE_PAGES, ids=[f"{w or 'anonymous'}:{p}" for w, p in PHONE_PAGES]
+)
+def test_a_page_on_a_phone_passes_axe_with_the_menu_open(
+    browser, live_server, sign_in, who, path
+) -> None:
+    context, page, url = open_page(
+        browser, live_server, sign_in, who, path, bypass_csp=True, **PHONE
+    )
+    page.goto(url)
+    # Nothing makes the page scroll sideways at this width.
+    assert page.evaluate("document.documentElement.scrollWidth") <= PHONE_SIZE["width"]
+    # The open menu's overlay covers the page, so axe can't check the contrast of
+    # anything under it; this first run checks the page itself at this width.
+    closed = Axe().run(page, options=AXE_OPTIONS)
+    open_the_menu(page)
+    opened = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert closed.violations_count == 0, closed.generate_report()
+    assert opened.violations_count == 0, opened.generate_report()
+
+
+def open_the_menu(page) -> None:
+    """Tap Menu and wait for the menu to finish sliding in."""
+    page.tap(".usa-menu-btn")
+    page.wait_for_selector(".usa-nav.is-visible")
+    page.wait_for_function("document.getAnimations().length === 0")
+
+
+def test_the_phone_menu_keeps_focus_inside_until_closed(browser, live_server, sign_in) -> None:
+    """With the menu open, Tab and Shift+Tab stay in it, and Escape closes it.
+
+    USWDS hides the rest of the page from screen readers with aria-hidden while
+    the menu is open, and its links stay focusable. axe can't tell whether Tab
+    still reaches them, so it marks its aria-hidden-focus rule "needs review"
+    rather than passing or failing it. USWDS's focus trap is what keeps them out
+    of reach; this checks it.
+    """
+    context, page, url = open_page(
+        browser, live_server, sign_in, "student", "/centers/{slug}/", **PHONE
+    )
+    problems = watch_for_csp_problems(page)
+    page.goto(url)
+    hidden_before = page.locator("[aria-hidden]").count()
+    tab_to(page, lambda label: label.strip() == "Menu")
+    page.keyboard.press("Enter")
+    page.wait_for_selector(".usa-nav.is-visible")
+    in_menu = "!!document.activeElement.closest('.usa-nav')"
+    assert page.evaluate("document.activeElement.className") == "usa-nav__close"
+    reached = set()
+    for key in ["Tab"] * 8 + ["Shift+Tab"] * 8:
+        page.keyboard.press(key)
+        assert page.evaluate(in_menu), f"{key} left the open menu"
+        reached.add(page.evaluate("document.activeElement.textContent.trim()"))
+    assert {"My centers", "Account", "Sign out"} <= reached
+    page.keyboard.press("Escape")
+    page.wait_for_selector(".usa-nav", state="hidden")
+    assert page.evaluate("document.activeElement.className") == "usa-menu-btn"
+    assert page.locator("[aria-hidden]").count() == hidden_before
+    context.close()
+    assert problems == []
+
+
+# Content htmx swaps into a page: (who, path, steps). Each step is one of the
+# functions above that the keyboard tests use. axe runs after each step, once the
+# swap has settled.
+HTMX_SWAPS = [
+    ("student", "/centers/{slug}/schedules/{schedule}/", [show_the_last_open_day]),
+    ("student", "/centers/{slug}/appointments/{appointment}/change/", [show_the_last_open_day]),
+    ("student", "/centers/{slug}/schedules/{schedule}/book/?{slot}", [choose_something_else]),
+    (
+        "tutor",
+        "/centers/{slug}/appointments/{unwritten}/record/",
+        [tag_thesis, attach_the_thesis_handout],
+    ),
+    ("tutor", "/centers/{slug}/records/{draft}/edit/", [search_resources]),
+    ("director", "/centers/{slug}/members/", [search_members]),
+    ("director", "/centers/{slug}/forms/{form}/", [move_a_question_down]),
+]
+
+
+@pytest.mark.parametrize(
+    ("who", "path", "steps"),
+    HTMX_SWAPS,
+    ids=[f"{w}:{p}:{'+'.join(s.__name__ for s in steps)}" for w, p, steps in HTMX_SWAPS],
+)
+def test_swapped_in_content_passes_axe(browser, live_server, sign_in, who, path, steps) -> None:
+    context, page, url = open_page(browser, live_server, sign_in, who, path, bypass_csp=True)
+    page.goto(url)
+    page.evaluate("window.notReloaded = true")
+    reports = []
+    for step in steps:
+        step(page)
+        wait_for_htmx(page)
+        results = Axe().run(page, options=AXE_OPTIONS)
+        if results.violations_count:
+            reports.append(f"After {step.__name__}:\n{results.generate_report()}")
+    # What axe saw came from htmx, not from the page loading again.
+    assert page.evaluate("window.notReloaded") is True
+    context.close()
+    assert reports == [], "\n".join(reports)
+
+
+# Pages that between them use most of the USWDS components Sympraxi does: side
+# navigation, breadcrumbs, alerts, tags, a table, radio buttons, checkboxes,
+# disclosure groups and buttons marked aria-disabled. Each is checked with the
+# browser emulating a forced-colors theme (Windows' contrast themes), and again
+# with the reduce-motion setting.
+EMULATED_PAGES = [
+    (None, "/accounts/login/"),
+    ("student", "/centers/{slug}/"),
+    ("student", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
+    ("student", "/centers/{slug}/schedules/{schedule}/book/?{slot}"),
+    ("student", "/centers/{slug}/appointments/{appointment}/"),
+    ("tutor", "/centers/{slug}/appointments/{unwritten}/record/"),
+    ("front_desk", "/centers/{slug}/schedules/{schedule}/day/?date={tomorrow}"),
+    ("director", "/centers/{slug}/forms/{form}/"),
+]
+# With forced colors, axe compares the page's own text colors with the forced
+# background, not the colors the browser draws, so its two color rules report
+# nonsense: dark text on black under a dark theme, a pass by luck under a light one.
+# Everything else (names, roles, structure) still applies, and changes when
+# USWDS's forced-colors styles hide or replace parts of a component.
+FORCED_COLORS_AXE_OPTIONS = {
+    **AXE_OPTIONS,
+    "rules": {"color-contrast": {"enabled": False}, "link-in-text-block": {"enabled": False}},
+}
+# Playwright's context option, the media query it should then match, and axe's options.
+EMULATIONS = {
+    "forced-colors": (
+        {"forced_colors": "active"},
+        "(forced-colors: active)",
+        FORCED_COLORS_AXE_OPTIONS,
+    ),
+    "reduced-motion": (
+        {"reduced_motion": "reduce"},
+        "(prefers-reduced-motion: reduce)",
+        AXE_OPTIONS,
+    ),
+}
+
+
+@pytest.mark.parametrize("emulation", EMULATIONS)
+@pytest.mark.parametrize(
+    ("who", "path"), EMULATED_PAGES, ids=[f"{w or 'anonymous'}:{p}" for w, p in EMULATED_PAGES]
+)
+def test_a_page_passes_axe_with_emulated_settings(
+    browser, live_server, sign_in, who, path, emulation
+) -> None:
+    options, query, axe_options = EMULATIONS[emulation]
+    context, page, url = open_page(
+        browser, live_server, sign_in, who, path, bypass_csp=True, **options
+    )
+    page.goto(url)
+    assert page.evaluate(f"matchMedia('{query}').matches") is True
+    results = Axe().run(page, options=axe_options)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+@pytest.mark.parametrize("emulation", EMULATIONS)
+def test_the_phone_menu_passes_axe_with_emulated_settings(
+    browser, live_server, sign_in, emulation
+) -> None:
+    """The open menu is where these settings change the most.
+
+    Under forced colors USWDS hides the close button's image and draws the X
+    itself, so the button needs a name that isn't the image's alt text. Under
+    reduced motion the menu appears without sliding in.
+    """
+    options, query, axe_options = EMULATIONS[emulation]
+    context, page, url = open_page(
+        browser,
+        live_server,
+        sign_in,
+        "student",
+        "/centers/{slug}/",
+        bypass_csp=True,
+        **PHONE,
+        **options,
+    )
+    page.goto(url)
+    assert page.evaluate(f"matchMedia('{query}').matches") is True
+    page.tap(".usa-menu-btn")
+    page.wait_for_selector(".usa-nav.is-visible")
+    if emulation == "reduced-motion":
+        assert page.evaluate("document.getAnimations().length") == 0
+    page.wait_for_function("document.getAnimations().length === 0")
+    results = Axe().run(page, options=axe_options)
     context.close()
     assert results.violations_count == 0, results.generate_report()
 
