@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if page.object_list %}
-  <table class="usa-table usa-table--borderless">
+  <table class="usa-table usa-table--borderless usa-table--stacked">
     <caption class="usa-sr-only">{% translate "People in this center" %}</caption>
     <thead>
       <tr>
@@ -15,12 +15,12 @@
     <tbody>
       {% for m in page.object_list %}
         <tr>
-          <th scope="row">{{ m.user.display_name }}{% if m.user.pronouns %} <span class="text-base">({{ m.user.pronouns }})</span>{% endif %}</th>
-          <td>{{ m.user.email }}</td>
-          <td>{{ m.get_role_display }}</td>
-          <td>{% if m.is_active %}{% translate "Active" %}{% else %}{% translate "Inactive" %}{% endif %}</td>
-          {% if can_view_records %}<td>{% if m.role == "student" %}<a href="{% url 'records:student_history' slug=center.slug membership_id=m.pk %}">{% translate "History" %}<span class="usa-sr-only"> {% blocktranslate with name=m.user.display_name %}for {{ name }}{% endblocktranslate %}</span></a>{% endif %}</td>{% endif %}
-          {% if can_manage_members %}<td><a href="{% url 'centers:person' slug=center.slug membership_id=m.pk %}">{% translate "Change" %}<span class="usa-sr-only"> {% blocktranslate with name=m.user.display_name %}roles for {{ name }}{% endblocktranslate %}</span></a></td>{% endif %}
+          <th scope="row" data-label="{% translate 'Name' %}">{{ m.user.display_name }}{% if m.user.pronouns %} <span class="text-base">({{ m.user.pronouns }})</span>{% endif %}</th>
+          <td data-label="{% translate 'Email' %}">{{ m.user.email }}</td>
+          <td data-label="{% translate 'Role' %}">{{ m.get_role_display }}</td>
+          <td data-label="{% translate 'Status' %}">{% if m.is_active %}{% translate "Active" %}{% else %}{% translate "Inactive" %}{% endif %}</td>
+          {% if can_view_records %}<td data-label="{% translate 'Session records' %}">{% if m.role == "student" %}<a href="{% url 'records:student_history' slug=center.slug membership_id=m.pk %}">{% translate "History" %}<span class="usa-sr-only"> {% blocktranslate with name=m.user.display_name %}for {{ name }}{% endblocktranslate %}</span></a>{% endif %}</td>{% endif %}
+          {% if can_manage_members %}<td data-label="{% translate 'Roles' %}"><a href="{% url 'centers:person' slug=center.slug membership_id=m.pk %}">{% translate "Change" %}<span class="usa-sr-only"> {% blocktranslate with name=m.user.display_name %}roles for {{ name }}{% endblocktranslate %}</span></a></td>{% endif %}
         </tr>
       {% endfor %}
     </tbody>
