@@ -94,6 +94,7 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/accounts/encryption.py` | Encrypts the two-factor secrets allauth stores, under a key derived from the secret key; `manage.py reencrypt_mfa_secrets` rewrites them after the key changes |
 | `sympraxi/centers/` | Centers, roles, memberships |
 | `sympraxi/centers/people.py` | Adding people one at a time or from a CSV file, and turning roles on and off |
+| `sympraxi/staff/` | The time clock: entries, clocking in and out, directors' corrections, the midnight clock-out and timesheets |
 | `sympraxi/scheduling/services.py` | Every booking rule: limits, notice, cutoff, groups, locks |
 | `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions, closures and tutor caps |
 | `sympraxi/scheduling/timeutils.py` | Wall-clock times and daylight-saving rules |

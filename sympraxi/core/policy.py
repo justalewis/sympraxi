@@ -44,6 +44,11 @@ students booked. Front desk staff and directors see the master lists, which
 name students: a day's or a week's appointments, and the students who booked
 in a period with their visits. Only directors export the whole center, and
 site administrators never do: the export holds every session record.
+
+Time clock: tutors, front desk staff and directors clock themselves in and out
+and see their own hours. Directors see everyone's timesheets and add, change
+and remove entries, with a reason each time (`sympraxi/staff/timeclock.py`).
+Site administrators don't: the hours are the center's employment records.
 """
 
 from collections.abc import Callable
@@ -134,6 +139,10 @@ class Action(StrEnum):
     VIEW_MASTER_LISTS = "reports.view_master_lists"
     # One ZIP of everything the center keeps, session records included.
     EXPORT_CENTER = "reports.export_center"
+    # Clock yourself in and out, and see your own hours.
+    CLOCK_OWN = "staff.clock_own"
+    # Everyone's timesheets, and adding, changing and removing their entries.
+    MANAGE_TIME = "staff.manage_time"
 
 
 ROLE_GRANTS: dict[Role, frozenset[Action]] = {
@@ -161,6 +170,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_RECORDS,
             Action.VIEW_INTAKE,
             Action.VIEW_REGISTRATION,
+            Action.CLOCK_OWN,
         }
     ),
     Role.FRONT_DESK: frozenset(
@@ -179,6 +189,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_INTAKE,
             Action.VIEW_REGISTRATION,
             Action.VIEW_MASTER_LISTS,
+            Action.CLOCK_OWN,
         }
     ),
     Role.DIRECTOR: frozenset(
@@ -212,6 +223,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_STATISTICS,
             Action.VIEW_MASTER_LISTS,
             Action.EXPORT_CENTER,
+            Action.CLOCK_OWN,
+            Action.MANAGE_TIME,
         }
     ),
 }

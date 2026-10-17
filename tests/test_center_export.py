@@ -52,6 +52,7 @@ FILES = {
     "form_responses.json",
     "survey_results.json",
     "resources.json",
+    "time_entries.json",
     "audit_events.json",
     "audit_events.csv",
 }

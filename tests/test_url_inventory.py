@@ -32,6 +32,7 @@ from tests.forms_world import SURVEY_ANSWERS, add_forms, values
 from tests.records_world import add_records
 from tests.reports_world import add_reports
 from tests.scheduling_world import World, build_world
+from tests.staff_world import add_time_clock
 
 # accounts:local_login is the break-glass password sign-in. It is public like the
 # regular sign-in page; AccountAdapter.pre_login() decides who may use it.
@@ -138,6 +139,11 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "reports:student_list": (Action.VIEW_MASTER_LISTS, "center"),
     "reports:center_export": (Action.EXPORT_CENTER, "center"),
     "reports:center_export_download": (Action.EXPORT_CENTER, "center_export"),
+    # Time clock
+    "staff:clock": (Action.CLOCK_OWN, "center"),
+    "staff:entries": (Action.MANAGE_TIME, "center"),
+    "staff:entry_add": (Action.MANAGE_TIME, "center"),
+    "staff:entry_edit": (Action.MANAGE_TIME, "time_entry"),
 }
 
 
@@ -202,6 +208,7 @@ URL_KWARGS = {
     "form": "form_id",
     "question": "question_id",
     "center_export": "export_id",
+    "time_entry": "entry_id",
 }
 
 # Pages that need a chosen open time in the query string.
@@ -244,7 +251,7 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return add_reports(add_forms(add_attendance(add_records(build_world(center)))))
+    return add_time_clock(add_reports(add_forms(add_attendance(add_records(build_world(center))))))
 
 
 def test_every_url_is_classified() -> None:

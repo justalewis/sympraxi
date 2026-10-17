@@ -58,6 +58,12 @@ ACTION_LABELS = {
     "reports.list_exported": _("Downloaded a list of appointments or students"),
     "reports.center_export_requested": _("Asked for a full export of the center"),
     "reports.center_export_downloaded": _("Downloaded the full export of the center"),
+    "staff.clocked_in": _("Clocked in"),
+    "staff.clocked_out": _("Clocked out"),
+    "staff.closed_automatically": _("Clocked out at midnight by the scheduler"),
+    "staff.entry_added": _("Added time for someone"),
+    "staff.entry_changed": _("Changed someone's time"),
+    "staff.entry_removed": _("Removed someone's time"),
 }
 
 

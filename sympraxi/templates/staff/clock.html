@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Time clock" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Time clock" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Time clock" %}</h1>
+  {% if open %}
+    <p class="sympraxi-clock-status">{% blocktranslate with since=open.started_at|time:"g:i A" what=open.get_category_display %}You're clocked in since {{ since }}, for {{ what }}.{% endblocktranslate %}</p>
+    <form method="post" class="sympraxi-form-actions">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="out">
+      <button class="usa-button" type="submit">{% translate "Clock out" %}</button>
+    </form>
+  {% else %}
+    <p class="sympraxi-clock-status">{% translate "You're not clocked in." %}</p>
+    <form class="usa-form" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="in">
+      {% include "includes/form_fields.html" %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Clock in" %}</button>
+      </div>
+    </form>
+  {% endif %}
+  <p>{% translate "Anyone still clocked in at midnight is clocked out then. If you forget to clock in or out, ask a director to fix your time." %}</p>
+
+  {% for week in weeks %}
+    <section aria-labelledby="week-{{ forloop.counter }}">
+      <h2 id="week-{{ forloop.counter }}">{{ week.label }} <span class="text-base">({% blocktranslate with day=week.first|date:"F j" %}from Monday, {{ day }}{% endblocktranslate %})</span></h2>
+      {% if week.entries %}
+        <table class="usa-table usa-table--borderless usa-table--stacked">
+          <caption class="usa-sr-only">{% blocktranslate with label=week.label %}Your time, {{ label }}{% endblocktranslate %}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{% translate "Day" %}</th>
+              <th scope="col">{% translate "Started" %}</th>
+              <th scope="col">{% translate "Ended" %}</th>
+              <th scope="col">{% translate "Hours" %}</th>
+              <th scope="col">{% translate "What for" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in week.entries %}
+              <tr>
+                <th scope="row" data-label="{% translate 'Day' %}">{{ entry.started_at|date:"l, F j" }}</th>
+                <td data-label="{% translate 'Started' %}">{{ entry.started_at|time:"g:i A" }}</td>
+                <td data-label="{% translate 'Ended' %}">{% if entry.ended_at %}{{ entry.ended_at|time:"g:i A" }}{% if entry.closed_automatically %} <span class="usa-tag">{% translate "Clocked out at midnight" %}</span>{% endif %}{% else %}{% translate "Still clocked in" %}{% endif %}</td>
+                <td data-label="{% translate 'Hours' %}">{{ entry.hours|default_if_none:"" }}</td>
+                <td data-label="{% translate 'What for' %}">{{ entry.get_category_display }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <p>{% blocktranslate with total=week.total %}Total: {{ total }} hours.{% endblocktranslate %}</p>
+      {% else %}
+        <p>{% translate "No time yet." %}</p>
+      {% endif %}
+    </section>
+  {% endfor %}
+{% endblock content %}

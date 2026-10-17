@@ -68,6 +68,12 @@ class AuditAction(StrEnum):
     LIST_EXPORTED = "reports.list_exported"
     CENTER_EXPORT_REQUESTED = "reports.center_export_requested"
     CENTER_EXPORT_DOWNLOADED = "reports.center_export_downloaded"
+    TIME_CLOCKED_IN = "staff.clocked_in"
+    TIME_CLOCKED_OUT = "staff.clocked_out"
+    TIME_CLOSED_AUTOMATICALLY = "staff.closed_automatically"
+    TIME_ENTRY_ADDED = "staff.entry_added"
+    TIME_ENTRY_CHANGED = "staff.entry_changed"
+    TIME_ENTRY_REMOVED = "staff.entry_removed"
 
 
 def client_ip(request: HttpRequest) -> str | None:
