@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  {% if count %}
+    <p>{% blocktranslate count n=count with role=role.label|lower %}This turns off {{ n }} {{ role }} role.{% plural %}This turns off {{ n }} {{ role }} roles.{% endblocktranslate %}{% if keeps_self %} {% translate "Yours stays on." %}{% endif %}</p>
+    {% if upcoming %}
+      <div class="usa-alert usa-alert--warning usa-alert--slim">
+        <div class="usa-alert__body"><p class="usa-alert__text">{% blocktranslate count n=upcoming %}{{ n }} of them has an appointment still to come. It stays on the schedule; cancel it separately if it shouldn't happen.{% plural %}{{ n }} of them have appointments still to come. They stay on the schedule; cancel them separately if they shouldn't happen.{% endblocktranslate %}</p></div>
+      </div>
+    {% endif %}
+    <form method="post" class="sympraxi-form-actions">
+      {% csrf_token %}
+      <input type="hidden" name="role" value="{{ role.value }}">
+      <button class="usa-button usa-button--secondary" type="submit" name="confirm" value="1">{% blocktranslate count n=count %}Turn off {{ n }} role{% plural %}Turn off {{ n }} roles{% endblocktranslate %}</button>
+      <a href="{% url 'centers:roles_off' slug=center.slug %}">{% translate "Go back" %}</a>
+    </form>
+  {% else %}
+    <p>{% blocktranslate with role=role.label|lower %}Nobody else has an active {{ role }} role here.{% endblocktranslate %}</p>
+    <p><a href="{% url 'centers:members' slug=center.slug %}">{% translate "Back to everyone in the center" %}</a></p>
+  {% endif %}
+{% endblock content %}

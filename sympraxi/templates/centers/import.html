@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% translate "Save a spreadsheet as CSV and choose it here. You'll see who will be added, and any lines that need fixing, before anything changes." %}</p>
+  <h2>{% translate "What the file needs" %}</h2>
+  <ul class="usa-list">
+    <li>{% translate "A first line that names the columns." %}</li>
+    <li>{% translate "An Email column, and a Full name column or First name and Last name columns." %}</li>
+    <li>{% translate "If you like: Preferred name, Pronouns, Student ID, and Role (student, tutor, front desk or director)." %}</li>
+  </ul>
+  <p>{% translate "For example:" %}</p>
+  <pre class="sympraxi-example">Email,First name,Last name,Student ID,Role
+ana.ruiz@college.edu,Ana,Ruiz,A0012345,student
+sam.lee@college.edu,Sam,Lee,,tutor</pre>
+  <p>{% translate "Someone new to Sympraxi gets an account with no password. They sign in with your college's single sign-on, or set a password with “Forgot your password?” on the sign-in page. People who already have an account keep it as it is." %}</p>
+  <form class="usa-form usa-form--large" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Check the file" %}</button>
+      <a href="{% url 'centers:members' slug=center.slug %}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+{% endblock content %}

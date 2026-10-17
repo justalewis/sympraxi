@@ -53,6 +53,10 @@ LOGIN_REQUIRED = {"accounts:reminders"}
 CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "centers:detail": (Action.VIEW_CENTER, "center"),
     "centers:members": (Action.VIEW_MEMBERS, "center"),
+    "centers:person_add": (Action.MANAGE_MEMBERS, "center"),
+    "centers:import": (Action.MANAGE_MEMBERS, "center"),
+    "centers:roles_off": (Action.MANAGE_MEMBERS, "center"),
+    "centers:person": (Action.MANAGE_MEMBERS, "student_membership"),
     "privacy:audit_log": (Action.VIEW_AUDIT_LOG, "center"),
     # Booking
     "scheduling:schedules": (Action.VIEW_SCHEDULES, "center"),

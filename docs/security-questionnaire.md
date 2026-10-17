@@ -2,7 +2,7 @@
 
 This is the draft answer set a pilot campus's IT office can review before student data goes into Sympraxi. It follows the Higher Education Community Vendor Assessment Toolkit (HECVAT) and answers each question from the code and docs as they stand, with the file that shows it. Phase 1 of [02-build-plan.md](02-build-plan.md) calls for it. Its companion for accessibility is [accessibility.md](accessibility.md).
 
-Drafted on October 16 and 17, 2026. The answers describe branch `phase-0-foundation` at merge `8490575`, which includes the session-report questions and surveys, statistics and the full-center export, and the load-test fixes to sign-in limits, web workers and booking. Sympraxi has no release yet and runs nowhere in production.
+Drafted on October 16 and 17, 2026. The answers describe branch `phase-0-foundation` as of October 17, 2026, which includes the session-report questions and surveys, statistics and the full-center export, the load-test fixes to sign-in limits, web workers and booking, and adding people from a CSV file. Sympraxi has no release yet and runs nowhere in production.
 
 ## Which HECVAT
 
@@ -118,7 +118,7 @@ Paths are relative to the repository root.
 | AAAI-11* | Log retention, protection and access | Partly | Audit entries are kept until a retention purge exists, which isn't built. A database trigger refuses any UPDATE and any DELETE outside a purge transaction (`sympraxi/privacy/migrations/0002_audit_append_only.py`; `test_database_rejects_update_and_delete` in `tests/test_audit.py`). The database owner can still get around the trigger (decisions.md, Phase 0). The campus has full access to its own log. How long container logs are kept is the campus's Docker setting |
 | AAAI-12 | Works with other authentication systems | Partly | OIDC only, for Entra ID and Google. SAML (Shibboleth), CAS and other OIDC providers such as Okta: Not yet (Phase 5) |
 | AAAI-13 | Customer-defined attribute mappings | Not yet (Phase 5) | Student-ID mapping and account linking (02-build-plan.md §9) |
-| AAAI-14 | Directory integration | No | A CSV user import is Not yet (Phase 1). LDAP and SCIM: Not scheduled |
+| AAAI-14 | Directory integration | Partly | Directors add people from a CSV file exported from the student system, with a preview, and turn roles off in bulk between terms (`sympraxi/centers/people.py`). Single sign-on creates and matches accounts at sign-in. LDAP and SCIM: Not scheduled |
 | AAAI-15 | SAML2, OIDC or CAS | Partly | OIDC now; SAML2 and CAS Not yet (Phase 5) |
 | AAAI-16 | Tells email address and user ID apart | Yes | Once linked, sign-ins match the provider's subject ID, not the address, and an account linked to one identity is never relinked to another by address (decisions.md, Phase 1 SSO; `tests/test_sso.py`) |
 | AAAI-17 | Multi-factor login | Yes | Authenticator apps (TOTP), passkeys and recovery codes; no text-message codes. Required for every staff role and site administrators (`RequireStaffMFAMiddleware` in `sympraxi/accounts/middleware.py`; `tests/test_mfa_gate.py`). Students can turn it on. `SYMPRAXI_TRUST_IDP_MFA` accepts the identity provider's MFA only when the ID token's `amr` claim says `mfa` |
@@ -354,7 +354,6 @@ The open items a pilot campus will notice, in rough order of how much they'll ma
 10. **No SBOM or signed images; images and actions pinned by tag, not digest** (APPL-10). Whether the Renovate app is switched on for the repository isn't recorded; the workflows still reference actions by tag, which Renovate's `pinGitHubActionDigests` would change.
 11. **No SIEM export** (AAAI-10). Container logs and the audit table are there for the campus to collect.
 12. **Backups leave out `deploy/.env` and `deploy/backup.env`, and the docs don't say to keep copies of them** (DATA-11). Losing the restic password loses every off-site copy. Key rotation isn't documented (DATA-23).
-13. **No CSV user import yet** (AAAI-14). Phase 1.
-14. **Password rules can't be changed without editing code** (AAAI-03).
-15. **No privacy notice, privacy framework or impact assessment** (PRGN-05, DRPV-01, DRPV-02, PDOC-02). The college publishes its own notice, but Sympraxi has no setting to link it from its pages.
-16. **Students can't change their own name or pronouns** (DRPV-07, DRPV-10). Only a site administrator can, in the Django admin.
+13. **Password rules can't be changed without editing code** (AAAI-03).
+14. **No privacy notice, privacy framework or impact assessment** (PRGN-05, DRPV-01, DRPV-02, PDOC-02). The college publishes its own notice, but Sympraxi has no setting to link it from its pages.
+15. **Students can't change their own name or pronouns** (DRPV-07, DRPV-10). Only a site administrator can, in the Django admin.

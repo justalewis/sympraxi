@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% translate "Nothing has changed yet." %}</p>
+  <ul class="usa-list">
+    <li>{% blocktranslate count n=counts.add %}{{ n }} role will be added.{% plural %}{{ n }} roles will be added.{% endblocktranslate %}</li>
+    {% if counts.turn_on %}<li>{% blocktranslate count n=counts.turn_on %}{{ n }} role that was turned off will be turned back on.{% plural %}{{ n }} roles that were turned off will be turned back on.{% endblocktranslate %}</li>{% endif %}
+    {% if counts.already %}<li>{% blocktranslate count n=counts.already %}{{ n }} line is already in the center and changes nothing.{% plural %}{{ n }} lines are already in the center and change nothing.{% endblocktranslate %}</li>{% endif %}
+    {% if problems %}<li>{% blocktranslate count n=problems|length %}{{ n }} line has a problem and will be skipped.{% plural %}{{ n }} lines have problems and will be skipped.{% endblocktranslate %}</li>{% endif %}
+  </ul>
+
+  {% if problems %}
+    <h2>{% translate "Lines that will be skipped" %}</h2>
+    <p>{% translate "Fix these in the spreadsheet and add them later, or go ahead without them." %}</p>
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Lines with problems" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Line" %}</th>
+          <th scope="col">{% translate "Email" %}</th>
+          <th scope="col">{% translate "Problem" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for problem in problems %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Line' %}">{{ problem.line }}</th>
+            <td data-label="{% translate 'Email' %}">{{ problem.email }}</td>
+            <td data-label="{% translate 'Problem' %}">{{ problem.problems|join:" " }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if ready %}
+    <h2>{% translate "People in the file" %}</h2>
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "People in the file" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Line" %}</th>
+          <th scope="col">{% translate "Name" %}</th>
+          <th scope="col">{% translate "Email" %}</th>
+          <th scope="col">{% translate "Role" %}</th>
+          <th scope="col">{% translate "What happens" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row, status in rows %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Line' %}">{{ row.line }}</th>
+            <td data-label="{% translate 'Name' %}">{{ row.full_name }}{% if row.preferred_name %} ({{ row.preferred_name }}){% endif %}</td>
+            <td data-label="{% translate 'Email' %}">{{ row.email }}</td>
+            <td data-label="{% translate 'Role' %}">{{ row.role.label }}</td>
+            <td data-label="{% translate 'What happens' %}">{% if status == "add" %}{% translate "Added" %}{% elif status == "turn_on" %}{% translate "Turned back on" %}{% else %}{% translate "Already here" %}{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if more %}<p>{% blocktranslate count n=more %}And {{ n }} more line.{% plural %}And {{ n }} more lines.{% endblocktranslate %}</p>{% endif %}
+
+    {% if welcome %}<p>{% translate "Each person added, or whose role is turned back on, will get an email saying how to sign in." %}</p>{% endif %}
+    <form method="post" class="sympraxi-form-actions">
+      {% csrf_token %}
+      <input type="hidden" name="key" value="{{ key }}">
+      <button class="usa-button" type="submit" name="confirm" value="1">{% translate "Add these people" %}</button>
+      <a href="{% url 'centers:import' slug=center.slug %}">{% translate "Choose a different file" %}</a>
+    </form>
+  {% else %}
+    <p>{% translate "No line in the file can be added as it is." %}</p>
+    <p><a href="{% url 'centers:import' slug=center.slug %}">{% translate "Choose a different file" %}</a></p>
+  {% endif %}
+{% endblock content %}

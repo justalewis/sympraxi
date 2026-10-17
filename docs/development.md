@@ -92,6 +92,7 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/accounts/` | User model, sign-up rules, the staff two-factor gate |
 | `sympraxi/accounts/sso.py` | What a single sign-on login must prove; `sso_config.py` builds the providers from the environment |
 | `sympraxi/centers/` | Centers, roles, memberships |
+| `sympraxi/centers/people.py` | Adding people one at a time or from a CSV file, and turning roles on and off |
 | `sympraxi/scheduling/services.py` | Every booking rule: limits, notice, cutoff, groups, locks |
 | `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions, closures and tutor caps |
 | `sympraxi/scheduling/timeutils.py` | Wall-clock times and daylight-saving rules |

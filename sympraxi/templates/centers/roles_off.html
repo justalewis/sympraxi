@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% translate "Use this between terms: turn off every student role, say, then add this term's students from a file. Turned-off roles keep their history, and each one can be turned back on." %}</p>
+  <p>{% translate "You'll see how many people it changes before anything happens. Your own roles stay on." %}</p>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "See who this changes" %}</button>
+      <a href="{% url 'centers:members' slug=center.slug %}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+{% endblock content %}

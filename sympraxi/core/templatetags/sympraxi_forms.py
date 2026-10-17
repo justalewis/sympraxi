@@ -11,6 +11,7 @@ WIDGET_CLASSES = {
     "select": "usa-select",
     "textarea": "usa-textarea",
     "input": "usa-input",
+    "file": "usa-file-input",
 }
 
 
@@ -21,6 +22,8 @@ def widget_kind(field: BoundField) -> str:
         return "hidden"
     if isinstance(widget, forms.CheckboxInput):
         return "checkbox"
+    if isinstance(widget, forms.FileInput):
+        return "file"
     if isinstance(widget, forms.Select):
         return "select"
     if isinstance(widget, forms.Textarea):

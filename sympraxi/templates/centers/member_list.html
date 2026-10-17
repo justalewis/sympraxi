@@ -9,6 +9,13 @@
     </ol>
   </nav>
   <h1>{% translate "People in this center" %}</h1>
+  {% if can_manage_members %}
+    <ul class="usa-list usa-list--unstyled sympraxi-people-tools">
+      <li><a class="usa-button" href="{% url 'centers:person_add' slug=center.slug %}">{% translate "Add a person" %}</a></li>
+      <li><a class="usa-button usa-button--outline" href="{% url 'centers:import' slug=center.slug %}">{% translate "Add people from a CSV file" %}</a></li>
+      <li><a class="usa-button usa-button--outline" href="{% url 'centers:roles_off' slug=center.slug %}">{% translate "Turn off a role for everyone" %}</a></li>
+    </ul>
+  {% endif %}
   {% url 'centers:members' slug=center.slug as members_url %}
   <form class="usa-search usa-search--small" role="search" method="get" action="{{ members_url }}"
         hx-get="{{ members_url }}" hx-target="#member-results" hx-push-url="true"

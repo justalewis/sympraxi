@@ -1,6 +1,7 @@
 from typing import Any
 
 from allauth.account import signals as account_signals
+from allauth.socialaccount import signals as social_signals
 from django.dispatch import receiver
 from django.http import HttpRequest
 
@@ -17,3 +18,10 @@ def remember_idp_mfa(sender: Any, request: HttpRequest, user: Any, **kwargs: Any
         request.session[sso.IDP_MFA_SESSION_KEY] = True
     else:
         request.session.pop(sso.IDP_MFA_SESSION_KEY, None)
+
+
+@receiver(social_signals.social_account_added)
+def verify_linked_address(
+    sender: Any, request: HttpRequest, sociallogin: Any, **kwargs: Any
+) -> None:
+    sso.verify_linked_address(sociallogin)

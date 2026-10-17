@@ -21,6 +21,7 @@ stands in for Sympraxi's own two-factor step. Nothing else in the token does.
 from dataclasses import dataclass
 from typing import Any
 
+from allauth.account.models import EmailAddress
 from django.conf import settings
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
@@ -150,6 +151,29 @@ def mark_email_verified(sociallogin: Any) -> None:
     for address in sociallogin.email_addresses:
         if address.email.lower() == email:
             address.verified = True
+
+
+def verify_linked_address(sociallogin: Any) -> None:
+    """Mark the account's own copy of the address verified once it is linked.
+
+    A director can add someone before they ever sign in (sympraxi/centers/people.py),
+    so the account's address starts unverified. When single sign-on links that
+    account, the provider has just vouched for the address (`check()` passed), so
+    the person isn't also asked to confirm it by email.
+
+    This must run after allauth's `wipe_password()`, which takes the password off
+    an account matched by an unverified address, in case someone else registered
+    the address first. Marking it verified sooner, in `pre_social_login()`, would
+    let that password survive. `accounts/signals.py` calls this when the link is
+    saved, which allauth does right after the wipe.
+    """
+    if sociallogin.user.pk is None:
+        return
+    email = asserted_email(id_token_claims(sociallogin))
+    if email:
+        EmailAddress.objects.filter(
+            user=sociallogin.user, email__iexact=email, verified=False
+        ).update(verified=True)
 
 
 def proves_mfa(claims: dict[str, Any]) -> bool:

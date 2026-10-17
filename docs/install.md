@@ -43,7 +43,7 @@ Create the first site administrator:
 docker compose exec web python manage.py createsuperuser
 ```
 
-Sign in at `https://writing.example.edu`. You'll be asked to set up two-factor login before anything else. Then open **Site administration** to create your center and add its director.
+Sign in at `https://writing.example.edu`. You'll be asked to set up two-factor login before anything else. Then open **Site administration** to create your center and add its director. The director adds everyone else on the center's **People** page: one at a time, or many from a CSV file.
 
 ## Single sign-on
 
@@ -107,7 +107,7 @@ Every SSO sign-in is checked, every time, not only the first:
 
 Someone who passes these checks and already has a Sympraxi account with the same address is linked to that account automatically. If that account's address was never verified, its password is removed, in case someone else registered the address first. An account that is already linked to a different Microsoft or Google identity is never linked to a second one by address: when a college gives an old address to a new person, the new person must not get the previous holder's records. Their sign-in is refused, and a site administrator has to look at the account.
 
-Someone without an account gets one at their first sign-in, as long as `SYMPRAXI_SIGNUP_OPEN` is true (the default). A director then gives them a role as usual.
+Someone without an account gets one at their first sign-in, as long as `SYMPRAXI_SIGNUP_OPEN` is true (the default). A director then gives them a role on the center's **People** page.
 
 People see and remove their links under **Account** → **Linked accounts**. An account with no password can't remove its last link. Links, unlinks and refused sign-ins go in the audit log, which site administrators can read under **Site administration** → **Audit events**.
 
@@ -175,6 +175,12 @@ docker compose logs scheduler --tail 50
 If it was down for a while, it sends only the reminders that are less than 15 minutes late when it comes back, never a backlog. `upgrade.sh` and `restore.sh` stop it while the database changes and start it again afterward.
 
 Each schedule sets its reminders, its late-cancellation window and how long after the start a student is flagged as a possible no-show (on the schedule's edit page). Directors set the center's limits for booking blocks under **Booking blocks**. Students turn reminders off, and tutors turn them on, under **Account** → **Email reminders**.
+
+## Adding people
+
+Nothing to set up on the server. Directors add people on the center's **People** page: one at a time, or many from a CSV file whose first line names the columns (Email, and Full name or First name and Last name; Preferred name, Pronouns, Student ID and Role are optional). They see who will be added, and which lines need fixing, before anything changes. Between terms, **Turn off a role for everyone** turns off every student role, say, before this term's file goes in.
+
+Someone new gets an account with no password. With single sign-on they just sign in; otherwise they choose "Forgot your password?" on the sign-in page. When `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` is set, only addresses at those domains can be added. The optional welcome email goes out through the `worker` service.
 
 ## Registration and intake forms
 

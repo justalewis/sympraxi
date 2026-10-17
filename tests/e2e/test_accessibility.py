@@ -165,6 +165,11 @@ PAGES = [
     ("front_desk", "/centers/{slug}/reports/appointments/?date={tomorrow}"),
     ("front_desk", "/centers/{slug}/reports/appointments/?date={tomorrow}&span=week&canceled=on"),
     ("front_desk", "/centers/{slug}/reports/students/"),
+    # People
+    ("director", "/centers/{slug}/members/add/"),
+    ("director", "/centers/{slug}/members/import/"),
+    ("director", "/centers/{slug}/members/turn-off/"),
+    ("director", "/centers/{slug}/members/{student_membership}/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -618,3 +623,48 @@ def test_a_student_answers_a_survey_by_keyboard_without_signing_in(
     assert page.goto(url).status == 404
     context.close()
     assert problems == []
+
+
+def test_a_director_adds_people_from_a_file_by_keyboard(browser, live_server, sign_in) -> None:
+    """Choose a file, check the preview, add the people; then review turning a role off.
+    The preview and the review are answers to a form, so axe checks them here."""
+    context, page, url = open_page(
+        browser,
+        live_server,
+        sign_in,
+        "director",
+        "/centers/{slug}/members/import/",
+        bypass_csp=True,
+    )
+    page.goto(url)
+    page.set_input_files(
+        "#id_file",
+        {
+            "name": "people.csv",
+            "mimeType": "text/csv",
+            "buffer": b"Email,First name,Last name,Role\n"
+            b"ana.ruiz@example.edu,Ana,Ruiz,student\n"
+            b"not-an-address,Broken,Line,student\n",
+        },
+    )
+    page.get_by_role("button", name="Check the file").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("h1:has-text('Check the people before adding them')")
+    assert "1 line has a problem and will be skipped" in page.content()
+    results = Axe().run(page, options=AXE_OPTIONS)
+    assert results.violations_count == 0, results.generate_report()
+
+    page.get_by_role("button", name="Add these people").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("text=Added 1 role.")
+    assert Membership.objects.filter(user__email="ana.ruiz@example.edu").exists()
+
+    page.goto(url.replace("/import/", "/turn-off/"))
+    page.select_option("#id_role", "student")
+    page.get_by_role("button", name="See who this changes").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("h1:has-text('Turn off a role for everyone')")
+    assert "student roles" in page.content()
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()

@@ -67,6 +67,7 @@ def member_list(request: HtmxHttpRequest, slug: str) -> HttpResponse:
         "page": page,
         "query": query,
         "can_view_records": can(request.user, Action.VIEW_RECORDS, center),
+        "can_manage_members": can(request.user, Action.MANAGE_MEMBERS, center),
     }
     # A search typed into the box replaces only the results, not the whole page.
     template = "centers/_member_results.html" if request.htmx else "centers/member_list.html"

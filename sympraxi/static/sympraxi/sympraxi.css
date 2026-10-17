@@ -400,3 +400,22 @@
     max-width: none;
   }
 }
+
+/* A sample file on the CSV import page. */
+.sympraxi-example {
+  background: #f0f0f0;
+  border-left: 0.25rem solid #71767a;
+  font-size: 0.93rem;
+  margin: 0 0 1rem;
+  overflow-wrap: anywhere;
+  padding: 0.5rem 1rem;
+  white-space: pre-wrap;
+}
+
+/* The links above the list of people, for directors. */
+.sympraxi-people-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1rem;
+}

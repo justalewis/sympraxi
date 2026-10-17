@@ -1,0 +1,13 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=person.display_name %}Hello {{ name }},{% endblocktranslate %}
+
+{% blocktranslate with center=center.name %}You've been added to {{ center }} in {{ SITE_NAME }}, as: {{ roles }}.{% endblocktranslate %}
+
+{% translate "Sign in here:" %}
+{{ url }}
+
+{% if sso_only %}{% translate "Use your college account to sign in." %}{% elif has_sso %}{% translate "Use your college account to sign in. Or, to sign in with a password, choose “Forgot your password?” on that page and enter this email address to set one." %}{% else %}{% translate "The first time, choose “Forgot your password?” on that page and enter this email address to set a password." %}{% endif %}
+
+{% if center.contact_email %}{% blocktranslate with email=center.contact_email %}Questions? Write to {{ email }}.{% endblocktranslate %}
+
+{% endif %}{{ SITE_NAME }}
+{% endautoescape %}

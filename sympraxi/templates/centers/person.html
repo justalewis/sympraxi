@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ person.display_name }}{% if person.pronouns %} <span class="text-base">({{ person.pronouns }})</span>{% endif %}</h1>
+  <dl class="sympraxi-summary">
+    <dt>{% translate "Full name" %}</dt>
+    <dd>{{ person.full_name }}</dd>
+    <dt>{% translate "Email" %}</dt>
+    <dd>{{ person.email }}</dd>
+    {% if person.student_id %}
+      <dt>{% translate "Student ID" %}</dt>
+      <dd>{{ person.student_id }}</dd>
+    {% endif %}
+  </dl>
+
+  <h2>{% translate "Roles in this center" %}</h2>
+  <p>{% translate "A role that's turned off keeps its history. The person keeps their appointments and records, but can't use the role until it's turned back on." %}</p>
+  <table class="usa-table usa-table--borderless">
+    <caption class="usa-sr-only">{% translate "Roles in this center" %}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{% translate "Role" %}</th>
+        <th scope="col">{% translate "Status" %}</th>
+        <th scope="col">{% translate "Change" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in roles %}
+        <tr>
+          <th scope="row">{{ m.get_role_display }}</th>
+          <td>{% if m.is_active %}{% translate "On" %}{% else %}{% translate "Off" %}{% endif %}</td>
+          <td>
+            {% if is_me and m.role == "director" and m.is_active %}
+              {% translate "Another director can turn this off." %}
+            {% else %}
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="membership" value="{{ m.pk }}">
+                {% if m.is_active %}
+                  <input type="hidden" name="active" value="0">
+                  <button class="usa-button usa-button--outline" type="submit">{% translate "Turn off" %}<span class="usa-sr-only"> {% blocktranslate with role=m.get_role_display %}the {{ role }} role{% endblocktranslate %}</span></button>
+                {% else %}
+                  <input type="hidden" name="active" value="1">
+                  <button class="usa-button usa-button--outline" type="submit">{% translate "Turn on" %}<span class="usa-sr-only"> {% blocktranslate with role=m.get_role_display %}the {{ role }} role{% endblocktranslate %}</span></button>
+                {% endif %}
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if addable %}
+    <h2>{% translate "Add a role" %}</h2>
+    <form class="usa-form" method="post">
+      {% csrf_token %}
+      <label class="usa-label" for="add-role">{% translate "Role" %}</label>
+      <select class="usa-select" id="add-role" name="add_role">
+        {% for value, label in addable %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+      </select>
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Add the role" %}</button>
+      </div>
+    </form>
+  {% endif %}
+  <p><a href="{% url 'centers:members' slug=center.slug %}">{% translate "Back to everyone in the center" %}</a></p>
+{% endblock content %}

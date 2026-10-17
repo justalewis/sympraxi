@@ -303,6 +303,20 @@ def test_linking_an_unverified_account_removes_its_password(client, sso) -> None
     assert SocialAccount.objects.get().user == squatter
 
 
+def test_a_signed_up_squatter_loses_the_password_before_the_address_is_verified(
+    client, sso
+) -> None:
+    """Signing up leaves an unverified address row. Single sign-on marks the address
+    verified, but only after allauth has taken the squatter's password away."""
+    squatter = UserFactory(email="sam@example.edu", verified=False)
+    EmailAddress.objects.create(user=squatter, email=squatter.email, primary=True, verified=False)
+    sign_in(client, sso, "entra", entra_claims())
+    squatter.refresh_from_db()
+    assert not squatter.has_usable_password()
+    assert EmailAddress.objects.get(user=squatter).verified
+    assert signed_in_user(client) == squatter
+
+
 @pytest.mark.parametrize(("provider_id", "claims", "reason"), REFUSED, ids=REFUSED_IDS)
 def test_a_refused_sign_in_never_links_an_account(client, sso, provider_id, claims, reason) -> None:
     user = UserFactory(email=claims.get("email", "sam@example.edu"))
