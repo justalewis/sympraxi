@@ -5,17 +5,19 @@ Run with: uv run pytest -m e2e  (after `npm --prefix frontend run build` and
 SSO_PAGES if it only looks different once single sign-on is set up.
 """
 
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 from allauth.socialaccount.models import SocialAccount
 from axe_playwright_python.sync_playwright import Axe
+from django.utils import timezone
 from django.utils.csp import CSP
 
 from sympraxi.accounts import sso_config
 from sympraxi.centers.models import Membership, Role
 from sympraxi.forms.models import Answer, Question, Response
 from sympraxi.records.models import RecordStatus, SessionRecord
+from sympraxi.reports.models import CenterExport
 from sympraxi.scheduling.models import Attendance, Block, Participant
 from sympraxi.scheduling.timeutils import local_date
 from tests import sso_idp
@@ -23,6 +25,7 @@ from tests.attendance_world import add_attendance
 from tests.factories import CenterFactory, MembershipFactory, UserFactory, give_mfa
 from tests.forms_world import add_forms
 from tests.records_world import add_records
+from tests.reports_world import add_reports
 from tests.scheduling_world import build_world
 
 pytestmark = [pytest.mark.e2e, pytest.mark.django_db(transaction=True)]
@@ -153,6 +156,15 @@ PAGES = [
     ("student", "/centers/{slug}/my-writing/{answered_record}/"),
     (None, "/survey/{survey_token}/"),
     (None, "/survey/thanks/"),
+    # Reports
+    ("director", "/centers/{slug}/reports/statistics/"),
+    ("director", "/centers/{slug}/reports/statistics/?first=2030-01-02&last=2030-01-01"),
+    ("director", "/centers/{slug}/reports/hours/"),
+    ("director", "/centers/{slug}/reports/export/"),
+    ("front_desk", "/centers/{slug}/"),
+    ("front_desk", "/centers/{slug}/reports/appointments/?date={tomorrow}"),
+    ("front_desk", "/centers/{slug}/reports/appointments/?date={tomorrow}&span=week&canceled=on"),
+    ("front_desk", "/centers/{slug}/reports/students/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -215,13 +227,15 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
                 extra_data={"id_token": sso_idp.entra_claims(email=user.email)},
             )
         sign_in(context, user)
-    world = add_forms(
-        add_attendance(
-            add_records(
-                build_world(
-                    center,
-                    student=user if who == "student" else None,
-                    tutor=user if who == "tutor" else None,
+    world = add_reports(
+        add_forms(
+            add_attendance(
+                add_records(
+                    build_world(
+                        center,
+                        student=user if who == "student" else None,
+                        tutor=user if who == "tutor" else None,
+                    )
                 )
             )
         )
@@ -261,6 +275,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         answered_record=world.answered_record.pk,
         survey_form=world.survey_form.pk,
         survey_token=world.survey_token,
+        center_export=world.center_export.pk,
     )
     page = context.new_page()
     return context, page, url
@@ -278,6 +293,24 @@ def test_page_passes_axe(browser, live_server, sign_in, settings, who, path, var
     )
     response = page.goto(url)
     assert response is not None and response.status == 200, f"{url} returned {response}"
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+def test_an_expired_export_link_passes_axe(browser, live_server, sign_in) -> None:
+    """The page an expired download link answers with, status 410."""
+    context, page, url = open_page(
+        browser,
+        live_server,
+        sign_in,
+        "director",
+        "/centers/{slug}/reports/export/{center_export}/download/",
+        bypass_csp=True,
+    )
+    CenterExport.objects.update(expires_at=timezone.now() - timedelta(hours=1))
+    response = page.goto(url)
+    assert response is not None and response.status == 410
     results = Axe().run(page, options=AXE_OPTIONS)
     context.close()
     assert results.violations_count == 0, results.generate_report()

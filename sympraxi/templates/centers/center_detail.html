@@ -25,6 +25,16 @@
       {% if can_write_records %}<li><a href="{% url 'records:new' slug=center.slug %}">{% translate "Record a meeting that wasn't booked" %}</a></li>{% endif %}
     </ul>
   {% endif %}
+  {% if can_view_statistics or can_view_master_lists or can_export_center %}
+    <h2>{% translate "Reports" %}</h2>
+    <ul class="usa-list">
+      {% if can_view_master_lists %}<li><a href="{% url 'reports:appointment_list' slug=center.slug %}">{% translate "Appointment list for a day or a week, to print" %}</a></li>{% endif %}
+      {% if can_view_master_lists %}<li><a href="{% url 'reports:student_list' slug=center.slug %}">{% translate "Students and their visits" %}</a></li>{% endif %}
+      {% if can_view_statistics %}<li><a href="{% url 'reports:statistics' slug=center.slug %}">{% translate "Statistics: appointments, visits and topics" %}</a></li>{% endif %}
+      {% if can_view_statistics %}<li><a href="{% url 'reports:utilization' slug=center.slug %}">{% translate "Hours offered and booked" %}</a></li>{% endif %}
+      {% if can_export_center %}<li><a href="{% url 'reports:center_export' slug=center.slug %}">{% translate "Full export of the center" %}</a></li>{% endif %}
+    </ul>
+  {% endif %}
   {% if can_view_members or can_view_audit_log or can_manage_schedules or can_manage_records or can_manage_blocks or can_manage_forms or can_view_survey_results %}
     <h2>{% translate "Center tools" %}</h2>
     <ul class="usa-list">

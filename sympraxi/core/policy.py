@@ -38,6 +38,12 @@ records actions; the student sees only the ones a director marked for students
 (`sympraxi/forms/report.py`). Survey answers are anonymous; only directors see
 the results, and only once enough people answered (`sympraxi/forms/surveys.py`).
 The survey page itself opens from an emailed link, without signing in.
+
+Reports: directors see the center's statistics and the hours tutors offered and
+students booked. Front desk staff and directors see the master lists, which
+name students: a day's or a week's appointments, and the students who booked
+in a period with their visits. Only directors export the whole center, and
+site administrators never do: the export holds every session record.
 """
 
 from collections.abc import Callable
@@ -120,6 +126,14 @@ class Action(StrEnum):
     # Read a survey's anonymous results: counts for each option and the written
     # answers, once enough people answered in the term.
     VIEW_SURVEY_RESULTS = "forms.view_survey_results"
+    # Counts of appointments, visits and session topics, and the hours tutors
+    # offered and students booked, by term or dates. Names tutors, not students.
+    VIEW_STATISTICS = "reports.view_statistics"
+    # The appointment list for a day or week and the list of students with their
+    # visits, on the page or downloaded. Both name students.
+    VIEW_MASTER_LISTS = "reports.view_master_lists"
+    # One ZIP of everything the center keeps, session records included.
+    EXPORT_CENTER = "reports.export_center"
 
 
 ROLE_GRANTS: dict[Role, frozenset[Action]] = {
@@ -164,6 +178,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_RECORD_STATUS,
             Action.VIEW_INTAKE,
             Action.VIEW_REGISTRATION,
+            Action.VIEW_MASTER_LISTS,
         }
     ),
     Role.DIRECTOR: frozenset(
@@ -194,6 +209,9 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_REGISTRATION,
             Action.VIEW_ALL_REGISTRATION,
             Action.VIEW_SURVEY_RESULTS,
+            Action.VIEW_STATISTICS,
+            Action.VIEW_MASTER_LISTS,
+            Action.EXPORT_CENTER,
         }
     ),
 }

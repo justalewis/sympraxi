@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Students and their visits" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Students and their visits" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Students and their visits" %}</h1>
+  <p class="sympraxi-no-print">{% translate "Every student with an appointment in the period: how many visits they booked, how many times they came, and when they first came to the center." %}</p>
+  {% include "reports/_period_filters.html" %}
+  {% if not invalid %}
+    <p class="sympraxi-report-period"><strong>{{ period.label }}</strong>. {{ period.schedule_label }}.</p>
+    {% include "reports/_downloads.html" %}
+    {% if table.rows %}
+      <p>{% blocktranslate count n=page.paginator.count %}{{ n }} student.{% plural %}{{ n }} students.{% endblocktranslate %}{% if page.has_other_pages %} {% blocktranslate with number=page.number total=page.paginator.num_pages %}Page {{ number }} of {{ total }}; the downloads have every student.{% endblocktranslate %}{% endif %}</p>
+      {% include "reports/_table.html" with table=table %}
+      {% if page.has_other_pages %}
+        <nav aria-label="{% translate 'Pages' %}" class="usa-pagination sympraxi-no-print">
+          <ul class="usa-pagination__list">
+            {% if page.has_previous %}
+              <li class="usa-pagination__item usa-pagination__arrow">
+                <a href="?{% if page_query %}{{ page_query }}&amp;{% endif %}page={{ page.previous_page_number }}" class="usa-pagination__link usa-pagination__previous-page"><span class="usa-pagination__link-text">{% translate "Previous" %}</span></a>
+              </li>
+            {% endif %}
+            <li class="usa-pagination__item usa-pagination__page-no">
+              <span class="usa-pagination__button usa-current" aria-current="page">{% blocktranslate with number=page.number total=page.paginator.num_pages %}Page {{ number }} of {{ total }}{% endblocktranslate %}</span>
+            </li>
+            {% if page.has_next %}
+              <li class="usa-pagination__item usa-pagination__arrow">
+                <a href="?{% if page_query %}{{ page_query }}&amp;{% endif %}page={{ page.next_page_number }}" class="usa-pagination__link usa-pagination__next-page"><span class="usa-pagination__link-text">{% translate "Next" %}</span></a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+    {% else %}
+      <p>{% translate "No students had appointments in this period." %}</p>
+    {% endif %}
+  {% endif %}
+{% endblock content %}

@@ -30,6 +30,9 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_manage_blocks": can(request.user, Action.MANAGE_BLOCKS, center),
         "can_manage_forms": can(request.user, Action.MANAGE_FORMS, center),
         "can_view_survey_results": can(request.user, Action.VIEW_SURVEY_RESULTS, center),
+        "can_view_statistics": can(request.user, Action.VIEW_STATISTICS, center),
+        "can_view_master_lists": can(request.user, Action.VIEW_MASTER_LISTS, center),
+        "can_export_center": can(request.user, Action.EXPORT_CENTER, center),
         "asks_registration": can(request.user, Action.ANSWER_OWN_FORMS, center)
         and Form.objects.filter(
             center=center,

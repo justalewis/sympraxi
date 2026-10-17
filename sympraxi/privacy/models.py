@@ -50,6 +50,10 @@ ACTION_LABELS = {
     "forms.answered": _("Answered a registration or intake form"),
     "forms.answers_viewed": _("Read a student's registration or intake answers"),
     "forms.survey_settings_changed": _("Changed when the survey goes out"),
+    "reports.list_viewed": _("Viewed a list of appointments or students"),
+    "reports.list_exported": _("Downloaded a list of appointments or students"),
+    "reports.center_export_requested": _("Asked for a full export of the center"),
+    "reports.center_export_downloaded": _("Downloaded the full export of the center"),
 }
 
 

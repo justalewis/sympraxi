@@ -1,0 +1,15 @@
+{% load i18n %}
+<div class="sympraxi-no-print">
+  {% if form.non_field_errors %}
+    <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+      <div class="usa-alert__body"><p class="usa-alert__text">{{ form.non_field_errors|join:" " }}</p></div>
+    </div>
+  {% endif %}
+  <form class="sympraxi-filters" method="get">
+    {% include "includes/field.html" with field=form.term %}
+    {% include "includes/field.html" with field=form.first %}
+    {% include "includes/field.html" with field=form.last %}
+    {% include "includes/field.html" with field=form.schedule %}
+    <button class="usa-button" type="submit">{% translate "Show" %}</button>
+  </form>
+</div>

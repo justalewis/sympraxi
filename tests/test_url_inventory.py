@@ -30,6 +30,7 @@ from tests.attendance_world import add_attendance
 from tests.factories import CenterFactory
 from tests.forms_world import SURVEY_ANSWERS, add_forms, values
 from tests.records_world import add_records
+from tests.reports_world import add_reports
 from tests.scheduling_world import World, build_world
 
 # accounts:local_login is the break-glass password sign-in. It is public like the
@@ -126,6 +127,13 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "forms:student_registration": (Action.VIEW_REGISTRATION, "student_membership"),
     "forms:survey_settings": (Action.MANAGE_FORMS, "center"),
     "forms:survey_results": (Action.VIEW_SURVEY_RESULTS, "center"),
+    # Reports. Each downloads from its own address with ?format=.
+    "reports:statistics": (Action.VIEW_STATISTICS, "center"),
+    "reports:utilization": (Action.VIEW_STATISTICS, "center"),
+    "reports:appointment_list": (Action.VIEW_MASTER_LISTS, "center"),
+    "reports:student_list": (Action.VIEW_MASTER_LISTS, "center"),
+    "reports:center_export": (Action.EXPORT_CENTER, "center"),
+    "reports:center_export_download": (Action.EXPORT_CENTER, "center_export"),
 }
 
 
@@ -189,6 +197,7 @@ URL_KWARGS = {
     "block": "block_id",
     "form": "form_id",
     "question": "question_id",
+    "center_export": "export_id",
 }
 
 # Pages that need a chosen open time in the query string.
@@ -231,7 +240,7 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return add_forms(add_attendance(add_records(build_world(center))))
+    return add_reports(add_forms(add_attendance(add_records(build_world(center)))))
 
 
 def test_every_url_is_classified() -> None:

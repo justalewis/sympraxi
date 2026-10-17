@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Statistics" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Statistics" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Statistics" %}</h1>
+  <p class="sympraxi-no-print">{% translate "Appointments, visits and session topics for a term or a range of dates. A visit is one student in one appointment, so a group of four is four visits. Survey answers aren't here: they're counted on the survey results page, by term." %}</p>
+  {% include "reports/_period_filters.html" %}
+  {% if report %}
+    <p class="sympraxi-report-period"><strong>{{ period.label }}</strong>. {{ period.schedule_label }}.</p>
+    {% include "reports/_downloads.html" %}
+    {% for table in report.tables %}
+      <section class="sympraxi-report-section" aria-labelledby="table-{{ table.name }}">
+        <h2 id="table-{{ table.name }}">{{ table.title }}</h2>
+        {% include "reports/_table.html" %}
+      </section>
+    {% endfor %}
+  {% endif %}
+{% endblock content %}

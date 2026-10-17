@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Appointment list" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Appointment list" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Appointment list" %}</h1>
+  <div class="sympraxi-no-print">
+    <p>{% translate "Every appointment on a day or in a week, on one schedule or all of them, to print for the front desk. Printing leaves out the site's menus and these filters." %}</p>
+    <form class="sympraxi-filters" method="get">
+      {% include "includes/field.html" with field=form.date %}
+      {% include "includes/field.html" with field=form.span %}
+      {% include "includes/field.html" with field=form.schedule %}
+      {% include "includes/field.html" with field=form.canceled %}
+      <button class="usa-button" type="submit">{% translate "Show" %}</button>
+    </form>
+  </div>
+  <p class="sympraxi-report-period"><strong>{{ choice.label }}</strong>. {% if choice.schedule %}{{ choice.schedule.name }}{% else %}{% translate "Every schedule" %}{% endif %}.{% if choice.include_canceled %} {% translate "Canceled appointments are included." %}{% endif %}</p>
+  {% include "reports/_downloads.html" %}
+  {% if found.truncated %}
+    <div class="usa-alert usa-alert--warning usa-alert--slim" role="status">
+      <div class="usa-alert__body"><p class="usa-alert__text">{% blocktranslate %}Only the first {{ limit }} appointments are shown. Choose one day or one schedule to see the rest.{% endblocktranslate %}</p></div>
+    </div>
+  {% endif %}
+  {% for day, appointments in found.days %}
+    <section class="sympraxi-print-day" aria-labelledby="day-{{ forloop.counter }}">
+      <h2 id="day-{{ forloop.counter }}">{{ day|date:"l, F j, Y" }}</h2>
+      <table class="usa-table usa-table--borderless usa-table--stacked sympraxi-report-table">
+        <caption class="usa-sr-only">{% blocktranslate with day=day|date:"l, F j" %}Appointments on {{ day }}{% endblocktranslate %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Time" %}</th>
+            {% if not choice.schedule %}<th scope="col">{% translate "Schedule" %}</th>{% endif %}
+            <th scope="col">{% translate "Tutor" %}</th>
+            <th scope="col">{% translate "Students" %}</th>
+            <th scope="col">{% translate "How" %}</th>
+            <th scope="col">{% translate "Where" %}</th>
+            <th scope="col">{% translate "Status" %}</th>
+            <th scope="col">{% translate "Attendance" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in appointments %}
+            <tr>
+              <th scope="row" data-label="{% translate 'Time' %}"><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=a.pk %}">{{ a.starts_at|time }} {% translate "to" %} {{ a.ends_at|time:"P T" }}</a></th>
+              {% if not choice.schedule %}<td data-label="{% translate 'Schedule' %}">{{ a.schedule.name }}</td>{% endif %}
+              <td data-label="{% translate 'Tutor' %}">{{ a.tutor.display_name }}</td>
+              <td data-label="{% translate 'Students' %}">{% for p in a.shown %}{{ p.student.display_name }}{% if p.student.student_id %} ({{ p.student.student_id }}){% endif %}{% if not forloop.last %}; {% endif %}{% empty %}{% translate "None" %}{% endfor %}</td>
+              <td data-label="{% translate 'How' %}">{{ a.get_modality_display }}</td>
+              <td data-label="{% translate 'Where' %}">{{ a.place|default:"—" }}</td>
+              <td data-label="{% translate 'Status' %}">{{ a.status_label }}</td>
+              <td data-label="{% translate 'Attendance' %}">{% for p in a.shown %}{% if p.attendance_label %}{{ p.student.display_name }}: {{ p.attendance_label }}{% if not forloop.last %}; {% endif %}{% endif %}{% empty %}—{% endfor %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  {% empty %}
+    <p>{% translate "No appointments then." %}</p>
+  {% endfor %}
+{% endblock content %}

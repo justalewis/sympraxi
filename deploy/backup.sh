@@ -20,7 +20,11 @@ umask 077
 mkdir -p "$dest"
 
 docker compose exec -T db pg_dump -U sympraxi -d sympraxi --format=custom >"$dest/database.dump"
-docker compose run --rm --no-deps -T --entrypoint tar web -C /app/media -czf - . >"$dest/media.tar.gz"
+# Full-center exports are left out: each is deleted when its 24-hour download link
+# expires, and a backup kept for a year shouldn't keep it longer. Their data is in
+# the database dump.
+docker compose run --rm --no-deps -T --entrypoint tar web -C /app/media \
+    --exclude=./center-exports -czf - . >"$dest/media.tar.gz"
 docker compose run --rm --no-deps -T web python manage.py showmigrations --plan >"$dest/migrations.txt"
 (cd "$dest" && sha256sum database.dump media.tar.gz migrations.txt >SHA256SUMS)
 

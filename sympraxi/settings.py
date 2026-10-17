@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "sympraxi.scheduling",
     "sympraxi.records",
     "sympraxi.forms",
+    "sympraxi.reports",
 ]
 
 MIDDLEWARE = [
@@ -121,15 +122,27 @@ CACHES = {"default": env.cache("CACHE_URL", default="dbcache://sympraxi_cache")}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
-}
 STATIC_URL = "/static/"
 STATIC_ROOT = env.path("SYMPRAXI_STATIC_ROOT", default=BASE_DIR / "staticfiles")
 STATICFILES_DIRS = [BASE_DIR / "sympraxi" / "static"]
 MEDIA_URL = "/media/"
 MEDIA_ROOT = env.path("SYMPRAXI_MEDIA_ROOT", default=BASE_DIR / "media")
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    # Full-center exports (sympraxi/reports/center_export.py). Never served by the
+    # web server: they download through a page that checks who is asking, and the
+    # scheduler deletes each one when its link expires. backup.sh leaves them out.
+    "exports": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {
+            "location": Path(str(MEDIA_ROOT)) / "center-exports",
+            "base_url": None,
+            "file_permissions_mode": 0o600,
+            "directory_permissions_mode": 0o700,
+        },
+    },
+}
 
 TASKS = {"default": {"BACKEND": "django_tasks_db.DatabaseBackend"}}
 

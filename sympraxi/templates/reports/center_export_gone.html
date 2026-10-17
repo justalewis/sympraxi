@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "This export can't be downloaded" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Full export" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "This export can't be downloaded" %}</h1>
+  <p>{% blocktranslate count n=link_hours %}An export can be downloaded for {{ n }} hour after it's ready, and then its file is deleted. This one has expired, or isn't ready yet.{% plural %}An export can be downloaded for {{ n }} hours after it's ready, and then its file is deleted. This one has expired, or isn't ready yet.{% endblocktranslate %}</p>
+  <p><a class="usa-link" href="{% url 'reports:center_export' slug=center.slug %}">{% translate "See the center's exports, or build a new one" %}</a></p>
+{% endblock content %}

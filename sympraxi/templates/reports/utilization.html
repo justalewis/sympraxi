@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Hours offered and booked" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Hours offered and booked" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Hours offered and booked" %}</h1>
+  <p class="sympraxi-no-print">{% translate "How many hours tutors offered, how many students booked, and how many were held with at least one student there. Weeks run Monday to Sunday." %}</p>
+  {% include "reports/_period_filters.html" %}
+  {% if report %}
+    <p class="sympraxi-report-period"><strong>{{ period.label }}</strong>. {{ period.schedule_label }}.</p>
+    {% include "reports/_downloads.html" %}
+    {% for table in report.tables %}
+      {% if table.name == "by_tutor_and_week" %}
+        <details class="sympraxi-details sympraxi-report-section">
+          <summary>{{ table.title }}</summary>
+          {% include "reports/_table.html" %}
+        </details>
+      {% else %}
+        <section class="sympraxi-report-section" aria-labelledby="table-{{ table.name }}">
+          <h2 id="table-{{ table.name }}">{{ table.title }}</h2>
+          {% include "reports/_table.html" %}
+        </section>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endblock content %}

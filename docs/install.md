@@ -139,8 +139,8 @@ Site administrators keep a break-glass sign-in with their password and two-facto
 |---|---|
 | `caddy` | HTTPS, certificates, compression |
 | `web` | The Django application (Gunicorn) |
-| `worker` | Background jobs, such as sending email |
-| `scheduler` | Each minute, sends reminder emails and flags possible no-shows |
+| `worker` | Background jobs, such as sending email and building full-center exports |
+| `scheduler` | Each minute, sends reminder emails, flags possible no-shows and deletes expired exports |
 | `db` | PostgreSQL 18 |
 
 Data lives in Docker volumes: `pgdata` (the database), `media` (uploads), and `caddy_data` (certificates).
@@ -169,6 +169,12 @@ Nothing to set up on the server. Directors build their center's forms in Symprax
 Directors add these under **Forms** too. Session-report questions appear on the session record form for tutors; only staff who read records see the answers, unless a director marks a question for the student. A survey goes to students after sessions they came to, either when the tutor finalizes the record or a set time after the appointment ends (**When surveys go out**, on the Forms page). Results are under **Survey results** on the center page, by term, once at least five people have answered in a term.
 
 The `scheduler` service sends the invitations and the `worker` service sends their emails, so both must be running; `install.sh` starts them. Links start with `SYMPRAXI_BASE_URL`, like reminders. A survey link opens without signing in and works once, for 14 days. The answers are stored without the student's name, appointment or time of day, and the `web` service's logs write `/survey/[link]/` in place of each link. Someone with direct access to the database could still work out who answered on a day when few students did, so keep database access to the people who run the server. If you add an access log to Caddy, leave `/survey/` paths out of it.
+
+## Reports and the full export
+
+Nothing to set up for the reports. They're under **Reports** on the center page. Front desk staff and directors see the appointment list for a day or a week and the student list; directors also see statistics, hours offered and booked, and the full export. Each report downloads as CSV, Excel or JSON.
+
+The `worker` service builds a full export and saves it in the `media` volume under `center-exports/`, where only the app's user can read it. Its download link works for 24 hours, and then the `scheduler` deletes the file. Caddy doesn't serve that folder: the file downloads only through Sympraxi, to a director who is signed in, and each download goes in the audit log. `backup.sh` leaves the folder out. The worker writes the ZIP to a temporary file first and then copies it into the volume, so while it builds it needs room for one copy in the container's `/tmp` and one in the `media` volume.
 
 ## Backups
 

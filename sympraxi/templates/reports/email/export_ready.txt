@@ -1,0 +1,10 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with center=center.name %}The full export of {{ center }} you asked for is ready.{% endblocktranslate %}
+
+{% blocktranslate with until=export.expires_at|date:"l, F j, Y" time=export.expires_at|time:"P T" %}Download it from the center's export page before {{ until }} at {{ time }}. After that the file is deleted.{% endblocktranslate %}
+
+{{ url }}
+
+{% translate "You'll need to sign in. The file holds education records protected by FERPA, so keep it somewhere only people who need it can reach." %}
+
+{{ SITE_NAME }}
+{% endautoescape %}

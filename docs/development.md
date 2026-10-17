@@ -31,6 +31,8 @@ It also sets up a registration form and an intake form with a follow-up question
 
 It also sets up session-report questions, answered in the demo student's two written-up records (the student sees one of the answers on My writing), and a survey with six anonymous responses this term, so **Survey results** has something to show. It prints a survey link for the demo student that opens without signing in and works once.
 
+The demo's appointments give the pages under **Reports** something to show. A full export of the center is built by `db_worker` and saved under `media/center-exports/`; without the worker running, it waits in the queue.
+
 ## The scheduler
 
 Reminder emails, survey invitations and possible no-show flags come from a third process, beside `runserver` and `db_worker`:
@@ -117,11 +119,17 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/forms/tasks.py` | The survey email, sent by the task worker, which makes the link's token |
 | `sympraxi/forms/survey_views.py` | The survey page opened from the emailed link, without signing in |
 | `sympraxi/forms/migrations/0004_report_answers_locked.py` | The triggers that lock report answers on final records and keep survey responses anonymous |
+| `sympraxi/reports/statistics.py` | Statistics by term or dates: visits by outcome, tutor, modality and kind, first visits, topics, all counted in PostgreSQL |
+| `sympraxi/reports/utilization.py` | Hours offered, booked and attended, by schedule, tutor and week |
+| `sympraxi/reports/lists.py` | The front desk's appointment list and the student list with visit counts |
+| `sympraxi/reports/tables.py` | Report tables and their CSV, XLSX and JSON files, with the guard against spreadsheet formulas |
+| `sympraxi/reports/center_export.py` | The full-center export ZIP, and deleting it when its link expires |
 | `tests/test_policy_matrix.py` | Every role against every action, written out by hand |
 | `tests/test_url_inventory.py` | Fails if a new URL isn't assigned a permission |
 | `tests/records_world.py` | Builders for session-record tests: topics, resources, appointments, records |
 | `tests/attendance_world.py` | A no-show, a possible no-show and a booking block, for attendance page tests |
 | `tests/forms_world.py` | Builders for form tests: forms from question specs, answers by label, posted form data, report answers, anonymous survey responses and survey links |
+| `tests/reports_world.py` | A term of appointments with every outcome, whose report counts are written out by hand |
 | `tests/sso_idp.py` | A fake Entra ID and Google for SSO tests; nothing goes over the network |
 | `tests/e2e/` | Browser tests: axe accessibility and Content Security Policy |
 | `tests/load/` | The first-Monday load test (`python -m tests.load run`) and its own checks |

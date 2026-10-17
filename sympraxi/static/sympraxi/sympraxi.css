@@ -350,3 +350,53 @@
   color: #005ea2;
   text-decoration: underline;
 }
+
+/* --- Reports -------------------------------------------------------------- */
+
+.sympraxi-report-section {
+  margin-top: 2rem;
+}
+
+.sympraxi-content.usa-prose .sympraxi-report-section,
+.sympraxi-content.usa-prose .sympraxi-print-day,
+.sympraxi-content.usa-prose .sympraxi-report-table {
+  max-width: none;
+}
+
+.sympraxi-report-table .sympraxi-number {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sympraxi-downloads .usa-link {
+  white-space: nowrap;
+}
+
+/* The master lists print on paper: no menus or filters, column headings on every
+   page, rows kept whole, and each day of a week on its own page. */
+@media print {
+  .sympraxi-report-table {
+    font-size: 10pt;
+  }
+
+  .sympraxi-report-table thead {
+    display: table-header-group;
+  }
+
+  .sympraxi-report-table tr {
+    break-inside: avoid;
+  }
+
+  .sympraxi-print-day + .sympraxi-print-day {
+    break-before: page;
+  }
+
+  .sympraxi-report-table a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .sympraxi-content.usa-prose {
+    max-width: none;
+  }
+}

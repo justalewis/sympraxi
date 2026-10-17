@@ -1,0 +1,19 @@
+{% load i18n report_tables %}
+<table class="usa-table usa-table--borderless usa-table--stacked sympraxi-report-table">
+  <caption class="usa-sr-only">{{ table.title }}{% if caption_extra %}, {{ caption_extra }}{% endif %}</caption>
+  <thead>
+    <tr>
+      {% for column in table.columns %}<th scope="col"{% if column.numeric %} class="sympraxi-number"{% endif %}>{{ column.label }}</th>{% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in table|cells %}
+      <tr>
+        {% for value, column, header in row %}{% if header %}<th scope="row" data-label="{{ column.label }}">{{ value|shown }}</th>{% else %}<td data-label="{{ column.label }}"{% if column.numeric %} class="sympraxi-number"{% endif %}>{{ value|shown }}</td>{% endif %}{% endfor %}
+      </tr>
+    {% empty %}
+      <tr><td colspan="{{ table.columns|length }}">{% translate "Nothing to show for this period." %}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% if table.note %}<p class="usa-hint">{{ table.note }}</p>{% endif %}

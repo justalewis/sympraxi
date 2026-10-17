@@ -16,6 +16,7 @@ from sympraxi.core import policy
 from sympraxi.core.policy import Action
 from sympraxi.forms.models import FormKind
 from sympraxi.records.models import SessionRecord, WritingProject
+from sympraxi.reports.models import CenterExport
 from sympraxi.scheduling.models import (
     Appointment,
     AppointmentStatus,
@@ -82,7 +83,20 @@ FORMS_ACTIONS = [
     Action.VIEW_SURVEY_RESULTS,
 ]
 
-ACTIONS = CENTER_ACTIONS + SCHEDULING_ACTIONS + ATTENDANCE_ACTIONS + RECORDS_ACTIONS + FORMS_ACTIONS
+REPORTS_ACTIONS = [
+    Action.VIEW_STATISTICS,
+    Action.VIEW_MASTER_LISTS,
+    Action.EXPORT_CENTER,
+]
+
+ACTIONS = (
+    CENTER_ACTIONS
+    + SCHEDULING_ACTIONS
+    + ATTENDANCE_ACTIONS
+    + RECORDS_ACTIONS
+    + FORMS_ACTIONS
+    + REPORTS_ACTIONS
+)
 
 # fmt: off
 EXPECTED_IN_OWN_CENTER = {
@@ -158,6 +172,21 @@ EXPECTED_FORMS = {
     "director":    (1,     0,      1,      1,      1,        1),
     "site_admin":  (0,     0,      0,      0,      0,        0),
 }
+
+# Reports. Statistics and hours name tutors, not students, and are for directors.
+# The master lists name students and are for the front desk and directors. Only
+# directors export the whole center. Site administrators get none: the export
+# holds every session record, and the lists and statistics are about students.
+EXPECTED_REPORTS = {
+    #              statistics  master  export
+    #                          lists   center
+    "none":        (0,         0,      0),
+    "student":     (0,         0,      0),
+    "tutor":       (0,         0,      0),
+    "front_desk":  (0,         1,      0),
+    "director":    (1,         1,      1),
+    "site_admin":  (0,         0,      0),
+}
 # fmt: on
 
 CASES = [
@@ -168,6 +197,7 @@ CASES = [
         (EXPECTED_ATTENDANCE, ATTENDANCE_ACTIONS),
         (EXPECTED_RECORDS, RECORDS_ACTIONS),
         (EXPECTED_FORMS, FORMS_ACTIONS),
+        (EXPECTED_REPORTS, REPORTS_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)
@@ -666,4 +696,36 @@ def test_someone_elses_answers_are_hidden_not_forbidden(person_with_role, center
     with pytest.raises(PermissionDenied):
         policy.get_for_action(
             student, Action.VIEW_REGISTRATION, Membership.objects.all(), pk=other.pk
+        )
+
+
+# --- Reports ----------------------------------------------------------------------------
+
+# (role, action, expected) for one of the center's exports, asked for by another
+# director. Any director of the center may download it; no one else may.
+# fmt: off
+EXPORT_CASES = [
+    ("director",   Action.EXPORT_CENTER, True),
+    ("front_desk", Action.EXPORT_CENTER, False),
+    ("tutor",      Action.EXPORT_CENTER, False),
+    ("student",    Action.EXPORT_CENTER, False),
+    ("site_admin", Action.EXPORT_CENTER, False),
+    ("none",       Action.EXPORT_CENTER, False),
+]
+# fmt: on
+
+
+@pytest.mark.parametrize(("role", "action", "expected"), EXPORT_CASES)
+def test_export_access(person_with_role, center, role, action, expected) -> None:
+    export = CenterExport.objects.create(center=center, requested_by=UserFactory())
+    user = person_with_role(role, center)
+    assert policy.can(user, action, export) is expected
+
+
+def test_an_export_from_another_center_is_hidden(person_with_role, center, other_center) -> None:
+    export = CenterExport.objects.create(center=other_center)
+    director = person_with_role("director", center)
+    with pytest.raises(Http404):
+        policy.get_for_action(
+            director, Action.EXPORT_CENTER, CenterExport.objects.all(), pk=export.pk
         )

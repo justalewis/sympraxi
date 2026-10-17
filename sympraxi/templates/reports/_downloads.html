@@ -1,0 +1,5 @@
+{% load i18n %}
+<p class="sympraxi-downloads sympraxi-no-print">
+  <span id="downloads-label">{% translate "Download this report:" %}</span>
+  {% for label, url in downloads %}<a class="usa-link" href="{{ url }}" aria-describedby="downloads-label">{{ label }}</a>{% if not forloop.last %} · {% endif %}{% endfor %}
+</p>

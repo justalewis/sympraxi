@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Full export of the center" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Full export" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Full export of the center" %}</h1>
+  <p>{% blocktranslate with center=center.name %}One ZIP file with everything {{ center }} keeps: its people and roles, terms, schedules and tutors' hours, every appointment and who came, exemptions and booking blocks, writing projects, every session record with its staff notes and amendments, the forms and the answers to them, and the audit log. The files are JSON, with CSV copies of the appointments and the audit log.{% endblocktranslate %}</p>
+  <p>{% translate "Survey answers are in it only as the survey results page counts them, by term, and only for terms with at least five responses. Single responses are never listed, so no one can tell who gave them." %}</p>
+  <p>{% blocktranslate count n=link_hours %}It takes a few minutes to build. We'll email you when it's ready, and it can be downloaded from this page for {{ n }} hour. Then the file is deleted. Asking for it and every download are recorded in the audit log.{% plural %}It takes a few minutes to build. We'll email you when it's ready, and it can be downloaded from this page for {{ n }} hours. Then the file is deleted. Asking for it and every download are recorded in the audit log.{% endblocktranslate %}</p>
+  <div class="usa-alert usa-alert--warning usa-alert--slim">
+    <div class="usa-alert__body"><p class="usa-alert__text">{% translate "The file holds education records protected by FERPA. Keep it somewhere only people with a legitimate educational interest can reach, and delete it when you no longer need it." %}</p></div>
+  </div>
+  {% if building %}
+    <p>{% translate "An export is being built now. Reload this page to see when it's ready." %}</p>
+  {% else %}
+    <form method="post" class="sympraxi-form-actions">
+      {% csrf_token %}
+      <button class="usa-button" type="submit">{% translate "Build a new export" %}</button>
+    </form>
+  {% endif %}
+
+  <h2>{% translate "Recent exports" %}</h2>
+  {% if exports %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Recent exports, newest first" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Asked for" %}</th>
+          <th scope="col">{% translate "By" %}</th>
+          <th scope="col">{% translate "Status" %}</th>
+          <th scope="col">{% translate "Download" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for export in exports %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Asked for' %}"><time datetime="{{ export.requested_at|date:'c' }}">{{ export.requested_at|date:"SHORT_DATETIME_FORMAT" }}</time></th>
+            <td data-label="{% translate 'By' %}">{% if export.requested_by %}{{ export.requested_by.display_name }}{% else %}—{% endif %}</td>
+            <td data-label="{% translate 'Status' %}">{{ export.get_status_display }}</td>
+            <td data-label="{% translate 'Download' %}">{% if export.status == ExportStatus.READY and export.expires_at > now %}<a class="usa-link" href="{% url 'reports:center_export_download' slug=center.slug export_id=export.pk %}">{% blocktranslate with size=export.size|filesizeformat %}Download the ZIP file ({{ size }}){% endblocktranslate %}</a><br><span class="usa-hint">{% blocktranslate with until=export.expires_at|date:"SHORT_DATETIME_FORMAT" %}Until {{ until }}{% endblocktranslate %}</span>{% else %}—{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "No one has exported this center yet." %}</p>
+  {% endif %}
+{% endblock content %}
