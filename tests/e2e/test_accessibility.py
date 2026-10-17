@@ -443,7 +443,8 @@ def test_a_tutor_writes_and_finalizes_a_record_by_keyboard(browser, live_server,
     page.keyboard.press("Enter")
     page.wait_for_selector("#attached-resources >> text=Our thesis handout")
     assert "Attached Our thesis handout" in page.locator("#resource-status").inner_text()
-    assert page.locator("#attached-empty").is_hidden()
+    # htmx applies the swapped-in class after its settle delay (20 ms), so wait for it.
+    page.wait_for_selector("#attached-empty", state="hidden")
 
     # The new row's note box is the next thing to type in.
     page.focus("#attached-resources textarea")
