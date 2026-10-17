@@ -56,6 +56,25 @@ The booking engine's property tests (`tests/test_booking_properties.py`) run a s
 HYPOTHESIS_PROFILE=thorough uv run pytest tests/test_booking_properties.py
 ```
 
+## Load test
+
+The Phase 1 exit needs a first-Monday rush, about 500 students booking within ten minutes, with no double bookings and acceptable response times. `tests/load/` runs one against a real server and PostgreSQL:
+
+```bash
+DATABASE_URL=postgresql://postgres@127.0.0.1:5432/sympraxi_loadtest uv run python -m tests.load run
+```
+
+It takes about twelve minutes. The database's name must contain `load`, because the test drops and recreates it. Then it:
+
+1. Migrates, collects the static files and builds a center (`tests/load/world.py`): three schedules (in person, online, and groups of four), 24 tutors on overlapping shifts, eight of them on two schedules, three front desk workers and 500 students, all already signed in.
+2. Starts three web workers the way the Dockerfile runs Gunicorn (separate processes sharing one socket, each answering one request at a time), plus `db_worker` and the scheduler. Gunicorn doesn't run on Windows, so `tests/load/server.py` does this with Django's own request handler. The settings are the production ones, without HTTPS, and emails go to a dummy backend.
+3. Sends the students through the real pages, 30 percent of them in the first minute: the schedules page, open times, the booking page, then the form. They want the same days and hours, some want two or three appointments, and 5 percent double-click the button. The front desk books for students and opens the day sheet the whole time.
+4. Checks the database with its own SQL (`tests/load/check.py`): no tutor or student double-booked, no group over its size, no tutor cap or student limit exceeded when each booking was made, notice and horizon kept, every appointment inside its tutor's hours, and the database holding exactly the appointments people were told they had. Every refusal must have shown a message.
+
+`report.md` in the output folder (`sympraxi-load` in the system temp folder unless you pass `--out`) gives the p50, p95 and p99 response time of each page, the refusals by message, lock waits and deadlocks from PostgreSQL's statistics, and the email queue. The run exits with 1 if any check fails, any request gets a server error or no answer, a refusal has no message, or a page's p95 is over 1 second or its p99 over 2 seconds (`--p95-ms`, `--p99-ms`).
+
+Useful options: `--students`, `--duration` (seconds over which students arrive), `--think 0` (no pauses between pages, a harder run), `--workers`, `--sign-in 0.5` (half the students sign in with a password first) and `--seed`. `--students 20 --duration 30 --think 0.2` checks the tool itself in about two minutes. To book against a server you start yourself, such as the Docker stack, run `prepare`, start the server with the database and secret key it prints, then `run --url http://...`. `check --out <folder>` checks the database again and rewrites the report, as long as no later run has replaced the database. `tests/load/test_load_tool.py`, part of the normal test run, makes sure the checks catch what they should and that the driver still finds its way through the booking pages.
+
 ## Where things are
 
 | Path | What |
@@ -86,6 +105,7 @@ HYPOTHESIS_PROFILE=thorough uv run pytest tests/test_booking_properties.py
 | `tests/attendance_world.py` | A no-show, a possible no-show and a booking block, for attendance page tests |
 | `tests/sso_idp.py` | A fake Entra ID and Google for SSO tests; nothing goes over the network |
 | `tests/e2e/` | Browser tests: axe accessibility and Content Security Policy |
+| `tests/load/` | The first-Monday load test (`python -m tests.load run`) and its own checks |
 | `deploy/` | Production Compose stack, Caddy, install, backup, restore, upgrade |
 
 ## Adding a page
