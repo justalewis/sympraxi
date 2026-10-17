@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Who outside the center has seen your records" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Record of disclosures" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Who outside the center has seen your records" %}</h1>
+  <p>{% translate "When anyone outside the college's own officials asks for your records at this center, or receives them, the center records it here, as FERPA requires. Sharing among the center's own staff, and with you, isn't listed." %}</p>
+  {% translate "Nobody outside the center has asked for or received your records." as empty %}
+  {% include "privacy/_disclosure_list.html" with empty=empty %}
+  {% if center.contact_email %}<p>{% blocktranslate with email=center.contact_email %}Questions? Write to {{ email }}.{% endblocktranslate %}</p>{% endif %}
+{% endblock content %}

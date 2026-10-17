@@ -9,8 +9,9 @@ their reasons, and every set of intake answers given for them. The student's
 registration answers are included, earlier ones too (sympraxi/forms/export.py),
 and each session record carries the tutor's answers to the center's
 session-report questions, whether or not the student sees them on My writing.
-Booking blocks are listed with any director's note. Survey answers aren't
-included: they are anonymous and nothing ties them to the student.
+Booking blocks are listed with any director's note, and the student's record
+of disclosures outside the college (34 CFR 99.32) is included. Survey answers
+aren't included: they are anonymous and nothing ties them to the student.
 
 Other students are left out. A group appointment shows how many students it
 had, never who they were (99.12: when a record holds information about more
@@ -26,13 +27,15 @@ from django.utils import timezone
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Membership
 from sympraxi.forms import export as form_export
+from sympraxi.privacy.models import Disclosure
 from sympraxi.records.models import SessionRecord, WritingProject
 from sympraxi.scheduling.models import Block, Participant
 
 FORMAT = "sympraxi.student-record"
 # Version 2 added registration answers and each appointment's intake answers.
 # Version 3 added each session record's answers to the center's report questions.
-VERSION = 3
+# Version 4 added the record of disclosures.
+VERSION = 4
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
@@ -71,6 +74,32 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
             .select_related("schedule", "lifted_by")
             .order_by("created_at")
         ],
+        "disclosures": [_disclosure(d) for d in disclosures(membership)],
+    }
+
+
+def disclosures(membership: Membership) -> QuerySet[Disclosure]:
+    return (
+        Disclosure.objects.filter(center=membership.center, student=membership.user)
+        .select_related("recorded_by")
+        .order_by("recorded_at")
+    )
+
+
+def _disclosure(d: Disclosure) -> dict[str, Any]:
+    return {
+        "id": str(d.id),
+        "disclosed": d.disclosed,
+        "requested_on": d.requested_on.isoformat() if d.requested_on else None,
+        "disclosed_on": d.disclosed_on.isoformat() if d.disclosed_on else None,
+        "party": d.party,
+        "legitimate_interest": d.interest,
+        "basis": d.get_basis_display(),
+        "records": d.records,
+        "note": d.note,
+        "corrects": str(d.corrects_id) if d.corrects_id else None,
+        "recorded_by": _person(d.recorded_by),
+        "recorded_at": _when(d.recorded_at),
     }
 
 

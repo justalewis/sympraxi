@@ -109,6 +109,10 @@
     <p>{% translate "None." %}</p>
   {% endif %}
 
+  <h2>{% translate "Record of disclosures" %}</h2>
+  {% translate "None." as empty %}
+  {% include "privacy/_disclosure_list.html" with entries=disclosures empty=empty %}
+
   <h2>{% translate "Session records" %}</h2>
   {% for rec in records %}
     <article class="sympraxi-record" aria-labelledby="record-{{ rec.pk }}">

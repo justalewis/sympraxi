@@ -38,6 +38,7 @@ from sympraxi.scheduling.models import Attendance, Block, Participant
 from sympraxi.scheduling.timeutils import local_date
 from tests import sso_idp
 from tests.attendance_world import add_attendance
+from tests.disclosure_world import add_disclosures
 from tests.factories import (
     TOTP_SECRET,
     CenterFactory,
@@ -211,6 +212,9 @@ PAGES = [
     ("director", "/centers/{slug}/email/"),
     ("director", "/centers/{slug}/email/sent/"),
     ("director", "/centers/{slug}/email/sent/{mass_email}/"),
+    # Record of disclosures (each world's student has one entry)
+    ("director", "/centers/{slug}/students/{student_membership}/disclosures/"),
+    ("student", "/centers/{slug}/my-writing/disclosures/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -273,16 +277,18 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
                 extra_data={"id_token": sso_idp.entra_claims(email=user.email)},
             )
         sign_in(context, user)
-    world = add_news(
-        add_time_clock(
-            add_reports(
-                add_forms(
-                    add_attendance(
-                        add_records(
-                            build_world(
-                                center,
-                                student=user if who == "student" else None,
-                                tutor=user if who == "tutor" else None,
+    world = add_disclosures(
+        add_news(
+            add_time_clock(
+                add_reports(
+                    add_forms(
+                        add_attendance(
+                            add_records(
+                                build_world(
+                                    center,
+                                    student=user if who == "student" else None,
+                                    tutor=user if who == "tutor" else None,
+                                )
                             )
                         )
                     )

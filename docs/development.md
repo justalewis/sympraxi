@@ -88,7 +88,7 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | Path | What |
 |---|---|
 | `sympraxi/core/policy.py` | Every permission rule. Start here before adding a view |
-| `sympraxi/privacy/` | Audit log (append-only, enforced by a database trigger) |
+| `sympraxi/privacy/` | Audit log and each student's record of disclosures, both append-only through database triggers |
 | `sympraxi/accounts/` | User model, sign-up rules, the staff two-factor gate |
 | `sympraxi/accounts/sso.py` | What a single sign-on login must prove; `sso_config.py` builds the providers from the environment |
 | `sympraxi/accounts/encryption.py` | Encrypts the two-factor secrets allauth stores, under a key derived from the secret key; `manage.py reencrypt_mfa_secrets` rewrites them after the key changes |

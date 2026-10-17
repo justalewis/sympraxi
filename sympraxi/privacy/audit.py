@@ -35,6 +35,8 @@ class AuditAction(StrEnum):
     PEOPLE_IMPORTED = "access.people_imported"
     ROLES_TURNED_OFF = "access.roles_turned_off"
     AUDIT_LOG_VIEWED = "privacy.audit_log_viewed"
+    DISCLOSURE_RECORDED = "privacy.disclosure_recorded"
+    DISCLOSURES_VIEWED = "privacy.disclosures_viewed"
     APPOINTMENT_BOOKED = "scheduling.appointment_booked"
     APPOINTMENT_JOINED = "scheduling.appointment_joined"
     APPOINTMENT_CHANGED = "scheduling.appointment_changed"

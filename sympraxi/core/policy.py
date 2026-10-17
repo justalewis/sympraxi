@@ -53,6 +53,11 @@ Site administrators don't: the hours are the center's employment records.
 News: directors post announcements on the center's pages and email groups of
 the center's people (`sympraxi/notify/news.py`). Site administrators do
 neither: they run the installation, not the center.
+
+Disclosures: directors keep each student's record of disclosures of their
+records outside the college's own officials (34 CFR 99.32), and the student
+reads their own on My writing. Site administrators don't: it is part of the
+student's record.
 """
 
 from collections.abc import Callable
@@ -118,6 +123,8 @@ class Action(StrEnum):
     VIEW_OWN_WRITING = "records.view_own_writing"
     # Everything the center keeps about one student, for a FERPA inspection request.
     EXPORT_STUDENT_RECORD = "records.export_student"
+    # Read and add to a student's record of disclosures outside the college.
+    RECORD_DISCLOSURES = "privacy.record_disclosures"
     # The center's own link-only resources and its session-record settings.
     MANAGE_RECORDS = "records.manage"
     # Build, preview and publish the center's forms: registration, intake,
@@ -235,6 +242,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.MANAGE_TIME,
             Action.MANAGE_ANNOUNCEMENTS,
             Action.SEND_MASS_EMAIL,
+            Action.RECORD_DISCLOSURES,
         }
     ),
 }

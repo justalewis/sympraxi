@@ -20,7 +20,7 @@ spreadsheet), with `manifest.json` saying what each file holds:
   response, its ID or its date is ever listed, because the order and dates
   could tie an anonymous answer to the student who gave it;
 - the center's own resources, staff time clock entries (removed ones too,
-  marked), and its audit log.
+  marked), every student's record of disclosures, and its audit log.
 
 This is the center's own copy of its records, for its directors only: the
 policy grants `reports.export_center` to directors and never to site
@@ -55,7 +55,7 @@ from sympraxi.core.logs import scrub
 from sympraxi.forms import export as form_export
 from sympraxi.forms import surveys
 from sympraxi.forms.models import Form, FormKind, FormVersion, Response
-from sympraxi.privacy.models import AuditEvent
+from sympraxi.privacy.models import AuditEvent, Disclosure
 from sympraxi.records import export as record_export
 from sympraxi.records.models import AttachedResource, Resource, SessionRecord, WritingProject
 from sympraxi.reports.models import UNFINISHED, CenterExport, ExportStatus
@@ -544,6 +544,13 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
             (
                 columns_of(e)
                 for e in TimeEntry.objects.filter(center=center).order_by("started_at", "pk")
+            ),
+        )
+        w.items(
+            "disclosures.json",
+            (
+                columns_of(d)
+                for d in Disclosure.objects.filter(center=center).order_by("recorded_at", "pk")
             ),
         )
         w.items("audit_events.json", (_audit_item(e) for e in _audit(center)), scrubbed=True)

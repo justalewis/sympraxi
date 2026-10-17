@@ -1,0 +1,31 @@
+{% load i18n %}
+{% if entries %}
+  <table class="usa-table usa-table--borderless usa-table--stacked">
+    <caption class="usa-sr-only">{% translate "Record of disclosures, newest first" %}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{% translate "Who" %}</th>
+        <th scope="col">{% translate "When" %}</th>
+        <th scope="col">{% translate "Which records" %}</th>
+        <th scope="col">{% translate "Why" %}</th>
+        <th scope="col">{% translate "Under" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in entries %}
+        <tr>
+          <th scope="row" data-label="{% translate 'Who' %}">{{ entry.party }}{% if entry.corrects %}<br><span class="usa-tag">{% translate "Correction" %}</span> <span class="usa-hint">{% blocktranslate with earlier=entry.corrects %}corrects {{ earlier }}{% endblocktranslate %}</span>{% endif %}</th>
+          <td data-label="{% translate 'When' %}">
+            {% if entry.requested_on %}{% blocktranslate with day=entry.requested_on|date:"M j, Y" %}Asked {{ day }}{% endblocktranslate %}<br>{% endif %}
+            {% if entry.disclosed %}{% blocktranslate with day=entry.disclosed_on|date:"M j, Y" %}Disclosed {{ day }}{% endblocktranslate %}{% else %}{% translate "Not disclosed" %}{% endif %}
+          </td>
+          <td data-label="{% translate 'Which records' %}">{{ entry.records }}</td>
+          <td data-label="{% translate 'Why' %}">{{ entry.interest }}{% if entry.note %}<br><span class="usa-hint">{{ entry.note }}</span>{% endif %}</td>
+          <td data-label="{% translate 'Under' %}">{{ entry.get_basis_display }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>{{ empty }}</p>
+{% endif %}

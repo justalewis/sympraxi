@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with name=student.display_name %}Disclosures of {{ name }}'s records{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% translate "Record of disclosures" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with name=student.display_name %}Disclosures of {{ name }}'s records{% endblocktranslate %}</h1>
+  <p>{% translate "FERPA asks the college to record each request for, and each disclosure of, a student's records to anyone outside its own officials: who asked or received them, and their legitimate interest (34 CFR 99.32). The student can read this record on their My writing page." %}</p>
+  <p>{% translate "Disclosures to the student, to the center's own staff, and of directory information don't need an entry. Entries can't be changed or deleted; to fix one, add an entry that corrects it." %}</p>
+  {% translate "Nothing has been recorded for this student." as empty %}
+  {% include "privacy/_disclosure_list.html" with empty=empty %}
+
+  <h2>{% translate "Add an entry" %}</h2>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Add the entry" %}</button>
+    </div>
+  </form>
+{% endblock content %}

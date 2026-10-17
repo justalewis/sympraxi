@@ -10,6 +10,9 @@
   {% if can_export %}
     <p><a href="{% url 'records:export' slug=center.slug membership_id=membership.pk %}">{% translate "Export this student's complete record" %}</a></p>
   {% endif %}
+  {% if can_record_disclosures %}
+    <p><a href="{% url 'privacy:disclosures' slug=center.slug membership_id=membership.pk %}">{% translate "Record of disclosures outside the college" %}</a></p>
+  {% endif %}
 
   {% for group in groups %}
     <section class="sympraxi-project" aria-labelledby="project-{{ forloop.counter }}">

@@ -99,6 +99,10 @@ NEWS_ACTIONS = [
     Action.SEND_MASS_EMAIL,
 ]
 
+DISCLOSURE_ACTIONS = [
+    Action.RECORD_DISCLOSURES,
+]
+
 ACTIONS = (
     CENTER_ACTIONS
     + SCHEDULING_ACTIONS
@@ -108,6 +112,7 @@ ACTIONS = (
     + REPORTS_ACTIONS
     + STAFF_ACTIONS
     + NEWS_ACTIONS
+    + DISCLOSURE_ACTIONS
 )
 
 # fmt: off
@@ -226,6 +231,19 @@ EXPECTED_NEWS = {
     "director":    (1,        1),
     "site_admin":  (0,        0),
 }
+
+# The record of disclosures is part of each student's record, kept by directors.
+# Students read their own through VIEW_OWN_WRITING. Site administrators get none.
+EXPECTED_DISCLOSURES = {
+    #              record
+    #              disclosures
+    "none":        (0,),
+    "student":     (0,),
+    "tutor":       (0,),
+    "front_desk":  (0,),
+    "director":    (1,),
+    "site_admin":  (0,),
+}
 # fmt: on
 
 CASES = [
@@ -239,6 +257,7 @@ CASES = [
         (EXPECTED_REPORTS, REPORTS_ACTIONS),
         (EXPECTED_STAFF, STAFF_ACTIONS),
         (EXPECTED_NEWS, NEWS_ACTIONS),
+        (EXPECTED_DISCLOSURES, DISCLOSURE_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)

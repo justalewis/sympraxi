@@ -1,3 +1,4 @@
+import uuid
 from typing import Any
 
 from django.conf import settings
@@ -25,6 +26,8 @@ ACTION_LABELS = {
     "access.people_imported": _("Added people from a CSV file"),
     "access.roles_turned_off": _("Turned off everyone's role of one kind"),
     "privacy.audit_log_viewed": _("Viewed the audit log"),
+    "privacy.disclosure_recorded": _("Recorded a disclosure of a student's records"),
+    "privacy.disclosures_viewed": _("Read a student's record of disclosures"),
     "scheduling.appointment_booked": _("Booked an appointment"),
     "scheduling.appointment_joined": _("Added a student to a group appointment"),
     "scheduling.appointment_changed": _("Changed an appointment"),
@@ -127,3 +130,77 @@ class AuditEvent(models.Model):
     @property
     def action_label(self) -> str:
         return str(ACTION_LABELS.get(self.action, self.action))
+
+
+class DisclosureBasis(models.TextChoices):
+    """The FERPA provision a disclosure without consent relied on (34 CFR 99.31)."""
+
+    OTHER_SCHOOL = "other_school", _("Another school the student is enrolling in (99.31(a)(2))")
+    AUTHORITIES = "authorities", _("Federal, state or local education authorities (99.31(a)(3))")
+    FINANCIAL_AID = "financial_aid", _("Financial aid the student applied for (99.31(a)(4))")
+    STUDIES = "studies", _("An organization doing studies for the college (99.31(a)(6))")
+    ACCREDITING = "accrediting", _("An accrediting organization (99.31(a)(7))")
+    PARENTS = "parents", _("Parents of a dependent student (99.31(a)(8))")
+    SUBPOENA = "subpoena", _("A court order or lawfully issued subpoena (99.31(a)(9))")
+    EMERGENCY = "emergency", _("A health or safety emergency (99.31(a)(10))")
+    CONSENT = "consent", _("The student's signed, written consent (99.30)")
+    OTHER = "other", _("Something else, explained in the note")
+
+
+class Disclosure(models.Model):
+    """One entry in a student's record of disclosures (34 CFR 99.32).
+
+    FERPA asks a school to record each request for, and each disclosure of, a
+    student's education records to someone outside the school's own officials:
+    who asked or received them and their legitimate interest. The student may
+    inspect that record, and it is kept as long as the records are. Entries are
+    append-only (migration 0004); a mistake is fixed by a new entry that
+    `corrects` the old one, so the record shows both.
+
+    Disclosures to the student, to the center's own staff, and of directory
+    information don't need an entry (99.32(d)); recording one anyway does no harm.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    center = models.ForeignKey("centers.Center", on_delete=models.PROTECT, related_name="+")
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="disclosures"
+    )
+    # False for a request that was refused or is still open.
+    disclosed = models.BooleanField(_("records were disclosed"), default=True)
+    requested_on = models.DateField(_("asked on"), null=True, blank=True)
+    disclosed_on = models.DateField(_("disclosed on"), null=True, blank=True)
+    party = models.CharField(_("who asked for or received them"), max_length=200)
+    interest = models.CharField(_("their legitimate interest"), max_length=500)
+    basis = models.CharField(_("under"), max_length=20, choices=DisclosureBasis.choices)
+    records = models.CharField(_("which records"), max_length=300)
+    note = models.CharField(_("note"), max_length=500, blank=True)
+    corrects = models.ForeignKey(
+        "self",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="corrections",
+        verbose_name=_("corrects the entry"),
+    )
+    recorded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="+"
+    )
+    recorded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-recorded_at"]
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(disclosed=False) | models.Q(disclosed_on__isnull=False),
+                name="privacy_disclosure_has_its_date",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(requested_on__isnull=False)
+                | models.Q(disclosed_on__isnull=False),
+                name="privacy_disclosure_has_a_date",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.disclosed_on or self.requested_on}: {self.party}"

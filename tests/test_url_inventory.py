@@ -28,6 +28,7 @@ from sympraxi.forms import surveys
 from sympraxi.forms.models import SurveyInvitation
 from sympraxi.notify import feeds
 from tests.attendance_world import add_attendance
+from tests.disclosure_world import add_disclosures
 from tests.factories import CenterFactory
 from tests.forms_world import SURVEY_ANSWERS, add_forms, values
 from tests.news_world import add_news
@@ -61,6 +62,8 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "centers:roles_off": (Action.MANAGE_MEMBERS, "center"),
     "centers:person": (Action.MANAGE_MEMBERS, "student_membership"),
     "privacy:audit_log": (Action.VIEW_AUDIT_LOG, "center"),
+    "privacy:disclosures": (Action.RECORD_DISCLOSURES, "student_membership"),
+    "privacy:my_disclosures": (Action.VIEW_OWN_WRITING, "center"),
     # Booking
     "scheduling:schedules": (Action.VIEW_SCHEDULES, "center"),
     "scheduling:open_times": (Action.VIEW_SCHEDULES, "schedule"),
@@ -289,8 +292,10 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return add_news(
-        add_time_clock(add_reports(add_forms(add_attendance(add_records(build_world(center))))))
+    return add_disclosures(
+        add_news(
+            add_time_clock(add_reports(add_forms(add_attendance(add_records(build_world(center))))))
+        )
     )
 
 
