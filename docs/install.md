@@ -184,6 +184,10 @@ Nothing to set up on the server. Directors add people on the center's **People**
 
 Someone new gets an account with no password. With single sign-on they just sign in; otherwise they choose "Forgot your password?" on the sign-in page. When `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` is set, only addresses at those domains can be added. The optional welcome email goes out through the `worker` service.
 
+## Announcements and mass email
+
+Nothing to set up on the server. Directors post announcements and email groups of the center's people under **News** on the center page. Mass email goes out through the `worker` service and your SMTP relay, one copy per person, so a large send takes a few minutes and counts against any sending limit your relay has. Ask whoever runs the relay what that limit is before a first email to every student.
+
 ## Calendar feeds
 
 Nothing to set up on the server. Anyone can turn on a private calendar feed under **Account** → **Calendar feed** and subscribe to it in their calendar app. Feed addresses start with the site's address, so calendar apps outside the campus network need to reach the server. If yours is reachable only on campus, feeds work only on campus. The access logs hide each feed's secret part.

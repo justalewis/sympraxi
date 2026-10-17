@@ -425,3 +425,16 @@
   gap: 0.5rem 1.5rem;
   margin-bottom: 1rem;
 }
+
+/* Announcements at the top of the center and schedules pages. */
+.sympraxi-announcements {
+  margin-bottom: 2rem;
+}
+
+/* A mass email's message, on the review and sent pages. */
+.sympraxi-email-preview {
+  border-left: 0.25rem solid #71767a;
+  margin-bottom: 1.5rem;
+  max-width: 40rem;
+  padding: 0 1rem;
+}

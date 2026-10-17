@@ -46,6 +46,7 @@ from tests.factories import (
     give_mfa,
 )
 from tests.forms_world import add_forms
+from tests.news_world import add_news
 from tests.records_world import add_records
 from tests.reports_world import add_reports
 from tests.scheduling_world import build_world
@@ -202,6 +203,14 @@ PAGES = [
     ("director", "/centers/{slug}/time-clock/entries/"),
     ("director", "/centers/{slug}/time-clock/entries/new/"),
     ("director", "/centers/{slug}/time-clock/entries/{time_entry}/"),
+    # News. Every world has a current announcement, so the student's center and
+    # schedules pages above show one.
+    ("director", "/centers/{slug}/announcements/"),
+    ("director", "/centers/{slug}/announcements/new/"),
+    ("director", "/centers/{slug}/announcements/{announcement}/"),
+    ("director", "/centers/{slug}/email/"),
+    ("director", "/centers/{slug}/email/sent/"),
+    ("director", "/centers/{slug}/email/sent/{mass_email}/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -264,15 +273,17 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
                 extra_data={"id_token": sso_idp.entra_claims(email=user.email)},
             )
         sign_in(context, user)
-    world = add_time_clock(
-        add_reports(
-            add_forms(
-                add_attendance(
-                    add_records(
-                        build_world(
-                            center,
-                            student=user if who == "student" else None,
-                            tutor=user if who == "tutor" else None,
+    world = add_news(
+        add_time_clock(
+            add_reports(
+                add_forms(
+                    add_attendance(
+                        add_records(
+                            build_world(
+                                center,
+                                student=user if who == "student" else None,
+                                tutor=user if who == "tutor" else None,
+                            )
                         )
                     )
                 )
@@ -316,6 +327,8 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         survey_token=world.survey_token,
         center_export=world.center_export.pk,
         time_entry=world.time_entry.pk,
+        announcement=world.announcement.pk,
+        mass_email=world.mass_email.pk,
     )
     page = context.new_page()
     return context, page, url
@@ -1199,6 +1212,23 @@ def test_turning_on_a_calendar_feed_by_keyboard(browser, live_server, sign_in) -
     page.keyboard.press("Enter")
     page.wait_for_selector("#feed-address")
     assert page.input_value("#feed-address").endswith(".ics")
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+def test_a_director_checks_a_mass_email_by_keyboard(browser, live_server, sign_in) -> None:
+    """The review page answers a form, so axe checks it here."""
+    context, page, url = open_page(
+        browser, live_server, sign_in, "director", "/centers/{slug}/email/", bypass_csp=True
+    )
+    page.goto(url)
+    page.fill("#id_subject", "Workshop on Thursday")
+    page.fill("#id_body", "Join us at 3.\nBring a draft.")
+    page.get_by_role("button", name="Check it before sending").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("h1:has-text('Check the email before it goes')")
+    assert "Nothing has been sent yet." in page.content()
     results = Axe().run(page, options=AXE_OPTIONS)
     context.close()
     assert results.violations_count == 0, results.generate_report()

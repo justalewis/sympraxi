@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Emails sent" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Emails sent" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Emails sent" %}</h1>
+  <p><a class="usa-button" href="{% url 'news:mass_email' slug=center.slug %}">{% translate "Write an email" %}</a></p>
+  {% if sent %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Emails sent, newest first" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Subject" %}</th>
+          <th scope="col">{% translate "To" %}</th>
+          <th scope="col">{% translate "Sent" %}</th>
+          <th scope="col">{% translate "By" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mass in sent %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Subject' %}"><a href="{% url 'news:mass_email_detail' slug=center.slug mass_email_id=mass.pk %}">{{ mass.subject }}</a></th>
+            <td data-label="{% translate 'To' %}">{{ mass.audience }}</td>
+            <td data-label="{% translate 'Sent' %}">{{ mass.created_at|date:"M j, Y, g:i A" }}</td>
+            <td data-label="{% translate 'By' %}">{% if mass.sent_by %}{{ mass.sent_by.display_name }}{% else %}{% translate "Someone no longer here" %}{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "No emails have been sent from this center yet." %}</p>
+  {% endif %}
+{% endblock content %}

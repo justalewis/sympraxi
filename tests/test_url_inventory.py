@@ -30,6 +30,7 @@ from sympraxi.notify import feeds
 from tests.attendance_world import add_attendance
 from tests.factories import CenterFactory
 from tests.forms_world import SURVEY_ANSWERS, add_forms, values
+from tests.news_world import add_news
 from tests.records_world import add_records
 from tests.reports_world import add_reports
 from tests.scheduling_world import World, build_world
@@ -145,6 +146,13 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "staff:entries": (Action.MANAGE_TIME, "center"),
     "staff:entry_add": (Action.MANAGE_TIME, "center"),
     "staff:entry_edit": (Action.MANAGE_TIME, "time_entry"),
+    # News
+    "news:announcements": (Action.MANAGE_ANNOUNCEMENTS, "center"),
+    "news:announcement_create": (Action.MANAGE_ANNOUNCEMENTS, "center"),
+    "news:announcement_edit": (Action.MANAGE_ANNOUNCEMENTS, "announcement"),
+    "news:mass_email": (Action.SEND_MASS_EMAIL, "center"),
+    "news:mass_email_log": (Action.SEND_MASS_EMAIL, "center"),
+    "news:mass_email_detail": (Action.SEND_MASS_EMAIL, "mass_email"),
 }
 
 
@@ -237,6 +245,8 @@ URL_KWARGS = {
     "question": "question_id",
     "center_export": "export_id",
     "time_entry": "entry_id",
+    "announcement": "announcement_id",
+    "mass_email": "mass_email_id",
 }
 
 # Pages that need a chosen open time in the query string.
@@ -279,7 +289,9 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return add_time_clock(add_reports(add_forms(add_attendance(add_records(build_world(center))))))
+    return add_news(
+        add_time_clock(add_reports(add_forms(add_attendance(add_records(build_world(center))))))
+    )
 
 
 def test_every_url_is_classified() -> None:

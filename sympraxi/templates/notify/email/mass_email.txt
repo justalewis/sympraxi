@@ -1,0 +1,6 @@
+{% load i18n %}{% autoescape off %}{{ mass.body }}
+
+{% blocktranslate with center=center.name %}Sent by {{ center }} in {{ SITE_NAME }}.{% endblocktranslate %}
+{% if student_only %}{% translate "To stop getting news like this from centers where you're a student, turn off center news in your email settings:" %}
+{{ settings_url }}
+{% endif %}{% endautoescape %}

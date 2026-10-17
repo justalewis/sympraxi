@@ -77,6 +77,7 @@ class AuditAction(StrEnum):
     CALENDAR_FEED_STARTED = "notify.calendar_feed_started"
     CALENDAR_FEED_REPLACED = "notify.calendar_feed_replaced"
     CALENDAR_FEED_TURNED_OFF = "notify.calendar_feed_turned_off"
+    MASS_EMAIL_SENT = "notify.mass_email_sent"
 
 
 def client_ip(request: HttpRequest) -> str | None:

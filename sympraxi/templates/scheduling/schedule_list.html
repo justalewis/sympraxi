@@ -5,6 +5,7 @@
   {% translate "Schedules" as current %}
   {% include "scheduling/_breadcrumbs.html" with current=current %}
   <h1>{% translate "Schedules" %}</h1>
+  {% include "notify/_announcements.html" %}
   {% if can_book_own %}
     <p><a href="{% url 'scheduling:my_appointments' slug=center.slug %}">{% translate "See your appointments" %}</a></p>
   {% endif %}

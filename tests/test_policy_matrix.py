@@ -94,6 +94,11 @@ STAFF_ACTIONS = [
     Action.MANAGE_TIME,
 ]
 
+NEWS_ACTIONS = [
+    Action.MANAGE_ANNOUNCEMENTS,
+    Action.SEND_MASS_EMAIL,
+]
+
 ACTIONS = (
     CENTER_ACTIONS
     + SCHEDULING_ACTIONS
@@ -102,6 +107,7 @@ ACTIONS = (
     + FORMS_ACTIONS
     + REPORTS_ACTIONS
     + STAFF_ACTIONS
+    + NEWS_ACTIONS
 )
 
 # fmt: off
@@ -207,6 +213,19 @@ EXPECTED_STAFF = {
     "director":    (1,    1),
     "site_admin":  (0,    0),
 }
+
+# News. Directors post announcements and email groups of the center's people.
+# Site administrators get neither: they run the installation, not the center.
+EXPECTED_NEWS = {
+    #              announce-  mass
+    #              ments      email
+    "none":        (0,        0),
+    "student":     (0,        0),
+    "tutor":       (0,        0),
+    "front_desk":  (0,        0),
+    "director":    (1,        1),
+    "site_admin":  (0,        0),
+}
 # fmt: on
 
 CASES = [
@@ -219,6 +238,7 @@ CASES = [
         (EXPECTED_FORMS, FORMS_ACTIONS),
         (EXPECTED_REPORTS, REPORTS_ACTIONS),
         (EXPECTED_STAFF, STAFF_ACTIONS),
+        (EXPECTED_NEWS, NEWS_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)

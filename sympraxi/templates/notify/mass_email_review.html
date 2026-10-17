@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% translate "Nothing has been sent yet." %}</p>
+  <dl class="sympraxi-summary">
+    <dt>{% translate "To" %}</dt>
+    <dd>{{ reach.label }}</dd>
+    <dt>{% translate "How many" %}</dt>
+    <dd>{% blocktranslate count n=count %}{{ n }} person{% plural %}{{ n }} people{% endblocktranslate %}{% if skipped %}. {% blocktranslate count n=skipped %}{{ n }} more student turned off center news and won't get it.{% plural %}{{ n }} more students turned off center news and won't get it.{% endblocktranslate %}{% endif %}</dd>
+    <dt>{% translate "Subject" %}</dt>
+    <dd>{{ subject }}</dd>
+  </dl>
+  <h2>{% translate "Message" %}</h2>
+  <div class="sympraxi-email-preview">{{ body|linebreaks }}</div>
+
+  <form method="post" class="sympraxi-form-actions">
+    {% csrf_token %}
+    {% for field in form %}{{ field.as_hidden }}{% endfor %}
+    {% if count %}
+      <button class="usa-button" type="submit" name="send" value="1">{% blocktranslate count n=count %}Send to {{ n }} person{% plural %}Send to {{ n }} people{% endblocktranslate %}</button>
+    {% endif %}
+    <button class="usa-button usa-button--outline" type="submit" name="test" value="1">{% translate "Send me a test copy" %}</button>
+    <button class="usa-button usa-button--unstyled" type="submit" name="edit" value="1">{% translate "Change it" %}</button>
+  </form>
+  {% if not count %}<p>{% translate "Nobody fits who you chose, so there's no one to send it to." %}</p>{% endif %}
+{% endblock content %}

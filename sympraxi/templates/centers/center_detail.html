@@ -6,6 +6,7 @@
   {% if my_roles %}
     <p>{% translate "Your roles here:" %} {% for role in my_roles %}<span class="usa-tag">{{ role.label }}</span> {% endfor %}</p>
   {% endif %}
+  {% include "notify/_announcements.html" %}
   {% if can_view_schedules or can_book_own or can_tutor or can_mark_attendance %}
     <h2>{% translate "Appointments" %}</h2>
     <ul class="usa-list">
@@ -40,6 +41,14 @@
       {% if can_view_statistics %}<li><a href="{% url 'reports:statistics' slug=center.slug %}">{% translate "Statistics: appointments, visits and topics" %}</a></li>{% endif %}
       {% if can_view_statistics %}<li><a href="{% url 'reports:utilization' slug=center.slug %}">{% translate "Hours offered and booked" %}</a></li>{% endif %}
       {% if can_export_center %}<li><a href="{% url 'reports:center_export' slug=center.slug %}">{% translate "Full export of the center" %}</a></li>{% endif %}
+    </ul>
+  {% endif %}
+  {% if can_manage_announcements or can_send_mass_email %}
+    <h2>{% translate "News" %}</h2>
+    <ul class="usa-list">
+      {% if can_manage_announcements %}<li><a href="{% url 'news:announcements' slug=center.slug %}">{% translate "Announcements" %}</a></li>{% endif %}
+      {% if can_send_mass_email %}<li><a href="{% url 'news:mass_email' slug=center.slug %}">{% translate "Email people in the center" %}</a></li>{% endif %}
+      {% if can_send_mass_email %}<li><a href="{% url 'news:mass_email_log' slug=center.slug %}">{% translate "Emails sent" %}</a></li>{% endif %}
     </ul>
   {% endif %}
   {% if can_view_members or can_view_audit_log or can_manage_schedules or can_manage_records or can_manage_blocks or can_manage_forms or can_view_survey_results %}

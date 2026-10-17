@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% translate "Each person gets their own copy, so nobody sees anyone else's address. Replies go to the center's contact address, or to you if the center has none." %}</p>
+  <p>{% translate "Students who turned off center news don't get it; staff always do. You'll see how many people it reaches, and can send yourself a test copy, before it goes." %}</p>
+  <p><a href="{% url 'news:mass_email_log' slug=center.slug %}">{% translate "Emails already sent" %}</a></p>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit" name="review" value="1">{% translate "Check it before sending" %}</button>
+    </div>
+  </form>
+{% endblock content %}

@@ -2,6 +2,16 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 1: announcements and mass email (October 2026)
+
+**Announcements are plain text for a span of days.** A director posts one for everyone in the center, for students, or for staff, with a first and a last day (at most a year apart). It shows at the top of the center page, and students also see theirs on the schedules page, where they book. The text is escaped like everything else; line breaks become paragraphs and web addresses become links (Django's `linebreaks` and `urlize`), and nothing else is interpreted, so an announcement can't carry markup or scripts. Announcements aren't records, so changing or deleting one isn't audited. Two new actions, both for directors only: `notify.manage_announcements` and `notify.send_mass_email`.
+
+**Mass email reaches one group, and the director sees how many first.** The groups are students, tutors, front desk staff, directors, all staff, or everyone, and students can be narrowed to those with an appointment (not canceled, and not one they left) in a span of days, on one schedule or all. Writing goes to a review page that says how many people it reaches and how many students it leaves out, offers a test copy to the director alone, and only then sends. Each person gets their own copy, so nobody sees another address, and replies go to the center's contact address, or to the director if the center has none.
+
+**Students can turn off center news; staff can't.** A new setting on the email settings page, on by default, lets a student stop mass email from centers where they're a student. Emails about their own appointments still come. Staff get mass email whatever they chose, because it's about their work, and someone who is both a student and staff in the center counts as staff. A student's copy says how to turn center news off; a staff member's doesn't.
+
+**Every send is logged with who it went to.** The log keeps the subject, the message, the group in words, who sent it and when, how many students were left out, and each recipient. Directors see it under **Emails sent**, so "did they get it?" has an answer months later. Sending is audited (`notify.mass_email_sent`) with the group and the counts, never the message. The request only writes the log; the task worker then queues each person's copy through the same queue as every other email, a few hundred at a time, marking each recipient as it goes, so a worker that stops partway picks up where it left off and nobody gets two copies.
+
 ## Phase 1: private calendar feeds (October 2026)
 
 **One feed per person, across centers.** Anyone signed in can turn on a calendar feed under **Account** → **Calendar feed** and subscribe to it in Google Calendar, Outlook or Apple Calendar. It lists the appointments they booked as a student and the ones they teach as a tutor, in every center where that role is on, from a month ago to six months ahead. Canceled appointments drop out, and calendar apps remove them at their next fetch. The `.ics` file attached to booking emails still works as before; a feed is for people who want every appointment without adding each one.

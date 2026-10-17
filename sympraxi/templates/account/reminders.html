@@ -5,6 +5,7 @@
   <h1>{% translate "Email reminders" %}</h1>
   <p>{% translate "Each schedule decides when reminders go out, for example a day before and an hour before. Reminders never go out for a canceled appointment." %}</p>
   <p>{% translate "A center may also send a short survey after a session you came to. Your answers are anonymous." %}</p>
+  <p>{% translate "Centers sometimes email all their students with news, such as new hours or a workshop. You can turn that off below." %}</p>
   <form class="usa-form usa-form--large" method="post">
     {% csrf_token %}
     {% include "includes/form_fields.html" %}

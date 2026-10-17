@@ -61,7 +61,12 @@ class ReminderSettingsForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["reminders_for_appointments", "reminders_for_tutoring", "survey_emails"]
+        fields = [
+            "reminders_for_appointments",
+            "reminders_for_tutoring",
+            "survey_emails",
+            "center_news_emails",
+        ]
 
     def __init__(self, *args: Any, tutor: bool, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)

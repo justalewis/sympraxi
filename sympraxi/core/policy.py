@@ -49,6 +49,10 @@ Time clock: tutors, front desk staff and directors clock themselves in and out
 and see their own hours. Directors see everyone's timesheets and add, change
 and remove entries, with a reason each time (`sympraxi/staff/timeclock.py`).
 Site administrators don't: the hours are the center's employment records.
+
+News: directors post announcements on the center's pages and email groups of
+the center's people (`sympraxi/notify/news.py`). Site administrators do
+neither: they run the installation, not the center.
 """
 
 from collections.abc import Callable
@@ -143,6 +147,10 @@ class Action(StrEnum):
     CLOCK_OWN = "staff.clock_own"
     # Everyone's timesheets, and adding, changing and removing their entries.
     MANAGE_TIME = "staff.manage_time"
+    # Post, change and delete the center's announcements.
+    MANAGE_ANNOUNCEMENTS = "notify.manage_announcements"
+    # Email a group of the center's people, and see what was sent to whom.
+    SEND_MASS_EMAIL = "notify.send_mass_email"
 
 
 ROLE_GRANTS: dict[Role, frozenset[Action]] = {
@@ -225,6 +233,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.EXPORT_CENTER,
             Action.CLOCK_OWN,
             Action.MANAGE_TIME,
+            Action.MANAGE_ANNOUNCEMENTS,
+            Action.SEND_MASS_EMAIL,
         }
     ),
 }

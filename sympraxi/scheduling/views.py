@@ -29,6 +29,8 @@ from sympraxi.core.policy import Action, can, get_for_action
 from sympraxi.forms import booking as form_questions
 from sympraxi.forms import display as form_answers
 from sympraxi.forms.answering import follow_up_message
+from sympraxi.notify import news
+from sympraxi.notify.models import Audience
 from sympraxi.records import brief
 from sympraxi.records.models import SessionRecord
 from sympraxi.scheduling import attendance, blocks, ics, notifications, services
@@ -126,6 +128,10 @@ def schedule_list(request: HttpRequest, slug: str) -> HttpResponse:
         "can_tutor": can(user, Action.VIEW_OWN_TUTORING, center),
         "Visibility": Visibility,
         "crumbs": crumbs(center)[:1],
+        # Students see their announcements where they book, too.
+        "announcements": [a for a in news.showing(center, user) if a.audience != Audience.STAFF]
+        if can(user, Action.BOOK_OWN, center)
+        else [],
     }
     with timezone.override(center.time_zone):
         return render(request, "scheduling/schedule_list.html", context)

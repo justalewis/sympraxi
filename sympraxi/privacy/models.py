@@ -67,6 +67,7 @@ ACTION_LABELS = {
     "notify.calendar_feed_started": _("Turned on a calendar feed"),
     "notify.calendar_feed_replaced": _("Gave a calendar feed a new address"),
     "notify.calendar_feed_turned_off": _("Turned off a calendar feed"),
+    "notify.mass_email_sent": _("Emailed a group of the center's people"),
 }
 
 

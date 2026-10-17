@@ -68,6 +68,16 @@ class User(AbstractUser):
         default=True,
         help_text=_("The answers are anonymous: the center sees them without your name."),
     )
+    # Emails a center sends to many of its students at once. Emails about the
+    # person's own appointments go out either way, and staff always get them.
+    center_news_emails = models.BooleanField(
+        _("email me news from centers where I'm a student"),
+        default=True,
+        help_text=_(
+            "Announcements a center emails to its students, such as new hours or "
+            "workshops. Emails about your own appointments come either way."
+        ),
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: ClassVar[list[str]] = ["full_name"]

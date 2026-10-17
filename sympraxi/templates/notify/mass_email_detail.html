@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ mass.subject }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=mass.subject %}
+  <h1>{{ mass.subject }}</h1>
+  <dl class="sympraxi-summary">
+    <dt>{% translate "To" %}</dt>
+    <dd>{{ mass.audience }}</dd>
+    <dt>{% translate "Sent" %}</dt>
+    <dd>{{ mass.created_at|date:"l, F j, Y, g:i A" }}{% if mass.sent_by %}, {% blocktranslate with name=mass.sent_by.display_name %}by {{ name }}{% endblocktranslate %}{% endif %}</dd>
+    <dt>{% translate "How many" %}</dt>
+    <dd>{% blocktranslate count n=count %}{{ n }} person{% plural %}{{ n }} people{% endblocktranslate %}{% if queued < count %} ({% blocktranslate with done=queued %}{{ done }} handed to the mail server so far{% endblocktranslate %}){% endif %}{% if mass.skipped %}. {% blocktranslate count n=mass.skipped %}{{ n }} student had turned off center news.{% plural %}{{ n }} students had turned off center news.{% endblocktranslate %}{% endif %}</dd>
+  </dl>
+  <h2>{% translate "Message" %}</h2>
+  <div class="sympraxi-email-preview">{{ mass.body|linebreaks }}</div>
+  <h2>{% translate "Who it went to" %}</h2>
+  {% if listed %}
+    <ul class="usa-list">
+      {% for r in listed %}<li>{{ r.user.display_name }} ({{ r.user.email }})</li>{% endfor %}
+    </ul>
+    {% if more %}<p>{% blocktranslate count n=more %}And {{ n }} more.{% plural %}And {{ n }} more.{% endblocktranslate %}</p>{% endif %}
+  {% else %}
+    <p>{% translate "Nobody." %}</p>
+  {% endif %}
+{% endblock content %}
