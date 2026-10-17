@@ -18,9 +18,11 @@ from sympraxi.centers.models import Center, Membership, Role
 from sympraxi.forms import builder as form_builder
 from sympraxi.forms import services as form_services
 from sympraxi.forms.builder import QuestionData
-from sympraxi.forms.models import Form, FormKind, FormVersion
+from sympraxi.forms.models import Form, FormKind, FormVersion, SurveyInvitation, token_hash
+from sympraxi.forms.report import ReportAnswers
+from sympraxi.forms.surveys import LINK_DAYS
 from sympraxi.records import services as records
-from sympraxi.records.models import Resource, SessionRecord, Topic
+from sympraxi.records.models import RecordStatus, Resource, SessionRecord, Topic
 from sympraxi.scheduling import attendance, services
 from sympraxi.scheduling.models import (
     Appointment,
@@ -34,6 +36,35 @@ from sympraxi.scheduling.models import (
     WeeklyHours,
 )
 from sympraxi.scheduling.timeutils import first_instant
+
+
+def _add(draft: FormVersion, label: str, kind: str = "short_text", **fields: Any) -> None:
+    """Add a question to a draft. `follows=(question label, option label)` makes a follow-up."""
+    options: list[tuple[UUID | None, str]] = [(None, o) for o in fields.pop("options", [])]
+    condition = None
+    if "follows" in fields:
+        source_label, option_label = fields.pop("follows")
+        source = draft.questions.get(label=source_label)
+        condition = (source.key, source.options.get(label=option_label).key)
+    form_builder.save_question(
+        draft=draft,
+        question=None,
+        data=QuestionData(kind=kind, label=label, options=options, condition=condition, **fields),
+    )
+
+
+def _answers(version: FormVersion, by_label: dict[str, Any]) -> dict[Any, Any]:
+    """Answers by question label (and option labels for choices), as the services take them."""
+    found: dict[Any, Any] = {}
+    for q in version.ordered_questions():
+        if q.label in by_label:
+            value = by_label[q.label]
+            if q.is_choice:
+                labels = {o.label: o.key for o in q.options.all()}
+                value = [labels[v] for v in ([value] if isinstance(value, str) else value)]
+            found[q.key] = value
+    return found
+
 
 DEMO_PEOPLE = [
     ("director@demo.test", "Dana Director", Role.DIRECTOR),
@@ -71,9 +102,11 @@ class Command(BaseCommand):
             Membership.objects.get_or_create(user=user, center=center, role=role)
         assignment = self._schedule(center)
         call_command("load_catalog", stdout=self.stdout)
+        self._report_questions(center)
         self._records(center, assignment)
         self._attendance(center, assignment)
         self._forms(center)
+        survey_url = self._survey(center)
         self.stdout.write(self.style.SUCCESS(f"Demo center ready at /centers/{center.slug}/"))
         self.stdout.write("Accounts: " + ", ".join(e for e, _, _ in DEMO_PEOPLE))
         if options["password"] is None:
@@ -82,9 +115,11 @@ class Command(BaseCommand):
             "Staff accounts will be asked to set up two-factor login on first sign-in."
         )
         self.stdout.write(
-            "Run `manage.py scheduler` alongside the server to send reminders and flag "
-            "possible no-shows."
+            "Run `manage.py scheduler` alongside the server to send reminders and surveys and "
+            "flag possible no-shows."
         )
+        if survey_url:
+            self.stdout.write(f"Sam's survey link (works once, no sign-in): {survey_url}")
 
     def _schedule(self, center: Center) -> TutorAssignment:
         """A drop-in schedule for the next three months, with the demo tutor on weekdays."""
@@ -182,6 +217,16 @@ class Command(BaseCommand):
                 resources=resource(
                     "purdue-owl-thesis-statement-tips", "Look at the argumentative examples."
                 ),
+                answers=self._report_answers(
+                    center,
+                    {
+                        "Did the student bring a draft?": "Yes",
+                        "What did you mostly work on?": "Ideas and argument",
+                        "What should the next tutor know?": (
+                            "Wants to talk through counterarguments next time."
+                        ),
+                    },
+                ),
             ),
             notify=False,
         )
@@ -202,6 +247,13 @@ class Command(BaseCommand):
                 project=project,
                 resources=resource("purdue-owl-signal-phrases")
                 + resource("purdue-owl-apa-in-text-basics", "For the page numbers."),
+                answers=self._report_answers(
+                    center,
+                    {
+                        "Did the student bring a draft?": "Yes",
+                        "What did you mostly work on?": "Using sources",
+                    },
+                ),
             ),
             notify=False,
         )
@@ -270,36 +322,13 @@ class Command(BaseCommand):
         """A registration form and an intake form with a follow-up question. Sam answered
         both; the intake form was reworded after Sam's first answers, so version 1 and
         version 2 both have answers."""
-        if Form.objects.filter(center=center).exists():
+        if Form.objects.filter(
+            center=center, kind__in=[FormKind.REGISTRATION, FormKind.INTAKE]
+        ).exists():
             return
         director = User.objects.get(email="director@demo.test")
         sam = User.objects.get(email="student@demo.test")
-
-        def add(draft: FormVersion, label: str, kind: str = "short_text", **fields: Any) -> None:
-            options: list[tuple[UUID | None, str]] = [(None, o) for o in fields.pop("options", [])]
-            condition = None
-            if "follows" in fields:
-                source_label, option_label = fields.pop("follows")
-                source = draft.questions.get(label=source_label)
-                condition = (source.key, source.options.get(label=option_label).key)
-            form_builder.save_question(
-                draft=draft,
-                question=None,
-                data=QuestionData(
-                    kind=kind, label=label, options=options, condition=condition, **fields
-                ),
-            )
-
-        def answers(version: FormVersion, by_label: dict[str, Any]) -> dict[Any, Any]:
-            found: dict[Any, Any] = {}
-            for q in version.ordered_questions():
-                if q.label in by_label:
-                    value = by_label[q.label]
-                    if q.is_choice:
-                        labels = {o.label: o.key for o in q.options.all()}
-                        value = [labels[v] for v in ([value] if isinstance(value, str) else value)]
-                    found[q.key] = value
-            return found
+        add, answers = _add, _answers
 
         registration = form_builder.create_form(
             actor=director, center=center, kind=FormKind.REGISTRATION
@@ -411,3 +440,127 @@ class Command(BaseCommand):
                 student=sam,
                 appointment=sessions[-1],
             )
+
+    def _report_questions(self, center: Center) -> None:
+        """Questions tutors answer in each session record. The student sees one of them."""
+        if Form.objects.filter(center=center, kind=FormKind.REPORT).exists():
+            return
+        director = User.objects.get(email="director@demo.test")
+        form = form_builder.create_form(actor=director, center=center, kind=FormKind.REPORT)
+        draft = form.versions.get()
+        _add(draft, "Did the student bring a draft?", "yes_no", required=True)
+        _add(
+            draft,
+            "What did you mostly work on?",
+            "one_choice",
+            options=["Ideas and argument", "Organization", "Using sources", "Sentences and style"],
+            shown_to_student=True,
+        )
+        _add(
+            draft,
+            "Which sentence patterns?",
+            follows=("What did you mostly work on?", "Sentences and style"),
+            required=True,
+        )
+        _add(draft, "What should the next tutor know?", "long_text")
+        form_builder.publish(actor=director, draft=draft)
+
+    def _report_answers(self, center: Center, by_label: dict[str, Any]) -> ReportAnswers | None:
+        version = form_services.report_version(center)
+        if version is None:
+            return None
+        return ReportAnswers(version=version, values=_answers(version, by_label))
+
+    def _survey(self, center: Center) -> str:
+        """A survey sent after sessions, with six anonymous responses this term so its
+        results show, and invitations for Sam's two written-up sessions. Returns the
+        link in the second invitation, to try the survey page."""
+        if Form.objects.filter(center=center, kind=FormKind.SURVEY).exists():
+            return ""
+        director = User.objects.get(email="director@demo.test")
+        sam = User.objects.get(email="student@demo.test")
+        form = form_builder.create_form(actor=director, center=center, kind=FormKind.SURVEY)
+        draft = form.versions.get()
+        draft.intro = "Three questions about your session."
+        draft.save(update_fields=["intro"])
+        _add(
+            draft,
+            "How helpful was the session?",
+            "one_choice",
+            options=["Very helpful", "Somewhat helpful", "Not very helpful"],
+            required=True,
+        )
+        _add(
+            draft,
+            "What helped most?",
+            "several_choices",
+            options=["Talking it through", "The tutor's questions", "A handout or link"],
+        )
+        _add(draft, "What could we do better?", "long_text")
+        version = form_builder.publish(actor=director, draft=draft)
+
+        today = timezone.localdate(timezone=zoneinfo.ZoneInfo(center.time_zone))
+        given: list[tuple[int, dict[str, Any]]] = [
+            (6, {"How helpful was the session?": "Very helpful"}),
+            (
+                5,
+                {
+                    "How helpful was the session?": "Very helpful",
+                    "What helped most?": ["A handout or link"],
+                },
+            ),
+            (
+                4,
+                {
+                    "How helpful was the session?": "Somewhat helpful",
+                    "What could we do better?": "More evening hours.",
+                },
+            ),
+            (
+                3,
+                {
+                    "How helpful was the session?": "Very helpful",
+                    "What helped most?": ["The tutor's questions"],
+                },
+            ),
+            (
+                2,
+                {
+                    "How helpful was the session?": "Not very helpful",
+                    "What could we do better?": "I needed help with citations, not ideas.",
+                },
+            ),
+            (
+                1,
+                {
+                    "How helpful was the session?": "Very helpful",
+                    "What helped most?": ["Talking it through", "The tutor's questions"],
+                },
+            ),
+        ]
+        for days_ago, by_label in given:
+            form_services.create_response(
+                version=version,
+                values=_answers(version, by_label),
+                answered_by=None,
+                student=None,
+                answered_on=today - timedelta(days=days_ago),
+            )
+
+        token = ""
+        for rec in SessionRecord.objects.filter(
+            center=center, student=sam, status=RecordStatus.FINAL, appointment__isnull=False
+        ).order_by("finalized_at"):
+            if rec.appointment is None:
+                continue
+            token = secrets.token_urlsafe(32)
+            sent = timezone.now()
+            SurveyInvitation.objects.create(
+                appointment=rec.appointment,
+                student=sam,
+                form=form,
+                token_hash=token_hash(token),
+                sent_at=sent,
+                expires_at=sent + timedelta(days=LINK_DAYS),
+            )
+        return f"/survey/{token}/" if token else ""

@@ -6,8 +6,11 @@ session record about them (drafts too, with staff notes and every amendment),
 attached resources with the tutors' notes, and their writing projects.
 Appointments include attendance: no-shows, late cancellations and waivers with
 their reasons, and every set of intake answers given for them. The student's
-registration answers are included, earlier ones too (sympraxi/forms/export.py).
-Booking blocks are listed with any director's note.
+registration answers are included, earlier ones too (sympraxi/forms/export.py),
+and each session record carries the tutor's answers to the center's
+session-report questions, whether or not the student sees them on My writing.
+Booking blocks are listed with any director's note. Survey answers aren't
+included: they are anonymous and nothing ties them to the student.
 
 Other students are left out. A group appointment shows how many students it
 had, never who they were (99.12: when a record holds information about more
@@ -28,7 +31,8 @@ from sympraxi.scheduling.models import Block, Participant
 
 FORMAT = "sympraxi.student-record"
 # Version 2 added registration answers and each appointment's intake answers.
-VERSION = 2
+# Version 3 added each session record's answers to the center's report questions.
+VERSION = 3
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
@@ -77,6 +81,12 @@ def records(membership: Membership) -> QuerySet[SessionRecord]:
         .select_related("tutor", "created_by", "finalized_by", "project")
         .prefetch_related("topics", "attachments__resource", "attachments__added_by")
         .prefetch_related("amendments__author")
+        .prefetch_related(
+            "report_responses__version",
+            "report_responses__form",
+            "report_responses__answered_by",
+            "report_responses__answers__question__options",
+        )
         .order_by("held_at", "created_at")
     )
 
@@ -184,6 +194,7 @@ def _record(r: SessionRecord) -> dict[str, Any]:
             }
             for a in r.attachments.all()
         ],
+        "report_answers": [form_export.response_data(x) for x in r.report_responses.all()],
         "amendments": [
             {
                 "at": _when(m.created_at),

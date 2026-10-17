@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Survey results" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Survey results" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Survey results" %}</h1>
+  <p>{% blocktranslate count n=minimum %}Answers are anonymous and counted by term. A term's results show once at least {{ n }} person has answered in it, so no one's answers can be picked out.{% plural %}Answers are anonymous and counted by term. A term's results show once at least {{ n }} people have answered in it, so no one's answers can be picked out.{% endblocktranslate %}</p>
+  {% if not survey %}
+    <p>{% translate "Your center doesn't send a survey yet." %}{% if can_manage %} <a href="{% url 'forms:list' slug=center.slug %}">{% translate "Add one with the center's forms." %}</a>{% endif %}</p>
+  {% elif not period %}
+    <p>{% translate "Results are counted by term, and this center has no terms yet." %}</p>
+  {% else %}
+    <form class="usa-form" method="get">
+      {% include "includes/field.html" with field=picker.survey %}
+      {% include "includes/field.html" with field=picker.term %}
+      <button class="usa-button" type="submit">{% translate "Show results" %}</button>
+    </form>
+
+    <h2>{% blocktranslate with survey=survey.title term=period.term.name %}{{ survey }}, {{ term }}{% endblocktranslate %}</h2>
+    {% if not results.shown %}
+      <p>{% blocktranslate count n=minimum %}Fewer than {{ n }} person has answered in this term so far, so there are no results to show yet.{% plural %}Fewer than {{ n }} people have answered in this term so far, so there are no results to show yet.{% endblocktranslate %}</p>
+    {% else %}
+      <p>{% blocktranslate count n=results.responses %}{{ n }} person answered in this term.{% plural %}{{ n }} people answered in this term.{% endblocktranslate %}</p>
+      {% for q in results.questions %}
+        <section class="sympraxi-record" aria-labelledby="result-{{ forloop.counter }}">
+          <h3 id="result-{{ forloop.counter }}">{{ q.label }}</h3>
+          <p class="usa-hint">{% blocktranslate count n=q.answered %}{{ n }} person answered this question.{% plural %}{{ n }} people answered this question.{% endblocktranslate %}</p>
+          {% if q.is_choice %}
+            <table class="usa-table usa-table--borderless">
+              <caption class="usa-sr-only">{% blocktranslate with label=q.label %}How many people chose each answer to “{{ label }}”{% endblocktranslate %}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{% translate "Answer" %}</th>
+                  <th scope="col">{% translate "People" %}</th>
+                  <th scope="col">{% translate "Share of those who answered" %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for option in q.options %}
+                  <tr>
+                    <th scope="row">{{ option.label }}</th>
+                    <td>{{ option.count }}</td>
+                    <td>{{ option.percent }}%</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% elif q.texts %}
+            <ul class="usa-list">
+              {% for text in q.texts %}<li>{{ text|linebreaksbr }}</li>{% endfor %}
+            </ul>
+          {% endif %}
+        </section>
+      {% endfor %}
+    {% endif %}
+  {% endif %}
+  {% if can_manage %}
+    <p><a href="{% url 'forms:list' slug=center.slug %}">{% translate "The center's forms" %}</a></p>
+  {% endif %}
+{% endblock content %}

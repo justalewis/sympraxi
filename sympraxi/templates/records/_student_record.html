@@ -8,6 +8,15 @@
   <{{ h|default:"h4" }}>{% translate "Next steps" %}</{{ h|default:"h4" }}>
   {{ rec.next_steps|linebreaks }}
 {% endif %}
+{% if rec.student_answers %}
+  <{{ h|default:"h4" }}>{% translate "More about the session" %}</{{ h|default:"h4" }}>
+  <dl class="sympraxi-answers-list">
+    {% for a in rec.student_answers %}
+      <dt>{{ a.question }}</dt>
+      <dd>{{ a.answer|linebreaksbr }}</dd>
+    {% endfor %}
+  </dl>
+{% endif %}
 {% if attachments %}
   <{{ h|default:"h4" }}>{% translate "Resources" %}</{{ h|default:"h4" }}>
   {% include "records/_attachment_list.html" %}

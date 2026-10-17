@@ -17,6 +17,8 @@ responses shown, never the answers themselves.
 """
 
 from dataclasses import dataclass, field
+from datetime import date
+from decimal import Decimal
 from typing import Any
 from uuid import UUID
 
@@ -33,6 +35,7 @@ from sympraxi.forms.models import (
     CHOICE_KINDS,
     Answer,
     FormKind,
+    Question,
     QuestionKind,
     Response,
     plain_number,
@@ -46,6 +49,8 @@ class ShownAnswer:
     key: UUID
     question: str
     answer: str
+    # Session-report answers only: the student sees this one too.
+    student_sees: bool = False
 
 
 @dataclass
@@ -60,15 +65,22 @@ class ShownResponse:
 
 def answer_text(answer: Answer) -> str:
     """One answer as words, in the version's own wording."""
-    question = answer.question
+    return value_text(answer.question, answer.value)
+
+
+def value_text(question: Question, value: Any) -> str:
+    """A typed value (text, a number, a date or option keys) as words for its question."""
+    if value is None:
+        return ""
     if question.kind in CHOICE_KINDS:
         labels = question.option_labels()
-        return ", ".join(labels.get(k, "") for k in answer.options if k in labels)
+        chosen = value if isinstance(value, list) else []
+        return ", ".join(labels[k] for k in chosen if k in labels)
     if question.kind == QuestionKind.NUMBER:
-        return plain_number(answer.number) if answer.number is not None else ""
+        return plain_number(value) if isinstance(value, Decimal) else str(value)
     if question.kind == QuestionKind.DATE:
-        return date_format(answer.date, "F j, Y") if answer.date else ""
-    return answer.text
+        return date_format(value, "F j, Y") if isinstance(value, date) else str(value)
+    return str(value)
 
 
 def answers_of(response: Response, *, keys: set[UUID] | None = None) -> list[ShownAnswer]:

@@ -39,6 +39,7 @@ from sympraxi.forms.services import AnswerValue
 CONTINUE = "continue"
 
 DIRECTORS_ONLY = gettext_lazy("Only the center's directors see your answer.")
+STUDENT_SEES = gettext_lazy("The student sees your answer, with the summary.")
 
 
 def field_name(question: Question) -> str:
@@ -151,6 +152,8 @@ class Row:
     # Changing this answer can show or hide follow-ups.
     leads_on: bool
     note: str
+    # Required, but only when the session record is finalized.
+    needed_to_finalize: bool = False
 
     @property
     def is_choice(self) -> bool:
@@ -193,7 +196,9 @@ class Questions:
     `data` is the posted form, or None for a fresh page. `initial` holds earlier
     answers by question key, to start from. With `skippable`, a staff member can
     leave every question blank to skip the form; answering any of them makes the
-    required ones required again.
+    required ones required again. Without `enforce_required`, required questions
+    may be left blank for now and are marked as needed to finalize (a draft
+    session record checks them when it is finalized).
     """
 
     def __init__(
@@ -204,10 +209,12 @@ class Questions:
         data: QueryDict | None = None,
         initial: dict[UUID, AnswerValue] | None = None,
         skippable: bool = False,
+        enforce_required: bool = True,
     ) -> None:
         self.version = version
         self.prefix = prefix
         self.data = data
+        self.enforce_required = enforce_required
         self.all = version.ordered_questions()
         self.has_follow_ups = any(q.is_follow_up for q in self.all)
         initial = initial or {}
@@ -235,7 +242,7 @@ class Questions:
         )
         for question in self.shown:
             self.form.fields[field_name(question)] = _field(
-                question, required=question.required and not self.skipped
+                question, required=question.required and not self.skipped and enforce_required
             )
 
     @property
@@ -277,16 +284,24 @@ class Questions:
 
     def rows(self) -> list[Row]:
         sources = {q.show_if_question for q in self.all if q.show_if_question is not None}
-        registration = self.version.form.kind == FormKind.REGISTRATION
         return [
             Row(
                 question=q,
                 field=self.form[field_name(q)],
                 leads_on=q.key in sources,
-                note=str(DIRECTORS_ONLY) if registration and not q.shown_to_staff else "",
+                note=self._note(q),
+                needed_to_finalize=q.required and not self.enforce_required,
             )
             for q in self.shown
         ]
+
+    def _note(self, question: Question) -> str:
+        kind = self.version.form.kind
+        if kind == FormKind.REGISTRATION and not question.shown_to_staff:
+            return str(DIRECTORS_ONLY)
+        if kind == FormKind.REPORT and question.shown_to_student:
+            return str(STUDENT_SEES)
+        return ""
 
     def is_valid(self) -> bool:
         return self.form.is_valid()
@@ -339,7 +354,12 @@ class Questions:
                 posted[question.key] = list(_hex_keys(values, set(question.option_labels())))
             elif values:
                 posted[question.key] = values[0]
-        redrawn = Questions(self.version, prefix=self.prefix, initial=posted)
+        redrawn = Questions(
+            self.version,
+            prefix=self.prefix,
+            initial=posted,
+            enforce_required=self.enforce_required,
+        )
         redrawn.revealed, redrawn.removed = self.revealed, self.removed
         return redrawn
 

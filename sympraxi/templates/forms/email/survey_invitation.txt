@@ -1,0 +1,14 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=student.display_name %}Hello {{ name }},{% endblocktranslate %}
+
+{% blocktranslate with center=center.name tutor=appointment.tutor.display_name when=appointment.starts_at|date:"l, F j" %}{{ center }} would like to know how your session with {{ tutor }} on {{ when }} went. The survey takes a few minutes:{% endblocktranslate %}
+
+{{ url }}
+
+{% translate "Your answers are anonymous. The center sees them without your name, and they aren't added to your records." %}
+{% blocktranslate with day=expires_at|date:"F j" %}The link works once, until {{ day }}.{% endblocktranslate %}
+
+{% translate "To stop getting these emails:" %} {{ settings_url }}
+
+{{ center.name }}{% if center.contact_email %}
+{{ center.contact_email }}{% endif %}
+{% endautoescape %}

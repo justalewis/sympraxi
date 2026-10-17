@@ -82,6 +82,15 @@
       {% include "includes/field.html" with field=form.project_due_on %}
     </fieldset>
 
+    {% if questions %}
+      <h2>{% translate "Questions from the center" %}</h2>
+      <p>{% translate "Only staff who read session records see these answers, unless a question says the student sees it." %}</p>
+      {% include "forms/_form_status.html" %}
+      {% include "forms/_questions.html" with group=questions refresh_url=request.get_full_path %}
+      {% include "forms/_continue_hint.html" with has_follow_ups=questions.has_follow_ups %}
+      {% include "forms/_continue.html" with has_follow_ups=questions.has_follow_ups %}
+    {% endif %}
+
     {% if form.copy_to_group %}
       <h2>{% translate "The rest of the group" %}</h2>
       {% include "includes/field.html" with field=form.copy_to_group %}

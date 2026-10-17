@@ -127,8 +127,9 @@ class RecordForm(forms.Form):
         copy = self.fields["copy_to_group"]
         copy.label = _(
             "Also start drafts for the other %(n)s students in this group, with the same "
-            "summary, next steps, topics, length and resources. Staff notes and the project "
-            "aren't copied. You'll still read and finalize each one."
+            "summary, next steps, topics, length, resources and answers to the center's "
+            "questions. Staff notes and the project aren't copied. You'll still read and "
+            "finalize each one."
         ) % {"n": group_others}
         if not group_others or amend:
             del self.fields["copy_to_group"]

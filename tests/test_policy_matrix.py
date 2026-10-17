@@ -29,6 +29,8 @@ from tests.forms_world import (
     INTAKE_ANSWERS,
     REGISTRATION,
     REGISTRATION_ANSWERS,
+    REPORT,
+    SURVEY,
     answer,
     make_form,
 )
@@ -77,6 +79,7 @@ FORMS_ACTIONS = [
     Action.VIEW_INTAKE,
     Action.VIEW_REGISTRATION,
     Action.VIEW_ALL_REGISTRATION,
+    Action.VIEW_SURVEY_RESULTS,
 ]
 
 ACTIONS = CENTER_ACTIONS + SCHEDULING_ACTIONS + ATTENDANCE_ACTIONS + RECORDS_ACTIONS + FORMS_ACTIONS
@@ -142,17 +145,18 @@ EXPECTED_RECORDS = {
 # and their own appointments' intake (FORM_CASES checks that part); "view intake"
 # means appointments they teach, and "view registration" students they tutor, for
 # tutors. Registration answers in full are for directors only; tutors and front
-# desk staff see the questions marked for staff. Site administrators get nothing:
-# the answers are student records.
+# desk staff see the questions marked for staff. Survey results, anonymous and
+# counted by term, are for directors only. Site administrators get nothing: the
+# answers are student records, and survey results are the center's.
 EXPECTED_FORMS = {
-    #              manage  answer  view    view    view all
-    #              forms   own     intake  regist. regist.
-    "none":        (0,     0,      0,      0,      0),
-    "student":     (0,     1,      0,      0,      0),
-    "tutor":       (0,     0,      1,      1,      0),
-    "front_desk":  (0,     0,      1,      1,      0),
-    "director":    (1,     0,      1,      1,      1),
-    "site_admin":  (0,     0,      0,      0,      0),
+    #              manage  answer  view    view    view all  survey
+    #              forms   own     intake  regist. regist.   results
+    "none":        (0,     0,      0,      0,      0,        0),
+    "student":     (0,     1,      0,      0,      0,        0),
+    "tutor":       (0,     0,      1,      1,      0,        0),
+    "front_desk":  (0,     0,      1,      1,      0,        0),
+    "director":    (1,     0,      1,      1,      1,        1),
+    "site_admin":  (0,     0,      0,      0,      0,        0),
 }
 # fmt: on
 
@@ -592,6 +596,15 @@ FORM_CASES = [
     ("site_admin", Action.MANAGE_FORMS,          "form",                       False),
     ("site_admin", Action.VIEW_INTAKE,           "other_intake",               False),
     ("site_admin", Action.VIEW_ALL_REGISTRATION, "other_student",              False),
+    ("director",   Action.MANAGE_FORMS,          "survey",                     True),
+    ("director",   Action.MANAGE_FORMS,          "report",                     True),
+    ("director",   Action.VIEW_SURVEY_RESULTS,   "survey",                     True),
+    ("front_desk", Action.VIEW_SURVEY_RESULTS,   "survey",                     False),
+    ("tutor",      Action.VIEW_SURVEY_RESULTS,   "survey",                     False),
+    ("tutor",      Action.MANAGE_FORMS,          "report",                     False),
+    ("student",    Action.VIEW_SURVEY_RESULTS,   "survey",                     False),
+    ("student",    Action.ANSWER_OWN_FORMS,      "survey",                     False),
+    ("site_admin", Action.VIEW_SURVEY_RESULTS,   "survey",                     False),
 ]
 # fmt: on
 
@@ -614,6 +627,8 @@ def _form_objects(center, user):
     own_tutoring = appointment_for(world, mine, days=4, tutor=user)
     objects = {
         "form": intake,
+        "survey": make_form(center, FormKind.SURVEY, questions=SURVEY),
+        "report": make_form(center, FormKind.REPORT, questions=REPORT),
         "own_appointment": own_appointment,
         "left_appointment": left,
         "other_appointment": world.appointment,

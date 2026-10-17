@@ -49,6 +49,7 @@ ACTION_LABELS = {
     "forms.form_published": _("Published a new version of a form"),
     "forms.answered": _("Answered a registration or intake form"),
     "forms.answers_viewed": _("Read a student's registration or intake answers"),
+    "forms.survey_settings_changed": _("Changed when the survey goes out"),
 }
 
 

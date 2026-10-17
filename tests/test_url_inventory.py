@@ -5,21 +5,43 @@ That is the point: no page that touches student data ships by accident.
 Third-party URLs (allauth, the Django admin) are excluded; the admin is
 restricted to site administrators and sits behind the same 2FA gate. allauth's
 single sign-on URLs (/accounts/oidc/<provider>/...) are covered in test_sso.py.
+
+Token pages open without signing in: a secret token in the URL is what opens
+them (survey links now, calendar feeds later). Each says how to make a working
+token and dead ones; every dead token, and an unknown one, must get exactly the
+same answer, so tokens can't be probed.
 """
+
+import re
+import secrets
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import timedelta
 
 import pytest
 from django.urls import URLPattern, URLResolver, get_resolver, reverse
+from django.utils import timezone
 
 from sympraxi.core import policy
 from sympraxi.core.policy import Action
+from sympraxi.forms import surveys
+from sympraxi.forms.models import SurveyInvitation
 from tests.attendance_world import add_attendance
-from tests.forms_world import add_forms
+from tests.factories import CenterFactory
+from tests.forms_world import SURVEY_ANSWERS, add_forms, values
 from tests.records_world import add_records
 from tests.scheduling_world import World, build_world
 
 # accounts:local_login is the break-glass password sign-in. It is public like the
 # regular sign-in page; AccountAdapter.pre_login() decides who may use it.
-PUBLIC = {"core:home", "core:healthz", "core:source", "accounts:local_login"}
+# survey:thanks says only "thank you", to anyone.
+PUBLIC = {
+    "core:home",
+    "core:healthz",
+    "core:source",
+    "accounts:local_login",
+    "survey:thanks",
+}
 
 # Pages about the signed-in person's own account, outside any center. Anyone
 # signed in may use them; they show and change only that person's settings.
@@ -102,6 +124,51 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "forms:my_registration": (Action.ANSWER_OWN_FORMS, "center"),
     "forms:intake": (Action.ANSWER_OWN_FORMS, "appointment"),
     "forms:student_registration": (Action.VIEW_REGISTRATION, "student_membership"),
+    "forms:survey_settings": (Action.MANAGE_FORMS, "center"),
+    "forms:survey_results": (Action.VIEW_SURVEY_RESULTS, "center"),
+}
+
+
+@dataclass
+class TokenPage:
+    """How to test one token page: a working token, and the kinds of dead ones."""
+
+    # The world's working token.
+    valid: Callable[[World], str]
+    # Name -> make a token that once worked and doesn't now (used, expired, ...).
+    dead: dict[str, Callable[[World], str]]
+
+
+def _used_survey_token(world: World) -> str:
+    token = world.survey_token
+    survey = surveys.open_survey(token)
+    assert survey is not None
+    assert surveys.submit(survey, token, values(survey.version, SURVEY_ANSWERS))
+    return token
+
+
+def _expired_survey_token(world: World) -> str:
+    SurveyInvitation.objects.filter(student=world.student).update(
+        expires_at=timezone.now() - timedelta(minutes=1)
+    )
+    return world.survey_token
+
+
+def _stopped_survey_token(world: World) -> str:
+    world.survey_form.is_active = False
+    world.survey_form.save(update_fields=["is_active"])
+    return world.survey_token
+
+
+TOKEN_PAGES: dict[str, TokenPage] = {
+    "survey:answer": TokenPage(
+        valid=lambda world: world.survey_token,
+        dead={
+            "used": _used_survey_token,
+            "expired": _expired_survey_token,
+            "survey stopped": _stopped_survey_token,
+        },
+    ),
 }
 
 # The URL keyword for each kind of object.
@@ -168,7 +235,56 @@ def world(center) -> World:
 
 
 def test_every_url_is_classified() -> None:
-    assert sympraxi_url_names() == PUBLIC | LOGIN_REQUIRED | set(CENTER_PAGES)
+    assert sympraxi_url_names() == PUBLIC | LOGIN_REQUIRED | set(CENTER_PAGES) | set(TOKEN_PAGES)
+
+
+def _token_url(name: str, token: str) -> str:
+    return reverse(name, kwargs={"token": token})
+
+
+def _same_page(body: bytes) -> bytes:
+    """The page without its per-request CSP nonces, which differ every time."""
+    return re.sub(rb'nonce="[^"]*"', b'nonce=""', body)
+
+
+@pytest.mark.parametrize("name", sorted(TOKEN_PAGES))
+def test_token_pages_open_without_signing_in(client, world, name) -> None:
+    response = client.get(_token_url(name, TOKEN_PAGES[name].valid(world)))
+    assert response.status_code == 200
+
+
+@pytest.mark.parametrize("name", sorted(TOKEN_PAGES))
+def test_token_pages_ignore_who_is_signed_in(client, person_with_role, world, name) -> None:
+    """Signed in or not, as anyone, the working token opens the page. Staff without
+    two-factor login aren't sent to set it up, which would put the token in a URL."""
+    for role in ("student", "director", "site_admin"):
+        client.force_login(person_with_role(role, world.center, mfa=False))
+        response = client.get(_token_url(name, TOKEN_PAGES[name].valid(world)))
+        assert response.status_code == 200, role
+
+
+@pytest.mark.parametrize("name", sorted(TOKEN_PAGES))
+def test_dead_and_unknown_tokens_look_alike(client, db, name) -> None:
+    """Unknown, used, expired: the same status and the same page, so tokens can't be probed."""
+    page = TOKEN_PAGES[name]
+    answers = {}
+    for kind, token in [
+        ("unknown", secrets.token_urlsafe(32)),
+        ("not a token", "x"),
+        ("far too long", "a" * 500),
+    ]:
+        response = client.get(_token_url(name, token))
+        answers[kind] = (response.status_code, _same_page(response.content))
+    for kind, make in page.dead.items():
+        world = add_forms(add_attendance(add_records(build_world(CenterFactory()))))
+        token = make(world)
+        for response in (client.get(_token_url(name, token)), client.post(_token_url(name, token))):
+            answers[f"{kind} ({response.request['REQUEST_METHOD']})"] = (
+                response.status_code,
+                _same_page(response.content),
+            )
+    assert answers["unknown"][0] == 404
+    assert len(set(answers.values())) == 1, sorted(answers)
 
 
 @pytest.mark.parametrize("name", sorted(PUBLIC - {"core:source"}))

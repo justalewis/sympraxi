@@ -29,6 +29,7 @@ from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center
 from sympraxi.forms.models import (
     CHOICE_KINDS,
+    PER_SCHEDULE_KINDS,
     Form,
     FormKind,
     FormVersion,
@@ -59,6 +60,7 @@ class QuestionData:
     required: bool = False
     is_demographic: bool = False
     shown_to_staff: bool = False
+    shown_to_student: bool = False
     condition: tuple[UUID, UUID] | None = None
     options: list[tuple[UUID | None, str]] = field(default_factory=list)
 
@@ -75,9 +77,9 @@ def create_form(
     request: HttpRequest | None = None,
 ) -> Form:
     """A new form with an empty draft, version 1."""
-    if kind not in (FormKind.REGISTRATION, FormKind.INTAKE):
-        raise BuilderError(_("Only registration and intake forms can be added here."))
-    if kind != FormKind.INTAKE:
+    if kind not in FormKind.values:
+        raise BuilderError(_("That isn't a kind of form Sympraxi has."))
+    if kind not in PER_SCHEDULE_KINDS:
         schedule = None
     if Form.objects.filter(center=center, kind=kind, schedule=schedule).exists():
         raise BuilderError(_("That form already exists. Edit it instead."))
@@ -128,6 +130,7 @@ def start_draft(*, actor: User, form: Form) -> FormVersion:
                     required=question.required,
                     is_demographic=question.is_demographic,
                     shown_to_staff=question.shown_to_staff,
+                    shown_to_student=question.shown_to_student,
                     show_if_question=question.show_if_question,
                     show_if_option=question.show_if_option,
                 )
@@ -236,6 +239,7 @@ def save_question(*, draft: FormVersion, question: Question | None, data: Questi
         question.is_demographic = data.is_demographic
         question.required = data.required and not data.is_demographic
         question.shown_to_staff = data.shown_to_staff and draft.form.kind == FormKind.REGISTRATION
+        question.shown_to_student = data.shown_to_student and draft.form.kind == FormKind.REPORT
         question.show_if_question, question.show_if_option = data.condition or (None, None)
         question.save()
         _save_options(draft, question, data, previous_kind)

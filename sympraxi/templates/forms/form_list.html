@@ -5,7 +5,7 @@
   {% translate "Forms" as current %}
   {% include "scheduling/_breadcrumbs.html" with current=current %}
   <h1>{% translate "Forms" %}</h1>
-  <p>{% translate "Questions your center asks students. The registration form is asked once, the first time a student books. Intake forms are asked each time a student books." %}</p>
+  <p>{% translate "Questions your center asks. The registration form is asked once, the first time a student books. Intake forms are asked each time a student books. Session report questions are answered by tutors in each session record. Surveys go to students after sessions they came to, and their answers are anonymous." %}</p>
   <p>{% translate "Every change is saved as a new version. Answers already given keep the wording the student saw." %}</p>
   {% if rows %}
     <table class="usa-table usa-table--borderless">
@@ -37,4 +37,9 @@
   {% if can_add %}
     <p><a class="usa-button" href="{% url 'forms:create' slug=center.slug %}">{% translate "Add a form" %}</a></p>
   {% endif %}
+  <h2>{% translate "Surveys" %}</h2>
+  <ul class="usa-list">
+    <li><a href="{% url 'forms:survey_settings' slug=center.slug %}">{% translate "When surveys go out" %}</a>: {{ center.get_survey_timing_display|lower }}{% if center.survey_timing == "end" %} ({{ center.get_survey_delay_minutes_display }}){% endif %}.</li>
+    {% if has_surveys and can_see_results %}<li><a href="{% url 'forms:survey_results' slug=center.slug %}">{% translate "Survey results" %}</a></li>{% endif %}
+  </ul>
 {% endblock content %}

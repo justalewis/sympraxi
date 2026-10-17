@@ -5,9 +5,18 @@ from typing import Any
 from django import template
 from django.utils.translation import gettext_lazy as _
 
+from sympraxi.forms.display import answer_text
+from sympraxi.forms.models import Answer
 from sympraxi.records.models import Amendment, Topic
 
 register = template.Library()
+
+
+@register.filter
+def answer_words(answer: Answer) -> str:
+    """A form answer as words, in the wording of the version answered."""
+    return answer_text(answer)
+
 
 FIELD_LABELS = {
     "summary": _("Summary for the student"),
@@ -32,9 +41,14 @@ def amendment_rows(amendment: Amendment) -> list[dict[str, str]]:
     labels = dict(Topic.objects.filter(slug__in=slugs).values_list("slug", "label"))
     rows = []
     for name, change in amendment.changes.items():
+        if name.startswith("answer:"):
+            # An answer to one of the center's questions, kept in words.
+            label = str(change.get("question", name))
+        else:
+            label = str(FIELD_LABELS.get(name, name))
         rows.append(
             {
-                "label": str(FIELD_LABELS.get(name, name)),
+                "label": label,
                 "before": _text(name, change.get("before"), labels),
                 "after": _text(name, change.get("after"), labels),
             }

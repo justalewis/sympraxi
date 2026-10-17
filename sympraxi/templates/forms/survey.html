@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "A short survey" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% blocktranslate with center=center.name %}A short survey from {{ center }}{% endblocktranslate %}</h1>
+  <p>{% translate "Tell the center how your session went. Your answers are anonymous: the center sees them without your name, and they aren't added to your records." %}</p>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "forms/_form_status.html" %}
+    {% include "forms/_questions.html" with group=questions refresh_url=request.get_full_path %}
+    {% include "forms/_continue_hint.html" with has_follow_ups=questions.has_follow_ups %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{{ submit }}</button>
+      {% include "forms/_continue.html" with has_follow_ups=questions.has_follow_ups %}
+    </div>
+  </form>
+  <p class="usa-hint">{% translate "This link works once. After you send your answers, it stops working." %}</p>
+{% endblock content %}

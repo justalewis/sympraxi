@@ -20,6 +20,9 @@ urlpatterns = [
         views.question_remove,
         name="question_remove",
     ),
+    # Surveys, for directors
+    path("surveys/settings/", views.survey_settings, name="survey_settings"),
+    path("surveys/results/", views.survey_results, name="survey_results"),
     # Answering, for students
     path("registration/", views.my_registration, name="my_registration"),
     path("appointments/<uuid:appointment_id>/intake/", views.intake, name="intake"),

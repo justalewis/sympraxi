@@ -24,6 +24,23 @@ class Role(models.TextChoices):
 STAFF_ROLES = frozenset({Role.TUTOR, Role.FRONT_DESK, Role.DIRECTOR})
 
 
+class SurveyTiming(models.TextChoices):
+    """When a center's survey goes out to a student who came to a session."""
+
+    AFTER_RECORD = "record", _("When the tutor finalizes the session record")
+    AFTER_END = "end", _("A set time after the appointment ends")
+
+
+# How long after an appointment ends its survey goes out, in minutes.
+SURVEY_DELAY_CHOICES = [
+    (30, _("30 minutes")),
+    (60, _("1 hour")),
+    (120, _("2 hours")),
+    (240, _("4 hours")),
+    (1440, _("1 day")),
+]
+
+
 class Center(models.Model):
     """A writing center (or any tutoring center) inside one installation."""
 
@@ -74,6 +91,19 @@ class Center(models.Model):
         null=True,
         blank=True,
         help_text=_("Leave empty to count within each term."),
+    )
+    # Surveys. They go out only once the center has a survey form in use.
+    survey_timing = models.CharField(
+        _("when the survey goes out"),
+        max_length=10,
+        choices=SurveyTiming.choices,
+        default=SurveyTiming.AFTER_RECORD,
+    )
+    survey_delay_minutes = models.PositiveIntegerField(
+        _("how long after the appointment ends"),
+        choices=SURVEY_DELAY_CHOICES,
+        default=60,
+        help_text=_("Used only when the survey goes out a set time after the appointment."),
     )
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -29,6 +29,7 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_mark_attendance": can(request.user, Action.MARK_ATTENDANCE, center),
         "can_manage_blocks": can(request.user, Action.MANAGE_BLOCKS, center),
         "can_manage_forms": can(request.user, Action.MANAGE_FORMS, center),
+        "can_view_survey_results": can(request.user, Action.VIEW_SURVEY_RESULTS, center),
         "asks_registration": can(request.user, Action.ANSWER_OWN_FORMS, center)
         and Form.objects.filter(
             center=center,

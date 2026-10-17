@@ -1,10 +1,11 @@
 """The scheduler: one long-running process (`manage.py scheduler`) that runs the
 minute-by-minute jobs.
 
-Each minute it sends the reminders that are due (`reminders`) and flags possible
-no-shows (`attendance.flag_possible_no_shows`). Both are safe to run twice at
-once, so a second scheduler, or one started during an upgrade while the old one
-is stopping, doesn't send anything twice. After a sweep that finishes without an
+Each minute it sends the reminders that are due (`reminders`), flags possible
+no-shows (`attendance.flag_possible_no_shows`) and sends the surveys that are
+due (`sympraxi.forms.surveys`). Each is safe to run twice at once, so a second
+scheduler, or one started during an upgrade while the old one is stopping,
+doesn't send anything twice. After a sweep that finishes without an
 error it writes the heartbeat that `python -m sympraxi.healthcheck scheduler`
 reads.
 
@@ -23,6 +24,7 @@ from django.db import close_old_connections, connection
 from django.utils import timezone
 
 from sympraxi import healthcheck
+from sympraxi.forms import surveys
 from sympraxi.scheduling import attendance, reminders
 
 logger = logging.getLogger("sympraxi.scheduler")
@@ -32,6 +34,7 @@ logger = logging.getLogger("sympraxi.scheduler")
 class Sweep:
     reminders: int
     flagged: int
+    surveys: int = 0
 
 
 def _refresh_connections() -> None:
@@ -51,6 +54,7 @@ def sweep(*, base_url: str, now: datetime | None = None) -> Sweep:
         return Sweep(
             reminders=reminders.send_due_reminders(base_url=base_url, now=now),
             flagged=attendance.flag_possible_no_shows(now),
+            surveys=surveys.send_due_invitations(base_url=base_url, now=now),
         )
     finally:
         _refresh_connections()
@@ -71,10 +75,11 @@ def run(*, base_url: str, stop: threading.Event, once: bool = False) -> None:
             logger.exception("Scheduler sweep failed; trying again next minute")
         else:
             healthcheck.write_heartbeat()
-            if result.reminders or result.flagged:
+            if result.reminders or result.flagged or result.surveys:
                 logger.info(
-                    "Queued %s reminder emails; flagged %s possible no-shows",
+                    "Queued %s reminder emails and %s surveys; flagged %s possible no-shows",
                     result.reminders,
+                    result.surveys,
                     result.flagged,
                 )
         if once:

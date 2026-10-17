@@ -18,29 +18,53 @@ from sympraxi.forms.models import (
 )
 from sympraxi.scheduling.models import Schedule
 
-REGISTRATION = "registration"
-INTAKE_DEFAULT = "intake"
-
 
 def places_free(center: Center) -> list[tuple[str, str]]:
-    """The forms a center doesn't have yet, as choices: registration, default intake,
-    and an intake form for each schedule."""
+    """The forms a center doesn't have yet, as choices.
+
+    Each value is the kind, or "<kind>:<schedule id>" for an intake form or
+    survey that belongs to one schedule: registration, the default intake form,
+    an intake form for each schedule, session-report questions, the default
+    survey, and a survey for each schedule.
+    """
     taken = {(f.kind, f.schedule_id) for f in Form.objects.filter(center=center)}
-    choices = []
-    if (FormKind.REGISTRATION, None) not in taken:
-        choices.append((REGISTRATION, str(_("Registration: asked the first time a student books"))))
-    if (FormKind.INTAKE, None) not in taken:
-        choices.append(
-            (INTAKE_DEFAULT, str(_("Intake: asked when booking on any schedule without its own")))
+    schedules = list(Schedule.objects.filter(center=center).order_by("name"))
+    choices: list[tuple[str, str]] = []
+
+    def offer(kind: str, schedule: Schedule | None, label: str) -> None:
+        if (kind, schedule.pk if schedule else None) not in taken:
+            choices.append((f"{kind}:{schedule.pk}" if schedule else kind, label))
+
+    offer(
+        FormKind.REGISTRATION,
+        None,
+        str(_("Registration: asked the first time a student books")),
+    )
+    offer(
+        FormKind.INTAKE, None, str(_("Intake: asked when booking on any schedule without its own"))
+    )
+    for schedule in schedules:
+        offer(
+            FormKind.INTAKE,
+            schedule,
+            str(_("Intake: asked when booking on %(name)s")) % {"name": schedule.name},
         )
-    for schedule in Schedule.objects.filter(center=center).order_by("name"):
-        if (FormKind.INTAKE, schedule.pk) not in taken:
-            choices.append(
-                (
-                    str(schedule.pk),
-                    str(_("Intake: asked when booking on %(name)s")) % {"name": schedule.name},
-                )
-            )
+    offer(
+        FormKind.REPORT,
+        None,
+        str(_("Session report questions: tutors answer them in each session record")),
+    )
+    offer(
+        FormKind.SURVEY,
+        None,
+        str(_("Survey: sent after sessions on any schedule without its own")),
+    )
+    for schedule in schedules:
+        offer(
+            FormKind.SURVEY,
+            schedule,
+            str(_("Survey: sent after sessions on %(name)s")) % {"name": schedule.name},
+        )
     return choices
 
 
@@ -53,12 +77,10 @@ class NewFormForm(forms.Form):
         cast(forms.ChoiceField, self.fields["place"]).choices = places_free(center)
 
     def kind_and_schedule(self) -> tuple[str, Schedule | None]:
-        place = self.cleaned_data["place"]
-        if place == REGISTRATION:
-            return FormKind.REGISTRATION, None
-        if place == INTAKE_DEFAULT:
-            return FormKind.INTAKE, None
-        return FormKind.INTAKE, Schedule.objects.get(center=self.center, pk=UUID(place))
+        kind, _sep, schedule_id = self.cleaned_data["place"].partition(":")
+        if not schedule_id:
+            return kind, None
+        return kind, Schedule.objects.get(center=self.center, pk=UUID(schedule_id))
 
 
 class IntroForm(forms.ModelForm):
@@ -100,6 +122,14 @@ class QuestionForm(forms.Form):
         required=False,
         help_text=_("Directors see every answer either way."),
     )
+    shown_to_student = forms.BooleanField(
+        label=_("The student sees the answer"),
+        required=False,
+        help_text=_(
+            "With the session summary on their My writing page. Otherwise only staff who read "
+            "session records see it. Students can still ask to see every answer."
+        ),
+    )
     condition = forms.ChoiceField(label=_("When to show this question"), required=False)
 
     def __init__(
@@ -115,6 +145,8 @@ class QuestionForm(forms.Form):
         self.question = question
         if draft.form.kind != FormKind.REGISTRATION:
             del self.fields["shown_to_staff"]
+        if draft.form.kind != FormKind.REPORT:
+            del self.fields["shown_to_student"]
         if kind_locked:
             kind = self.fields["kind"]
             kind.disabled = True
@@ -204,6 +236,34 @@ class QuestionForm(forms.Form):
             required=bool(data.get("required")),
             is_demographic=bool(data.get("is_demographic")),
             shown_to_staff=bool(data.get("shown_to_staff")),
+            shown_to_student=bool(data.get("shown_to_student")),
             condition=data.get("condition"),
             options=options,
         )
+
+
+class SurveySettingsForm(forms.ModelForm):
+    """When the center's survey goes out to students who came to a session."""
+
+    class Meta:
+        model = Center
+        fields = ["survey_timing", "survey_delay_minutes"]
+        widgets = {"survey_timing": forms.RadioSelect}
+
+
+class PeriodForm(forms.Form):
+    """Which survey and which term the results page shows. Sent with GET."""
+
+    survey = forms.ChoiceField(label=_("Survey"))
+    term = forms.ChoiceField(label=_("Term"))
+
+    def __init__(
+        self,
+        *args: Any,
+        surveys: list[tuple[str, str]],
+        terms: list[tuple[str, str]],
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        cast(forms.ChoiceField, self.fields["survey"]).choices = surveys
+        cast(forms.ChoiceField, self.fields["term"]).choices = terms

@@ -1,15 +1,21 @@
+import io
 import json
+import logging
 import os
 import re
 import subprocess
 import sys
+from datetime import timedelta
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from django.core import mail
 from django.core.mail import send_mail
 from django.test import override_settings
 from django.urls import reverse
+
+from sympraxi.core.logs import ScrubLinks, scrub
 
 REPO = Path(__file__).resolve().parent.parent
 TEMPLATES = REPO / "sympraxi" / "templates"
@@ -104,3 +110,61 @@ def test_email_goes_through_the_task_queue() -> None:
     assert len(mail.outbox) == 1
     assert mail.outbox[0].subject == "Your appointment"
     assert mail.outbox[0].to == ["student@example.edu"]
+
+
+# A survey link's token, shaped like secrets.token_urlsafe(32).
+SURVEY_TOKEN = "q8Zf3kLm0Xw-Rt7_Ub2Ye9Hn4Vc6Ja1Ps5Dg0Oi3Kz"
+
+
+def test_survey_link_tokens_are_scrubbed() -> None:
+    request_line = f'"GET /survey/{SURVEY_TOKEN}/ HTTP/1.1" 200'
+    assert scrub(request_line) == '"GET /survey/[link]/ HTTP/1.1" 200'
+    assert scrub(f"https://wc.example.edu/survey/{SURVEY_TOKEN}/?a=1") == (
+        "https://wc.example.edu/survey/[link]/?a=1"
+    )
+    assert scrub(f"/survey/{SURVEY_TOKEN}") == "/survey/[link]"
+    assert scrub("/survey/thanks/") == "/survey/thanks/"
+    results = "/centers/writing/forms/surveys/results/"
+    assert scrub(results) == results
+
+
+@pytest.mark.django_db
+def test_django_logs_a_dead_survey_link_without_its_token(client) -> None:
+    console = next(
+        handler
+        for handler in logging.getLogger().handlers
+        if any(isinstance(f, ScrubLinks) for f in handler.filters)
+    )
+    assert isinstance(console, logging.StreamHandler)
+    stream = io.StringIO()
+    previous = console.setStream(stream)
+    try:
+        assert client.get(f"/survey/{SURVEY_TOKEN}/").status_code == 404
+    finally:
+        console.setStream(previous)
+    assert "Not Found: /survey/[link]/" in stream.getvalue()
+    assert SURVEY_TOKEN not in stream.getvalue()
+
+
+def test_the_access_log_hides_survey_link_tokens() -> None:
+    pytest.importorskip("fcntl", reason="Gunicorn runs only on Unix-like systems")
+    from gunicorn.config import Config
+
+    from sympraxi.core.access_log import AccessLog
+
+    link = f"/survey/{SURVEY_TOKEN}/"
+    environ = {
+        "REQUEST_METHOD": "POST",
+        "RAW_URI": link,
+        "PATH_INFO": link,
+        "QUERY_STRING": "",
+        "SERVER_PROTOCOL": "HTTP/1.1",
+        "REMOTE_ADDR": "192.0.2.10",
+        "HTTP_REFERER": f"https://wc.example.edu{link}",
+    }
+    request = SimpleNamespace(headers=[("REFERER", environ["HTTP_REFERER"])])
+    response = SimpleNamespace(status="302 Found", sent=0, headers=[])
+    atoms = AccessLog(Config()).atoms(response, request, environ, timedelta(milliseconds=12))
+    assert SURVEY_TOKEN not in repr(atoms)
+    assert atoms["r"] == "POST /survey/[link]/ HTTP/1.1"
+    assert atoms["f"] == "https://wc.example.edu/survey/[link]/"

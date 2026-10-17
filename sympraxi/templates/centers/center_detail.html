@@ -25,12 +25,13 @@
       {% if can_write_records %}<li><a href="{% url 'records:new' slug=center.slug %}">{% translate "Record a meeting that wasn't booked" %}</a></li>{% endif %}
     </ul>
   {% endif %}
-  {% if can_view_members or can_view_audit_log or can_manage_schedules or can_manage_records or can_manage_blocks or can_manage_forms %}
+  {% if can_view_members or can_view_audit_log or can_manage_schedules or can_manage_records or can_manage_blocks or can_manage_forms or can_view_survey_results %}
     <h2>{% translate "Center tools" %}</h2>
     <ul class="usa-list">
       {% if can_manage_schedules %}<li><a href="{% url 'scheduling:schedules' slug=center.slug %}">{% translate "Set up schedules, terms and rooms" %}</a></li>{% endif %}
       {% if can_manage_blocks %}<li><a href="{% url 'scheduling:blocks' slug=center.slug %}">{% translate "Booking blocks for no-shows and late cancellations" %}</a></li>{% endif %}
-      {% if can_manage_forms %}<li><a href="{% url 'forms:list' slug=center.slug %}">{% translate "Registration and intake forms" %}</a></li>{% endif %}
+      {% if can_manage_forms %}<li><a href="{% url 'forms:list' slug=center.slug %}">{% translate "Forms: registration, intake, session reports and surveys" %}</a></li>{% endif %}
+      {% if can_view_survey_results %}<li><a href="{% url 'forms:survey_results' slug=center.slug %}">{% translate "Survey results" %}</a></li>{% endif %}
       {% if can_manage_records %}<li><a href="{% url 'records:resources' slug=center.slug %}">{% translate "Your center's resources" %}</a></li>{% endif %}
       {% if can_manage_records %}<li><a href="{% url 'records:settings' slug=center.slug %}">{% translate "Session record settings" %}</a></li>{% endif %}
       {% if can_view_members %}<li><a href="{% url 'centers:members' slug=center.slug %}">{% translate "People in this center" %}</a></li>{% endif %}

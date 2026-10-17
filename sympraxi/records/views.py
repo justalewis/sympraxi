@@ -28,6 +28,9 @@ from sympraxi.centers.views import HtmxHttpRequest
 from sympraxi.core.policy import Action, can, get_for_action
 from sympraxi.forms import display as form_display
 from sympraxi.forms import export as form_export
+from sympraxi.forms import report
+from sympraxi.forms.answering import CONTINUE, Questions, follow_up_message
+from sympraxi.forms.models import Response
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.records import export, services, suggestions
 from sympraxi.records.display import by_project, topic_axes, topics_by_axis
@@ -92,7 +95,11 @@ def membership_of(center: Center, student: User) -> Membership | None:
     return Membership.objects.filter(center=center, user=student, role=Role.STUDENT).first()
 
 
-def _audit_read(request: HttpRequest, rec: SessionRecord, where: str) -> None:
+def _audit_read(
+    request: HttpRequest, rec: SessionRecord, where: str, answers: Response | None = None
+) -> None:
+    """A staff read of a record. Names the record's report answers if they were shown."""
+    details = {"report_answers": str(answers.pk)} if answers is not None else {}
     record(
         AuditAction.RECORD_VIEWED,
         request=request,
@@ -100,6 +107,7 @@ def _audit_read(request: HttpRequest, rec: SessionRecord, where: str) -> None:
         target=rec,
         student=str(rec.student_id),
         where=where,
+        **details,
     )
 
 
@@ -220,9 +228,25 @@ def _record_page(
     amend: bool = False,
 ) -> HttpResponse:
     posted = request.method == "POST"
-    # Attaching or searching without JavaScript redraws the form as posted, unsaved
-    # and without error messages: nothing has been submitted yet.
-    redraw = posted and ("attach" in request.POST or "search" in request.POST)
+    questions = report.questions_for(
+        center=center, rec=rec, amend=amend, data=request.POST if posted else None
+    )
+    # Follow-up questions the answers call for, which the page didn't show yet
+    # (or Continue pressed): nothing is saved, and the page shows them.
+    follow_ups = (
+        posted
+        and questions is not None
+        and (CONTINUE in request.POST or questions.needs_another_look)
+    )
+    # Attaching, searching or showing follow-ups without JavaScript redraws the
+    # form as posted, unsaved and without error messages: nothing has been
+    # submitted yet.
+    redraw = posted and ("attach" in request.POST or "search" in request.POST or follow_ups)
+    form_status = ""
+    if questions is not None and redraw:
+        if follow_ups and CONTINUE not in request.POST:
+            form_status = follow_up_message(_submit_label(request, amend))
+        questions = questions.again()
     others = 0 if amend else _others_without_records(appointment, student)
     form = RecordForm(
         request.POST if posted and not redraw else None,
@@ -246,12 +270,17 @@ def _record_page(
                 request,
                 _("Attached %(title)s. Save the record to keep it.") % {"title": resource.title},
             )
-    elif posted and not redraw and form.is_valid():
-        saved = _save_record(request, form, center, appointment, student, rec, attached, amend)
-        if saved is not None:
-            return saved
+    elif posted and not redraw:
+        # Validate both, so each shows its own errors.
+        valid = [form.is_valid(), questions is None or questions.is_valid()]
+        if all(valid):
+            saved = _save_record(
+                request, form, center, appointment, student, rec, attached, amend, questions
+            )
+            if saved is not None:
+                return saved
     elif not posted and rec is not None:
-        _audit_read(request, rec, "record form")
+        _audit_read(request, rec, "record form", report.response_of(rec))
 
     chosen = Topic.objects.filter(slug__in=form.topic_slugs())
     attached_ids = [a.resource.pk for a in attached]
@@ -277,11 +306,22 @@ def _record_page(
         "results": suggestions.search(center, query, exclude=attached_ids) if query else [],
         "searched": posted and "search" in request.POST,
         "others": others,
+        "questions": questions,
+        "form_status": form_status or (questions.status if questions else ""),
         "crumbs": _form_crumbs(center, appointment, rec),
         "back_url": _form_crumbs(center, appointment, rec)[-1][1],
     }
     with timezone.override(center.time_zone):
         return render(request, "records/record_form.html", context)
+
+
+def _submit_label(request: HttpRequest, amend: bool) -> str:
+    """The button the tutor pressed, for the message about follow-up questions."""
+    if amend:
+        return _("Save the amendment")
+    if request.POST.get("action") == "finalize":
+        return _("Save and finalize")
+    return _("Save draft")
 
 
 def _form_crumbs(
@@ -309,6 +349,7 @@ def _save_record(
     rec: SessionRecord | None,
     attached: list[Attached],
     amend: bool,
+    questions: Questions | None,
 ) -> HttpResponse | None:
     """Save from a valid form. Returns the redirect, or None to show the form's errors."""
     user = signed_in(request)
@@ -337,6 +378,10 @@ def _save_record(
                     request=request,
                 )
             content = form.content([(a.resource, a.note) for a in attached], project)
+            if questions is not None:
+                content.answers = report.ReportAnswers(
+                    version=questions.version, values=questions.values()
+                )
             if amend:
                 services.amend(
                     actor=user,
@@ -490,13 +535,15 @@ def standalone_start(request: HttpRequest, slug: str) -> HttpResponse:
 def record_detail(request: HttpRequest, slug: str, record_id: UUID) -> HttpResponse:
     """A whole record for staff: staff notes, tags, resources and every amendment."""
     rec = record_for(request, Action.VIEW_RECORDS, slug, record_id)
-    _audit_read(request, rec, "record page")
+    answers = report.for_staff(rec)
+    _audit_read(request, rec, "record page", answers.response if answers else None)
     center = rec.center
     user = request.user
     membership = membership_of(center, rec.student)
     context = {
         "center": center,
         "rec": rec,
+        "answers": answers,
         "topics": topics_by_axis(rec.topics.all()),
         "attachments": rec.attachments.select_related("resource"),
         "amendments": rec.amendments.select_related("author"),
@@ -654,6 +701,8 @@ def my_writing(request: HttpRequest, slug: str) -> HttpResponse:
     center = center_for(request, Action.VIEW_OWN_WRITING, slug)
     student = signed_in(request)
     records = _student_records(center, student, final_only=True)
+    for rec in records:
+        rec.student_answers = report.for_student(rec)  # type: ignore[attr-defined]
     projects = WritingProject.objects.filter(center=center, student=student)
     context = {
         "center": center,
@@ -669,6 +718,7 @@ def my_writing(request: HttpRequest, slug: str) -> HttpResponse:
 def my_record(request: HttpRequest, slug: str, record_id: UUID) -> HttpResponse:
     """One of the student's own sessions. The summary email links here."""
     rec = record_for(request, Action.VIEW_OWN_WRITING, slug, record_id)
+    rec.student_answers = report.for_student(rec)  # type: ignore[attr-defined]
     center = rec.center
     context = {
         "center": center,

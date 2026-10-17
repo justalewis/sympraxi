@@ -3,7 +3,7 @@
 {% with field=row.field %}
   {% if row.is_choice %}
     <fieldset class="usa-fieldset sympraxi-question{% if field.errors %} usa-form-group--error{% endif %}" id="question-{{ row.question.key.hex }}"{% if row.leads_on and refresh_url %} hx-post="{{ refresh_url }}" hx-trigger="change" hx-target="#answers-{{ group.prefix }}" hx-select="#answers-{{ group.prefix }}" hx-swap="outerHTML" hx-select-oob="#form-status:innerHTML" hx-vals='{"continue": "1"}'{% endif %}>
-      <legend class="usa-legend">{{ field.label }}{% if not field.field.required %} <span class="usa-hint">({% translate "optional" %})</span>{% endif %}</legend>
+      <legend class="usa-legend">{{ field.label }}{% if row.needed_to_finalize %} <span class="usa-hint">({% translate "needed to finalize" %})</span>{% elif not field.field.required %} <span class="usa-hint">({% translate "optional" %})</span>{% endif %}</legend>
       {% include "forms/_question_notes.html" %}
       {% for choice in field %}
         {% if row.is_multiple %}
@@ -21,7 +21,7 @@
     </fieldset>
   {% else %}
     <div class="usa-form-group sympraxi-question{% if field.errors %} usa-form-group--error{% endif %}" id="question-{{ row.question.key.hex }}">
-      <label class="usa-label{% if field.errors %} usa-label--error{% endif %}" for="{{ field.id_for_label }}">{{ field.label }}{% if not field.field.required %} <span class="usa-hint">({% translate "optional" %})</span>{% endif %}</label>
+      <label class="usa-label{% if field.errors %} usa-label--error{% endif %}" for="{{ field.id_for_label }}">{{ field.label }}{% if row.needed_to_finalize %} <span class="usa-hint">({% translate "needed to finalize" %})</span>{% elif not field.field.required %} <span class="usa-hint">({% translate "optional" %})</span>{% endif %}</label>
       {% include "forms/_question_notes.html" %}
       {{ row.widget }}
     </div>

@@ -27,8 +27,8 @@ class LocalLoginView(LoginView):
 
 @login_required
 def reminders(request: HttpRequest) -> HttpResponse:
-    """Turn reminder emails on or off. Students have them on unless they turn them
-    off; tutors have them off unless they turn them on."""
+    """Turn reminder and survey emails on or off. Students have both on unless they
+    turn them off; tutors have reminders off unless they turn them on."""
     user = cast(User, request.user)
     tutor = Membership.objects.filter(user=user, role=Role.TUTOR, is_active=True).exists()
     data = request.POST if request.method == "POST" else None

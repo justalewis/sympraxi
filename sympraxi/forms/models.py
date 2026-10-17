@@ -1,9 +1,10 @@
-"""Forms a center writes for itself: registration and intake now, session reports and
-surveys later.
+"""Forms a center writes for itself: registration, intake, session-report questions
+and surveys.
 
 A `Form` is one place a center asks questions: its registration form, the intake
-form for a schedule (or the center's default intake form), and later its
-session-report questions and surveys. Its wording lives in numbered
+form for a schedule (or the center's default intake form), the questions tutors
+answer in each session record, and the survey sent to students after sessions
+(per schedule, or a center default). Its wording lives in numbered
 `FormVersion`s. Directors edit a draft version and publish it; editing a
 published form starts a new draft that copies it.
 
@@ -18,14 +19,24 @@ Each answer also points to the exact question it answered, so it is always shown
 with the wording the person saw. Questions skipped, or hidden because a
 condition wasn't met, have no answer.
 
-The database keeps this honest (migration 0002): a published version and its
-questions and options can't change or be deleted, an answer must belong to its
-response's version, and responses and answers are never updated or deleted.
-Changing answers means a new response; the old one stays.
+The database keeps this honest (migrations 0002 and 0004): a published version
+and its questions and options can't change or be deleted, an answer must belong
+to its response's version, and responses and answers are never updated or
+deleted. Changing answers means a new response; the old one stays. The one
+exception is session-report answers, which belong to a session record
+(`Response.record`): while the record is a draft they are replaced on each save,
+and once it is final they change only inside an amendment, like the record.
 
-Intake and registration answers are FERPA education records.
+A survey response is anonymous: it keeps no student, appointment, record or
+person who answered, and only the date it was given (`answered_on`), not the
+time. `SurveyInvitation` records each survey email sent, and nothing about
+whether or when it was answered; a used link is kept in `UsedSurveyToken` under
+a hash that can't be matched to its invitation.
+
+Intake, registration and session-report answers are FERPA education records.
 """
 
+import hashlib
 import uuid
 from decimal import Decimal
 from typing import Any
@@ -34,6 +45,7 @@ from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models import Deferrable, Q
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from sympraxi.centers.models import Center
@@ -75,14 +87,15 @@ class Form(models.Model):
     """One place a center asks questions.
 
     A center has at most one form of each kind for each place: one registration
-    form, one default intake form, and one intake form per schedule.
+    form, one set of session-report questions, a default intake form and survey,
+    and one intake form and survey per schedule.
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     center = models.ForeignKey(Center, on_delete=models.PROTECT, related_name="forms")
     kind = models.CharField(_("kind"), max_length=20, choices=FormKind.choices)
-    # An intake form for one schedule. Empty means the center's default, used on
-    # every schedule that has no form of its own.
+    # An intake form or survey for one schedule. Empty means the center's default,
+    # used on every schedule that has no form of its own.
     schedule = models.ForeignKey(
         Schedule, on_delete=models.PROTECT, null=True, blank=True, related_name="forms"
     )
@@ -120,6 +133,12 @@ class Form(models.Model):
             if self.schedule_id is None:
                 return str(_("Intake: every schedule without its own form"))
             return str(_("Intake: %(schedule)s") % {"schedule": self.schedule})
+        if self.kind == FormKind.SURVEY:
+            if self.schedule_id is None:
+                return str(_("Survey: every schedule without its own survey"))
+            return str(_("Survey: %(schedule)s") % {"schedule": self.schedule})
+        if self.kind == FormKind.REPORT:
+            return str(_("Session report questions"))
         return str(self.get_kind_display())
 
     def published(self) -> "FormVersion | None":
@@ -208,6 +227,13 @@ class Question(models.Model):
         default=False,
         help_text=_("Directors see every answer either way."),
     )
+    # Session-report questions only: the student sees the tutor's answer with
+    # their summary. Otherwise only staff who read records see it.
+    shown_to_student = models.BooleanField(
+        _("the student sees the answer"),
+        default=False,
+        help_text=_("With the session summary on their My writing page."),
+    )
     # A follow-up: show this question only when the question with this key was
     # answered with the option with this key. Both are permanent keys, so the
     # condition carries over to new versions.
@@ -280,8 +306,16 @@ class Response(models.Model):
     """One person's answers to one version of a form.
 
     `student` is whom the answers are about, and `answered_by` who gave them: the
-    student, or a staff member booking for them. `appointment` is set for intake.
-    Never changed: new answers are a new response, and the earlier one stays.
+    student, a staff member booking for them, or the tutor writing a session
+    record. `appointment` is set for intake (and for session reports about a
+    booked session), `record` for session reports. Never changed: new answers are
+    a new response, and the earlier one stays. Session-report answers are the
+    exception (see the module's docstring).
+
+    A survey response is anonymous: `student`, `appointment`, `record`,
+    `answered_by` and `created_at` are all empty, and `answered_on` holds the
+    date only. The database refuses any other shape for a survey response, and
+    this shape for any other kind (migration 0004).
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -302,10 +336,21 @@ class Response(models.Model):
         blank=True,
         related_name="form_responses",
     )
-    answered_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+"
+    # A session-report response belongs to its record. Only a draft record can be
+    # deleted, and its answers go with it.
+    record = models.ForeignKey(
+        "records.SessionRecord",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="report_responses",
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    answered_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name="+"
+    )
+    # Empty only for survey responses, which keep the date and not the time.
+    created_at = models.DateTimeField(default=timezone.now, null=True, blank=True)
+    answered_on = models.DateField(null=True, blank=True)
 
     class Meta:
         ordering = ["created_at"]
@@ -314,10 +359,38 @@ class Response(models.Model):
             models.Index(
                 fields=["appointment", "student", "-created_at"], name="forms_response_appointment"
             ),
+            models.Index(fields=["form", "answered_on"], name="forms_response_answered_on"),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["record"],
+                condition=Q(record__isnull=False),
+                name="forms_one_response_per_record",
+            ),
+            # Either an anonymous survey response, with a date and nothing else, or
+            # one that says who answered and when.
+            models.CheckConstraint(
+                condition=Q(
+                    student__isnull=True,
+                    appointment__isnull=True,
+                    record__isnull=True,
+                    answered_by__isnull=True,
+                    created_at__isnull=True,
+                    answered_on__isnull=False,
+                )
+                | Q(answered_by__isnull=False, created_at__isnull=False, answered_on__isnull=True),
+                name="forms_response_anonymous_or_signed",
+            ),
         ]
 
     def __str__(self) -> str:
+        if self.created_at is None:
+            return f"{self.version} {self.answered_on}"
         return f"{self.version} {self.created_at:%Y-%m-%d %H:%M}"
+
+    @property
+    def is_anonymous(self) -> bool:
+        return self.answered_by_id is None
 
     @property
     def by_staff(self) -> bool:
@@ -359,6 +432,70 @@ class Answer(models.Model):
         if kind == QuestionKind.DATE:
             return self.date
         return self.text
+
+
+class SurveyInvitation(models.Model):
+    """One survey email to one student about one appointment, so it is sent once.
+
+    The scheduler writes the row; the mail worker then makes the link's token,
+    stores only its hash here and sends the email (`sympraxi/forms/tasks.py`), so
+    the token itself is never stored. Nothing here says whether or when the
+    survey was answered. The unique constraint stops a second scheduler, or a
+    sweep run twice, from sending another.
+    """
+
+    appointment = models.ForeignKey(
+        Appointment, on_delete=models.CASCADE, related_name="survey_invitations"
+    )
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
+    )
+    form = models.ForeignKey(Form, on_delete=models.PROTECT, related_name="invitations")
+    # sha256 of the link's token, set when the email is sent. Empty until then.
+    token_hash = models.CharField(max_length=64, blank=True, default="")
+    sent_at = models.DateTimeField()
+    expires_at = models.DateTimeField()
+
+    class Meta:
+        ordering = ["sent_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["appointment", "student"], name="forms_survey_invitation_once"
+            ),
+            models.UniqueConstraint(
+                fields=["token_hash"],
+                condition=~Q(token_hash=""),
+                name="forms_survey_token_once",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"Survey for {self.appointment_id} to {self.student_id}"
+
+
+class UsedSurveyToken(models.Model):
+    """A survey link that has been used, so it works only once.
+
+    `digest` is a different hash of the token from the invitation's
+    `token_hash`, so a used link can't be matched to its invitation, or to the
+    student, without the link itself. The digest is the primary key: there is
+    no counter, and no time, that would put used links in order.
+    """
+
+    digest = models.CharField(max_length=64, primary_key=True)
+
+    def __str__(self) -> str:
+        return self.digest
+
+
+def token_hash(token: str) -> str:
+    """How a survey link's token is stored on its invitation."""
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+def used_digest(token: str) -> str:
+    """How a used survey link is stored. Can't be worked out from `token_hash`."""
+    return hashlib.sha256(b"sympraxi-survey-used:" + token.encode()).hexdigest()
 
 
 def plain_number(value: Decimal) -> str:

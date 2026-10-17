@@ -10,6 +10,7 @@ what happened. Follow-up questions work the same way on every answering page
 
 from typing import Any
 from uuid import UUID
+from zoneinfo import ZoneInfo
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -23,9 +24,16 @@ from django.utils.translation import gettext as _
 from sympraxi.centers.models import Center
 from sympraxi.centers.views import HtmxHttpRequest
 from sympraxi.core.policy import Action, can, get_for_action
-from sympraxi.forms import builder, display, services
+from sympraxi.forms import builder, display, services, surveys
 from sympraxi.forms.answering import CONTINUE, Questions, follow_up_message
-from sympraxi.forms.forms import IntroForm, NewFormForm, QuestionForm, places_free
+from sympraxi.forms.forms import (
+    IntroForm,
+    NewFormForm,
+    PeriodForm,
+    QuestionForm,
+    SurveySettingsForm,
+    places_free,
+)
 from sympraxi.forms.models import (
     CHOICE_KINDS,
     Form,
@@ -37,6 +45,9 @@ from sympraxi.forms.models import (
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.records.views import student_for
 from sympraxi.scheduling.views import appointment_for, center_for, signed_in
+
+# The order forms are listed in.
+KIND_ORDER: list[str] = [FormKind.REGISTRATION, FormKind.INTAKE, FormKind.REPORT, FormKind.SURVEY]
 
 
 def _crumbs(center: Center, *extra: tuple[str, str]) -> list[tuple[str, str]]:
@@ -114,16 +125,19 @@ def describe(version: FormVersion) -> list[dict[str, Any]]:
 def form_list(request: HttpRequest, slug: str) -> HttpResponse:
     center = center_for(request, Action.MANAGE_FORMS, slug)
     forms = Form.objects.filter(center=center).select_related("schedule")
-    # Registration first, then the default intake form, then each schedule's.
+    # Registration, intake, session-report questions, then surveys; within each
+    # kind, the default form before each schedule's.
     ordered = sorted(
         forms.annotate(answered=Count("responses")),
-        key=lambda f: (f.kind != FormKind.REGISTRATION, f.schedule is not None, str(f.schedule)),
+        key=lambda f: (KIND_ORDER.index(f.kind), f.schedule is not None, str(f.schedule)),
     )
     rows = [{"form": f, "published": f.published(), "draft": f.draft()} for f in ordered]
     context = {
         "center": center,
         "rows": rows,
         "can_add": bool(places_free(center)),
+        "has_surveys": any(f.kind == FormKind.SURVEY for f in ordered),
+        "can_see_results": can(request.user, Action.VIEW_SURVEY_RESULTS, center),
         "crumbs": _crumbs(center),
     }
     return render(request, "forms/form_list.html", context)
@@ -157,8 +171,10 @@ def form_create(request: HttpRequest, slug: str) -> HttpResponse:
         "title": _("Add a form"),
         "intro": _(
             "A registration form is asked once, the first time a student books. An intake "
-            "form is asked each time a student books. A schedule with its own intake form "
-            "uses it; every other schedule uses the default one."
+            "form is asked each time a student books. Session report questions are answered "
+            "by the tutor in each session record. A survey goes to students after sessions "
+            "they came to. A schedule with its own intake form or survey uses it; every "
+            "other schedule uses the default one."
         ),
         "crumbs": _crumbs(center, _list_crumb(center)),
         "submit": _("Add the form"),
@@ -249,6 +265,7 @@ def form_detail(request: HtmxHttpRequest, slug: str, form_id: UUID) -> HttpRespo
         "problems": builder.publish_problems(draft) if draft else [],
         "intro_form": IntroForm(instance=draft) if draft else None,
         "is_registration": form.kind == FormKind.REGISTRATION,
+        "is_report": form.kind == FormKind.REPORT,
         "status": status,
         "crumbs": _crumbs(form.center, _list_crumb(form.center)),
     }
@@ -268,6 +285,7 @@ def _question_initial(question: Question | None) -> dict[str, Any]:
         "required": question.required,
         "is_demographic": question.is_demographic,
         "shown_to_staff": question.shown_to_staff,
+        "shown_to_student": question.shown_to_student,
         "condition": condition,
     }
 
@@ -375,6 +393,7 @@ def changes(before: FormVersion | None, after: FormVersion) -> dict[str, list[st
             and earlier.help_text == question.help_text
             and earlier.required == question.required
             and earlier.shown_to_staff == question.shown_to_staff
+            and earlier.shown_to_student == question.shown_to_student
             and earlier.show_if_option == question.show_if_option
             and [(o.key, o.label) for o in earlier.options.all()]
             == [(o.key, o.label) for o in question.options.all()]
@@ -597,3 +616,75 @@ def student_registration(request: HttpRequest, slug: str, membership_id: UUID) -
     }
     with timezone.override(center.time_zone):
         return render(request, "forms/student_registration.html", context)
+
+
+# --- Surveys ------------------------------------------------------------------------
+
+
+@login_required
+def survey_settings(request: HttpRequest, slug: str) -> HttpResponse:
+    """When the center's survey goes out to students who came to a session."""
+    center = center_for(request, Action.MANAGE_FORMS, slug)
+    form = SurveySettingsForm(request.POST or None, instance=center)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        record(
+            AuditAction.SURVEY_SETTINGS_CHANGED,
+            request=request,
+            center=center,
+            target=center,
+            **{name: form.cleaned_data[name] for name in form.changed_data},
+        )
+        messages.success(request, _("Settings saved."))
+        return redirect("forms:list", slug=slug)
+    context = {
+        "center": center,
+        "form": form,
+        "title": _("When surveys go out"),
+        "intro": _(
+            "A survey goes to each student who came to a session: never for a canceled "
+            "appointment or a no-show, and only to students marked as here (finalizing a "
+            "session record marks them). It goes out only once the center has a survey in "
+            "use. Students can turn these emails off."
+        ),
+        "crumbs": _crumbs(center, _list_crumb(center)),
+        "submit": _("Save settings"),
+        "back": reverse("forms:list", kwargs={"slug": slug}),
+    }
+    return render(request, "scheduling/form_page.html", context)
+
+
+@login_required
+def survey_results(request: HttpRequest, slug: str) -> HttpResponse:
+    """A survey's anonymous results for one term, once enough people answered."""
+    center = center_for(request, Action.VIEW_SURVEY_RESULTS, slug)
+    survey_forms = sorted(
+        Form.objects.filter(center=center, kind=FormKind.SURVEY).select_related("schedule"),
+        key=lambda f: (f.schedule is not None, str(f.schedule)),
+    )
+    choices = surveys.periods(center)
+    today = timezone.localdate(timezone=ZoneInfo(center.time_zone))
+    chosen_form = next((f for f in survey_forms if str(f.pk) == request.GET.get("survey")), None)
+    chosen_form = chosen_form or (survey_forms[0] if survey_forms else None)
+    period = next((p for p in choices if p.key == request.GET.get("term")), None)
+    period = period or surveys.current_period(choices, today)
+    picker = PeriodForm(
+        initial={
+            "survey": str(chosen_form.pk) if chosen_form else "",
+            "term": period.key if period else "",
+        },
+        surveys=[(str(f.pk), f.title) for f in survey_forms],
+        terms=[(p.key, p.term.name) for p in reversed(choices)],
+    )
+    found = surveys.results(chosen_form, period) if chosen_form and period else None
+    context = {
+        "center": center,
+        "picker": picker,
+        "survey": chosen_form,
+        "period": period,
+        "results": found,
+        "minimum": surveys.MIN_RESPONSES,
+        "can_manage": can(request.user, Action.MANAGE_FORMS, center),
+        "crumbs": _crumbs(center),
+    }
+    return render(request, "forms/survey_results.html", context)

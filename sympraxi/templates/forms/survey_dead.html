@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Survey link" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "This link doesn't open a survey" %}</h1>
+  <p>{% blocktranslate count days=days %}Survey links work once and stop working {{ days }} day after they're sent.{% plural %}Survey links work once and stop working {{ days }} days after they're sent.{% endblocktranslate %}</p>
+{% endblock content %}

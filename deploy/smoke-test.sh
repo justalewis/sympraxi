@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # CI check of the real production stack: install, serve over HTTPS through Caddy,
-# back up, wipe, restore, and confirm the data came back; then check that the
-# scheduler is healthy and sends a reminder that falls due. Runs on a throwaway VM.
+# keep survey links out of the logs, back up, wipe, restore, and confirm the data
+# came back; then check that the scheduler is healthy and sends a reminder that
+# falls due. Runs on a throwaway VM.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -33,6 +34,21 @@ grep -q "Smoke Test Center" <<<"$home" || fail "home page does not show the site
 echo "--- Plain HTTP redirects to HTTPS"
 status="$(curl --silent --output /dev/null --write-out '%{http_code}' http://localhost/)"
 [ "$status" = "308" ] || fail "expected a 308 redirect from http://localhost/, got $status"
+
+echo "--- Survey links stay out of the web server's logs"
+link_token="smokeTestSurveyLink0123456789abcdefghijklmn"
+curl --silent --insecure --output /dev/null \
+    -H "Referer: https://localhost/survey/$link_token/" "https://localhost/survey/$link_token/"
+logs=""
+for _ in $(seq 1 10); do
+    logs="$(docker compose logs web 2>&1)"
+    grep -q "/survey/\[link\]/" <<<"$logs" && break
+    sleep 1
+done
+grep -q "/survey/\[link\]/" <<<"$logs" || fail "the web logs don't show the survey request at all"
+if grep -q "$link_token" <<<"$logs"; then
+    fail "a survey link's token is in the web logs"
+fi
 
 echo "--- Back up, wipe, restore"
 manage() { docker compose exec -T web python manage.py "$@"; }

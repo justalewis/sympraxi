@@ -40,11 +40,13 @@ def response_data(response: Response) -> dict[str, Any]:
         "id": str(response.id),
         "form": response.form.title,
         "version": response.version.number,
-        "answered_at": response.created_at.isoformat(),
+        "answered_at": response.created_at.isoformat() if response.created_at else None,
         "answered_by": {
             "name": response.answered_by.display_name,
             "email": response.answered_by.email,
-        },
+        }
+        if response.answered_by
+        else None,
         "answers": [_answer(a) for a in answers],
     }
 

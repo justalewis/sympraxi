@@ -162,7 +162,13 @@ Each schedule sets its reminders, its late-cancellation window and how long afte
 
 ## Registration and intake forms
 
-Nothing to set up on the server. Directors build their center's forms in Sympraxi, under **Registration and intake forms** on the center page: a registration form, asked once when a student first books, and intake forms, asked at each booking (one per schedule, or a default for every schedule). A form's questions reach students only after a director publishes them. Each later change is published as a new version, and earlier answers keep the wording students saw.
+Nothing to set up on the server. Directors build their center's forms in Sympraxi, under **Forms** on the center page: a registration form, asked once when a student first books, and intake forms, asked at each booking (one per schedule, or a default for every schedule). A form's questions reach students only after a director publishes them. Each later change is published as a new version, and earlier answers keep the wording students saw.
+
+## Session-report questions and surveys
+
+Directors add these under **Forms** too. Session-report questions appear on the session record form for tutors; only staff who read records see the answers, unless a director marks a question for the student. A survey goes to students after sessions they came to, either when the tutor finalizes the record or a set time after the appointment ends (**When surveys go out**, on the Forms page). Results are under **Survey results** on the center page, by term, once at least five people have answered in a term.
+
+The `scheduler` service sends the invitations and the `worker` service sends their emails, so both must be running; `install.sh` starts them. Links start with `SYMPRAXI_BASE_URL`, like reminders. A survey link opens without signing in and works once, for 14 days. The answers are stored without the student's name, appointment or time of day, and the `web` service's logs write `/survey/[link]/` in place of each link. Someone with direct access to the database could still work out who answered on a day when few students did, so keep database access to the people who run the server. If you add an access log to Caddy, leave `/survey/` paths out of it.
 
 ## Backups
 

@@ -35,11 +35,12 @@ class SignupForm(forms.Form):
 
 
 class ReminderSettingsForm(forms.ModelForm):
-    """Reminder emails before appointments. Tutors see the tutoring choice only."""
+    """Reminder emails before appointments, and survey emails after sessions.
+    Only tutors see the tutoring choice."""
 
     class Meta:
         model = User
-        fields = ["reminders_for_appointments", "reminders_for_tutoring"]
+        fields = ["reminders_for_appointments", "reminders_for_tutoring", "survey_emails"]
 
     def __init__(self, *args: Any, tutor: bool, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)

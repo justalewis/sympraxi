@@ -62,6 +62,12 @@ class User(AbstractUser):
     reminders_for_tutoring = models.BooleanField(
         _("email me before appointments I'm tutoring"), default=False
     )
+    # The survey a center sends after a session the student came to.
+    survey_emails = models.BooleanField(
+        _("email me a short survey after my sessions"),
+        default=True,
+        help_text=_("The answers are anonymous: the center sees them without your name."),
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS: ClassVar[list[str]] = ["full_name"]

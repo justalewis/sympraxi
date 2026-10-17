@@ -33,6 +33,11 @@ Intake answers are read by the appointment's tutor, front desk staff and
 directors. Registration answers are read in full only by directors; tutors (for
 students they tutor) and front desk staff see the answers to questions a
 director marked for staff, which `sympraxi/forms/display.py` filters.
+Session-report answers are part of the session record, so they follow the
+records actions; the student sees only the ones a director marked for students
+(`sympraxi/forms/report.py`). Survey answers are anonymous; only directors see
+the results, and only once enough people answered (`sympraxi/forms/surveys.py`).
+The survey page itself opens from an emailed link, without signing in.
 """
 
 from collections.abc import Callable
@@ -100,7 +105,8 @@ class Action(StrEnum):
     EXPORT_STUDENT_RECORD = "records.export_student"
     # The center's own link-only resources and its session-record settings.
     MANAGE_RECORDS = "records.manage"
-    # Build, preview and publish the center's registration and intake forms.
+    # Build, preview and publish the center's forms: registration, intake,
+    # session-report questions and surveys; and say when surveys go out.
     MANAGE_FORMS = "forms.manage"
     # Answer the center's registration form and the intake form for your own
     # appointments, and see your own answers.
@@ -111,6 +117,9 @@ class Action(StrEnum):
     VIEW_REGISTRATION = "forms.view_registration"
     # Read every registration answer, including questions not marked for staff.
     VIEW_ALL_REGISTRATION = "forms.view_all_registration"
+    # Read a survey's anonymous results: counts for each option and the written
+    # answers, once enough people answered in the term.
+    VIEW_SURVEY_RESULTS = "forms.view_survey_results"
 
 
 ROLE_GRANTS: dict[Role, frozenset[Action]] = {
@@ -184,6 +193,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_INTAKE,
             Action.VIEW_REGISTRATION,
             Action.VIEW_ALL_REGISTRATION,
+            Action.VIEW_SURVEY_RESULTS,
         }
     ),
 }

@@ -53,6 +53,21 @@
   <h2>{% translate "Notes for staff" %}</h2>
   {% if rec.staff_notes %}{{ rec.staff_notes|linebreaks }}{% else %}<p>{% translate "None." %}</p>{% endif %}
 
+  {% if answers %}
+    <h2>{% translate "Answers to the center's questions" %}</h2>
+    {% if answers.answers %}
+      <dl class="sympraxi-answers-list">
+        {% for a in answers.answers %}
+          <dt>{{ a.question }}</dt>
+          <dd>{{ a.answer|linebreaksbr }}{% if a.student_sees %} <span class="usa-hint">({% translate "the student sees this" %})</span>{% endif %}</dd>
+        {% endfor %}
+      </dl>
+    {% else %}
+      <p>{% translate "No questions were answered." %}</p>
+    {% endif %}
+    <p class="usa-hint">{% blocktranslate with number=answers.response.version.number %}Answered on version {{ number }} of the questions.{% endblocktranslate %}</p>
+  {% endif %}
+
   {% if amendments %}
     <h2>{% translate "Changes after it was finalized" %}</h2>
     {% for m in amendments %}

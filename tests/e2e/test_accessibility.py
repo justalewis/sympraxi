@@ -14,7 +14,7 @@ from django.utils.csp import CSP
 
 from sympraxi.accounts import sso_config
 from sympraxi.centers.models import Membership, Role
-from sympraxi.forms.models import Answer, Question
+from sympraxi.forms.models import Answer, Question, Response
 from sympraxi.records.models import RecordStatus, SessionRecord
 from sympraxi.scheduling.models import Attendance, Block, Participant
 from sympraxi.scheduling.timeutils import local_date
@@ -34,9 +34,13 @@ pytestmark = [pytest.mark.e2e, pytest.mark.django_db(transaction=True)]
 # amended), {draft}, {unwritten} (past, no record), {project}, {resource} and
 # {student_membership}; and its attendance (tests/attendance_world.py): {missed}
 # (a no-show by {blocked_student}) and {block}; and its forms (tests/forms_world.py):
-# {form} (the default intake form, with a draft) and {question} (in that draft).
-# "blocked_student" signs in as a student whose online booking is paused, and
-# "new_student" as one who hasn't answered the registration questions yet.
+# {form} (the default intake form, with a draft) and {question} (in that draft),
+# {report_form} and {report_question} (the same for the session-report questions),
+# {answered_record} (a final record with report answers), {survey_form} (with
+# five anonymous responses, so its results show) and {survey_token} (a working
+# survey link). "blocked_student" signs in as a student whose online booking is
+# paused, and "new_student" as one who hasn't answered the registration
+# questions yet.
 PAGES = [
     (None, "/"),
     (None, "/accounts/login/"),
@@ -137,6 +141,18 @@ PAGES = [
     ("student", "/centers/{slug}/registration/"),
     ("student", "/centers/{slug}/appointments/{appointment}/intake/"),
     ("new_student", "/centers/{slug}/schedules/{schedule}/book/?{slot}"),
+    # Session-report questions and surveys
+    ("director", "/centers/{slug}/forms/{report_form}/"),
+    ("director", "/centers/{slug}/form-questions/{report_question}/edit/"),
+    ("director", "/centers/{slug}/forms/{survey_form}/"),
+    ("director", "/centers/{slug}/surveys/settings/"),
+    ("director", "/centers/{slug}/surveys/results/"),
+    ("director", "/centers/{slug}/records/{answered_record}/"),
+    ("tutor", "/centers/{slug}/records/{answered_record}/"),
+    ("tutor", "/centers/{slug}/records/{answered_record}/amend/"),
+    ("student", "/centers/{slug}/my-writing/{answered_record}/"),
+    (None, "/survey/{survey_token}/"),
+    (None, "/survey/thanks/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -240,6 +256,11 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         blocked_student=world.blocked_student.pk,
         form=world.form.pk,
         question=world.question.pk,
+        report_form=world.report_form.pk,
+        report_question=world.report_question.pk,
+        answered_record=world.answered_record.pk,
+        survey_form=world.survey_form.pk,
+        survey_token=world.survey_token,
     )
     page = context.new_page()
     return context, page, url
@@ -403,6 +424,10 @@ def test_a_tutor_writes_and_finalizes_a_record_by_keyboard(browser, live_server,
     page.focus("#id_summary")
     page.keyboard.type("We moved your thesis to the first paragraph.")
 
+    # The center's required report question, answered with the space bar.
+    page.get_by_label("Yes", exact=True).focus()
+    page.keyboard.press("Space")
+
     # Open the "Ideas and argument" group and check "Thesis" with the space bar.
     page.focus("summary:has-text('Ideas and argument')")
     page.keyboard.press("Enter")
@@ -524,5 +549,38 @@ def test_a_director_reorders_questions_by_keyboard(browser, live_server, sign_in
         "What kind of writing is it?",
         "What course is this for?",
     ]
+    context.close()
+    assert problems == []
+
+
+def test_a_dead_survey_link_passes_axe(browser, live_server) -> None:
+    context = browser.new_context(bypass_csp=True)
+    page = context.new_page()
+    response = page.goto(live_server.url + "/survey/" + "a" * 43 + "/")
+    assert response is not None and response.status == 404
+    assert "doesn't open a survey" in page.locator("main").inner_text()
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+def test_a_student_answers_a_survey_by_keyboard_without_signing_in(
+    browser, live_server, sign_in
+) -> None:
+    """Open the emailed link, choose with the space bar, send with Enter. The link then dies."""
+    context, page, url = open_page(browser, live_server, sign_in, None, "/survey/{survey_token}/")
+    problems = watch_for_csp_problems(page)
+    page.goto(url)
+    before = Response.objects.filter(form__kind="survey").count()
+    page.get_by_label("Somewhat helpful").focus()
+    page.keyboard.press("Space")
+    page.focus("#answers-survey textarea")
+    page.keyboard.type("Longer sessions.")
+    tab_to(page, lambda label: label.startswith("Send your answers"))
+    page.keyboard.press("Enter")
+    page.wait_for_selector("text=Your answers were sent to the center")
+    assert Response.objects.filter(form__kind="survey").count() == before + 1
+    assert Answer.objects.filter(text="Longer sessions.", response__student=None).exists()
+    assert page.goto(url).status == 404
     context.close()
     assert problems == []

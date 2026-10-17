@@ -27,17 +27,21 @@ Emails print to the console in development. Set `SYMPRAXI_QUEUE_EMAIL=false` to 
 
 `seed_demo` also gives the demo student a late cancellation and a possible no-show, and gives a second demo student, `student2@demo.test`, three no-shows and a booking block.
 
-It also sets up a registration form and an intake form with a follow-up question (under **Registration and intake forms** on the center page). The demo student answered both, and the intake form was reworded afterward, so the student's earlier answers show the wording of version 1 and the later ones version 2.
+It also sets up a registration form and an intake form with a follow-up question (under **Forms** on the center page). The demo student answered both, and the intake form was reworded afterward, so the student's earlier answers show the wording of version 1 and the later ones version 2.
+
+It also sets up session-report questions, answered in the demo student's two written-up records (the student sees one of the answers on My writing), and a survey with six anonymous responses this term, so **Survey results** has something to show. It prints a survey link for the demo student that opens without signing in and works once.
 
 ## The scheduler
 
-Reminder emails and possible no-show flags come from a third process, beside `runserver` and `db_worker`:
+Reminder emails, survey invitations and possible no-show flags come from a third process, beside `runserver` and `db_worker`:
 
 ```bash
 uv run python manage.py scheduler
 ```
 
-It sweeps at the start of every minute until you stop it. `--once` runs one sweep and exits. It needs `SYMPRAXI_BASE_URL` in `.env` (for development, `http://localhost:8000`), because reminder links are written outside a page request. Running two at once is safe: neither sends anything the other already sent.
+It sweeps at the start of every minute until you stop it. `--once` runs one sweep and exits. It needs `SYMPRAXI_BASE_URL` in `.env` (for development, `http://localhost:8000`), because reminder and survey links are written outside a page request. Running two at once is safe: neither sends anything the other already sent.
+
+Survey emails are sent by `db_worker` even when `SYMPRAXI_QUEUE_EMAIL=false`, because the worker makes each survey link's token at the moment it sends the email, so the link is never stored. Without `db_worker` running, invitations are recorded and their emails wait.
 
 ## Checks
 
@@ -108,11 +112,16 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/forms/display.py` | Showing answers in the wording answered, who sees which registration answers, audited reads |
 | `sympraxi/forms/booking.py` | The registration and intake questions on the booking pages |
 | `sympraxi/forms/migrations/0002_versions_frozen.py` | The triggers that freeze published versions and keep answers append-only |
+| `sympraxi/forms/report.py` | Session-report questions on the record form: draft answers, what finalizing needs, amendments, who sees which answer |
+| `sympraxi/forms/surveys.py` | Surveys: who gets one and when, the one-time link, anonymous answers, results by term |
+| `sympraxi/forms/tasks.py` | The survey email, sent by the task worker, which makes the link's token |
+| `sympraxi/forms/survey_views.py` | The survey page opened from the emailed link, without signing in |
+| `sympraxi/forms/migrations/0004_report_answers_locked.py` | The triggers that lock report answers on final records and keep survey responses anonymous |
 | `tests/test_policy_matrix.py` | Every role against every action, written out by hand |
 | `tests/test_url_inventory.py` | Fails if a new URL isn't assigned a permission |
 | `tests/records_world.py` | Builders for session-record tests: topics, resources, appointments, records |
 | `tests/attendance_world.py` | A no-show, a possible no-show and a booking block, for attendance page tests |
-| `tests/forms_world.py` | Builders for form tests: forms from question specs, answers by label, posted form data |
+| `tests/forms_world.py` | Builders for form tests: forms from question specs, answers by label, posted form data, report answers, anonymous survey responses and survey links |
 | `tests/sso_idp.py` | A fake Entra ID and Google for SSO tests; nothing goes over the network |
 | `tests/e2e/` | Browser tests: axe accessibility and Content Security Policy |
 | `tests/load/` | The first-Monday load test (`python -m tests.load run`) and its own checks |
@@ -123,6 +132,6 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 1. Add an `Action` to `sympraxi/core/policy.py` if the page needs a new permission, and grant it in `ROLE_GRANTS`.
 2. Add the action's row to the matrix in `tests/test_policy_matrix.py`.
 3. Fetch objects with `get_for_action()` so outsiders get a 404 and members without permission get a 403.
-4. Classify the URL in `tests/test_url_inventory.py`.
+4. Classify the URL in `tests/test_url_inventory.py`. A page opened by a secret token instead of a sign-in (a survey link) goes in `TOKEN_PAGES`, with a way to make a working token and each kind of dead one.
 5. Add the page to `PAGES` in `tests/e2e/test_accessibility.py`.
 6. No inline `style=` or `<script>` blocks. The Content Security Policy blocks them, and a test checks for them.

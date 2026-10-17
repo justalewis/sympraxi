@@ -138,6 +138,20 @@
       {% else %}
         <p>{% translate "None." %}</p>
       {% endif %}
+      {% for response in rec.report_responses.all %}
+        <h4>{% translate "Answers to the center's questions" %}</h4>
+        {% if response.answers.all %}
+          <dl class="sympraxi-answers-list">
+            {% for a in response.answers.all|dictsort:"question.position" %}
+              <dt>{{ a.question.label }}</dt>
+              <dd>{{ a|answer_words|linebreaksbr }}</dd>
+            {% endfor %}
+          </dl>
+        {% else %}
+          <p>{% translate "None." %}</p>
+        {% endif %}
+        <p class="usa-hint">{% blocktranslate with number=response.version.number who=response.answered_by.display_name %}Version {{ number }} of the questions, answered by {{ who }}.{% endblocktranslate %}</p>
+      {% endfor %}
       {% if rec.amendments.all %}
         <h4>{% translate "Changes after it was finalized" %}</h4>
         {% for m in rec.amendments.all %}

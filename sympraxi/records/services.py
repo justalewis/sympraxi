@@ -7,7 +7,9 @@ and what finalizing needs.
 
 A final record changes only through `amend()`, which writes an `Amendment`
 holding each changed field before and after, then opens that amendment for the
-rest of the transaction so the database trigger lets the change through.
+rest of the transaction so the database trigger lets the change through. The
+answers to the center's session-report questions are part of the record's
+content (`Content.answers`) and follow the same rules (sympraxi/forms/report.py).
 """
 
 from collections.abc import Iterator, Sequence
@@ -22,6 +24,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from sympraxi.accounts.models import User
+from sympraxi.forms import report
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.records import notifications
 from sympraxi.records.models import (
@@ -59,6 +62,9 @@ class Content:
     project: WritingProject | None = None
     # (resource, note to the student), in the order shown.
     resources: Sequence[tuple[Resource, str]] = field(default_factory=list)
+    # Answers to the center's session-report questions. None leaves the record's
+    # answers as they are.
+    answers: report.ReportAnswers | None = None
 
     @classmethod
     def of(cls, rec: SessionRecord) -> "Content":
@@ -70,6 +76,7 @@ class Content:
             topics=list(rec.topics.all()),
             project=rec.project,
             resources=[(a.resource, a.note) for a in rec.attachments.select_related("resource")],
+            answers=report.answers_of(rec),
         )
 
 
@@ -198,6 +205,7 @@ def finalize_problems(rec: SessionRecord, *, now: datetime | None = None) -> lis
         problems.append(_("Write a summary for the student."))
     if not rec.topics.filter(axis=Axis.CONCERN).exists():
         problems.append(_("Tag at least one concern."))
+    problems.extend(report.problems(rec))
     if rec.held_at > now:
         problems.append(_("The session hasn't started yet. Finalize the record after it."))
     return problems
@@ -223,19 +231,30 @@ def amend(
         if not rec.is_final:
             raise RecordError("draft", _("This record is still a draft. Edit it directly."))
         _check_project(rec, content.project)
-        before = snapshot(Content.of(rec))
+        current = Content.of(rec)
+        before = snapshot(current)
         after = snapshot(content)
-        changes = {
+        changes: dict[str, Any] = {
             name: {"before": before[name], "after": after[name]}
             for name in before
             if before[name] != after[name]
         }
+        if content.answers is not None:
+            if current.answers is not None and content.answers.version != current.answers.version:
+                raise RecordError(
+                    "version", _("The answers changed while you were editing. Try again.")
+                )
+            changes.update(report.changes(current.answers, content.answers))
         if not changes:
             raise RecordError("unchanged", _("Nothing changed, so there's nothing to amend."))
         if not content.summary.strip():
             raise RecordError("incomplete", _("A final record needs a summary for the student."))
         if not any(t.axis == Axis.CONCERN for t in content.topics):
             raise RecordError("incomplete", _("A final record needs at least one concern."))
+        if content.answers is not None and current.answers is not None:
+            missing = report.missing(content.answers.version, content.answers.values)
+            if missing:
+                raise RecordError("incomplete", " ".join(missing))
         amendment = Amendment.objects.create(
             record=rec, author=actor, reason=reason, changes=changes
         )
@@ -288,7 +307,8 @@ def copy_to_group(
 
     Each copy is a separate record about one student, finalized on its own after
     the tutor reads it. Staff notes and the writing project stay behind: notes are
-    about one student, and each student has their own projects.
+    about one student, and each student has their own projects. Answers to the
+    center's session-report questions are copied, like the summary.
     """
     appointment = rec.appointment
     if appointment is None:
@@ -319,6 +339,7 @@ def copy_to_group(
                     next_steps=content.next_steps,
                     topics=content.topics,
                     resources=content.resources,
+                    answers=content.answers,
                 ),
                 actor,
             )
@@ -409,6 +430,9 @@ def _apply(rec: SessionRecord, content: Content, actor: User) -> None:
     gone = [pk for pk in attachments if pk not in keep]
     if gone:
         AttachedResource.objects.filter(record=rec, resource_id__in=gone).delete()
+
+    if content.answers is not None:
+        report.write(rec, content.answers, actor)
 
 
 def _audit(

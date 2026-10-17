@@ -273,6 +273,14 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {"plain": {"format": "%(asctime)s %(levelname)s %(name)s %(message)s"}},
-    "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "plain"}},
+    # Survey link tokens never reach the log (sympraxi/core/logs.py).
+    "filters": {"scrub_links": {"()": "sympraxi.core.logs.ScrubLinks"}},
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "plain",
+            "filters": ["scrub_links"],
+        }
+    },
     "root": {"handlers": ["console"], "level": env.str("SYMPRAXI_LOG_LEVEL", default="INFO")},
 }
