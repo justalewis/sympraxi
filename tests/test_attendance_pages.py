@@ -317,4 +317,8 @@ def test_the_export_includes_attendance_waivers_and_blocks(client, world) -> Non
     assert (block["reason"], block["count"], block["limit"]) == ("no_shows", 1, 1)
     shown = text(client.get(page("records:export", world, membership_id=membership.pk)))
     assert "Booking blocks" in shown and "Weather." in shown
+    # The attendance column belongs to the appointments table, not writing projects.
+    appointments = shown.split('<caption class="usa-sr-only">Appointments</caption>')[1]
+    header = appointments.split("</thead>")[0]
+    assert header.count('<th scope="col">') == 6 and "Attendance" in header
     assert Block.objects.count() == 1
