@@ -7,6 +7,6 @@
 {% block head_title %}{% translate "Not part of your role" %}{% endblock head_title %}
 {% block content %}
   <h1>{% translate "This page isn't part of your role" %}</h1>
-  <p>{% translate "Your role doesn't include this page. If you need it for your work, ask your center's director." %}</p>
+  <p>{% translate "If you need it for your work, ask your center's director." %}</p>
   <p><a href="{% url 'core:home' %}">{% translate "Go to My centers" %}</a></p>
 {% endblock content %}
