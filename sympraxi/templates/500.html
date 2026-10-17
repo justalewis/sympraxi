@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% comment %}
+  Rendered by core.views.server_error with only SITE_NAME, never the request's
+  context: whatever failed (the database, say) may fail again in a context
+  processor. So the navigation can't tell who is signed in, and offers only
+  the home page.
+{% endcomment %}
+{% block head_title %}{% translate "Something went wrong" %}{% endblock head_title %}
+{% block nav_items %}
+  <li class="usa-nav__primary-item">
+    <a class="usa-nav-link" href="{% url 'core:home' %}"><span>{% translate "Home" %}</span></a>
+  </li>
+{% endblock nav_items %}
+{% block content %}
+  <h1>{% translate "Something went wrong" %}</h1>
+  <p>{% translate "The site couldn't finish what you asked. If you were saving something, check whether it was saved before you try again." %}</p>
+  <p>{% translate "If it keeps happening, tell your center's staff what you were doing and when." %}</p>
+  <p><a href="{% url 'core:home' %}">{% translate "Go to the home page" %}</a></p>
+{% endblock content %}

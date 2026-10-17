@@ -28,6 +28,7 @@
           <img src="{% static 'vendor/uswds/img/usa-icons/close.svg' %}" alt="{% translate 'Close menu' %}">
         </button>
         <ul class="usa-nav__primary usa-accordion">
+          {% block nav_items %}
           {% if user.is_authenticated %}
             <li class="usa-nav__primary-item">
               <a class="usa-nav-link" href="{% url 'core:home' %}"><span>{% translate "My centers" %}</span></a>
@@ -56,6 +57,7 @@
               </li>
             {% endif %}
           {% endif %}
+          {% endblock nav_items %}
         </ul>
       </nav>
     </div>

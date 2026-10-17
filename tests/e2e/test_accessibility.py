@@ -554,6 +554,51 @@ def test_a_director_reorders_questions_by_keyboard(browser, live_server, sign_in
     assert problems == []
 
 
+# Error pages: (who, path, status). tests/error_urls.py adds /fail/, which raises.
+ERROR_PAGES = [
+    (None, "/no-such-page/", 404),
+    ("student", "/centers/{slug}/appointments/00000000-0000-0000-0000-000000000000/", 404),
+    ("student", "/centers/{slug}/members/", 403),
+    (None, "/fail/", 500),
+    ("student", "/fail/", 500),
+]
+
+
+@pytest.mark.urls("tests.error_urls")
+@pytest.mark.parametrize(("who", "path", "status"), ERROR_PAGES)
+def test_an_error_page_passes_axe_and_the_csp(browser, live_server, sign_in, who, path, status):
+    context, page, url = open_page(browser, live_server, sign_in, who, path)
+    problems = watch_for_csp_problems(page)
+    response = page.goto(url)
+    assert response is not None and response.status == status
+    page.wait_for_load_state("networkidle")
+    context.close()
+    assert problems == []
+
+    context, page, url = open_page(browser, live_server, sign_in, who, path, bypass_csp=True)
+    page.goto(url)
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+def test_the_expired_form_page_passes_axe(browser, live_server) -> None:
+    """A sign-in form posted without its CSRF cookie gets the "form has expired" page."""
+    context = browser.new_context(bypass_csp=True)
+    page = context.new_page()
+    page.goto(live_server.url + "/accounts/login/")
+    context.clear_cookies()
+    page.fill("#id_login", "someone@example.edu")
+    page.fill("#id_password", "not-the-password")
+    with page.expect_response(lambda r: r.request.method == "POST") as posted:
+        page.click("main button[type=submit]:text-is('Sign in')")
+    assert posted.value.status == 403
+    page.wait_for_selector("text=This form has expired")
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
 def test_a_dead_survey_link_passes_axe(browser, live_server) -> None:
     context = browser.new_context(bypass_csp=True)
     page = context.new_page()

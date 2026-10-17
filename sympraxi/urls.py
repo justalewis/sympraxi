@@ -20,3 +20,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("admin/", admin.site.urls),
 ]
+
+# 403.html and 404.html are rendered by Django's own handlers. The 500 page
+# leaves out the request's context (sympraxi/core/views.py).
+handler500 = "sympraxi.core.views.server_error"

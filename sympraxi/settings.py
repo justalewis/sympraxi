@@ -32,6 +32,7 @@ ALLOWED_HOSTS = env.list(
     "SYMPRAXI_ALLOWED_HOSTS", default=["localhost", "127.0.0.1"] if DEBUG else []
 )
 CSRF_TRUSTED_ORIGINS = env.list("SYMPRAXI_CSRF_TRUSTED_ORIGINS", default=[])
+CSRF_FAILURE_VIEW = "sympraxi.core.views.csrf_failure"
 
 SYMPRAXI_SITE_NAME = env.str("SYMPRAXI_SITE_NAME", default="Sympraxi")
 # The address people use to reach this site, e.g. "https://writing.college.edu".
