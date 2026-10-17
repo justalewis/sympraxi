@@ -2,7 +2,7 @@
 
 This is the draft answer set a pilot campus's IT office can review before student data goes into Sympraxi. It follows the Higher Education Community Vendor Assessment Toolkit (HECVAT) and answers each question from the code and docs as they stand, with the file that shows it. Phase 1 of [02-build-plan.md](02-build-plan.md) calls for it. Its companion for accessibility is [accessibility.md](accessibility.md).
 
-Drafted on October 16 and 17, 2026. The answers describe branch `phase-0-foundation` at commit `1dd462c`, which includes the session-report questions and surveys. Statistics and the full-center export were being built that day and aren't committed, so they're described as still to come. Sympraxi has no release yet and runs nowhere in production.
+Drafted on October 16 and 17, 2026. The answers describe branch `phase-0-foundation` at merge `8490575`, which includes the session-report questions and surveys, statistics and the full-center export, and the load-test fixes to sign-in limits, web workers and booking. Sympraxi has no release yet and runs nowhere in production.
 
 ## Which HECVAT
 
@@ -137,7 +137,7 @@ Paths are relative to the repository root.
 | DATA-07* | Backups leave the institution's data zone | Campus responsibility | `deploy/backup.sh` writes to `backups/` on the same server. Restic sends copies only where the campus sets `RESTIC_REPOSITORY` (`deploy/backup.env.example`) |
 | DATA-08* | Archive media stored securely | Campus responsibility | |
 | DATA-09 | Data returned and deleted at contract end | Not applicable | No contract; the college already holds all of it |
-| DATA-10 | Customer can extract a full or partial backup | Yes | `deploy/backup.sh` (database dump, uploads, migration list, checksums). A director can export one student's complete record as JSON or a printable page (`sympraxi/records/export.py`). The full-center CSV, XLSX and JSON export is Not yet (Phase 1) |
+| DATA-10 | Customer can extract a full or partial backup | Yes | `deploy/backup.sh` (database dump, uploads, migration list, checksums). A director can export one student's complete record as JSON or a printable page (`sympraxi/records/export.py`), or the whole center as one ZIP of JSON and CSV files, built by the task worker and downloadable for 24 hours (`sympraxi/reports/center_export.py`). Statistics and lists download as CSV, XLSX or JSON |
 | DATA-11 | Backups include software and settings | No | A backup holds the database, uploads and migration list. The software is rebuilt from the repository. `deploy/.env` and `deploy/backup.env` aren't in the backup, and the campus needs its own safe copy of both (see the gaps list) |
 | DATA-12 | Off-site backups | Campus responsibility | Optional through restic (`deploy/backup.sh`, `docs/install.md`, "Backups") |
 | DATA-13 | Physical backups taken off-site | Campus responsibility | |
@@ -247,7 +247,7 @@ The campus runs one Linux VM with Docker Engine and the Compose plugin, and five
 | OPEM-05 | Remote actions logged and visible | Not applicable | No remote management (OPEM-04) |
 | OPEM-06 | FERPA-compliant handling under remote access | Not applicable | No remote access (OPEM-02) |
 | OPEM-07 | Status monitoring the campus can use (SNMPv3 or other) | Yes, without SNMP | `/healthz` answers over HTTP (`sympraxi/core/views.py`), and the web, worker, scheduler and database containers each have a Docker health check; the scheduler's turns unhealthy when it stops finishing its sweeps (`deploy/compose.yaml`, `sympraxi/healthcheck.py`). No SNMP |
-| OPEM-08 | Other safeguards against malicious activity | | The audit log records sign-ins, failed sign-ins, refused SSO sign-ins with the reason, two-factor changes and role changes (AAAI-09, AAAI-10); allauth rate-limits sign-ins and password resets (AAAI-05); container logs go to standard output for the campus's own monitoring |
+| OPEM-08 | Other safeguards against malicious activity | | The audit log records sign-ins, failed sign-ins, refused SSO sign-ins with the reason, two-factor changes and role changes (AAAI-09, AAAI-10); allauth rate-limits sign-ins and password resets, counted per visitor address behind Caddy, with a page that says when to try again (AAAI-05; decisions.md, Phase 1 sign-in limits); container logs go to standard output for the campus's own monitoring |
 | OPEM-09 | How long in this business | | Since October 2026, when the build plan was written |
 | OPEM-10 | Existing higher education customers | No | The pilot center is still being recruited (02-build-plan.md §13) |
 
@@ -351,11 +351,10 @@ The open items a pilot campus will notice, in rough order of how much they'll ma
 7. **No encryption at rest in the app** (DATA-03). TOTP secrets for two-factor login are stored unencrypted in the database, because allauth's default MFA adapter doesn't encrypt them. A database dump or backup therefore holds the seed of every authenticator app set up in Sympraxi. allauth provides `encrypt()` and `decrypt()` hooks for this.
 8. **SSO tested only against a fake provider** (AAAI-01). A real-tenant test needs the pilot's app registration.
 9. **No idle timeout and no login-alert emails** (AAAI-18). 02-build-plan.md §6.2 lists login alerts; allauth's `ACCOUNT_EMAIL_NOTIFICATIONS` covers password, email and two-factor changes, not new sign-ins.
-10. **Shared sign-in rate limit behind Caddy.** allauth's limits count every request from Caddy's address, so 30 sign-ins a minute cover everyone (decisions.md, Phase 1 load test, which also describes the fix).
-11. **No SBOM or signed images; images and actions pinned by tag, not digest** (APPL-10). Whether the Renovate app is switched on for the repository isn't recorded; the workflows still reference actions by tag, which Renovate's `pinGitHubActionDigests` would change.
-12. **No SIEM export** (AAAI-10). Container logs and the audit table are there for the campus to collect.
-13. **Backups leave out `deploy/.env` and `deploy/backup.env`, and the docs don't say to keep copies of them** (DATA-11). Losing the restic password loses every off-site copy. Key rotation isn't documented (DATA-23).
-14. **No full-center export or CSV user import yet** (DATA-10, AAAI-14). Both are Phase 1.
-15. **Password rules can't be changed without editing code** (AAAI-03).
-16. **No privacy notice, privacy framework or impact assessment** (PRGN-05, DRPV-01, DRPV-02, PDOC-02). The college publishes its own notice, but Sympraxi has no setting to link it from its pages.
-17. **Students can't change their own name or pronouns** (DRPV-07, DRPV-10). Only a site administrator can, in the Django admin.
+10. **No SBOM or signed images; images and actions pinned by tag, not digest** (APPL-10). Whether the Renovate app is switched on for the repository isn't recorded; the workflows still reference actions by tag, which Renovate's `pinGitHubActionDigests` would change.
+11. **No SIEM export** (AAAI-10). Container logs and the audit table are there for the campus to collect.
+12. **Backups leave out `deploy/.env` and `deploy/backup.env`, and the docs don't say to keep copies of them** (DATA-11). Losing the restic password loses every off-site copy. Key rotation isn't documented (DATA-23).
+13. **No CSV user import yet** (AAAI-14). Phase 1.
+14. **Password rules can't be changed without editing code** (AAAI-03).
+15. **No privacy notice, privacy framework or impact assessment** (PRGN-05, DRPV-01, DRPV-02, PDOC-02). The college publishes its own notice, but Sympraxi has no setting to link it from its pages.
+16. **Students can't change their own name or pronouns** (DRPV-07, DRPV-10). Only a site administrator can, in the Django admin.
