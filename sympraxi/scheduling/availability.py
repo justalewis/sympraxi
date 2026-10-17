@@ -3,6 +3,10 @@
 A tutor's availability on a date is their weekly hours for that weekday, plus
 extra hours, minus time off, inside the schedule's opening hours. Appointments
 start on the schedule's grid: every `slot_minutes` from the opening time.
+A tutor who has reached their daily or weekly cap on this schedule has no new
+times that day, though seats in their group appointments stay open, since
+joining a group doesn't count toward a cap. Staff, who can override caps, see
+those times marked instead (`OpenTime.at_cap`).
 Nothing here writes to the database; `services.book()` re-checks every rule
 inside a transaction before it creates anything.
 """
@@ -11,9 +15,10 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
+from typing import Literal
 from uuid import UUID
 
-from django.db.models import Prefetch
+from django.db.models import Count, Prefetch, Q
 
 from sympraxi.scheduling.models import (
     Appointment,
@@ -28,12 +33,18 @@ from sympraxi.scheduling.timeutils import (
     Interval,
     clip,
     covers,
+    day_bounds,
     first_instant,
     local_date,
     merge,
     overlaps,
     subtract,
+    week_bounds,
 )
+
+# What to do with times for a tutor who has reached a daily or weekly cap:
+# leave them out, list them marked, or not count caps at all (placeholders).
+CapRule = Literal["hide", "mark", "ignore"]
 
 
 @dataclass(frozen=True)
@@ -44,6 +55,8 @@ class OpenTime:
     # Set when this is a seat in a group appointment that someone already booked.
     appointment: Appointment | None = None
     seats_left: int = 1
+    # "day" or "week" when the tutor has reached that cap; listed only for staff.
+    at_cap: str = ""
 
     @property
     def modalities(self) -> list[str]:
@@ -143,11 +156,16 @@ def open_times(
     earliest: datetime | None = None,
     assignment_id: UUID | None = None,
     modality: str | None = None,
+    caps: CapRule = "hide",
+    moving: Appointment | None = None,
 ) -> list[OpenTime]:
     """Times on `day` when an appointment of `minutes` could be booked, earliest first.
 
     `earliest` hides times that start before it (the minimum notice, for students).
     Group appointments with seats left are listed as open times of their own.
+    `caps` says what to do with a tutor at their daily or weekly cap (`CapRule`).
+    `moving` is an appointment being moved, which doesn't count toward its
+    tutor's caps, as in `services.reschedule()`.
     """
     window = day_window(schedule, day)
     if window is None:
@@ -182,20 +200,24 @@ def open_times(
         {a.tutor_id for a in candidates}, (window[0], window[1] + length + buffer)
     )
     groups = _groups_with_seats(candidates, window)
+    full = {} if caps == "ignore" else at_cap(candidates, day, moving=moving)
 
     result: list[OpenTime] = []
     for assignment in candidates:
         available = available_intervals(assignment, day, window)
         tutor_busy = busy.get(assignment.tutor_id, [])
+        cap = full.get(assignment.pk, "")
+        # A tutor at a cap has no new times; seats in their groups stay open.
+        hidden = bool(cap) and caps == "hide"
         start = window[0]
-        while start + length <= window[1]:
+        while not hidden and start + length <= window[1]:
             end = start + length
             if (
                 (earliest is None or start >= earliest)
                 and covers(available, start, end)
                 and not any(overlaps((start, end + buffer), b) for b in tutor_busy)
             ):
-                result.append(OpenTime(assignment, start, end))
+                result.append(OpenTime(assignment, start, end, at_cap=cap))
             start += step
         for appointment, taken in groups.get(assignment.pk, []):
             if appointment.minutes != minutes:
@@ -215,6 +237,47 @@ def open_times(
             )
     result.sort(key=lambda o: (o.starts_at, o.assignment.tutor.display_name))
     return result
+
+
+def at_cap(
+    assignments: Iterable[TutorAssignment], day: date, *, moving: Appointment | None = None
+) -> dict[UUID, str]:
+    """Which of one schedule's assignments are at a cap on `day`: "day", or else "week".
+
+    Counts as `services._check_tutor_caps()` does: the assignment's active
+    appointments starting that local day or week, placeholders left out.
+    """
+    capped = [a for a in assignments if a.max_per_day is not None or a.max_per_week is not None]
+    if not capped:
+        return {}
+    tz = capped[0].schedule.tz
+    today = day_bounds(day, tz)
+    week = week_bounds(day, tz)
+    counts = (
+        Appointment.objects.filter(
+            assignment__in=capped,
+            is_placeholder=False,
+            starts_at__gte=week[0],
+            starts_at__lt=week[1],
+        )
+        .exclude(status=AppointmentStatus.CANCELED)
+        .exclude(pk__in=[moving.pk] if moving else [])
+        .order_by()
+        .values("assignment_id")
+        .annotate(
+            day=Count("pk", filter=Q(starts_at__gte=today[0], starts_at__lt=today[1])),
+            week=Count("pk"),
+        )
+    )
+    booked = {row["assignment_id"]: row for row in counts}
+    full: dict[UUID, str] = {}
+    for assignment in capped:
+        row = booked.get(assignment.pk, {"day": 0, "week": 0})
+        if assignment.max_per_day is not None and row["day"] >= assignment.max_per_day:
+            full[assignment.pk] = "day"
+        elif assignment.max_per_week is not None and row["week"] >= assignment.max_per_week:
+            full[assignment.pk] = "week"
+    return full
 
 
 def _groups_with_seats(

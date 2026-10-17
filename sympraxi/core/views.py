@@ -35,6 +35,17 @@ def healthz(request: HttpRequest) -> JsonResponse:
         return JsonResponse({"status": "error", "database": "unavailable"}, status=503)
 
 
+def too_many_requests(request: HttpRequest) -> HttpResponse:
+    """allauth's answer when a rate limit is reached (`handler429` in sympraxi/urls.py).
+
+    Every limit that answers this way counts over one minute, so a minute is
+    always long enough to wait.
+    """
+    response = render(request, "429.html", status=429)
+    response["Retry-After"] = "60"
+    return response
+
+
 @require_GET
 def source_code(request: HttpRequest) -> HttpResponseRedirect:
     """AGPL section 13: every user can get the source of the version they are using."""

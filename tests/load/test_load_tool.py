@@ -233,8 +233,13 @@ def test_the_seeded_center_books_through_its_pages(client) -> None:
     booked = client.post(links[0], forms[0].fields)
     assert booked.status_code == 302 and "/appointments/" in booked["Location"]
 
+    # Sending it again, as a double-click does, lands on the same appointment.
     again = client.post(links[0], forms[0].fields)
-    shown = client.get(again["Location"]) if again.status_code == 302 else again
+    assert again.status_code == 302 and again["Location"] == booked["Location"]
+    # Another student is refused that time, with a message the driver can read.
+    client.cookies["sessionid"] = manifest["students"][1]["session"]
+    refused = client.post(links[0], forms[0].fields)
+    shown = client.get(refused["Location"]) if refused.status_code == 302 else refused
     assert Page(shown.content.decode()).messages("error", "warning")
 
     center_id = manifest["center"]["id"]

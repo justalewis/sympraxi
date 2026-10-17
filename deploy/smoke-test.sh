@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # CI check of the real production stack: install, serve over HTTPS through Caddy,
-# keep survey links out of the logs, back up, wipe, restore, and confirm the data
-# came back; then check that the scheduler is healthy and sends a reminder that
-# falls due. Runs on a throwaway VM.
+# keep survey links out of the logs, start the configured number of web workers,
+# back up, wipe, restore, and confirm the data came back; then check that the
+# scheduler is healthy and sends a reminder that falls due. Runs on a throwaway VM.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -16,6 +16,7 @@ sed -i \
     -e 's/^POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=smoketestpassword/' \
     -e 's|^EMAIL_URL=.*|EMAIL_URL=consolemail://|' \
     -e 's/^SYMPRAXI_SITE_NAME=.*/SYMPRAXI_SITE_NAME=Smoke Test Center/' \
+    -e 's/^WEB_CONCURRENCY=.*/WEB_CONCURRENCY=2/' \
     .env
 
 bash install.sh
@@ -49,6 +50,24 @@ grep -q "/survey/\[link\]/" <<<"$logs" || fail "the web logs don't show the surv
 if grep -q "$link_token" <<<"$logs"; then
     fail "a survey link's token is in the web logs"
 fi
+
+echo "--- Gunicorn starts the number of workers in WEB_CONCURRENCY"
+# Gunicorn's processes, read from /proc (the image has no ps): the master and its workers.
+workers="$(docker compose exec -T web python - <<'PY'
+import os
+
+def runs_gunicorn(pid):
+    try:
+        with open(f"/proc/{pid}/cmdline", "rb") as f:
+            args = f.read().split(b"\0")
+    except OSError:
+        return False
+    return any(arg.endswith(b"/gunicorn") for arg in args[:2])
+
+print(sum(runs_gunicorn(pid) for pid in os.listdir("/proc") if pid.isdigit()) - 1)
+PY
+)" || fail "could not count the web workers"
+[ "$workers" = "2" ] || fail "expected 2 web workers (WEB_CONCURRENCY=2), found $workers"
 
 echo "--- Back up, wipe, restore"
 manage() { docker compose exec -T web python manage.py "$@"; }

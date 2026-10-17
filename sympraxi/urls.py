@@ -8,6 +8,9 @@ admin.site.login = secure_admin_login(admin.site.login)  # type: ignore[method-a
 admin.site.site_header = f"{settings.SYMPRAXI_SITE_NAME} administration"
 admin.site.site_title = settings.SYMPRAXI_SITE_NAME
 
+# allauth looks here for the page to show when one of its rate limits is reached.
+handler429 = "sympraxi.core.views.too_many_requests"
+
 urlpatterns = [
     path("", include("sympraxi.core.urls")),
     path("", include("sympraxi.privacy.urls")),

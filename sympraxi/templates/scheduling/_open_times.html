@@ -30,6 +30,12 @@
             {% if t.appointment %}
               <span class="usa-tag">{% blocktranslate count n=t.seats_left %}Group: {{ n }} place left{% plural %}Group: {{ n }} places left{% endblocktranslate %}</span>
             {% endif %}
+            {# Only staff are shown times with a tutor at a cap; they can override it. #}
+            {% if t.at_cap == "day" %}
+              <span class="usa-tag">{% translate "Tutor's daily limit reached" %}</span>
+            {% elif t.at_cap == "week" %}
+              <span class="usa-tag">{% translate "Tutor's weekly limit reached" %}</span>
+            {% endif %}
             {% if row.book_url %}
               <span class="sympraxi-time__action">
                 <a class="usa-button usa-button--outline" href="{{ row.book_url }}">{% if link_label %}{{ link_label }}{% elif t.appointment %}{% translate "Join" %}{% else %}{% translate "Book" %}{% endif %}<span class="usa-sr-only"> {{ t.starts_at|time }} {% translate "with" %} {{ t.assignment.tutor.display_name }}</span></a>

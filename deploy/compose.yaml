@@ -39,6 +39,7 @@ services:
 
   web:
     <<: *app
+    # Gunicorn starts WEB_CONCURRENCY workers, set in deploy/.env (3 if it isn't).
 
   worker:
     <<: *app
