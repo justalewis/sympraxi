@@ -1,0 +1,13 @@
+{% extends "allauth/layouts/entrance.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Too many tries" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "Too many tries in the last minute" %}</h1>
+  {% if user.is_authenticated %}
+    <p>{% blocktranslate %}To protect your account, {{ SITE_NAME }} limits how many times a minute you can change your password or email address, or confirm your password. You just reached that limit.{% endblocktranslate %}</p>
+  {% else %}
+    <p>{% blocktranslate %}To slow down anyone guessing passwords, {{ SITE_NAME }} limits how many times a minute people can sign in, create an account or reset a password from one internet address. That limit was just reached. On campus Wi-Fi many people share one address, so the tries may not all have been yours.{% endblocktranslate %}</p>
+  {% endif %}
+  <p>{% translate "Nothing you entered was saved. Wait a minute, then try again." %}</p>
+  <p><a class="usa-button" href="{{ request.get_full_path }}">{% translate "Try again" %}</a></p>
+{% endblock content %}

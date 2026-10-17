@@ -48,5 +48,8 @@ EXPOSE 8000
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=5 \
     CMD ["python", "-m", "sympraxi.healthcheck"]
 
+# Gunicorn takes its number of workers from WEB_CONCURRENCY. Set it in deploy/.env
+# to size an installation (docs/install.md, "Web workers").
+ENV WEB_CONCURRENCY=3
 # The access log hides survey link tokens (sympraxi/core/logs.py).
-CMD ["gunicorn", "sympraxi.wsgi", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "60", "--access-logfile", "-", "--logger-class", "sympraxi.core.access_log.AccessLog"]
+CMD ["gunicorn", "sympraxi.wsgi", "--bind", "0.0.0.0:8000", "--timeout", "60", "--access-logfile", "-", "--logger-class", "sympraxi.core.access_log.AccessLog"]

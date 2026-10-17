@@ -4,7 +4,7 @@ This guide sets up Sympraxi for one college on a single Linux server. Plan on ab
 
 ## What you need
 
-- A Linux VM with 2 to 4 vCPUs, 4 to 8 GB of RAM and 40 GB of disk. These sizes are an estimate until load testing in Phase 1.
+- A Linux VM with 2 to 4 vCPUs, 4 to 8 GB of RAM and 40 GB of disk. These sizes are still an estimate, since the Phase 1 load test ran on a laptop (see [Web workers](#web-workers)).
 - Docker Engine with the Compose plugin (`docker compose version` should work).
 - A DNS name for the site (for example `writing.example.edu`) pointing at the server.
 - Ports 80 and 443 open to your users. Caddy uses them to get and renew the TLS certificate automatically.
@@ -144,6 +144,22 @@ Site administrators keep a break-glass sign-in with their password and two-facto
 | `db` | PostgreSQL 18 |
 
 Data lives in Docker volumes: `pgdata` (the database), `media` (uploads), and `caddy_data` (certificates).
+
+## Web workers
+
+The `web` service runs Gunicorn, which passes each request to one of a fixed number of worker processes. A worker answers one request at a time, and requests that arrive while every worker is busy wait their turn. The default is 3 workers. To change it, set `WEB_CONCURRENCY` in `deploy/.env` and run `docker compose up -d`.
+
+Start with twice the number of vCPUs plus one: 5 workers on 2 vCPUs, 9 on 4. Plan on about 150 MB of memory for each worker. Each one also keeps a database connection open, and PostgreSQL allows 100.
+
+The Phase 1 load test ran on a laptop with 8 logical processors (`docs/decisions.md`, "Phase 1: first-Monday load test"). In its standard run, 500 students booked over ten minutes, 150 of them in the first minute, while three front desk workers booked for students. Three workers kept 95 percent of requests on every page under 600 ms, but that first minute used about 90 percent of what they could serve. When the same students came five times as fast, three workers fell behind and eight kept up. A VM's processors are usually slower than a laptop's, so a center expecting a rush like that should start above the default.
+
+If pages get slow at busy times while the server's processors have room to spare (check with `top` or `docker stats`), add workers. If the processors are already busy, add vCPUs first.
+
+## Sign-in limits
+
+To slow down password guessing, Sympraxi limits password sign-ins from each internet address: 300 a minute, of which 60 may fail, and 60 new accounts a minute. Each account also gets 5 failed sign-ins in 5 minutes. Anyone over a limit sees a page asking them to wait a minute and try again. Sign-ins through Microsoft or Google don't count toward these limits.
+
+Caddy passes each visitor's address to Sympraxi, which uses it for these limits and for the audit log. If campus IT puts a load balancer or another proxy in front of Caddy, every request reaches Caddy from that proxy's address. Everyone then shares one set of limits, and the audit log records the proxy's address instead of the visitor's.
 
 ## Reminders and attendance
 
