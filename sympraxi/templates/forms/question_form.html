@@ -35,14 +35,11 @@
 
     {% include "includes/field.html" with field=qform.required %}
     {% include "includes/field.html" with field=qform.is_demographic %}
-    <p class="usa-hint">{{ qform.is_demographic.help_text }}</p>
     {% if qform.shown_to_staff %}
       {% include "includes/field.html" with field=qform.shown_to_staff %}
-      <p class="usa-hint">{{ qform.shown_to_staff.help_text }}</p>
     {% endif %}
     {% if qform.shown_to_student %}
       {% include "includes/field.html" with field=qform.shown_to_student %}
-      <p class="usa-hint">{{ qform.shown_to_student.help_text }}</p>
     {% endif %}
     {% include "includes/field.html" with field=qform.condition %}
 

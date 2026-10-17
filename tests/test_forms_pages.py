@@ -111,7 +111,12 @@ def test_demographic_questions_cannot_be_required(client, world, director) -> No
         {"label": "Your age?", "kind": "number", "is_demographic": "on", "required": "on"},
     )
     assert response.status_code == 200
-    assert "always optional" in text_of(response)
+    page = text_of(response)
+    assert "Questions about who the student is are always optional." in page
+    assert 'id="id_required_error"' in page
+    # The checkbox's hint shows once, under the box it belongs to.
+    assert page.count("For example gender, race or ethnicity") == 1
+    assert 'aria-describedby="id_is_demographic_helptext"' in page
     assert not form.draft().questions.exists()
 
 
