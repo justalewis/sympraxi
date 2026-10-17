@@ -15,6 +15,7 @@ sed -i \
     -e 's/^POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=smoketestpassword/' \
     -e 's|^EMAIL_URL=.*|EMAIL_URL=consolemail://|' \
     -e 's/^SYMPRAXI_SITE_NAME=.*/SYMPRAXI_SITE_NAME=Smoke Test Center/' \
+    -e 's/^WEB_CONCURRENCY=.*/WEB_CONCURRENCY=2/' \
     .env
 
 bash install.sh
@@ -33,6 +34,24 @@ grep -q "Smoke Test Center" <<<"$home" || fail "home page does not show the site
 echo "--- Plain HTTP redirects to HTTPS"
 status="$(curl --silent --output /dev/null --write-out '%{http_code}' http://localhost/)"
 [ "$status" = "308" ] || fail "expected a 308 redirect from http://localhost/, got $status"
+
+echo "--- Gunicorn starts the number of workers in WEB_CONCURRENCY"
+# Gunicorn's processes, read from /proc (the image has no ps): the master and its workers.
+workers="$(docker compose exec -T web python - <<'PY'
+import os
+
+def runs_gunicorn(pid):
+    try:
+        with open(f"/proc/{pid}/cmdline", "rb") as f:
+            args = f.read().split(b"\0")
+    except OSError:
+        return False
+    return any(arg.endswith(b"/gunicorn") for arg in args[:2])
+
+print(sum(runs_gunicorn(pid) for pid in os.listdir("/proc") if pid.isdigit()) - 1)
+PY
+)" || fail "could not count the web workers"
+[ "$workers" = "2" ] || fail "expected 2 web workers (WEB_CONCURRENCY=2), found $workers"
 
 echo "--- Back up, wipe, restore"
 manage() { docker compose exec -T web python manage.py "$@"; }

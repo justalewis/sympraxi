@@ -168,6 +168,20 @@ ACCOUNT_PREVENT_ENUMERATION = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http" if DEBUG else "https"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = f"[{SYMPRAXI_SITE_NAME}] "
 
+# allauth's rate limits count per client address. Behind Caddy every request comes
+# from Caddy's address, so take the client's from the X-Forwarded-For entry Caddy
+# writes (the last one), the same address the audit log records.
+ALLAUTH_TRUSTED_PROXY_COUNT = 1 if SYMPRAXI_TRUST_X_FORWARDED_FOR else 0
+# Many students on a campus network can share one public address, so these are
+# higher than allauth's 30 sign-ins, 10 failed sign-ins and 20 sign-ups a minute.
+# Each account still gets 5 failed sign-ins in 5 minutes. Every limit that answers
+# with the 429 page counts over a minute (tests/test_rate_limits.py checks this).
+ACCOUNT_RATE_LIMITS = {
+    "login": "300/m/ip",
+    "login_failed": "60/m/ip,5/300s/key",
+    "signup": "60/m/ip",
+}
+
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_TOTP_ISSUER = SYMPRAXI_SITE_NAME
