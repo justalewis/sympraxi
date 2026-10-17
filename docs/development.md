@@ -134,5 +134,5 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 2. Add the action's row to the matrix in `tests/test_policy_matrix.py`.
 3. Fetch objects with `get_for_action()` so outsiders get a 404 and members without permission get a 403.
 4. Classify the URL in `tests/test_url_inventory.py`. A page opened by a secret token instead of a sign-in (a survey link) goes in `TOKEN_PAGES`, with a way to make a working token and each kind of dead one.
-5. Add the page to `PAGES` in `tests/e2e/test_accessibility.py`. A form with its own kind of error message can also go in `FORMS_WITH_ERRORS`, so axe sees the page after a failed submission.
+5. Add the page to `PAGES` in `tests/e2e/test_accessibility.py`. A form with its own kind of error message can also go in `FORMS_WITH_ERRORS`, so axe sees the page after a failed submission. A part of the page that htmx updates goes in `HTMX_SWAPS`, with a step that triggers it, and a key student page in `PHONE_PAGES`.
 6. No inline `style=` or `<script>` blocks. The Content Security Policy blocks them, and a test checks for them.
