@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% comment %}
+  A form that failed Django's CSRF check (core.views.csrf_failure). Django logs
+  the reason; the page doesn't show it.
+{% endcomment %}
+{% block head_title %}{% translate "Form expired" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "This form has expired" %}</h1>
+  <p>{% translate "Nothing was saved. This usually happens when you sign in or out in another tab while a form is open, or when your browser blocks this site's cookies." %}</p>
+  <p>{% translate "Go back, reload the page and try again. If it keeps happening, check that your browser accepts cookies from this site." %}</p>
+{% endblock content %}

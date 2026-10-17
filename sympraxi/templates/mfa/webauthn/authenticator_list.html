@@ -1,0 +1,51 @@
+{% extends "mfa/webauthn/base.html" %}
+{% load i18n humanize %}
+{% comment %}
+  allauth's list of security keys and passkeys, with a name for the column of
+  links (axe's empty-table-header rule) and each key's name in its links.
+{% endcomment %}
+{% block content %}
+  <h1>{% translate "Security Keys" %}</h1>
+  {% if authenticators|length == 0 %}
+    <p>{% blocktranslate %}No security keys have been added.{% endblocktranslate %}</p>
+  {% else %}
+    <table class="usa-table usa-table--borderless">
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Key" %}</th>
+          <th scope="col">{% translate "Usage" %}</th>
+          <th scope="col"><span class="usa-sr-only">{% translate "Change or remove" %}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for authenticator in authenticators %}
+          <tr>
+            <td>
+              {{ authenticator }}
+              {% if authenticator.wrap.is_passwordless is True %}
+                <span class="usa-tag">{% translate "Passkey" %}</span>
+              {% elif authenticator.wrap.is_passwordless is False %}
+                <span class="usa-tag">{% translate "Security key" %}</span>
+              {% else %}
+                <span class="usa-tag">{% translate "Unspecified" %}</span>
+              {% endif %}
+            </td>
+            <td>
+              {% blocktranslate with created_at=authenticator.created_at|date:"SHORT_DATE_FORMAT" %}Added on {{ created_at }}{% endblocktranslate %}.
+              {% if authenticator.last_used_at %}
+                {% blocktranslate with last_used=authenticator.last_used_at|naturaltime %}Last used {{ last_used }}{% endblocktranslate %}
+              {% else %}
+                {% translate "Not used." %}
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'mfa_edit_webauthn' pk=authenticator.pk %}">{% translate "Edit" %}<span class="usa-sr-only"> {{ authenticator }}</span></a>
+              · <a href="{% url 'mfa_remove_webauthn' pk=authenticator.pk %}">{% translate "Remove" %}<span class="usa-sr-only"> {{ authenticator }}</span></a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+  <p><a class="usa-button" href="{% url 'mfa_add_webauthn' %}">{% translate "Add" %}</a></p>
+{% endblock content %}

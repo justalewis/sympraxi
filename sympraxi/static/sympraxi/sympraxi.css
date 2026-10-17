@@ -85,6 +85,12 @@
   margin-bottom: 1rem;
 }
 
+/* A checkbox's hint sits under its label text, clear of the box USWDS draws. */
+.sympraxi-checkbox-hint {
+  margin-top: 0.25rem;
+  padding-left: 2rem;
+}
+
 /* --- Scheduling ----------------------------------------------------------- */
 
 /* Booking filters sit in a row on wide screens and stack on narrow ones. */

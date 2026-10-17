@@ -1,6 +1,7 @@
 {% extends "allauth/layouts/base.html" %}
 {% load i18n socialaccount %}
 {% block sidebar %}
+  {% url 'accounts:profile' as profile_url %}
   {% url 'account_email' as email_url %}
   {% url 'account_change_password' as password_url %}
   {% url 'mfa_index' as mfa_url %}
@@ -9,6 +10,9 @@
   {% get_providers as sso_providers %}
   <nav class="tablet:grid-col-3 margin-bottom-4" aria-label="{% translate 'Account settings' %}">
     <ul class="usa-sidenav">
+      <li class="usa-sidenav__item">
+        <a href="{{ profile_url }}" {% if request.path == profile_url %}class="usa-current" aria-current="page"{% endif %}>{% translate "Name and pronouns" %}</a>
+      </li>
       <li class="usa-sidenav__item">
         <a href="{{ email_url }}" {% if request.path == email_url %}class="usa-current" aria-current="page"{% endif %}>{% translate "Email addresses" %}</a>
       </li>

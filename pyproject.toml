@@ -7,6 +7,7 @@ license = "AGPL-3.0-or-later"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
+    "cryptography>=50.0.2",
     "Django[argon2]>=6.1.2,<6.2",
     "django-allauth[mfa,socialaccount]>=65.19.7",
     "django-environ>=0.14.0",

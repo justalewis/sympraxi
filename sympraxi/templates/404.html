@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% comment %}
+  The same page whether the address never existed or belongs to someone else
+  (policy.get_for_action), so it can't be used to find out which records exist.
+  It shows nothing from the request, not even the path.
+{% endcomment %}
+{% block head_title %}{% translate "Page not found" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "Page not found" %}</h1>
+  <p>{% translate "There's no page here that you can open. The link may be out of date or mistyped." %}</p>
+  <p><a href="{% url 'core:home' %}">{% if user.is_authenticated %}{% translate "Go to My centers" %}{% else %}{% translate "Go to the home page" %}{% endif %}</a></p>
+{% endblock content %}

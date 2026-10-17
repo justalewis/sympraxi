@@ -12,6 +12,7 @@ ACTION_LABELS = {
     "auth.password_changed": _("Changed password"),
     "auth.password_reset": _("Reset password"),
     "auth.email_changed": _("Changed email address"),
+    "auth.profile_changed": _("Changed their name or pronouns"),
     "auth.mfa_added": _("Added a two-factor method"),
     "auth.mfa_removed": _("Removed a two-factor method"),
     "auth.mfa_recovery_codes_reset": _("Generated new recovery codes"),

@@ -24,10 +24,15 @@ if ENV_FILE.is_file():
 
 DEBUG = env.bool("SYMPRAXI_DEBUG", default=False)
 SECRET_KEY = env.str("SYMPRAXI_SECRET_KEY")
+# Earlier secret keys, comma-separated, while changing SYMPRAXI_SECRET_KEY. Two-factor
+# secrets written under one still decrypt until `manage.py reencrypt_mfa_secrets`
+# rewrites them (docs/install.md, "Keys and passwords").
+SECRET_KEY_FALLBACKS = env.list("SYMPRAXI_SECRET_KEY_FALLBACKS", default=[])
 ALLOWED_HOSTS = env.list(
     "SYMPRAXI_ALLOWED_HOSTS", default=["localhost", "127.0.0.1"] if DEBUG else []
 )
 CSRF_TRUSTED_ORIGINS = env.list("SYMPRAXI_CSRF_TRUSTED_ORIGINS", default=[])
+CSRF_FAILURE_VIEW = "sympraxi.core.views.csrf_failure"
 
 SYMPRAXI_SITE_NAME = env.str("SYMPRAXI_SITE_NAME", default="Sympraxi")
 # The address people use to reach this site, e.g. "https://writing.college.edu".
@@ -58,6 +63,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
+    # allauth's passkey list loads its template tags.
+    "django.contrib.humanize",
     "allauth",
     "allauth.account",
     "allauth.mfa",
@@ -196,6 +203,7 @@ ACCOUNT_RATE_LIMITS = {
     "signup": "60/m/ip",
 }
 
+MFA_ADAPTER = "sympraxi.accounts.adapter.MFAAdapter"
 MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
 MFA_PASSKEY_LOGIN_ENABLED = True
 MFA_TOTP_ISSUER = SYMPRAXI_SITE_NAME

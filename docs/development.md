@@ -91,6 +91,7 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/privacy/` | Audit log (append-only, enforced by a database trigger) |
 | `sympraxi/accounts/` | User model, sign-up rules, the staff two-factor gate |
 | `sympraxi/accounts/sso.py` | What a single sign-on login must prove; `sso_config.py` builds the providers from the environment |
+| `sympraxi/accounts/encryption.py` | Encrypts the two-factor secrets allauth stores, under a key derived from the secret key; `manage.py reencrypt_mfa_secrets` rewrites them after the key changes |
 | `sympraxi/centers/` | Centers, roles, memberships |
 | `sympraxi/centers/people.py` | Adding people one at a time or from a CSV file, and turning roles on and off |
 | `sympraxi/scheduling/services.py` | Every booking rule: limits, notice, cutoff, groups, locks |
@@ -143,5 +144,5 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 2. Add the action's row to the matrix in `tests/test_policy_matrix.py`.
 3. Fetch objects with `get_for_action()` so outsiders get a 404 and members without permission get a 403.
 4. Classify the URL in `tests/test_url_inventory.py`. A page opened by a secret token instead of a sign-in (a survey link) goes in `TOKEN_PAGES`, with a way to make a working token and each kind of dead one.
-5. Add the page to `PAGES` in `tests/e2e/test_accessibility.py`.
+5. Add the page to `PAGES` in `tests/e2e/test_accessibility.py`. A form with its own kind of error message can also go in `FORMS_WITH_ERRORS`, so axe sees the page after a failed submission.
 6. No inline `style=` or `<script>` blocks. The Content Security Policy blocks them, and a test checks for them.

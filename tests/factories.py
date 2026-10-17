@@ -1,6 +1,6 @@
 import factory
 from allauth.account.models import EmailAddress
-from allauth.mfa.models import Authenticator
+from allauth.mfa.totp.internal.auth import TOTP
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership, Role
@@ -40,6 +40,9 @@ class MembershipFactory(factory.django.DjangoModelFactory):
     role = Role.STUDENT
 
 
+TOTP_SECRET = "JBSWY3DPEHPK3PXP"
+
+
 def give_mfa(user: User) -> None:
     """Record an authenticator app for a staff user so the 2FA gate lets them through."""
-    Authenticator.objects.create(user=user, type=Authenticator.Type.TOTP, data={"secret": "x"})
+    TOTP.activate(user, TOTP_SECRET)

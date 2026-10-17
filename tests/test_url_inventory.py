@@ -46,7 +46,7 @@ PUBLIC = {
 
 # Pages about the signed-in person's own account, outside any center. Anyone
 # signed in may use them; they show and change only that person's settings.
-LOGIN_REQUIRED = {"accounts:reminders"}
+LOGIN_REQUIRED = {"accounts:profile", "accounts:reminders"}
 
 # Center-scoped pages, the action each one requires, and the object the action is
 # checked against ("center", or an attribute of the test World).

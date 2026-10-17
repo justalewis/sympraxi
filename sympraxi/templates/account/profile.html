@@ -1,0 +1,14 @@
+{% extends "allauth/layouts/manage.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Name and pronouns" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "Name and pronouns" %}</h1>
+  <p>{% translate "Staff at your centers see these with your appointments and session notes." %}</p>
+  <form class="usa-form usa-form--large" method="post">
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Save" %}</button>
+    </div>
+  </form>
+{% endblock content %}

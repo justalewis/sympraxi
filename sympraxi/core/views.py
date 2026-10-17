@@ -1,8 +1,16 @@
 from django.conf import settings
 from django.db import connection
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseRedirect,
+    HttpResponseServerError,
+    JsonResponse,
+)
 from django.shortcuts import render
+from django.template import loader
 from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import requires_csrf_token
 from django.views.decorators.http import require_GET
 
 from sympraxi.centers.models import Membership
@@ -50,3 +58,22 @@ def too_many_requests(request: HttpRequest) -> HttpResponse:
 def source_code(request: HttpRequest) -> HttpResponseRedirect:
     """AGPL section 13: every user can get the source of the version they are using."""
     return HttpResponseRedirect(settings.SYMPRAXI_SOURCE_CODE_URL)
+
+
+@requires_csrf_token
+def server_error(request: HttpRequest) -> HttpResponse:
+    """The 500 page in the site's layout (settings: handler500 in urls.py).
+
+    Rendered without the request, so no context processor runs: one that reads
+    the session or the database could fail the same way the request did.
+    """
+    page = loader.get_template("500.html").render({"SITE_NAME": settings.SYMPRAXI_SITE_NAME})
+    return HttpResponseServerError(page)
+
+
+def csrf_failure(request: HttpRequest, reason: str = "") -> HttpResponse:
+    """A failed CSRF check, in the site's layout (settings.CSRF_FAILURE_VIEW).
+
+    Django has already logged the reason; the page doesn't repeat it.
+    """
+    return render(request, "403_csrf.html", status=403)

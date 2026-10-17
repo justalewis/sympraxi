@@ -31,6 +31,8 @@ The first run creates `deploy/.env` with a new secret key and database password.
 | `SYMPRAXI_FROM_EMAIL` and `EMAIL_URL` | Your center's address and the campus relay |
 | `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` | `example.edu` (only these addresses can register) |
 
+When you've finished editing, keep a copy of `deploy/.env` and `deploy/backup.env` somewhere safe away from the server. "Keys and passwords" below says why.
+
 Then run the script again. It builds the image, creates the database tables, loads the topic vocabulary and resource catalog, and starts everything:
 
 ```bash
@@ -211,7 +213,9 @@ Each backup is a folder under `backups/` containing the database dump, the uploa
 15 2 * * * bash /opt/sympraxi/deploy/backup.sh >> /var/log/sympraxi-backup.log 2>&1
 ```
 
-To keep encrypted copies off the server, install [restic](https://restic.net) and set `RESTIC_REPOSITORY` and `RESTIC_PASSWORD` in `backup.env`.
+To keep encrypted copies off the server, install [restic](https://restic.net) and set `RESTIC_REPOSITORY` and `RESTIC_PASSWORD` in `backup.env`. Nobody can read those copies without `RESTIC_PASSWORD`, and it can't be recovered or reset, so keep a copy of it (see "Keys and passwords").
+
+Backups don't include `deploy/.env` or `deploy/backup.env`. A backup that carried them would also carry the keys that protect it.
 
 Session records and students' form answers are FERPA education records, and backups contain them. Two consequences:
 
@@ -225,6 +229,71 @@ bash restore.sh ../backups/20270115T021500Z
 ```
 
 The script checks the checksums, asks you to confirm, replaces the database and uploads, applies any newer migrations, and restarts. **Test a restore every term** on a spare VM so you know your backups work.
+
+To restore onto a new server, install Sympraxi there first. Before running `restore.sh`, copy `SYMPRAXI_SECRET_KEY` from your saved `deploy/.env` into the new one, along with the email and single sign-on settings, and restart with `docker compose up -d`. The new server keeps its own database password; the backup doesn't need the old one.
+
+## Keys and passwords
+
+Two files on the server hold what the backups leave out:
+
+| File | What's in it | Without a copy |
+|---|---|---|
+| `deploy/.env` | The secret key, the database password, the SMTP password and the single sign-on client secrets | A restored backup can't be used for two-factor login (below). The other values can be reset or issued again |
+| `deploy/backup.env` | The restic repository, its password and the storage account's keys | Nobody can read the off-site backups. Restic can't recover or reset its password |
+
+Keep a copy of both somewhere safe away from the server, such as the college's password vault, and update the copy whenever you change either file. `install.sh` makes both readable only by their owner; keep it that way on the server.
+
+`SYMPRAXI_SECRET_KEY` in `deploy/.env` signs sign-in sessions and password-reset links. It also encrypts what Sympraxi stores for each authenticator app and set of recovery codes, so a copy of the database can't be used to make anyone's two-factor codes. To restore a backup you need the secret key that was in use when it was made: without it, nobody's authenticator app or recovery codes work. Passkeys still do, because Sympraxi stores only their public keys.
+
+### Changing the secret key
+
+Change it if it may have leaked, or when someone who had a copy of `deploy/.env` no longer should.
+
+1. Make a new key:
+   ```bash
+   LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 60; echo
+   ```
+2. In `deploy/.env`, add a line `SYMPRAXI_SECRET_KEY_FALLBACKS=` with the current key after the `=`, and put the new key in `SYMPRAXI_SECRET_KEY`.
+3. Restart with `docker compose up -d`. Everything keeps working: Sympraxi reads secrets written under either key, and people stay signed in.
+4. Rewrite the two-factor secrets under the new key:
+   ```bash
+   docker compose run --rm web python manage.py reencrypt_mfa_secrets
+   ```
+5. Delete the `SYMPRAXI_SECRET_KEY_FALLBACKS` line and run `docker compose up -d` again. Anyone who hasn't opened a page since step 3 is signed out, and password-reset links sent before step 3 stop working.
+6. Update your saved copy of `deploy/.env`.
+
+If the old key may have leaked, do step 5 as soon as step 4 finishes. While the fallback is set, links made with the old key still work.
+
+### If the secret key is lost
+
+Put a new key in `SYMPRAXI_SECRET_KEY`, restart, and remove the authenticators no key can read:
+
+```bash
+docker compose run --rm web python manage.py reencrypt_mfa_secrets --remove-unreadable
+```
+
+Each removal goes in the audit log. Staff are asked to set up two-factor login again at their next sign-in, and students who had turned it on can sign in without it until they set it up again. Until the command runs, anyone with an authenticator app gets an error page when they enter a code.
+
+### Changing the database password
+
+`POSTGRES_PASSWORD` in `deploy/.env` is the password Sympraxi uses to reach PostgreSQL. PostgreSQL reads that setting only when it first creates the database, so change the password in PostgreSQL first and then in the file. Between steps 2 and 4 Sympraxi can't open new connections to the database, so some pages may fail for that minute; pick a quiet time.
+
+1. Make a new password:
+   ```bash
+   LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 40; echo
+   ```
+2. Open PostgreSQL's prompt, set the password, and quit with `\q`. `\password` asks for it twice and keeps it out of your shell history:
+   ```bash
+   docker compose exec db psql -U sympraxi -d sympraxi
+   ```
+   ```
+   \password sympraxi
+   ```
+3. Put the same password in `POSTGRES_PASSWORD` in `deploy/.env`.
+4. Restart with `docker compose up -d`, then check with `docker compose ps` that `web`, `worker` and `scheduler` are healthy.
+5. Update your saved copy of `deploy/.env`.
+
+`backup.sh` and `restore.sh` reach PostgreSQL from inside its own container, which doesn't use the password, so backups made before the change restore as usual.
 
 ## Upgrading
 

@@ -2,14 +2,28 @@
 
 Run with: uv run pytest -m e2e  (after `npm --prefix frontend run build` and
 `uv run playwright install chromium`). Add each new page to PAGES, or to
-SSO_PAGES if it only looks different once single sign-on is set up.
+SSO_PAGES if it only looks different once single sign-on is set up. allauth's
+own pages are in ACCOUNT_PAGES, forms sent back with errors in FORMS_WITH_ERRORS,
+and error pages in ERROR_PAGES.
 """
 
 from datetime import date, timedelta
 
 import pytest
+from allauth.account.models import EmailAddress, EmailConfirmationHMAC
+from allauth.account.utils import user_pk_to_url_str
+from allauth.mfa.models import Authenticator
+from allauth.mfa.recovery_codes.internal.auth import RecoveryCodes
+from allauth.mfa.totp.internal.auth import (
+    TOTP,
+    format_hotp_value,
+    hotp_value,
+    yield_hotp_counters_from_time,
+)
+from allauth.mfa.webauthn.internal.auth import WebAuthn
 from allauth.socialaccount.models import SocialAccount
 from axe_playwright_python.sync_playwright import Axe
+from django.contrib.auth.tokens import default_token_generator
 from django.utils import timezone
 from django.utils.csp import CSP
 
@@ -22,7 +36,13 @@ from sympraxi.scheduling.models import Attendance, Block, Participant
 from sympraxi.scheduling.timeutils import local_date
 from tests import sso_idp
 from tests.attendance_world import add_attendance
-from tests.factories import CenterFactory, MembershipFactory, UserFactory, give_mfa
+from tests.factories import (
+    TOTP_SECRET,
+    CenterFactory,
+    MembershipFactory,
+    UserFactory,
+    give_mfa,
+)
 from tests.forms_world import add_forms
 from tests.records_world import add_records
 from tests.reports_world import add_reports
@@ -125,6 +145,7 @@ PAGES = [
     ("director", "/centers/{slug}/blocks/settings/"),
     ("director", "/centers/{slug}/blocks/{block}/lift/"),
     ("student", "/accounts/reminders/"),
+    ("student", "/accounts/profile/"),
     ("tutor", "/accounts/reminders/"),
     ("blocked_student", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
     ("blocked_student", "/centers/{slug}/appointments/"),
@@ -590,6 +611,226 @@ def test_a_director_reorders_questions_by_keyboard(browser, live_server, sign_in
     ]
     context.close()
     assert problems == []
+
+
+# allauth's pages outside PAGES: (state, path). Each opens for a student without
+# a center, in one of these states:
+#   None           not signed in
+#   "student"      signed in, without two-factor login
+#   "no-password"  signed in, with an account made by single sign-on
+#   "fresh"        just signed in with a password, so pages that want a recent
+#                  sign-in open
+#   "fresh+2fa"    the same, with an authenticator app, recovery codes and a
+#                  passkey ({passkey}), signed in with a code from the app
+#   "2fa-step"     has an authenticator app and has entered only the password
+# {reset_key} is a working password-reset link's key and {confirm_key} a working
+# email-confirmation link's key.
+ACCOUNT_PAGES = [
+    (None, "/accounts/password/reset/done/"),
+    (None, "/accounts/password/reset/key/{reset_key}/"),
+    (None, "/accounts/password/reset/key/done/"),
+    (None, "/accounts/confirm-email/"),
+    (None, "/accounts/confirm-email/{confirm_key}/"),
+    (None, "/accounts/inactive/"),
+    (None, "/accounts/3rdparty/login/error/"),
+    ("2fa-step", "/accounts/2fa/authenticate/"),
+    ("student", "/accounts/logout/"),
+    ("student", "/accounts/reauthenticate/"),
+    ("no-password", "/accounts/password/set/"),
+    ("fresh", "/accounts/2fa/totp/activate/"),
+    ("fresh", "/accounts/2fa/webauthn/add/"),
+    ("fresh+2fa", "/accounts/2fa/"),
+    ("fresh+2fa", "/accounts/2fa/reauthenticate/"),
+    ("fresh+2fa", "/accounts/2fa/totp/deactivate/"),
+    ("fresh+2fa", "/accounts/2fa/recovery-codes/"),
+    ("fresh+2fa", "/accounts/2fa/recovery-codes/generate/"),
+    ("fresh+2fa", "/accounts/2fa/webauthn/"),
+    ("fresh+2fa", "/accounts/2fa/webauthn/keys/{passkey}/edit/"),
+    ("fresh+2fa", "/accounts/2fa/webauthn/keys/{passkey}/remove/"),
+]
+ACCOUNT_IDS = [f"{state or 'anonymous'}:{path}" for state, path in ACCOUNT_PAGES]
+# allauth answers a failed single sign-on with 401.
+ACCOUNT_STATUS = {"/accounts/3rdparty/login/error/": 401}
+
+
+def current_code(secret: str) -> str:
+    counters = list(yield_hotp_counters_from_time())
+    return format_hotp_value(hotp_value(secret, counters[len(counters) // 2]))
+
+
+def open_account_page(browser, sign_in, sign_in_with_password, live_server, state, path, **args):
+    user = UserFactory()
+    if state == "no-password":
+        user.set_unusable_password()
+        user.save()
+    passkey = None
+    if state in ("fresh+2fa", "2fa-step"):
+        TOTP.activate(user, TOTP_SECRET)
+    if state == "fresh+2fa":
+        RecoveryCodes.activate(user)
+        passkey = WebAuthn.add(user, "Work laptop", {}).instance
+        Authenticator.objects.filter(pk=passkey.pk).update(
+            data={**passkey.data, "passwordless": True}
+        )
+    unconfirmed = EmailAddress.objects.create(user=UserFactory(verified=False), email="new@x.edu")
+    context = browser.new_context(**args)
+    if state in ("student", "no-password"):
+        sign_in(context, user)
+    elif state == "fresh":
+        sign_in_with_password(context, user)
+    elif state == "fresh+2fa":
+        sign_in_with_password(context, user, code=current_code(TOTP_SECRET))
+    elif state == "2fa-step":
+        sign_in_with_password(context, user, code=None)
+    url = live_server.url + path.format(
+        reset_key=f"{user_pk_to_url_str(user)}-{default_token_generator.make_token(user)}",
+        confirm_key=EmailConfirmationHMAC(unconfirmed).key,
+        passkey=passkey.pk if passkey else None,
+    )
+    return context, context.new_page(), url
+
+
+@pytest.mark.parametrize(("state", "path"), ACCOUNT_PAGES, ids=ACCOUNT_IDS)
+def test_an_account_page_passes_axe(
+    browser, live_server, sign_in, sign_in_with_password, state, path
+) -> None:
+    context, page, url = open_account_page(
+        browser, sign_in, sign_in_with_password, live_server, state, path, bypass_csp=True
+    )
+    response = page.goto(url)
+    status = ACCOUNT_STATUS.get(path, 200)
+    assert response is not None and response.status == status, f"{url} returned {response}"
+    # Nothing sent the person elsewhere, such as back to sign in again. (A reset
+    # link moves its key into the session and goes on to the form.)
+    if "{reset_key}" not in path:
+        assert page.url == url
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+@pytest.mark.parametrize(("state", "path"), ACCOUNT_PAGES, ids=ACCOUNT_IDS)
+def test_an_account_page_has_no_csp_violations(
+    browser, live_server, sign_in, sign_in_with_password, state, path
+) -> None:
+    context, page, url = open_account_page(
+        browser, sign_in, sign_in_with_password, live_server, state, path
+    )
+    problems = watch_for_csp_problems(page)
+    page.goto(url)
+    page.wait_for_load_state("networkidle")
+    context.close()
+    assert problems == []
+
+
+# Forms sent back with errors: (who, path, steps, the button that sends it).
+# A step is ("fill", selector, text) or ("check", a checkbox's ID). Each form
+# passes the browser's own checks (required fields), so the server answers.
+FORMS_WITH_ERRORS = [
+    (
+        None,
+        "/accounts/signup/",
+        [
+            ("fill", "#id_email", "new@example.edu"),
+            ("fill", "#id_full_name", "New Person"),
+            ("fill", "#id_password1", "short"),
+            ("fill", "#id_password2", "short"),
+        ],
+        "main button[type=submit]",
+    ),
+    (
+        None,
+        "/accounts/login/",
+        [("fill", "#id_login", "nobody@example.edu"), ("fill", "#id_password", "not-it")],
+        "main button[type=submit]:text-is('Sign in')",
+    ),
+    (
+        "student",
+        "/centers/{slug}/schedules/{schedule}/book/?{slot}",
+        [],
+        "button:has-text('Book it')",
+    ),
+    (
+        "director",
+        "/centers/{slug}/form-questions/{question}/edit/",
+        [("check", "id_required"), ("check", "id_is_demographic")],
+        "button:has-text('Save the question')",
+    ),
+    (
+        "student",
+        "/accounts/profile/",
+        [("fill", "#id_full_name", "  ")],
+        "main button:text-is('Save')",
+    ),
+]
+
+
+@pytest.mark.parametrize(
+    ("who", "path", "steps", "button"),
+    FORMS_WITH_ERRORS,
+    ids=[f"{w or 'anonymous'}:{p}" for w, p, _, _ in FORMS_WITH_ERRORS],
+)
+def test_a_form_with_errors_passes_axe(
+    browser, live_server, sign_in, who, path, steps, button
+) -> None:
+    context, page, url = open_page(browser, live_server, sign_in, who, path, bypass_csp=True)
+    page.goto(url)
+    for step in steps:
+        if step[0] == "fill":
+            page.fill(step[1], step[2])
+        elif not page.is_checked(f"#{step[1]}"):
+            # USWDS keeps the real box off-screen and draws its own; click the label.
+            page.click(f"label[for='{step[1]}']")
+    page.click(button)
+    page.wait_for_selector(".usa-error-message, .usa-alert--error")
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+# Error pages: (who, path, status). tests/error_urls.py adds /fail/, which raises.
+ERROR_PAGES = [
+    (None, "/no-such-page/", 404),
+    ("student", "/centers/{slug}/appointments/00000000-0000-0000-0000-000000000000/", 404),
+    ("student", "/centers/{slug}/members/", 403),
+    (None, "/fail/", 500),
+    ("student", "/fail/", 500),
+]
+
+
+@pytest.mark.urls("tests.error_urls")
+@pytest.mark.parametrize(("who", "path", "status"), ERROR_PAGES)
+def test_an_error_page_passes_axe_and_the_csp(browser, live_server, sign_in, who, path, status):
+    context, page, url = open_page(browser, live_server, sign_in, who, path)
+    problems = watch_for_csp_problems(page)
+    response = page.goto(url)
+    assert response is not None and response.status == status
+    page.wait_for_load_state("networkidle")
+    context.close()
+    assert problems == []
+
+    context, page, url = open_page(browser, live_server, sign_in, who, path, bypass_csp=True)
+    page.goto(url)
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+def test_the_expired_form_page_passes_axe(browser, live_server) -> None:
+    """A sign-in form posted without its CSRF cookie gets the "form has expired" page."""
+    context = browser.new_context(bypass_csp=True)
+    page = context.new_page()
+    page.goto(live_server.url + "/accounts/login/")
+    context.clear_cookies()
+    page.fill("#id_login", "someone@example.edu")
+    page.fill("#id_password", "not-the-password")
+    with page.expect_response(lambda r: r.request.method == "POST") as posted:
+        page.click("main button[type=submit]:text-is('Sign in')")
+    assert posted.value.status == 403
+    page.wait_for_selector("text=This form has expired")
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
 
 
 def test_a_dead_survey_link_passes_axe(browser, live_server) -> None:
