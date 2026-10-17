@@ -5,8 +5,9 @@ Run with: uv run pytest -m e2e  (after `npm --prefix frontend run build` and
 SSO_PAGES if it only looks different once single sign-on is set up. allauth's
 own pages are in ACCOUNT_PAGES, forms sent back with errors in FORMS_WITH_ERRORS,
 and error pages in ERROR_PAGES. Some pages are also checked on a phone with the
-menu open (PHONE_PAGES), after htmx swaps content in (HTMX_SWAPS), and with forced
-colors and reduced motion emulated (EMULATED_PAGES).
+menu open (PHONE_PAGES, STAFF_PHONE_PAGES), at 320 CSS pixels wide (REFLOW_PAGES),
+for a focus ring on each control (FOCUS_PAGES), after htmx swaps content in
+(HTMX_SWAPS), and with forced colors and reduced motion emulated (EMULATED_PAGES).
 """
 
 from datetime import date
@@ -863,8 +864,9 @@ def test_a_dead_survey_link_passes_axe(browser, live_server) -> None:
     assert results.violations_count == 0, results.generate_report()
 
 
-# Key student pages on a phone: (who, path). axe checks each as it loads and
-# again with the USWDS menu open.
+# Pages on a phone: (who, path). axe checks each as it loads and again with the
+# USWDS menu open. Key student pages, then the tutor's record form and the front
+# desk's pages, which staff use on phones and tablets too.
 PHONE_SIZE = {"width": 375, "height": 812}
 PHONE = {"viewport": PHONE_SIZE, "is_mobile": True, "has_touch": True}
 PHONE_PAGES = [
@@ -877,10 +879,21 @@ PHONE_PAGES = [
     ("student", "/centers/{slug}/appointments/{appointment}/"),
     ("student", "/centers/{slug}/my-writing/{record}/"),
 ]
+STAFF_PHONE_PAGES = [
+    ("tutor", "/centers/{slug}/appointments/{unwritten}/record/"),
+    ("tutor", "/centers/{slug}/records/{draft}/edit/"),
+    ("front_desk", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
+    ("front_desk", "/centers/{slug}/schedules/{schedule}/book-for/?{slot}"),
+    ("front_desk", "/centers/{slug}/schedules/{schedule}/day/?date={tomorrow}"),
+    ("front_desk", "/centers/{slug}/attendance/"),
+]
+ALL_PHONE_PAGES = PHONE_PAGES + STAFF_PHONE_PAGES
 
 
 @pytest.mark.parametrize(
-    ("who", "path"), PHONE_PAGES, ids=[f"{w or 'anonymous'}:{p}" for w, p in PHONE_PAGES]
+    ("who", "path"),
+    ALL_PHONE_PAGES,
+    ids=[f"{w or 'anonymous'}:{p}" for w, p in ALL_PHONE_PAGES],
 )
 def test_a_page_on_a_phone_passes_axe_with_the_menu_open(
     browser, live_server, sign_in, who, path
@@ -940,6 +953,162 @@ def test_the_phone_menu_keeps_focus_inside_until_closed(browser, live_server, si
     assert page.locator("[aria-hidden]").count() == hidden_before
     context.close()
     assert problems == []
+
+
+# WCAG's reflow criterion (1.4.10) asks that a page work 320 CSS pixels wide
+# without scrolling sideways: a 1280-pixel window zoomed to 400%. Data tables may
+# scroll on their own, but Sympraxi's stack into one column below 480 pixels
+# (USWDS's usa-table--stacked), so pages with wide tables must fit too. These are
+# the phone pages and the pages whose tables are widest.
+REFLOW_SIZE = {"width": 320, "height": 256}
+REFLOW_PAGES = [
+    *ALL_PHONE_PAGES,
+    ("director", "/centers/{slug}/members/"),
+    ("director", "/centers/{slug}/forms/"),
+    ("director", "/centers/{slug}/forms/{form}/"),
+    ("director", "/centers/{slug}/surveys/results/"),
+    ("director", "/centers/{slug}/students/{student_membership}/export/"),
+]
+# The outermost elements that reach past the window's right edge.
+STICKING_OUT = """() => {
+  const edge = document.documentElement.clientWidth + 0.5;
+  const out = (el) => el.getBoundingClientRect().right > edge;
+  return [...document.querySelectorAll('body *')]
+    .filter((el) => out(el) && !out(el.parentElement))
+    .map((el) => [el.tagName.toLowerCase(), ...el.classList].join('.'));
+}"""
+
+
+@pytest.mark.parametrize(
+    ("who", "path"), REFLOW_PAGES, ids=[f"{w or 'anonymous'}:{p}" for w, p in REFLOW_PAGES]
+)
+def test_a_page_fits_320_css_pixels_without_scrolling_sideways(
+    browser, live_server, sign_in, who, path
+) -> None:
+    context, page, url = open_page(browser, live_server, sign_in, who, path, viewport=REFLOW_SIZE)
+    page.goto(url)
+    # USWDS hides the body's sideways overflow, so too wide a page is cut off
+    # rather than scrolled. scrollWidth still counts what was cut.
+    width = page.evaluate("document.documentElement.scrollWidth")
+    sticking_out = page.evaluate(STICKING_OUT)
+    context.close()
+    assert width <= REFLOW_SIZE["width"], f"{width} CSS pixels wide, because of {sticking_out}"
+
+
+# Pages whose controls between them include every kind Sympraxi uses: links,
+# buttons, text, date and search fields, selects, text areas, radio buttons,
+# checkboxes, disclosure summaries, the side navigation, and buttons marked
+# aria-disabled.
+FOCUS_PAGES = [
+    (None, "/accounts/login/"),
+    ("student", "/centers/{slug}/"),
+    ("student", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
+    ("student", "/centers/{slug}/schedules/{schedule}/book/?{slot}"),
+    ("tutor", "/centers/{slug}/appointments/{unwritten}/record/"),
+    ("front_desk", "/centers/{slug}/schedules/{schedule}/day/?date={tomorrow}"),
+    ("director", "/centers/{slug}/forms/{form}/"),
+    ("director", "/centers/{slug}/members/"),
+]
+# How a control's focus ring is drawn: its outline, or its box shadow. USWDS keeps
+# the real checkbox or radio button off-screen and rings the box it draws in the
+# label's ::before instead, so for those the label is what counts.
+RING = """(el) => {
+  const drawn = el.matches('.usa-checkbox__input, .usa-radio__input') && el.labels[0] || el;
+  const style = getComputedStyle(drawn, drawn === el ? null : '::before');
+  const box = drawn.getBoundingClientRect();
+  const outline = style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0;
+  return {
+    outline: outline ? `${style.outlineStyle} ${style.outlineWidth} ${style.outlineColor}` : null,
+    shadow: style.boxShadow,
+    inView: box.width > 0 && box.height > 0 && box.right > 0 && box.bottom > 0
+      && box.left < innerWidth && box.top < innerHeight,
+  };
+}"""
+REMEMBER_UNFOCUSED_RINGS = f"""() => {{
+  window.ring = {RING};
+  window.unfocused = new Map();
+  const controls = 'a[href], button, input, select, textarea, summary, [tabindex]';
+  for (const el of document.querySelectorAll(controls)) window.unfocused.set(el, ring(el));
+}}"""
+FOCUSED = """() => {
+  const el = document.activeElement;
+  if (el === document.body) return null;
+  if (!window.unfocused.has(el)) window.unfocused.set(el, null);
+  const name = (el.textContent || '').trim() || el.value || el.name || el.id;
+  return {
+    index: [...window.unfocused.keys()].indexOf(el),
+    name: `${el.tagName.toLowerCase()} "${name.slice(0, 40)}"`,
+    unfocused: window.unfocused.get(el),
+    focused: ring(el),
+  };
+}"""
+
+
+def tab_through(page) -> tuple[int, list[str]]:
+    """Tab from wherever focus is until it comes back around or leaves the page.
+
+    Returns how many controls Tab reached and what was wrong with any of their
+    focus rings. Run REMEMBER_UNFOCUSED_RINGS first.
+    """
+    reached: list[int] = []
+    problems = []
+    for _ in range(200):
+        page.keyboard.press("Tab")
+        # The skip link slides into view when it has focus.
+        page.wait_for_function("document.getAnimations().length === 0")
+        stop = page.evaluate(FOCUSED)
+        if stop is None or (reached and stop["index"] == reached[0]):
+            return len(reached), problems
+        if reached and stop["index"] == reached[-1]:
+            continue  # Tab moves between the parts of a date field
+        reached.append(stop["index"])
+        before, now = stop["unfocused"], stop["focused"]
+        changed = before is None or (now["outline"], now["shadow"]) != (
+            before["outline"],
+            before["shadow"],
+        )
+        if not now["inView"]:
+            problems.append(f"{stop['name']} is out of sight")
+        elif not changed or (now["outline"] is None and now["shadow"] == "none"):
+            problems.append(f"{stop['name']} looks the same with focus as without")
+        elif now["outline"] and now["outline"].startswith("auto "):
+            problems.append(f"{stop['name']} has only the browser's own focus ring")
+    pytest.fail("Tab never came back around")
+
+
+@pytest.mark.parametrize(
+    ("who", "path"), FOCUS_PAGES, ids=[f"{w or 'anonymous'}:{p}" for w, p in FOCUS_PAGES]
+)
+def test_each_control_shows_a_focus_ring(browser, live_server, sign_in, who, path) -> None:
+    """Tab through the page; each control's outline or shadow changes when it has focus.
+
+    axe has no rule for visible focus (2.4.7). USWDS draws a 4-pixel ring, and
+    a control the test can't see a ring on is one where something has removed
+    it or put it out of sight, or where the browser's own ring stands in for it.
+    """
+    context, page, url = open_page(browser, live_server, sign_in, who, path, bypass_csp=True)
+    page.goto(url)
+    page.evaluate(REMEMBER_UNFOCUSED_RINGS)
+    reached, problems = tab_through(page)
+    context.close()
+    assert reached > 3
+    assert problems == []
+
+
+def test_each_control_shows_a_focus_ring_on_a_phone(browser, live_server, sign_in) -> None:
+    """The same on a phone, on the page and then in the open menu."""
+    context, page, url = open_page(
+        browser, live_server, sign_in, "student", "/centers/{slug}/", bypass_csp=True, **PHONE
+    )
+    page.goto(url)
+    page.evaluate(REMEMBER_UNFOCUSED_RINGS)
+    on_the_page, problems = tab_through(page)
+    open_the_menu(page)
+    in_the_menu, more = tab_through(page)
+    context.close()
+    assert on_the_page > 3
+    assert in_the_menu >= 4  # the close button, two links and Sign out
+    assert problems + more == []
 
 
 # Content htmx swaps into a page: (who, path, steps). Each step is one of the

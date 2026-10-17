@@ -8,7 +8,7 @@
   <p>{% translate "Questions your center asks. The registration form is asked once, the first time a student books. Intake forms are asked each time a student books. Session report questions are answered by tutors in each session record. Surveys go to students after sessions they came to, and their answers are anonymous." %}</p>
   <p>{% translate "Every change is saved as a new version. Answers already given keep the wording the student saw." %}</p>
   {% if rows %}
-    <table class="usa-table usa-table--borderless">
+    <table class="usa-table usa-table--borderless usa-table--stacked">
       <caption class="usa-sr-only">{% translate "Your center's forms" %}</caption>
       <thead>
         <tr>
@@ -22,11 +22,11 @@
       <tbody>
         {% for row in rows %}
           <tr>
-            <th scope="row"><a href="{% url 'forms:detail' slug=center.slug form_id=row.form.pk %}">{{ row.form.title }}</a></th>
-            <td>{% if row.published %}{% blocktranslate with n=row.published.number when=row.published.published_at|date:"F j, Y" %}Version {{ n }}, {{ when }}{% endblocktranslate %}{% else %}{% translate "Not yet" %}{% endif %}</td>
-            <td>{% if row.draft %}{% blocktranslate with n=row.draft.number %}Version {{ n }}{% endblocktranslate %}{% else %}{% translate "None" %}{% endif %}</td>
-            <td>{% if row.form.is_active %}{% translate "Yes" %}{% else %}{% translate "No, stopped" %}{% endif %}</td>
-            <td>{{ row.form.answered }}</td>
+            <th scope="row" data-label="{% translate 'Form' %}"><a href="{% url 'forms:detail' slug=center.slug form_id=row.form.pk %}">{{ row.form.title }}</a></th>
+            <td data-label="{% translate 'Published' %}">{% if row.published %}{% blocktranslate with n=row.published.number when=row.published.published_at|date:"F j, Y" %}Version {{ n }}, {{ when }}{% endblocktranslate %}{% else %}{% translate "Not yet" %}{% endif %}</td>
+            <td data-label="{% translate 'Draft' %}">{% if row.draft %}{% blocktranslate with n=row.draft.number %}Version {{ n }}{% endblocktranslate %}{% else %}{% translate "None" %}{% endif %}</td>
+            <td data-label="{% translate 'Asked' %}">{% if row.form.is_active %}{% translate "Yes" %}{% else %}{% translate "No, stopped" %}{% endif %}</td>
+            <td data-label="{% translate 'Responses' %}">{{ row.form.answered }}</td>
           </tr>
         {% endfor %}
       </tbody>

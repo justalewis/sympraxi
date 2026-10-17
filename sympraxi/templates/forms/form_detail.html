@@ -82,7 +82,7 @@
 
   <h2>{% translate "Published versions" %}</h2>
   {% if versions %}
-    <table class="usa-table usa-table--borderless">
+    <table class="usa-table usa-table--borderless usa-table--stacked">
       <caption class="usa-sr-only">{% translate "Published versions of this form" %}</caption>
       <thead>
         <tr>
@@ -95,10 +95,10 @@
       <tbody>
         {% for v in versions %}
           <tr>
-            <th scope="row"><a href="{% url 'forms:preview' slug=center.slug form_id=form.pk %}?version={{ v.number }}">{% blocktranslate with n=v.number %}Version {{ n }}{% endblocktranslate %}</a></th>
-            <td>{{ v.published_at|date:"F j, Y" }}</td>
-            <td>{{ v.published_by.display_name }}</td>
-            <td>{{ v.answered }}</td>
+            <th scope="row" data-label="{% translate 'Version' %}"><a href="{% url 'forms:preview' slug=center.slug form_id=form.pk %}?version={{ v.number }}">{% blocktranslate with n=v.number %}Version {{ n }}{% endblocktranslate %}</a></th>
+            <td data-label="{% translate 'Published' %}">{{ v.published_at|date:"F j, Y" }}</td>
+            <td data-label="{% translate 'By' %}">{{ v.published_by.display_name }}</td>
+            <td data-label="{% translate 'Responses' %}">{{ v.answered }}</td>
           </tr>
         {% endfor %}
       </tbody>

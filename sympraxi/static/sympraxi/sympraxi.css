@@ -27,15 +27,17 @@
   margin-bottom: 2rem;
 }
 
-/* The sign-out control is a form button styled to sit in the nav like a link. */
+/* The sign-out control is a form button styled to sit in the nav like a link:
+   the same color, weight and padding as USWDS gives the links, in the phone
+   menu and in the desktop header. */
 .sympraxi-nav-form {
   margin: 0;
 }
 
 .sympraxi-nav-button.usa-button--unstyled {
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   font-weight: 400;
-  color: #1b1b1b;
+  color: #565c65;
   text-decoration: none;
 }
 
@@ -45,9 +47,16 @@
 
 @media (min-width: 64em) {
   .sympraxi-nav-button.usa-button--unstyled {
+    padding: 1rem;
     font-weight: 700;
-    color: #565c65;
   }
+}
+
+/* USWDS gives links, buttons, fields and anything with a tabindex its focus
+   ring, but not a disclosure's summary, which got each browser's own. */
+summary:focus {
+  outline: 0.25rem solid #2491ff;
+  outline-offset: 0;
 }
 
 .sympraxi-content .usa-table {
