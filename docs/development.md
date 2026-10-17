@@ -91,13 +91,14 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/accounts/sso.py` | What a single sign-on login must prove; `sso_config.py` builds the providers from the environment |
 | `sympraxi/centers/` | Centers, roles, memberships |
 | `sympraxi/scheduling/services.py` | Every booking rule: limits, notice, cutoff, groups, locks |
-| `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions and closures |
+| `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions, closures and tutor caps |
 | `sympraxi/scheduling/timeutils.py` | Wall-clock times and daylight-saving rules |
 | `sympraxi/scheduling/attendance.py` | Marking attendance, possible no-shows, waivers, late-cancellation window |
 | `sympraxi/scheduling/blocks.py` | Counting no-shows and late cancellations, and setting and lifting booking blocks |
 | `sympraxi/scheduling/reminders.py` | Which reminders are due, and sending each one once |
 | `sympraxi/scheduling/scheduler.py` | The minute-by-minute loop behind `manage.py scheduler`; `sympraxi/healthcheck.py` checks its heartbeat |
 | `sympraxi/templates/allauth/` | Sign-in and account pages restyled with USWDS |
+| `sympraxi/static/sympraxi/sympraxi.js` | Sympraxi's own script, on every page (the CSP allows no inline script). Pages must work without it |
 | `sympraxi/records/models.py` | Session records, amendments, writing projects, topics and resources |
 | `sympraxi/records/services.py` | Saving, finalizing and amending records, and group copies |
 | `sympraxi/records/migrations/0002_final_records_locked.py` | The trigger that refuses changes to final records outside an amendment |

@@ -32,7 +32,7 @@ from sympraxi.forms.answering import follow_up_message
 from sympraxi.records import brief
 from sympraxi.records.models import SessionRecord
 from sympraxi.scheduling import attendance, blocks, ics, notifications, services
-from sympraxi.scheduling.availability import OpenTime, lengths_offered, open_times
+from sympraxi.scheduling.availability import CapRule, OpenTime, lengths_offered, open_times
 from sympraxi.scheduling.forms import (
     BookForm,
     ConfirmForm,
@@ -149,12 +149,15 @@ def _open_times_context(
     modality: str | None = None,
     minutes: int | None = None,
     groups: bool = True,
+    caps: CapRule = "hide",
+    moving: Appointment | None = None,
 ) -> dict[str, Any]:
     """The filters and open-times list shared by the booking and change pages.
 
     `link_base` is where each time's link goes (with the time in the query string),
     or "" for no links. `modality`, when given, overrides the filter. `groups=False`
-    leaves out seats in existing group appointments.
+    leaves out seats in existing group appointments. `caps` and `moving` are
+    passed to `open_times()`.
     """
     now = timezone.now()
     tz = schedule.tz
@@ -201,6 +204,8 @@ def _open_times_context(
             earliest=earliest,
             assignment_id=tutor,
             modality=chosen_modality,
+            caps=caps,
+            moving=moving,
         )
     rows = [
         {"time": t, "book_url": f"{link_base}?{_slot_query(t)}" if link_base else ""}
@@ -241,7 +246,14 @@ def open_times_page(request: HtmxHttpRequest, slug: str, schedule_id: UUID) -> H
         "schedule": schedule,
         "crumbs": crumbs(schedule.center),
         "htmx": bool(request.htmx),
-        **_open_times_context(request, schedule, as_staff=as_staff, link_base=book_url),
+        # Staff can override a tutor's caps, so they see those times, marked.
+        **_open_times_context(
+            request,
+            schedule,
+            as_staff=as_staff,
+            link_base=book_url,
+            caps="mark" if as_staff else "hide",
+        ),
         "as_staff": as_staff,
         "can_see_day": can(user, Action.VIEW_ALL_APPOINTMENTS, schedule),
         "my_blocks": my_blocks,
@@ -268,9 +280,14 @@ def _day_link(query: Any, day: date) -> str:
 
 
 def _chosen_time(
-    schedule: Schedule, data: Any, *, as_staff: bool
+    schedule: Schedule,
+    data: Any,
+    *,
+    as_staff: bool,
+    caps: CapRule = "hide",
+    moving: Appointment | None = None,
 ) -> tuple[SlotForm, OpenTime | None]:
-    """The open time named in `data`, if it is still open."""
+    """The open time named in `data`, if it is still open, by the list's rules."""
     slot = SlotForm(data)
     if not slot.is_valid():
         return slot, None
@@ -291,6 +308,8 @@ def _chosen_time(
         minutes,
         earliest=earliest,
         assignment_id=assignment.pk,
+        caps=caps,
+        moving=moving,
     ):
         if t.starts_at == start:
             return slot, t
@@ -300,6 +319,49 @@ def _chosen_time(
 def _gone(request: HttpRequest, schedule: Schedule) -> HttpResponseRedirect:
     messages.warning(request, _("That time isn't open anymore. Choose another."))
     return redirect("scheduling:open_times", slug=schedule.center.slug, schedule_id=schedule.pk)
+
+
+def held_time(schedule: Schedule, student: User, slot: SlotForm) -> Appointment | None:
+    """The student's own active appointment at the chosen tutor and time, if they hold it."""
+    if not slot.is_valid():
+        return None
+    start = slot.cleaned_data["start"]
+    return (
+        Appointment.objects.filter(
+            schedule=schedule,
+            assignment_id=slot.cleaned_data["assignment"],
+            starts_at=start,
+            ends_at=start + timedelta(minutes=slot.cleaned_data["minutes"]),
+            participants__student=student,
+            participants__canceled_at__isnull=True,
+        )
+        .exclude(status=AppointmentStatus.CANCELED)
+        .first()
+    )
+
+
+def _booked(request: HttpRequest, slug: str, appointment: Appointment) -> HttpResponseRedirect:
+    if appointment.is_tentative:
+        messages.success(request, _("Your request is in. The center will confirm it by email."))
+    else:
+        messages.success(request, _("You're booked. A confirmation email is on its way."))
+    return redirect("scheduling:appointment", slug=slug, appointment_id=appointment.pk)
+
+
+def _already_held(
+    request: HttpRequest, slug: str, appointment: Appointment, *, posted: bool
+) -> HttpResponseRedirect:
+    """Send a student who already holds the chosen time to that appointment.
+
+    A double-click posts the form twice. One request books; the other finds the
+    time taken, by the same student, and would show a refusal, and the browser
+    shows the answer to the last click. So a second post gets the same message
+    as the first. Opening the page again later (Back, an old tab) gets a note.
+    """
+    if posted:
+        return _booked(request, slug, appointment)
+    messages.info(request, _("You already have this appointment."))
+    return redirect("scheduling:appointment", slug=slug, appointment_id=appointment.pk)
 
 
 @login_required
@@ -314,9 +376,12 @@ def book(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpResponse:
     posted = request.POST if request.method == "POST" else None
     data = posted if posted is not None else request.GET
     slot, chosen = _chosen_time(schedule, data, as_staff=False)
+    student = signed_in(request)
+    held = held_time(schedule, student, slot)
+    if held is not None:
+        return _already_held(request, slug, held, posted=posted is not None)
     if chosen is None:
         return _gone(request, schedule)
-    student = signed_in(request)
     form = BookForm(
         posted,
         modalities=chosen.modalities,
@@ -350,15 +415,13 @@ def book(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpResponse:
                     request=request,
                 )
         except services.BookingError as exc:
+            # The other half of a double-click is refused once this student holds the time.
+            held = held_time(schedule, student, slot)
+            if held is not None:
+                return _already_held(request, slug, held, posted=True)
             form.add_error(None, exc.message)
         else:
-            if appointment.is_tentative:
-                messages.success(
-                    request, _("Your request is in. The center will confirm it by email.")
-                )
-            else:
-                messages.success(request, _("You're booked. A confirmation email is on its way."))
-            return redirect("scheduling:appointment", slug=slug, appointment_id=appointment.pk)
+            return _booked(request, slug, appointment)
     context = {
         "center": schedule.center,
         "schedule": schedule,
@@ -391,7 +454,7 @@ def staff_book(request: HttpRequest, slug: str, schedule_id: UUID) -> HttpRespon
     schedule = schedule_for(request, Action.BOOK_FOR_OTHERS, slug, schedule_id)
     posted = request.POST if request.method == "POST" else None
     data = posted if posted is not None else request.GET
-    slot, chosen = _chosen_time(schedule, data, as_staff=True)
+    slot, chosen = _chosen_time(schedule, data, as_staff=True, caps="mark")
     if chosen is None:
         return _gone(request, schedule)
     initial = {**slot.cleaned_data, "start": format_start(chosen.starts_at), "weeks": 1}
@@ -622,8 +685,10 @@ def appointment_change(request: HtmxHttpRequest, slug: str, appointment_id: UUID
     }
     template = "scheduling/appointment_change.html"
     data = request.POST if request.method == "POST" else request.GET
+    # Moving an appointment doesn't override caps, except that placeholders have none.
+    caps: CapRule = "ignore" if appointment.is_placeholder else "hide"
     if allowed and "start" in data:
-        slot, chosen = _chosen_time(schedule, data, as_staff=staff)
+        slot, chosen = _chosen_time(schedule, data, as_staff=staff, caps=caps, moving=appointment)
         if (
             chosen is None
             or chosen.appointment is not None
@@ -658,6 +723,8 @@ def appointment_change(request: HtmxHttpRequest, slug: str, appointment_id: UUID
                 modality=appointment.modality,
                 minutes=appointment.minutes,
                 groups=False,
+                caps=caps,
+                moving=appointment,
             )
         )
         context.update({"mode": "choose", "htmx": bool(request.htmx)})

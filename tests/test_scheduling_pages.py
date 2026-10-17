@@ -1,14 +1,18 @@
 """The booking and setup pages, driven the way a browser would."""
 
-from datetime import timedelta
+import html
+from datetime import time, timedelta
 from urllib.parse import urlencode
 
 import pytest
+from django.contrib.messages import get_messages
+from django.contrib.staticfiles import finders
 from django.urls import reverse
 
 from sympraxi.centers.models import Role
 from sympraxi.privacy.audit import AuditAction
 from sympraxi.privacy.models import AuditEvent
+from sympraxi.scheduling import services, views
 from sympraxi.scheduling.forms import format_start
 from sympraxi.scheduling.models import (
     Appointment,
@@ -20,7 +24,7 @@ from sympraxi.scheduling.models import (
     TutorAssignment,
 )
 from sympraxi.scheduling.timeutils import local_date
-from tests.scheduling_world import World, at, build_world, make_member
+from tests.scheduling_world import World, assign, at, build_world, make_member
 
 pytestmark = pytest.mark.django_db
 
@@ -98,7 +102,7 @@ def test_a_student_books_through_the_pages(client, world, django_capture_on_comm
 
 
 def test_a_taken_time_sends_the_student_back_to_the_list(client, world) -> None:
-    client.force_login(world.student)
+    client.force_login(make_member(world.center, Role.STUDENT))
     query = urlencode(
         {
             "assignment": str(world.assignment.pk),
@@ -423,3 +427,186 @@ def test_students_cannot_move_inside_the_cutoff(client, world) -> None:
     assert "too close to the appointment" in response.content.decode()
     world.appointment.refresh_from_db()
     assert world.appointment.sequence == 0
+
+
+# --- Tutor caps and repeated posts on the booking pages ---------------------------
+# The first-Monday load test (docs/decisions.md) found students offered times
+# with tutors who were already full, and double-clicks shown a refusal.
+
+BOOKED = "You're booked. A confirmation email is on its way."
+
+
+def text_of(response) -> str:
+    return html.unescape(" ".join(response.content.decode().split()))
+
+
+def shown_messages(response) -> list[str]:
+    return [str(m) for m in get_messages(response.wsgi_request)]
+
+
+def slot(assignment, start) -> str:
+    return urlencode(
+        {"assignment": str(assignment.pk), "start": format_start(start), "minutes": 30}
+    )
+
+
+def book_url(world: World, assignment=None, start=None) -> str:
+    url = page("scheduling:book", world, schedule_id=world.schedule.pk)
+    return f"{url}?{slot(assignment or world.assignment, start or world.free_start)}"
+
+
+def booking(assignment, start) -> dict[str, object]:
+    return {
+        "assignment": assignment.pk,
+        "start": format_start(start),
+        "minutes": 30,
+        "modality": "in_person",
+    }
+
+
+@pytest.fixture
+def full_tomorrow(world: World) -> World:
+    """The tutor's one appointment tomorrow fills their daily cap."""
+    world.assignment.max_per_day = 1
+    world.assignment.save()
+    return world
+
+
+def test_students_do_not_see_times_with_a_tutor_at_their_cap(client, full_tomorrow) -> None:
+    world = full_tomorrow
+    client.force_login(make_member(world.center, Role.STUDENT))
+    url = page("scheduling:open_times", world, schedule_id=world.schedule.pk)
+    listed = text_of(client.get(url, {"date": tomorrow(world).isoformat(), "minutes": 30}))
+    assert "No open times that day." in listed
+    later = (tomorrow(world) + timedelta(days=1)).isoformat()
+    assert "2 p.m. to 2:30 p.m." in text_of(client.get(url, {"date": later, "minutes": 30}))
+    # A link to one of those times, from before the tutor filled up, goes back to the list.
+    response = client.get(book_url(world))
+    assert response["Location"] == url
+    assert shown_messages(response) == ["That time isn't open anymore. Choose another."]
+
+
+def test_staff_see_times_with_a_tutor_at_their_cap_marked(client, full_tomorrow) -> None:
+    world = full_tomorrow
+    client.force_login(make_member(world.center, Role.FRONT_DESK))
+    url = page("scheduling:open_times", world, schedule_id=world.schedule.pk)
+    listed = text_of(client.get(url, {"date": tomorrow(world).isoformat(), "minutes": 30}))
+    assert "2 p.m. to 2:30 p.m." in listed
+    assert "Tutor's daily limit reached" in listed
+
+    form = page("scheduling:staff_book", world, schedule_id=world.schedule.pk)
+    form += "?" + slot(world.assignment, world.free_start)
+    shown = text_of(client.get(form))
+    assert "This tutor has reached their limit of 1 appointment a day." in shown
+    assert (
+        "To book anyway, check “Book even if it goes over the student's or tutor's limits”."
+        in shown
+    )
+    other = make_member(world.center, Role.STUDENT)
+    data = {**booking(world.assignment, world.free_start), "student": other.pk, "weeks": 1}
+    refused = text_of(client.post(form, data))
+    assert "This tutor is fully booked that day." in refused
+    assert ": This tutor" not in refused  # no date in front of a single booking
+    assert client.post(form, {**data, "override_limits": "on"}).status_code == 302
+
+
+def test_students_can_still_move_inside_a_day_their_tutor_has_filled(client, full_tomorrow):
+    # Moving doesn't count the appointment being moved, as in services.reschedule().
+    world = full_tomorrow
+    client.force_login(world.student)
+    url = page("scheduling:appointment_change", world, appointment_id=world.appointment.pk)
+    assert "2 p.m. to 2:30 p.m." in text_of(client.get(url, {"date": tomorrow(world).isoformat()}))
+    response = client.post(
+        url,
+        {"assignment": world.assignment.pk, "start": format_start(world.free_start), "minutes": 30},
+    )
+    assert response.status_code == 302
+    world.appointment.refresh_from_db()
+    assert world.appointment.starts_at == world.free_start
+
+
+@pytest.mark.parametrize(
+    ("tentative", "message"),
+    [(False, BOOKED), (True, "Your request is in. The center will confirm it by email.")],
+)
+def test_posting_the_booking_form_again_shows_the_booking(
+    client, world, django_capture_on_commit_callbacks, tentative, message
+) -> None:
+    world.assignment.needs_confirmation = tentative
+    world.assignment.save()
+    student = make_member(world.center, Role.STUDENT)
+    client.force_login(student)
+    with django_capture_on_commit_callbacks(execute=False) as emails:
+        first = client.post(book_url(world), booking(world.assignment, world.free_start))
+        client.get(first["Location"])  # shows, and so uses up, the first message
+        second = client.post(book_url(world), booking(world.assignment, world.free_start))
+    appointment = Appointment.objects.get(participants__student=student)
+    detail = page("scheduling:appointment", world, appointment_id=appointment.pk)
+    assert first["Location"] == second["Location"] == detail
+    assert shown_messages(second) == [message]
+    assert len(emails) == 1
+
+
+def test_a_refusal_caused_by_the_students_own_booking_shows_the_booking(
+    client, world, monkeypatch
+) -> None:
+    # In a double-click, the other request can commit after this one looked for
+    # it and before this one books. A group seat stays listed after the student
+    # takes it, so the booking itself is what refuses here.
+    group = assign(world.schedule, hours=((time(8), time(22)),), capacity=3)
+    student = make_member(world.center, Role.STUDENT)
+    appointment = services.book(
+        actor=student,
+        assignment=group,
+        starts_at=world.free_start,
+        minutes=30,
+        modality="in_person",
+        students=[student],
+        as_staff=False,
+        notify=False,
+    )
+    looks: list[object] = []
+    real = views.held_time
+
+    def first_look_misses(*args):
+        looks.append(args)
+        return None if len(looks) == 1 else real(*args)
+
+    monkeypatch.setattr(views, "held_time", first_look_misses)
+    client.force_login(student)
+    response = client.post(book_url(world, group), booking(group, world.free_start))
+    assert len(looks) == 2
+    detail = page("scheduling:appointment", world, appointment_id=appointment.pk)
+    assert response["Location"] == detail
+    assert shown_messages(response) == [BOOKED]
+
+
+def test_opening_the_booking_page_for_a_time_you_hold_shows_the_appointment(client, world):
+    client.force_login(world.student)
+    response = client.get(book_url(world, start=world.appointment.starts_at))
+    assert response["Location"] == page(
+        "scheduling:appointment", world, appointment_id=world.appointment.pk
+    )
+    assert shown_messages(response) == ["You already have this appointment."]
+
+
+def test_another_appointment_at_that_time_is_still_refused(client, world) -> None:
+    other = assign(world.schedule, hours=((time(8), time(22)),))
+    client.force_login(world.student)
+    start = world.appointment.starts_at
+    response = client.post(book_url(world, other, start), booking(other, start))
+    assert response.status_code == 200
+    assert f"{world.student} already has an appointment then." in text_of(response)
+
+
+def test_the_booking_forms_ignore_a_second_submit(client, world) -> None:
+    """`sympraxi.js` lets a form marked data-submit-once be sent once per page."""
+    assert finders.find("sympraxi/sympraxi.js")
+    client.force_login(make_member(world.center, Role.STUDENT))
+    student_page = client.get(book_url(world)).content.decode()
+    client.force_login(make_member(world.center, Role.FRONT_DESK))
+    staff_url = page("scheduling:staff_book", world, schedule_id=world.schedule.pk)
+    staff_page = client.get(staff_url + "?" + world.slot_query()).content.decode()
+    for shown in (student_page, staff_page):
+        assert "data-submit-once" in shown
+        assert "/static/sympraxi/sympraxi.js" in shown

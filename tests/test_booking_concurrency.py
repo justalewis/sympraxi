@@ -9,13 +9,18 @@ from collections.abc import Callable
 from datetime import UTC, date, datetime, time
 
 import pytest
+from django.conf import settings
+from django.contrib.messages import get_messages
 from django.db import connection
+from django.test import Client
+from django.urls import reverse
 
 from sympraxi.centers.models import Role
 from sympraxi.scheduling import services
+from sympraxi.scheduling.forms import format_start
 from sympraxi.scheduling.models import Appointment, AppointmentStatus
 from tests.factories import CenterFactory
-from tests.scheduling_world import assign, at, make_member, make_schedule
+from tests.scheduling_world import assign, at, build_world, make_member, make_schedule
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
@@ -165,3 +170,49 @@ def test_a_student_racing_themselves_stays_within_the_limit(center, schedule) ->
     student = make_member(center, Role.STUDENT)
     results = race(*(booking(student, t, 10 + i) for i, t in enumerate(tutors)))
     assert results == ["limit_day", "limit_day", "ok"]
+
+
+def test_a_double_click_books_once_and_both_clicks_show_the_booking(center) -> None:
+    # Both posts reach the server together, in one browser session. One books.
+    # The other waits on the student's lock and is refused, or finds the time
+    # gone, and either way sees that the student holds it.
+    world = build_world(center)
+    student = make_member(center, Role.STUDENT)
+    first = Client()
+    first.force_login(student)
+    second = Client()
+    session = first.cookies[settings.SESSION_COOKIE_NAME].value
+    second.cookies[settings.SESSION_COOKIE_NAME] = session
+    kwargs = {"slug": center.slug, "schedule_id": world.schedule.pk}
+    url = reverse("scheduling:book", kwargs=kwargs) + "?" + world.slot_query()
+    data = {
+        "assignment": world.assignment.pk,
+        "start": format_start(world.free_start),
+        "minutes": 30,
+        "modality": "in_person",
+    }
+    barrier = threading.Barrier(2)
+    responses = []
+
+    def click(client: Client) -> None:
+        try:
+            barrier.wait()
+            responses.append(client.post(url, data))
+        finally:
+            connection.close()
+
+    threads = [threading.Thread(target=click, args=(c,)) for c in (first, second)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(timeout=60)
+
+    appointment = Appointment.objects.get(participants__student=student)
+    detail = reverse(
+        "scheduling:appointment", kwargs={"slug": center.slug, "appointment_id": appointment.pk}
+    )
+    assert [r.status_code for r in responses] == [302, 302]
+    assert [r["Location"] for r in responses] == [detail, detail]
+    for response in responses:
+        shown = [str(m) for m in get_messages(response.wsgi_request)]
+        assert shown == ["You're booked. A confirmation email is on its way."]

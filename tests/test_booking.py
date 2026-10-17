@@ -397,6 +397,121 @@ def test_tutor_caps(schedule, center) -> None:
     book(students[3], capped, NEXT_TUESDAY, 10)
 
 
+def _tutors_listed(schedule, day: date, **kwargs: Any) -> dict[Any, list[str]]:
+    """Each tutor's new times on `day` (group seats left out), and how they're marked."""
+    listed: dict[Any, list[str]] = {}
+    for t in open_times(schedule, day, 30, **kwargs):
+        if t.appointment is None:
+            listed.setdefault(t.assignment, []).append(t.at_cap)
+    return listed
+
+
+def test_open_times_leave_out_a_tutor_at_a_cap(schedule, center, tutor, staff) -> None:
+    capped = assign(schedule, hours=((time(9), time(17)),), max_per_day=1, max_per_week=2)
+    students = [make_member(center, Role.STUDENT) for _ in range(3)]
+    assert capped in _tutors_listed(schedule, TUESDAY)
+    first = book(students[0], capped, TUESDAY, 10)
+    # A placeholder doesn't count toward a cap, as in the booking rules.
+    book(staff, capped, WEDNESDAY, 9, students=[], as_staff=True, is_placeholder=True)
+    listed = _tutors_listed(schedule, TUESDAY)
+    assert capped not in listed
+    assert tutor in listed
+    assert capped in _tutors_listed(schedule, WEDNESDAY)
+    book(students[1], capped, WEDNESDAY, 10)
+    assert capped not in _tutors_listed(schedule, THURSDAY)  # the week is full
+    assert capped in _tutors_listed(schedule, NEXT_TUESDAY)
+    services.cancel(actor=students[0], appointment=first, as_staff=False, now=NOW, notify=False)
+    assert capped in _tutors_listed(schedule, TUESDAY)
+
+
+def test_group_seats_stay_open_when_the_tutor_is_at_a_cap(schedule, center) -> None:
+    # Joining a group doesn't count toward a cap; only a new appointment does.
+    group = assign(schedule, hours=((time(9), time(17)),), capacity=3, max_per_day=1)
+    first, second = (make_member(center, Role.STUDENT) for _ in range(2))
+    appointment = book(first, group, TUESDAY, 10)
+    times = [t for t in open_times(schedule, TUESDAY, 30) if t.assignment == group]
+    assert [t.appointment for t in times] == [appointment]
+    assert book(second, group, TUESDAY, 10).pk == appointment.pk
+
+
+def test_staff_see_a_tutor_at_a_cap_marked(schedule, center, tutor) -> None:
+    capped = assign(schedule, hours=((time(9), time(17)),), max_per_day=2, max_per_week=3)
+    students = [make_member(center, Role.STUDENT) for _ in range(3)]
+    book(students[0], capped, TUESDAY, 10)
+    book(students[1], capped, TUESDAY, 11)
+    listed = _tutors_listed(schedule, TUESDAY, caps="mark")
+    assert set(listed[capped]) == {"day"}
+    assert set(listed[tutor]) == {""}
+    book(students[2], capped, WEDNESDAY, 10)
+    assert set(_tutors_listed(schedule, THURSDAY, caps="mark")[capped]) == {"week"}
+    assert set(_tutors_listed(schedule, TUESDAY, caps="ignore")[capped]) == {""}
+
+
+def test_an_appointment_being_moved_does_not_count_toward_its_tutors_cap(schedule, center):
+    capped = assign(schedule, hours=((time(9), time(17)),), max_per_day=1)
+    student = make_member(center, Role.STUDENT)
+    appointment = book(student, capped, TUESDAY, 10)
+    assert capped not in _tutors_listed(schedule, TUESDAY)
+    assert capped in _tutors_listed(schedule, TUESDAY, moving=appointment)
+    moved = services.reschedule(
+        actor=student,
+        appointment=appointment,
+        starts_at=at(schedule, TUESDAY, 14),
+        minutes=30,
+        as_staff=False,
+        now=NOW,
+        notify=False,
+    )
+    assert moved.starts_at == at(schedule, TUESDAY, 14)
+
+
+@pytest.mark.parametrize(
+    ("field", "n", "message"),
+    [
+        ("max_per_day", 1, "the limit of 1 appointment a day."),
+        ("max_per_day", 2, "the limit of 2 appointments a day."),
+        ("max_per_week", 1, "the limit of 1 appointment a week."),
+        ("max_per_term", 1, "the limit of 1 appointment this term."),
+        ("max_minutes_per_day", 30, "the limit of 30 minutes a day."),
+    ],
+)
+def test_limit_messages_count_in_the_right_number(schedule, tutor, student, field, n, message):
+    setattr(schedule, field, n)
+    schedule.save()
+    for hour in range(n if field.startswith("max_per") else 1):
+        book(student, tutor, TUESDAY, 10 + hour)
+    with pytest.raises(BookingError) as exc:
+        book(student, tutor, TUESDAY, 15)
+    assert exc.value.message == f"That would go over {message}"
+
+
+def test_the_horizon_message_counts_in_the_right_number(schedule, tutor, student) -> None:
+    schedule.horizon_days = 1
+    schedule.save()
+    with pytest.raises(BookingError) as exc:
+        book(student, tutor, THURSDAY, 10)
+    assert exc.value.message == "You can book up to 1 day ahead."
+
+
+def test_a_single_staff_booking_is_refused_without_a_date(schedule, tutor, student, staff):
+    tutor.max_per_day = 1
+    tutor.save()
+    book(make_member(schedule.center, Role.STUDENT), tutor, TUESDAY, 10)
+    with pytest.raises(BookingError) as exc:
+        services.book_series(
+            weeks=1,
+            actor=staff,
+            assignment=tutor,
+            starts_at=at(schedule, TUESDAY, 14),
+            minutes=30,
+            modality=Modality.IN_PERSON,
+            students=[student],
+            as_staff=True,
+            notify=False,
+        )
+    assert exc.value.message == "This tutor is fully booked that day."
+
+
 # --- Groups, placeholders, tentative ---------------------------------------------
 
 

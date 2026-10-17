@@ -31,6 +31,7 @@ from hypothesis.stateful import (
 
 from sympraxi.centers.models import Role
 from sympraxi.scheduling import services
+from sympraxi.scheduling.availability import open_times
 from sympraxi.scheduling.models import Appointment, AppointmentStatus, Exemption, Participant
 from sympraxi.scheduling.timeutils import first_instant
 from tests.factories import CenterFactory
@@ -58,6 +59,10 @@ OUTCOMES: Counter[str] = Counter()
 # Grid positions (30-minute steps from midnight) inside the tutors' hours, which
 # include the small hours of the daylight-saving night.
 SLOTS = [*range(0, 9), *range(18, 22)]
+
+# Why a student may still be refused a time from their own list: the list
+# doesn't know their limits or their other appointments.
+STUDENTS_OWN_REASONS = {"student_busy", "already_in"}
 
 
 def _record(outcome: str) -> None:
@@ -175,6 +180,51 @@ class BookingMachine(RuleBasedStateMachine):
             _record(f"book refused: {exc.code}")
             return multiple()
         _record("book: ok (group)" if appointment.capacity > 1 else "book: ok")
+        return appointment.pk
+
+    @rule(
+        target=appointments,
+        student=st.integers(0, 2),
+        schedule=st.integers(0, 1),
+        day=DAYS,
+        minutes=st.sampled_from([30, 60]),
+        pick=st.integers(0, 10_000),
+    )
+    def book_from_the_list(self, student, schedule, day, minutes, pick):
+        """A student books a time their list offers, which no tutor rule may refuse."""
+        chosen = self.schedules[schedule]
+        listed = open_times(
+            chosen,
+            self.first_day + timedelta(days=day),
+            minutes,
+            earliest=self.now + timedelta(minutes=chosen.min_notice_minutes),
+        )
+        if not listed:
+            _record("book from the list: nothing listed")
+            return multiple()
+        # Ties are listed by tutor name, which changes from run to run; Hypothesis
+        # needs the same draw to pick the same time.
+        listed.sort(key=lambda o: (o.starts_at, self.assignments.index(o.assignment)))
+        offered = listed[pick % len(listed)]
+        person = self.students[student]
+        try:
+            appointment = services.book(
+                actor=person,
+                assignment=offered.assignment,
+                starts_at=offered.starts_at,
+                minutes=minutes,
+                modality=offered.modalities[0],
+                students=[person],
+                as_staff=False,
+                now=self.now,
+                notify=False,
+            )
+        except services.BookingError as exc:
+            mine = exc.code in STUDENTS_OWN_REASONS or exc.code.startswith(("limit_", "minutes_"))
+            assert mine, (exc.code, exc.message, offered)
+            _record(f"book from the list refused: {exc.code}")
+            return multiple()
+        _record("book from the list: ok")
         return appointment.pk
 
     @rule(appointment=appointments, by_staff=st.booleans())
@@ -347,7 +397,7 @@ def test_no_sequence_breaks_the_rules(first_day: date, span: bool) -> None:
     # Guard against a machine that only ever gets refused: the rules must have been
     # exercised with real bookings, cancellations and changes.
     print(dict(OUTCOMES))
-    for prefix in ("book: ok", "cancel: ok", "reschedule: ok"):
+    for prefix in ("book: ok", "book from the list: ok", "cancel: ok", "reschedule: ok"):
         assert _count(prefix) > 0, (prefix, OUTCOMES)
     limit_refusals = sum(
         _count(f"{op} refused: {kind}_")

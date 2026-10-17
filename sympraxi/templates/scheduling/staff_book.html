@@ -15,7 +15,21 @@
       <dd>{% blocktranslate count n=time.seats_left %}{{ n }} place left{% plural %}{{ n }} places left{% endblocktranslate %}</dd>
     {% endif %}
   </dl>
-  <form class="usa-form usa-form--large" method="post" novalidate>
+  {% if time.at_cap %}
+    <div class="usa-alert usa-alert--warning usa-alert--slim">
+      <div class="usa-alert__body">
+        <p class="usa-alert__text">
+          {% if time.at_cap == "day" %}
+            {% blocktranslate count n=time.assignment.max_per_day %}This tutor has reached their limit of {{ n }} appointment a day.{% plural %}This tutor has reached their limit of {{ n }} appointments a day.{% endblocktranslate %}
+          {% else %}
+            {% blocktranslate count n=time.assignment.max_per_week %}This tutor has reached their limit of {{ n }} appointment a week.{% plural %}This tutor has reached their limit of {{ n }} appointments a week.{% endblocktranslate %}
+          {% endif %}
+          {% blocktranslate with label=form.override_limits.label %}To book anyway, check “{{ label }}”.{% endblocktranslate %}
+        </p>
+      </div>
+    </div>
+  {% endif %}
+  <form class="usa-form usa-form--large" method="post" novalidate data-submit-once>
     {% csrf_token %}
     {% include "includes/form_fields.html" %}
     {% include "forms/_booking_questions.html" %}

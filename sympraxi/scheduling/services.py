@@ -37,6 +37,7 @@ from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
+from django.utils.translation import ngettext, ngettext_lazy
 from psycopg import errors as pg_errors
 
 from sympraxi.accounts.models import User
@@ -222,6 +223,9 @@ def book_series(
                     )
                 )
             except BookingError as exc:
+                if weeks == 1:
+                    raise
+                # Say which week of the series was refused.
                 raise BookingError(
                     exc.code,
                     _("%(date)s: %(reason)s")
@@ -522,9 +526,15 @@ def _check_slot(
         raise BookingError("notice", _("That time is too soon to book online."))
     tz = schedule.tz
     if local_date(starts_at, tz) > local_date(now, tz) + timedelta(days=schedule.horizon_days):
+        days = schedule.horizon_days
         raise BookingError(
             "horizon",
-            _("You can book up to %(days)s days ahead.") % {"days": schedule.horizon_days},
+            ngettext(
+                "You can book up to %(days)s day ahead.",
+                "You can book up to %(days)s days ahead.",
+                days,
+            )
+            % {"days": days},
         )
 
 
@@ -645,15 +655,40 @@ def _check_limits(
 ) -> None:
     if is_exempt(schedule, student, local_date(starts_at, schedule.tz)):
         return
+    # The plural form is chosen when the message is filled in with "n".
     messages = {
-        "day": _("That would go over the limit of %(n)s appointments a day."),
-        "week": _("That would go over the limit of %(n)s appointments a week."),
-        "term": _("That would go over the limit of %(n)s appointments this term."),
+        "day": ngettext_lazy(
+            "That would go over the limit of %(n)s appointment a day.",
+            "That would go over the limit of %(n)s appointments a day.",
+            "n",
+        ),
+        "week": ngettext_lazy(
+            "That would go over the limit of %(n)s appointment a week.",
+            "That would go over the limit of %(n)s appointments a week.",
+            "n",
+        ),
+        "term": ngettext_lazy(
+            "That would go over the limit of %(n)s appointment this term.",
+            "That would go over the limit of %(n)s appointments this term.",
+            "n",
+        ),
     }
     minute_messages = {
-        "day": _("That would go over the limit of %(n)s minutes a day."),
-        "week": _("That would go over the limit of %(n)s minutes a week."),
-        "term": _("That would go over the limit of %(n)s minutes this term."),
+        "day": ngettext_lazy(
+            "That would go over the limit of %(n)s minute a day.",
+            "That would go over the limit of %(n)s minutes a day.",
+            "n",
+        ),
+        "week": ngettext_lazy(
+            "That would go over the limit of %(n)s minute a week.",
+            "That would go over the limit of %(n)s minutes a week.",
+            "n",
+        ),
+        "term": ngettext_lazy(
+            "That would go over the limit of %(n)s minute this term.",
+            "That would go over the limit of %(n)s minutes this term.",
+            "n",
+        ),
     }
     for period, window in limit_windows(schedule, starts_at):
         count_field, minutes_field = LIMIT_FIELDS[period]
