@@ -15,7 +15,10 @@ if [ ! -f .env ]; then
     chmod 600 .env
     sed -i "s/^SYMPRAXI_SECRET_KEY=.*/SYMPRAXI_SECRET_KEY=$(secret 60)/" .env
     sed -i "s/^POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=$(secret 40)/" .env
-    [ -f backup.env ] || cp backup.env.example backup.env
+    if [ ! -f backup.env ]; then
+        cp backup.env.example backup.env
+        chmod 600 backup.env
+    fi
     echo "Created deploy/.env with new secrets."
     echo "Edit the domain, email and institution settings in deploy/.env, then run this script again."
     exit 0
