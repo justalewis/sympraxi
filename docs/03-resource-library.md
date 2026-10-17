@@ -19,7 +19,7 @@ This document covers what we're allowed to do with each source, how the catalog 
 | Source | License | Link | Store | Iframe | Copy or adapt | Notes |
 |---|---|---|---|---|---|---|
 | **Purdue OWL** (owl.purdue.edu) | All rights reserved, under its own fair-use policy; no commercial use | Yes, deep links allowed without asking | Title and our summary | No | No | Asks, as a courtesy, for an email when you link. Sitemap with about 1,240 URLs and last-modified dates; crawl delay of 3 seconds; no API or RSS |
-| **Excelsior OWL** (owl.excelsior.edu) | **Unclear.** Footer text says CC BY 4.0; the license link and badge say CC BY-NC 4.0. Treat it as BY-NC until Excelsior confirms | Yes | Yes; WordPress API, sitemap, RSS | Not blocked, but don't | NonCommercial, with attribution | Has a Spanish section |
+| **Excelsior OWL** (owl.excelsior.edu) | **CC BY-NC 4.0.** Excelsior confirmed it by email on October 16, 2026, and corrected the footer, which had said CC BY 4.0 | Yes | Yes; WordPress API, sitemap, RSS | Not blocked, but don't | NonCommercial, with attribution | Has a Spanish section |
 | **UNC Writing Center handouts** | CC BY-NC-ND 4.0; reproduction must use the whole handout and credit UNC | Yes | Yes; page sitemap only | Not blocked, but don't | Whole and unmodified only, NonCommercial | About 94 handouts and 14 videos. robots.txt blocks AI crawlers and agents by name (ClaudeBot, anthropic-ai, ChatGPT-User, GPTBot and others), disallows `/wp-json/` for every bot it doesn't name, and sets a 10-second crawl delay |
 | **UW–Madison Writer's Handbook** | CC BY-NC-SA 4.0 | Yes | Yes; WordPress API, sitemap | Not blocked, but don't | NonCommercial; adaptations must keep the same license | |
 | **Writing Commons** | Site all rights reserved; some articles CC BY-NC-ND 4.0 | Yes; terms allow linking | **Manual entry only**; terms ban robots and copying | No | Only the individually licensed articles, verbatim, NonCommercial | Leave out of automated link checks |
@@ -130,7 +130,6 @@ Possible outside frameworks for the top level, such as the WPA Outcomes Statemen
 
 ## 5. Open questions
 
-- Excelsior OWL's actual license (footer and license link disagree).
 - Writing Spaces terms of use (the page returned an error).
 - APA terms of use (behind a bot check).
 - License version for *The Word on College Reading and Writing*.

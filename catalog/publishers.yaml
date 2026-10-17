@@ -46,8 +46,8 @@
   hosts: [owl.excelsior.edu]
   license: CC-BY-NC-4.0
   license_as_documented: >-
-    Unclear. Footer text says CC BY 4.0; the license link and badge say CC
-    BY-NC 4.0. Treat it as BY-NC until Excelsior confirms
+    CC BY-NC 4.0. Excelsior confirmed it by email on 2026-10-16 and corrected
+    the site footer, which had said CC BY 4.0
   can_vendor: false
   link_check: auto
   notes: >-

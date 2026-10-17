@@ -400,4 +400,4 @@ The calendar runs longer than the phase sizes add up to (31 to 42 weeks) because
 1. **Find a pilot center** by March 2027.
 2. **Have campus counsel look at AGPL** before the repository goes public.
 3. **Secure the name:** run a USPTO trademark search, register a domain (sympraxi.org, .com, .dev and .io had no DNS records on October 14, 2026, which suggests but doesn't prove they're available), and create the GitHub organization.
-4. **Outreach.** Send Purdue OWL the courtesy email its policy asks for when sites link to it, and ask Excelsior which license its OWL actually uses (the footer says CC BY 4.0; the license link says CC BY-NC 4.0).
+4. **Outreach.** Purdue OWL got the courtesy note its policy asks for, through its contact form on October 15, 2026; it says to allow one to two weeks for a reply. Excelsior confirmed on October 16 that its OWL is CC BY-NC 4.0 and corrected its footer, so that question is closed.
