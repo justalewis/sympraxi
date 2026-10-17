@@ -5,7 +5,7 @@ A draft conformance report for a pilot campus's accessibility and IT review, lai
 | | |
 |---|---|
 | Product | Sympraxi, scheduling and session records for college writing centers |
-| Version | No release yet. Branch `phase-0-foundation` at commit `1dd462c`. The statistics and export pages being built that day aren't covered |
+| Version | No release yet. Branch `phase-0-foundation` at commit `1dd462c`, with the fixes made on October 17 for issues this draft found (decisions.md, "Fixes from the security and accessibility drafts"). The statistics and export pages being built that day aren't covered |
 | Report date | October 17, 2026 (draft) |
 | Contact | To fill in before the repository goes public |
 | Standard | WCAG 2.2, Levels A and AA. Level AAA isn't reported |
@@ -16,7 +16,7 @@ Sympraxi aims at WCAG 2.2 AA (02-build-plan.md §1 and §7), which includes the 
 
 What is known today:
 
-- Every page in the browser tests' list passes axe's automated WCAG 2.2 A and AA rules (results below).
+- Every page in the browser tests' lists passes axe's automated WCAG 2.2 A and AA rules (results below). Since October 17 the lists include the rest of allauth's account pages, the error pages, and five forms sent back with errors.
 - Nine scripted browser tests drive key flows by keyboard or check the text of a status line.
 - No one has tested Sympraxi with a screen reader, by keyboard alone across every page, at 400% zoom, with reduced motion, or in forced-colors mode. So almost every criterion below is "Not Evaluated." The manual review planned at the end decides the real levels.
 
@@ -38,29 +38,33 @@ A finished VPAT 2.5 allows "Not Evaluated" only for Level AAA criteria. This dra
 
 `tests/e2e/test_accessibility.py` opens each page in Chromium through Playwright, signed in as the right role, and runs axe-core 4.12.1 (bundled with `axe-playwright-python`) with the rule tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa` and `best-practice`. Any violation fails the test. CI runs it on every push (the `test` job in `.github/workflows/ci.yml`). A rule in `CONTRIBUTING.md` and step 5 of "Adding a page" in [development.md](development.md) put every new page on the list.
 
-Run for this draft on October 16 and 17, 2026: all 240 browser tests passed, in 52 minutes. That is axe and the CSP check on each of the 114 page views below, plus the keyboard, status and booking tests described later (12 in all). The run used Chromium on Windows 11 with PostgreSQL 18.6, in a checkout that also held another slice's uncommitted statistics work.
+Run for this draft on October 16 and 17, 2026: all 240 browser tests passed, in 52 minutes, in a checkout that also held another slice's uncommitted statistics work. After the October 17 fixes, all 295 passed, in 47 minutes, without that work. That is axe and the CSP check on the 115 page views of the main list and on the 21 account pages; axe and the CSP check on 5 error pages; axe on the expired-form page and on 5 forms sent back with errors; and the keyboard, status and booking tests described later (12 in all, one of them axe on a dead survey link). Both runs used Chromium on Windows 11 with PostgreSQL 18.6.
 
-The list holds 114 page views: 107 pages and 7 variants that change once single sign-on is set up.
+The main list holds 115 page views: 108 pages and 7 variants that change once single sign-on is set up. Three more lists, added on October 17, are after the table.
 
 | Signed in as | Pages |
 |---|---|
 | Nobody (6) | Home; sign in; create an account; reset password; a survey opened from its emailed link; the survey's thank-you page |
 | Nobody, with SSO set up (6) | Sign in and create an account with Microsoft and Google buttons; sign in when SSO is the only way; the site administrators' break-glass sign-in; the Microsoft start page; a canceled SSO sign-in |
-| Student (20) | My centers; the center page; email addresses; change password; two-factor settings; schedules; open times for a day; booking a time; my appointments; one appointment; canceling; moving (choosing a day, then a time); My writing; one session on My writing; a past appointment; email reminders; registration answers; intake answers for an appointment; a session whose report answers include one shown to the student |
+| Student (21) | My centers; the center page; name and pronouns; email addresses; change password; two-factor settings; schedules; open times for a day; booking a time; my appointments; one appointment; canceling; moving (choosing a day, then a time); My writing; one session on My writing; a past appointment; email reminders; registration answers; intake answers for an appointment; a session whose report answers include one shown to the student |
 | Student, other cases (5) | Open times, my appointments and a missed appointment for a student whose booking is paused; the booking page for a student who hasn't answered the registration questions yet; linked accounts with SSO set up |
 | Tutor (18) | My tutoring; an appointment; records to write; starting a record; a past appointment; editing a draft; a final record; amending it; an off-schedule record; a student's writing history; editing a writing project; attendance for a session with no record and for one with a record; possible no-shows; email reminders; a student's registration answers; a record with report answers, and amending it |
 | Front desk (11) | Open times; booking for a student; the day sheet; an appointment; confirming a tentative appointment; records to write; a past appointment; possible no-shows; an appointment with no record; canceling; waiving a no-show |
 | Director (48) | The center page; members; the audit log; schedules (list, new, manage, edit); tutor assignments (new, edit, weekly hours, new hours change, deleting one); terms (list, new, edit, new closure, deleting one); rooms (list, new, edit); exemptions (list, new, ending one); a student's export; the center's resources (list, new, edit); record settings; booking blocks (list, settings, lifting one); forms (list, new, the builder, new question, editing and removing a question, preview, publish); an appointment; a student's registration answers; the session-report questions and one of them; the survey, when it goes out, and its results; a record with report answers; and, for a director without two-factor login yet, the page that asks them to set it up |
 
-A separate test runs axe on the page a dead survey link opens.
+| Added list | Pages |
+|---|---|
+| allauth's account pages (21) | Not signed in: the password-reset steps after the email (the notice, the form the link opens, and the last page); the email-confirmation notice and a confirmation link; an inactive account; a failed SSO sign-in. Signed in as a student: signing out; reauthenticating with a password; setting a password on an account made by SSO; the two-factor code at sign-in; setting up an authenticator app; adding a passkey. Signed in as a student with an authenticator app, recovery codes and a passkey: two-factor settings; reauthenticating with a code; turning the app off; recovery codes, and making new ones; the passkey list; editing and removing a passkey |
+| Error pages (7) | Page not found, signed out and for a student opening an appointment that doesn't exist; not part of your role (403); something went wrong (500), signed out and signed in; a form that expired (a failed CSRF check); a dead survey link |
+| Forms sent back with errors (5) | Sign-up with a short password; sign-in with a wrong password; booking without the required intake answers; a demographic question marked required (a checkbox's error); name and pronouns with a blank full name |
 
-The same 114 page views also load under the real Content Security Policy, and a test fails on any policy error (`test_page_has_no_csp_violations`). Another test fails if any template has a `style=` attribute, an `on...=` event attribute or an inline `<script>` (`test_templates_have_no_inline_styles_or_scripts` in `tests/test_security.py`). For accessibility this means all behavior comes from htmx and the published USWDS components, with no custom widgets of Sympraxi's own to break, and no inline styles for a person's own style sheet to work around.
+The pages on the main list, the account pages and the first five error pages also load under the real Content Security Policy, and a test fails on any policy error (`test_page_has_no_csp_violations`, `test_an_account_page_has_no_csp_violations`, `test_an_error_page_passes_axe_and_the_csp`). Another test fails if any template has a `style=` attribute, an `on...=` event attribute or an inline `<script>` (`test_templates_have_no_inline_styles_or_scripts` in `tests/test_security.py`). For accessibility this means all behavior comes from htmx and the published USWDS components, with no custom widgets of Sympraxi's own to break, and no inline styles for a person's own style sheet to work around.
 
 ### What axe doesn't cover
 
-Automated rules find only some kinds of failure, and the test sees each page only as it first loads, at Playwright's default desktop size, in light mode. It never sees:
+Automated rules find only some kinds of failure, and the tests see each page only as it first loads, or as it comes back after one failed submission, at Playwright's default desktop size, in light mode. They never see:
 
-- forms after a failed submission, with their error messages;
+- error messages on forms other than the five above;
 - content htmx swaps in after someone acts (new open times, follow-up questions, suggestions);
 - the mobile menu opened, or any narrow screen;
 - hover and focus states, forced colors, zoom or changed text spacing;
@@ -68,8 +72,7 @@ Automated rules find only some kinds of failure, and the test sees each page onl
 
 These pages aren't on the list at all:
 
-- The rest of the account pages from django-allauth, restyled with USWDS (`sympraxi/templates/allauth/`): the two-factor code at sign-in, setting up an authenticator app, passkeys (list, add, edit, remove, sign in), recovery codes, reauthentication, email confirmation, setting a password, the password reset steps after the email, signing out, an inactive account, and the SSO error and sign-up pages. Every staff member goes through the two-factor setup and code pages.
-- Error pages. Sympraxi has no templates for 403, 404, 500 or a failed CSRF check, so Django's plain pages appear, without the site's header or navigation. Students see the 404 when they open an appointment or record that isn't theirs (decisions.md, Phase 1 scheduling core).
+- Two allauth steps: the SSO sign-up page, which appears only when a provider's sign-in lacks something allauth needs, and signing in with a passkey, which happens in the browser's own dialog.
 - The Django admin, used only by site administrators to create centers and appoint directors. It is Django's own interface, not USWDS.
 - Emails (plain text) and calendar files.
 
@@ -96,7 +99,7 @@ Two more browser tests (`test_a_student_books_a_time` and `test_a_dead_survey_li
 For this draft the templates were read for the things a page's structure decides. These are observations from the code, not test results:
 
 - One base layout for every page (`sympraxi/templates/base.html`): `lang` on `<html>`, a skip link to `main`, header, a navigation landmark named "Main", main and footer, and a title of the form "page | site name". The viewport tag doesn't block zooming.
-- Every field's label is tied to it. Hints and errors are tied with `aria-describedby`, and a field with an error gets `aria-invalid` (`sympraxi/core/templatetags/sympraxi_forms.py`, `sympraxi/templates/includes/field.html`). Form questions with choices are fieldsets with legends (`sympraxi/templates/forms/_question.html`).
+- Every field's label is tied to it. Hints and errors are tied with `aria-describedby`, and a field with an error gets `aria-invalid` (`sympraxi/core/templatetags/sympraxi_forms.py`, `sympraxi/templates/includes/field.html`). Since October 17 that includes checkboxes, and a test checks that `aria-describedby` never names an element missing from the page (`tests/test_field_rendering.py`). Form questions with choices are fieldsets with legends (`sympraxi/templates/forms/_question.html`).
 - Booking is a list of times, not a grid (02-build-plan.md §7). The week grid the plan describes isn't built, so neither are its sticky headers.
 - Nothing uses dragging. Questions move with Move up and Move down buttons, and options with a Place menu (decisions.md, Phase 1 forms).
 - No audio, video, iframes or canvas, and one image: the menu's close icon, with alt text.
@@ -114,7 +117,7 @@ Pages use these USWDS 3.14 components as published: header with basic navigation
 | 1.2.1 Audio-only and Video-only (Prerecorded) | Not Applicable | No audio or video on any page. Phase 2 adds video sessions through Jitsi; evaluate them then |
 | 1.2.2 Captions (Prerecorded) | Not Applicable | As 1.2.1 |
 | 1.2.3 Audio Description or Media Alternative (Prerecorded) | Not Applicable | As 1.2.1 |
-| 1.3.1 Info and Relationships | Not Evaluated | Labels, hints and errors are tied to fields; choice questions use fieldsets; data tables use `th` with `scope` (for example the day sheet); axe's structure rules pass. **Known issue:** checkboxes drawn by `sympraxi/templates/includes/field.html` show no hint and no error, so a checkbox's hint elsewhere on the page isn't tied to it |
+| 1.3.1 Info and Relationships | Not Evaluated | Labels, hints and errors are tied to fields, checkboxes included (fixed October 17; `tests/test_field_rendering.py`); choice questions use fieldsets; data tables use `th` with `scope` (for example the day sheet); axe's structure rules pass |
 | 1.3.2 Meaningful Sequence | Not Evaluated | Single-column layouts whose reading order follows the source; on center pages the side navigation comes before the content |
 | 1.3.3 Sensory Characteristics | Not Evaluated | No instructions found that depend on shape, position or sound; not checked page by page |
 | 1.4.1 Use of Color | Not Evaluated | Design rule: color is never the only signal (02-build-plan.md §7). Statuses are words (alerts, tags). axe's rule for links in text passes in each page's first state |
@@ -137,8 +140,8 @@ Pages use these USWDS 3.14 components as published: header with basic navigation
 | 3.2.1 On Focus | Not Evaluated | No focus handlers |
 | 3.2.2 On Input | Not Evaluated | Changing an open-times filter, a choice with follow-ups or a topic, or typing in a search box, updates part of the page and a status line; none of them books, saves or leaves the page. Without JavaScript, a button does the same |
 | 3.2.6 Consistent Help | Not Evaluated | Pages have no help link or contact details of their own. A blocked student's notice says whom to write to on the booking and appointments pages; a reviewer should check it sits in the same place on each |
-| 3.3.1 Error Identification | Not Evaluated | Field errors appear as text by the field, with `role="alert"`, `aria-invalid` and `aria-describedby`; form-wide errors appear in an alert (`sympraxi/templates/includes/form_fields.html`). axe never sees an error state. **Known issue:** a checkbox drawn by `sympraxi/templates/includes/field.html` shows no error |
-| 3.3.2 Labels or Instructions | Not Evaluated | Every field has a visible label; optional fields say "(optional)", and record fields needed to finalize say so. Known issue as in 1.3.1 |
+| 3.3.1 Error Identification | Not Evaluated | Field errors appear as text by the field, with `role="alert"`, `aria-invalid` and `aria-describedby`; form-wide errors appear in an alert (`sympraxi/templates/includes/form_fields.html`). A checkbox's error showed nowhere until October 17. axe checks five forms sent back with errors, one of them a checkbox's; other forms' error states aren't checked |
+| 3.3.2 Labels or Instructions | Not Evaluated | Every field has a visible label; optional fields say "(optional)", and record fields needed to finalize say so. A checkbox's hint shows under its label (fixed October 17) |
 | 3.3.7 Redundant Entry | Not Evaluated | Registration questions are asked once, at the first booking (decisions.md, Phase 1 forms). A booking page that comes back for a follow-up keeps what was typed (tested) |
 | 4.1.1 Parsing | Not Applicable | Removed from WCAG 2.2. For a WCAG 2.1 report, W3C's errata treat it as always met for HTML |
 | 4.1.2 Name, Role, Value | Not Evaluated | Native controls and USWDS components. At the ends of a list, Move up and Move down stay focusable and are marked `aria-disabled` (decisions.md, Phase 1 forms). axe's name and ARIA rules pass. Needs screen-reader checks, especially the mobile menu and the parts htmx updates |
@@ -169,18 +172,17 @@ Pages use these USWDS 3.14 components as published: header with basic navigation
 | 3.2.4 Consistent Identification | Not Evaluated | The same components and words for the same actions across pages |
 | 3.3.3 Error Suggestion | Not Evaluated | Messages say what to fix; every refused booking shows a reason (the load test fails otherwise; decisions.md, Phase 1 load test). Wording needs review |
 | 3.3.4 Error Prevention (Legal, Financial, Data) | Not Evaluated | No legal or financial transactions. Booking asks "Book this appointment?" before saving. Canceling, ending an exemption, deleting a closure or hours change, removing a question and lifting a block each go through a confirmation page. A final record can be amended, and the earlier text is kept |
-| 3.3.8 Accessible Authentication (Minimum) | Not Evaluated | Nothing on the sign-in page blocks paste or password managers, and its fields carry allauth's `autocomplete` values; passkeys are offered; SSO hands off to the college's own page. A two-factor code has to be read from an authenticator app and typed or pasted; that page isn't axe-tested |
+| 3.3.8 Accessible Authentication (Minimum) | Not Evaluated | Nothing on the sign-in page blocks paste or password managers, and its fields carry allauth's `autocomplete` values; passkeys are offered; SSO hands off to the college's own page. A two-factor code has to be read from an authenticator app and typed or pasted; that page passes axe |
 | 4.1.3 Status Messages | Not Evaluated | Messages after an action are alerts with `role="status"` (`sympraxi/templates/base.html`). Live regions announce new open times, follow-up questions, reordering, and suggestions and attachments on the record form; the browser tests check their text. Whether NVDA and VoiceOver announce them needs a person |
 
 ## Known issues
 
 Found while writing this draft, from the code. None has been confirmed with assistive technology.
 
-1. Checkboxes drawn by `sympraxi/templates/includes/field.html` show no hint or error message (1.3.1, 3.3.1, 3.3.2). Question pages put checkbox hints in separate paragraphs that aren't tied to the box.
-2. The 8-hour sign-in ends without a warning, and work in a form posted after it is lost (2.2.1). The two-factor step at sign-in expires after 15 minutes.
-3. The two-factor setup and code pages, and the other allauth pages listed above, aren't axe-tested, though every staff member uses some of them.
-4. Error pages (403, 404, 500, CSRF) are Django's plain pages, without the site's layout or a way back.
-5. axe never sees error states, content htmx adds, narrow screens or forced colors.
+1. The 8-hour sign-in ends without a warning, and work in a form posted after it is lost (2.2.1). The two-factor step at sign-in expires after 15 minutes.
+2. axe never sees content htmx adds, narrow screens or forced colors, and sees error states on only five forms.
+
+Fixed on October 17, 2026, after the first draft: checkboxes showed no hint or error (1.3.1, 3.3.1, 3.3.2); the two-factor pages and the rest of allauth's pages weren't axe-tested, and adding them showed that the passkey list failed with a server error; error pages were Django's plain ones, without the site's layout or a way back.
 
 ## Plan for the manual review
 
@@ -214,4 +216,4 @@ The Phase 1 exit criteria require a WCAG 2.2 AA review of every student-facing f
 
 **Recording.** For each flow and setup: the date, browser, assistive technology and versions, what failed, and which criterion it maps to. Fix what fails, retest, and then replace "Not Evaluated" in the tables above with real levels. After the student flows, the same review should cover the tutor, front desk and director flows, since staff are users too. Each release then ships a finished Accessibility Conformance Report in the VPAT 2.5 format (02-build-plan.md §7).
 
-**Automated checks to add.** Close the gaps listed under "What axe doesn't cover": axe on the remaining allauth pages and on forms after a failed submission, a pass at a phone-sized viewport, and runs with Playwright's `forced_colors="active"` and `reduced_motion="reduce"` emulation. These catch regressions between manual reviews; they don't replace them.
+**Automated checks to add.** The remaining allauth pages and five forms after a failed submission joined the axe run on October 17. Still to add, from "What axe doesn't cover": a pass at a phone-sized viewport with the menu open, axe after htmx updates part of a page, and runs with Playwright's `forced_colors="active"` and `reduced_motion="reduce"` emulation. These catch regressions between manual reviews; they don't replace them.
