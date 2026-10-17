@@ -435,6 +435,14 @@ summary:focus {
   margin-bottom: 1rem;
 }
 
+/* At 320 CSS pixels (a 1280-pixel window at 400%), a long one-word heading such as
+   "Announcements" is wider than the page; let it break, with a hyphen. */
+.sympraxi-content h1,
+.sympraxi-content h2 {
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
 /* Announcements at the top of the center and schedules pages. */
 .sympraxi-announcements {
   margin-bottom: 2rem;

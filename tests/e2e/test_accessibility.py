@@ -1037,6 +1037,12 @@ REFLOW_PAGES = [
     ("director", "/centers/{slug}/forms/{form}/"),
     ("director", "/centers/{slug}/surveys/results/"),
     ("director", "/centers/{slug}/students/{student_membership}/export/"),
+    ("director", "/centers/{slug}/members/{student_membership}/"),
+    ("director", "/centers/{slug}/time-clock/entries/"),
+    ("tutor", "/centers/{slug}/time-clock/"),
+    ("director", "/centers/{slug}/announcements/"),
+    ("director", "/centers/{slug}/email/sent/"),
+    ("director", "/centers/{slug}/students/{student_membership}/disclosures/"),
 ]
 # The outermost elements that reach past the window's right edge.
 STICKING_OUT = """() => {
