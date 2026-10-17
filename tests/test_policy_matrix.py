@@ -89,6 +89,11 @@ REPORTS_ACTIONS = [
     Action.EXPORT_CENTER,
 ]
 
+STAFF_ACTIONS = [
+    Action.CLOCK_OWN,
+    Action.MANAGE_TIME,
+]
+
 ACTIONS = (
     CENTER_ACTIONS
     + SCHEDULING_ACTIONS
@@ -96,6 +101,7 @@ ACTIONS = (
     + RECORDS_ACTIONS
     + FORMS_ACTIONS
     + REPORTS_ACTIONS
+    + STAFF_ACTIONS
 )
 
 # fmt: off
@@ -187,6 +193,20 @@ EXPECTED_REPORTS = {
     "director":    (1,         1,      1),
     "site_admin":  (0,         0,      0),
 }
+
+# Time clock. Staff clock themselves in and out; directors see and correct
+# everyone's hours. Students have no time clock, and site administrators get
+# nothing: the hours are the center's employment records.
+EXPECTED_STAFF = {
+    #              clock  manage
+    #              own    time
+    "none":        (0,    0),
+    "student":     (0,    0),
+    "tutor":       (1,    0),
+    "front_desk":  (1,    0),
+    "director":    (1,    1),
+    "site_admin":  (0,    0),
+}
 # fmt: on
 
 CASES = [
@@ -198,6 +218,7 @@ CASES = [
         (EXPECTED_RECORDS, RECORDS_ACTIONS),
         (EXPECTED_FORMS, FORMS_ACTIONS),
         (EXPECTED_REPORTS, REPORTS_ACTIONS),
+        (EXPECTED_STAFF, STAFF_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)

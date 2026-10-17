@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  {% if entry %}
+    <p>{% blocktranslate with what=entry.get_category_display day=entry.started_at|date:"l, F j, Y" %}{{ what }}, {{ day }}.{% endblocktranslate %}{% if entry.closed_automatically %} {% translate "Nobody clocked out, so this was clocked out at midnight. Put in the time they stopped." %}{% endif %}</p>
+  {% endif %}
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{{ submit }}</button>
+      <a href="{% url 'staff:entries' slug=center.slug %}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+  {% if entry and remove_form %}
+    <h2>{% translate "Remove this entry" %}</h2>
+    <p>{% translate "A removed entry no longer counts toward anyone's hours. The audit log keeps what it said." %}</p>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      {% include "includes/form_fields.html" with form=remove_form %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button usa-button--secondary" type="submit" name="remove" value="1">{% translate "Remove the entry" %}</button>
+      </div>
+    </form>
+  {% endif %}
+{% endblock content %}

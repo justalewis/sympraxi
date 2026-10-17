@@ -27,6 +27,7 @@ from tests.forms_world import add_forms
 from tests.records_world import add_records
 from tests.reports_world import add_reports
 from tests.scheduling_world import build_world
+from tests.staff_world import add_time_clock
 
 pytestmark = [pytest.mark.e2e, pytest.mark.django_db(transaction=True)]
 
@@ -170,6 +171,12 @@ PAGES = [
     ("director", "/centers/{slug}/members/import/"),
     ("director", "/centers/{slug}/members/turn-off/"),
     ("director", "/centers/{slug}/members/{student_membership}/"),
+    # Time clock
+    ("tutor", "/centers/{slug}/time-clock/"),
+    ("front_desk", "/centers/{slug}/time-clock/"),
+    ("director", "/centers/{slug}/time-clock/entries/"),
+    ("director", "/centers/{slug}/time-clock/entries/new/"),
+    ("director", "/centers/{slug}/time-clock/entries/{time_entry}/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -232,14 +239,16 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
                 extra_data={"id_token": sso_idp.entra_claims(email=user.email)},
             )
         sign_in(context, user)
-    world = add_reports(
-        add_forms(
-            add_attendance(
-                add_records(
-                    build_world(
-                        center,
-                        student=user if who == "student" else None,
-                        tutor=user if who == "tutor" else None,
+    world = add_time_clock(
+        add_reports(
+            add_forms(
+                add_attendance(
+                    add_records(
+                        build_world(
+                            center,
+                            student=user if who == "student" else None,
+                            tutor=user if who == "tutor" else None,
+                        )
                     )
                 )
             )
@@ -281,6 +290,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         survey_form=world.survey_form.pk,
         survey_token=world.survey_token,
         center_export=world.center_export.pk,
+        time_entry=world.time_entry.pk,
     )
     page = context.new_page()
     return context, page, url

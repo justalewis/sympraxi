@@ -25,6 +25,13 @@
       {% if can_write_records %}<li><a href="{% url 'records:new' slug=center.slug %}">{% translate "Record a meeting that wasn't booked" %}</a></li>{% endif %}
     </ul>
   {% endif %}
+  {% if can_clock or can_manage_time %}
+    <h2>{% translate "Time clock" %}</h2>
+    <ul class="usa-list">
+      {% if can_clock %}<li><a href="{% url 'staff:clock' slug=center.slug %}">{% translate "Clock in or out, and your hours" %}</a></li>{% endif %}
+      {% if can_manage_time %}<li><a href="{% url 'staff:entries' slug=center.slug %}">{% translate "Timesheets" %}</a></li>{% endif %}
+    </ul>
+  {% endif %}
   {% if can_view_statistics or can_view_master_lists or can_export_center %}
     <h2>{% translate "Reports" %}</h2>
     <ul class="usa-list">

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Timesheets" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Timesheets" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Timesheets" %}</h1>
+  <p class="sympraxi-no-print">{% translate "Hours staff clocked, by person and by what they worked on. Each entry counts on the day it started." %}</p>
+  <p class="sympraxi-no-print"><a class="usa-button usa-button--outline" href="{% url 'staff:entry_add' slug=center.slug %}">{% translate "Add time for someone" %}</a></p>
+
+  <h2>{% translate "Clocked in now" %}</h2>
+  {% if clocked_in %}
+    <ul class="usa-list">
+      {% for entry in clocked_in %}
+        <li>{% blocktranslate with name=entry.person.display_name since=entry.started_at|date:"D, M j, g:i A" what=entry.get_category_display %}{{ name }}, since {{ since }}, for {{ what }}{% endblocktranslate %} · <a href="{% url 'staff:entry_edit' slug=center.slug entry_id=entry.pk %}">{% translate "Change" %}<span class="usa-sr-only"> {% blocktranslate with name=entry.person.display_name %}{{ name }}'s open entry{% endblocktranslate %}</span></a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "Nobody is clocked in." %}</p>
+  {% endif %}
+
+  <div class="sympraxi-no-print">
+    {% if form.non_field_errors %}
+      <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+        <div class="usa-alert__body"><p class="usa-alert__text">{{ form.non_field_errors|join:" " }}</p></div>
+      </div>
+    {% endif %}
+    <form class="sympraxi-filters" method="get">
+      {% include "includes/field.html" with field=form.first %}
+      {% include "includes/field.html" with field=form.last %}
+      <button class="usa-button" type="submit">{% translate "Show" %}</button>
+    </form>
+  </div>
+  <p class="sympraxi-report-period"><strong>{% blocktranslate with first=first|date:"F j, Y" last=last|date:"F j, Y" %}{{ first }} to {{ last }}{% endblocktranslate %}</strong></p>
+  {% if to_check %}
+    <div class="usa-alert usa-alert--warning usa-alert--slim">
+      <div class="usa-alert__body"><p class="usa-alert__text">{% blocktranslate count n=to_check %}{{ n }} entry was clocked out at midnight because nobody clocked out. Check its time.{% plural %}{{ n }} entries were clocked out at midnight because nobody clocked out. Check their times.{% endblocktranslate %}</p></div>
+    </div>
+  {% endif %}
+  {% include "reports/_downloads.html" %}
+
+  <section class="sympraxi-report-section" aria-labelledby="table-totals">
+    <h2 id="table-totals">{{ totals.title }}</h2>
+    {% include "reports/_table.html" with table=totals %}
+  </section>
+
+  <section class="sympraxi-report-section" aria-labelledby="table-entries">
+    <h2 id="table-entries">{% translate "Entries" %}</h2>
+    {% if entries %}
+      <table class="usa-table usa-table--borderless usa-table--stacked">
+        <caption class="usa-sr-only">{% translate "Every entry in the period" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Person" %}</th>
+            <th scope="col">{% translate "Day" %}</th>
+            <th scope="col">{% translate "Time" %}</th>
+            <th scope="col">{% translate "Hours" %}</th>
+            <th scope="col">{% translate "What for" %}</th>
+            <th scope="col">{% translate "Note" %}</th>
+            <th scope="col" class="sympraxi-no-print">{% translate "Change" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in entries %}
+            <tr>
+              <th scope="row" data-label="{% translate 'Person' %}">{{ entry.person.display_name }}</th>
+              <td data-label="{% translate 'Day' %}">{{ entry.started_at|date:"D, M j" }}</td>
+              <td data-label="{% translate 'Time' %}">{{ entry.started_at|time:"g:i A" }} {% translate "to" %} {% if entry.ended_at %}{{ entry.ended_at|time:"g:i A" }}{% else %}{% translate "still clocked in" %}{% endif %}{% if entry.closed_automatically %} <span class="usa-tag">{% translate "Clocked out at midnight" %}</span>{% elif entry.changed_by_id %} <span class="usa-tag">{% translate "Changed" %}</span>{% elif entry.added_by_id %} <span class="usa-tag">{% translate "Added" %}</span>{% endif %}</td>
+              <td data-label="{% translate 'Hours' %}">{{ entry.hours|default_if_none:"" }}</td>
+              <td data-label="{% translate 'What for' %}">{{ entry.get_category_display }}</td>
+              <td data-label="{% translate 'Note' %}">{{ entry.note }}</td>
+              <td data-label="{% translate 'Change' %}" class="sympraxi-no-print"><a href="{% url 'staff:entry_edit' slug=center.slug entry_id=entry.pk %}">{% translate "Change" %}<span class="usa-sr-only"> {% blocktranslate with name=entry.person.display_name day=entry.started_at|date:"M j" %}{{ name }}'s entry on {{ day }}{% endblocktranslate %}</span></a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>{% translate "No time was clocked in this period." %}</p>
+    {% endif %}
+  </section>
+{% endblock content %}

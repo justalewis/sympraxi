@@ -19,7 +19,8 @@ spreadsheet), with `manifest.json` saying what each file holds:
   for terms with at least five responses, written answers sorted. No survey
   response, its ID or its date is ever listed, because the order and dates
   could tie an anonymous answer to the student who gave it;
-- the center's own resources and its audit log.
+- the center's own resources, staff time clock entries (removed ones too,
+  marked), and its audit log.
 
 This is the center's own copy of its records, for its directors only: the
 policy grants `reports.export_center` to directors and never to site
@@ -71,6 +72,7 @@ from sympraxi.scheduling.models import (
     TutorAssignment,
     WeeklyHours,
 )
+from sympraxi.staff.models import TimeEntry
 
 logger = logging.getLogger("sympraxi.reports")
 
@@ -535,6 +537,13 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
                 for r in Resource.objects.filter(center=center)
                 .prefetch_related("topics")
                 .order_by("title", "pk")
+            ),
+        )
+        w.items(
+            "time_entries.json",
+            (
+                columns_of(e)
+                for e in TimeEntry.objects.filter(center=center).order_by("started_at", "pk")
             ),
         )
         w.items("audit_events.json", (_audit_item(e) for e in _audit(center)), scrubbed=True)
