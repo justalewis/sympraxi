@@ -22,6 +22,7 @@ class AuditAction(StrEnum):
     PASSWORD_CHANGED = "auth.password_changed"  # noqa: S105 (an event name, not a secret)
     PASSWORD_RESET = "auth.password_reset"  # noqa: S105
     EMAIL_CHANGED = "auth.email_changed"
+    PROFILE_CHANGED = "auth.profile_changed"
     MFA_ADDED = "auth.mfa_added"
     MFA_REMOVED = "auth.mfa_removed"
     MFA_RECOVERY_CODES_RESET = "auth.mfa_recovery_codes_reset"

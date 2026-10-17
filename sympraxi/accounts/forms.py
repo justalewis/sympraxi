@@ -34,6 +34,27 @@ class SignupForm(forms.Form):
         pass
 
 
+class ProfileForm(forms.ModelForm):
+    """A person's own name, preferred name and pronouns."""
+
+    class Meta:
+        model = User
+        fields = ["full_name", "preferred_name", "pronouns"]
+        labels = {
+            "full_name": _("Full name"),
+            "preferred_name": _("Preferred name"),
+            "pronouns": _("Pronouns"),
+        }
+        help_texts = {
+            "preferred_name": _("We'll use this instead of your full name wherever we can."),
+            "pronouns": _("For example: she/her, he/him, they/them."),
+        }
+        widgets = {
+            "full_name": forms.TextInput(attrs={"autocomplete": "name"}),
+            "preferred_name": forms.TextInput(attrs={"autocomplete": "nickname"}),
+        }
+
+
 class ReminderSettingsForm(forms.ModelForm):
     """Reminder emails before appointments, and survey emails after sessions.
     Only tutors see the tutoring choice."""

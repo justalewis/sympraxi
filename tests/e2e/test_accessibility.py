@@ -142,6 +142,7 @@ PAGES = [
     ("director", "/centers/{slug}/blocks/settings/"),
     ("director", "/centers/{slug}/blocks/{block}/lift/"),
     ("student", "/accounts/reminders/"),
+    ("student", "/accounts/profile/"),
     ("tutor", "/accounts/reminders/"),
     ("blocked_student", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
     ("blocked_student", "/centers/{slug}/appointments/"),
@@ -716,6 +717,12 @@ FORMS_WITH_ERRORS = [
         "/centers/{slug}/form-questions/{question}/edit/",
         [("check", "id_required"), ("check", "id_is_demographic")],
         "button:has-text('Save the question')",
+    ),
+    (
+        "student",
+        "/accounts/profile/",
+        [("fill", "#id_full_name", "  ")],
+        "main button:text-is('Save')",
     ),
 ]
 

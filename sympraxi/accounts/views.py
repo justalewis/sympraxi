@@ -7,9 +7,10 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 
-from sympraxi.accounts.forms import ReminderSettingsForm
+from sympraxi.accounts.forms import ProfileForm, ReminderSettingsForm
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Membership, Role
+from sympraxi.privacy.audit import AuditAction, record
 
 
 class LocalLoginView(LoginView):
@@ -23,6 +24,27 @@ class LocalLoginView(LoginView):
     """
 
     extra_context = {"break_glass": True}
+
+
+@login_required
+def profile(request: HttpRequest) -> HttpResponse:
+    """Change your own name, preferred name and pronouns. Each change is audited,
+    naming the fields that changed but not what they say."""
+    user = cast(User, request.user)
+    data = request.POST if request.method == "POST" else None
+    form = ProfileForm(data, instance=user)
+    if request.method == "POST" and form.is_valid():
+        if form.has_changed():
+            form.save()
+            record(
+                AuditAction.PROFILE_CHANGED,
+                request=request,
+                target=user,
+                fields=sorted(form.changed_data),
+            )
+        messages.success(request, _("Saved."))
+        return redirect("accounts:profile")
+    return render(request, "account/profile.html", {"form": form})
 
 
 @login_required
