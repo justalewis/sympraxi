@@ -1,6 +1,6 @@
 from django.urls import path
 
-from sympraxi.scheduling import attendance_views, setup_views, views
+from sympraxi.scheduling import attendance_views, setup_views, switch_views, views
 
 app_name = "scheduling"
 
@@ -48,6 +48,7 @@ urlpatterns = [
     path("blocks/<uuid:block_id>/lift/", attendance_views.block_lift, name="block_lift"),
     # Setup, for directors
     path("schedules/new/", setup_views.schedule_create, name="schedule_create"),
+    path("switch-online/", switch_views.switch_online, name="switch_online"),
     path("schedules/<uuid:schedule_id>/manage/", setup_views.schedule_manage, name="manage"),
     path("schedules/<uuid:schedule_id>/edit/", setup_views.schedule_edit, name="schedule_edit"),
     path(

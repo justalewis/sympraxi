@@ -48,6 +48,7 @@
         <li><a href="{% url 'scheduling:schedule_create' slug=center.slug %}">{% translate "Add a schedule" %}</a></li>
         <li><a href="{% url 'scheduling:terms' slug=center.slug %}">{% translate "Terms and closures" %}</a></li>
         <li><a href="{% url 'scheduling:rooms' slug=center.slug %}">{% translate "Rooms" %}</a></li>
+        <li><a href="{% url 'scheduling:switch_online' slug=center.slug %}">{% translate "Move a day online, as on a snow day" %}</a></li>
       {% endif %}
       {% if can_manage_exemptions %}
         <li><a href="{% url 'scheduling:exemptions' slug=center.slug %}">{% translate "Exemptions from booking limits" %}</a></li>

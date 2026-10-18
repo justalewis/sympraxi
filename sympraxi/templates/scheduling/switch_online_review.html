@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% blocktranslate with day=day|date:"l, F j, Y" where=schedule.name|default:_("every schedule") %}In-person appointments on {{ day }}, on {{ where }}. Nothing has changed yet.{% endblocktranslate %}</p>
+
+  {% if plan.stuck %}
+    <div class="usa-alert usa-alert--warning usa-alert--slim">
+      <div class="usa-alert__body">
+        <p class="usa-alert__text">{% blocktranslate count n=plan.stuck|length %}{{ n }} appointment can't move, because its tutor has no meeting link on that schedule.{% plural %}{{ n }} appointments can't move, because their tutors have no meeting link on those schedules.{% endblocktranslate %} {% translate "Add a link to the tutor's assignment on the schedule, then check again, or let them know another way." %}</p>
+      </div>
+    </div>
+    <h2>{% translate "Tutors without a meeting link" %}</h2>
+    <ul class="usa-list">
+      {% for tutor, sched in plan.tutors_without_links %}<li>{{ tutor.display_name }}, {{ sched.name }}</li>{% endfor %}
+    </ul>
+  {% endif %}
+
+  <h2>{% translate "What moves online" %}</h2>
+  {% if plan.movable %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Appointments that move online" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Time" %}</th>
+          <th scope="col">{% translate "Tutor" %}</th>
+          <th scope="col">{% translate "Schedule" %}</th>
+          <th scope="col">{% translate "Now" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in plan.movable %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Time' %}">{{ a.starts_at|time:"g:i A" }}</th>
+            <td data-label="{% translate 'Tutor' %}">{{ a.tutor.display_name }}</td>
+            <td data-label="{% translate 'Schedule' %}">{{ a.schedule.name }}</td>
+            <td data-label="{% translate 'Now' %}">{% if a.room %}{{ a.room.name }}{% else %}{% translate "In person" %}{% endif %}{% if a.is_placeholder %} <span class="usa-tag">{% translate "Placeholder" %}</span>{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <form method="post" class="sympraxi-form-actions">
+      {% csrf_token %}
+      {% for field in form %}{{ field.as_hidden }}{% endfor %}
+      <button class="usa-button" type="submit" name="confirm" value="1">{% blocktranslate count n=plan.movable|length %}Move {{ n }} appointment online{% plural %}Move {{ n }} appointments online{% endblocktranslate %}</button>
+      <button class="usa-button usa-button--unstyled" type="submit" name="edit" value="1">{% translate "Change the day" %}</button>
+    </form>
+  {% else %}
+    <p>{% translate "Nothing on that day can move online." %}</p>
+    <p><a href="{% url 'scheduling:switch_online' slug=center.slug %}">{% translate "Choose another day" %}</a></p>
+  {% endif %}
+{% endblock content %}

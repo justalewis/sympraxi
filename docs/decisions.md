@@ -2,6 +2,14 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 2: moving a day online (October 2026)
+
+**For snow days, one page instead of every appointment.** A director picks a day, on one schedule or all, and every scheduled in-person appointment that starts that day in the center's time zone moves online at the same time. It uses its tutor's meeting link on that schedule, and its room is cleared, so the location becomes the link. A review page lists what moves, and which tutors have no link, before anything changes; a tutor without one stays in person until a director adds a link to their assignment. Everything moves in one transaction. It needs `scheduling.manage_schedules`, which only directors have.
+
+**Everyone affected is told.** Each moved appointment gets a new calendar SEQUENCE and an email to its students and tutor, a new kind (`moved_online`) that says it's now online at the same time, with the link, the director's note if there is one, and an updated calendar file. Placeholders move without emails. Each move is audited as an appointment change, `via` switch_online, with the day.
+
+**Only what's booked.** New bookings for that day can still choose in person. Closing the center for in-person bookings on a day, the other half of a snow day, is left for later; a closure already stops all bookings, if the whole day should go.
+
 ## Phase 1: reminders about records not yet written (October 2026)
 
 **One email per tutor, for each session once.** The "Session records to write" page already listed what was missing; now the scheduler also emails the tutor. Each center chooses how long after a session ends (2 hours, 4 hours, a day or two days) or turns reminders off, on **Session record settings**; a new center reminds after a day. A tutor whose sessions fall due in the same sweep gets one email listing them, with how many records each still needs and a link to the appointment and to the page of everything left to write. Each appointment gets one reminder, ever: `RecordReminder` is written in the same transaction as the email is queued, with a unique constraint on the appointment and tutor, so two schedulers or a repeated sweep send nothing more. Sending a second, later reminder would be easy to add, but one email with a page that stays current seemed enough to start.

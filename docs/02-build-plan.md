@@ -295,6 +295,17 @@ Sizes assume one developer working close to full time with AI coding help. A par
 
 **Exit:** an online session works from a locked-down campus network (TURN over 443); asynchronous turnaround shows in reports; a center that skips Jitsi still has everything else working through meeting links.
 
+**Slices, in order** (planned October 17, 2026). Each one ships on its own with every check passing.
+
+1. **Switch a day to online.** A director moves every in-person appointment on a day (on one schedule or all) to online, using each tutor's meeting link, and everyone affected gets a notice. Tutors with no link are listed before anything changes. Nothing new to install.
+2. **Files on appointments, kept safe.** Students and tutors attach drafts to an appointment. Files live outside anything the web server serves, download only through a page that checks who is asking (or a short-lived signed link), have a size limit (25 MB by default) and an allowlist checked by content as well as name, and can be scanned by ClamAV in the worker before anyone can open them. ClamAV is optional and runs as its own container.
+3. **The asynchronous queue.** A student submits a draft with what kind of feedback they want and when they need it. Tutors claim submissions, or the queue assigns them by focus and load. The tutor writes feedback, as a session record, and can return a commented Word file. Due dates, overdue alerts and turnaround times in the reports. Builds on slice 2.
+4. **Jitsi video.** A center can point Sympraxi at its own Jitsi server: a hard-to-guess room per appointment, a signed token per person (the tutor as moderator), a join window and a lobby, and a deployment guide with TURN over port 443. Centers without Jitsi keep using meeting links.
+5. **Comments in the browser.** Tutors comment on PDFs, and on Word files converted to PDF by the worker, without downloading them. Needs PDF.js and a document converter in the worker image.
+6. **The live session room.** Video beside a shared editor (Tiptap with Yjs, served by Hocuspocus) with chat in the same document, saved to the session record, with version history and .docx import. Needs a Node service of its own behind Caddy.
+
+Slices 2, 5 and 6 add packages or containers, and each waits for the maintainer's OK on them first.
+
 ### Phase 3: Resource library and long-term tracking (4 to 6 weeks)
 
 - Full catalog: YAML entries with licenses, community summaries, the link checker, center handouts, tutor favorites, suggestions by topic.

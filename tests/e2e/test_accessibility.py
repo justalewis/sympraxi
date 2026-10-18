@@ -100,6 +100,7 @@ PAGES = [
     ("director", "/centers/{slug}/audit/"),
     ("director", "/centers/{slug}/schedules/"),
     ("director", "/centers/{slug}/schedules/new/"),
+    ("director", "/centers/{slug}/switch-online/"),
     ("director", "/centers/{slug}/schedules/{schedule}/manage/"),
     ("director", "/centers/{slug}/schedules/{schedule}/edit/"),
     ("director", "/centers/{slug}/schedules/{schedule}/tutors/new/"),
@@ -1410,6 +1411,22 @@ def test_a_director_checks_a_mass_email_by_keyboard(browser, live_server, sign_i
     page.keyboard.press("Enter")
     page.wait_for_selector("h1:has-text('Check the email before it goes')")
     assert "Nothing has been sent yet." in page.content()
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+def test_a_director_reviews_moving_a_day_online_by_keyboard(browser, live_server, sign_in) -> None:
+    """The review page answers a form, so axe checks it here."""
+    context, page, url = open_page(
+        browser, live_server, sign_in, "director", "/centers/{slug}/switch-online/", bypass_csp=True
+    )
+    page.goto(url)
+    tomorrow = date.fromordinal(date.today().toordinal() + 1).isoformat()
+    page.fill("#id_day", tomorrow)
+    page.get_by_role("button", name="See what moves").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("h1:has-text('Check what moves online')")
     results = Axe().run(page, options=AXE_OPTIONS)
     context.close()
     assert results.violations_count == 0, results.generate_report()

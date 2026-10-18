@@ -35,6 +35,8 @@ from sympraxi.scheduling.models import Appointment, BlockReason, Participant
 BOOKED = "booked"
 BOOKED_SERIES = "booked_series"
 CHANGED = "changed"
+# A director moved the day's in-person appointments online (switch_online.py).
+MOVED_ONLINE = "moved_online"
 CONFIRMED = "confirmed"
 CANCELED = "canceled"
 # Sent to the student instead of CANCELED when the cancellation was late.
@@ -74,6 +76,8 @@ def _subject(kind: str, appointment: Appointment, *, for_tutor: bool) -> str:
         text = _("Appointment canceled: %(when)s")
     elif kind == CHANGED:
         text = _("Appointment changed: %(when)s")
+    elif kind == MOVED_ONLINE:
+        text = _("Appointment moved online: %(when)s")
     elif kind == CONFIRMED:
         text = _("Appointment confirmed: %(when)s")
     elif kind == BOOKED_SERIES:
@@ -95,6 +99,7 @@ def _message(
     for_tutor: bool,
     series: Sequence[Appointment],
     url_base: str,
+    note: str = "",
 ) -> EmailMessage:
     events = list(series) or [appointment]
     context = {
@@ -106,6 +111,7 @@ def _message(
         "for_tutor": for_tutor,
         "url": ics.appointment_url(appointment, url_base),
         "location": ics.location(appointment),
+        "note": note,
         "SITE_NAME": settings.SYMPRAXI_SITE_NAME,
     }
     if kind == LATE_CANCELED:
@@ -135,6 +141,7 @@ def send(
     only: Sequence[UUID] | None = None,
     tutor: bool = True,
     series: Sequence[UUID] = (),
+    note: str = "",
     **_: Any,
 ) -> int:
     """Email the students (all active ones, or just `only`) and the tutor."""
@@ -160,7 +167,13 @@ def send(
         for student in students:
             messages.append(
                 _message(
-                    kind, appointment, student, for_tutor=False, series=events, url_base=base_url
+                    kind,
+                    appointment,
+                    student,
+                    for_tutor=False,
+                    series=events,
+                    url_base=base_url,
+                    note=note,
                 )
             )
         if tutor:
@@ -172,6 +185,7 @@ def send(
                     for_tutor=True,
                     series=events,
                     url_base=base_url,
+                    note=note,
                 )
             )
     return mailers.default.send_messages(messages) or 0

@@ -79,6 +79,7 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "scheduling:appointment_confirm": (Action.BOOK_FOR_OTHERS, "appointment"),
     # Setup
     "scheduling:schedule_create": (Action.MANAGE_SCHEDULES, "center"),
+    "scheduling:switch_online": (Action.MANAGE_SCHEDULES, "center"),
     "scheduling:manage": (Action.MANAGE_SCHEDULES, "schedule"),
     "scheduling:schedule_edit": (Action.MANAGE_SCHEDULES, "schedule"),
     "scheduling:assignment_create": (Action.MANAGE_SCHEDULES, "schedule"),

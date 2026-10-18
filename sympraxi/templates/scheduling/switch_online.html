@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% translate "When the center can't meet in person, as on a snow day, move every in-person appointment on a day to online. Each one keeps its time and uses its tutor's meeting link, and its students and tutor get an email with the link." %}</p>
+  <p>{% translate "You'll see what moves, and which tutors don't have a meeting link yet, before anything changes. New bookings for that day can still be in person." %}</p>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit" name="review" value="1">{% translate "See what moves" %}</button>
+      <a href="{% url 'scheduling:schedules' slug=center.slug %}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+{% endblock content %}
