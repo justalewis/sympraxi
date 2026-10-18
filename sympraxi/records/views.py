@@ -934,7 +934,8 @@ def record_settings(request: HttpRequest, slug: str) -> HttpResponse:
         "title": _("Session record settings"),
         "intro": _(
             "Students always see the summary, next steps and resources from each session. "
-            "These settings decide whether they see more."
+            "These settings decide whether they see more, and when tutors are reminded "
+            "about records they haven't written."
         ),
         "crumbs": _crumbs(center),
         "submit": _("Save settings"),

@@ -31,6 +31,15 @@ class SurveyTiming(models.TextChoices):
     AFTER_END = "end", _("A set time after the appointment ends")
 
 
+# How long after a session ends its tutor is reminded about a missing record, in hours.
+RECORD_REMINDER_CHOICES = [
+    (None, _("Don't remind tutors")),
+    (2, _("2 hours after the session")),
+    (4, _("4 hours after the session")),
+    (24, _("1 day after the session")),
+    (48, _("2 days after the session")),
+]
+
 # How long after an appointment ends its survey goes out, in minutes.
 SURVEY_DELAY_CHOICES = [
     (30, _("30 minutes")),
@@ -68,6 +77,19 @@ class Center(models.Model):
         help_text=_(
             "The email that tells a student their summary is ready also includes the summary "
             "and next steps. Otherwise it only links to them."
+        ),
+    )
+    # How long after a session ends its tutor is emailed if a record is still
+    # missing. Empty: no reminders.
+    record_reminder_hours = models.PositiveSmallIntegerField(
+        _("remind tutors about records not yet written"),
+        choices=RECORD_REMINDER_CHOICES,
+        null=True,
+        blank=True,
+        default=24,
+        help_text=_(
+            "Each tutor gets one email listing the sessions they still need to write up. "
+            "Students who were no-shows don't need a record."
         ),
     )
     # Booking blocks across every schedule in the center. Each schedule can also

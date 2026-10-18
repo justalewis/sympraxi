@@ -165,7 +165,7 @@ Caddy passes each visitor's address to Sympraxi, which uses it for these limits 
 
 ## Reminders and attendance
 
-The `scheduler` service sends reminder emails and flags students no one marked as here, once a minute. `install.sh` starts it with everything else. Links in reminders start with `https://` and your `SYMPRAXI_DOMAIN`; set `SYMPRAXI_BASE_URL` in `deploy/.env` only if people reach the site at a different address.
+The `scheduler` service sends reminder emails, flags students no one marked as here, and reminds tutors about session records they haven't written, once a minute. `install.sh` starts it with everything else. Links in reminders start with `https://` and your `SYMPRAXI_DOMAIN`; set `SYMPRAXI_BASE_URL` in `deploy/.env` only if people reach the site at a different address.
 
 Its health check passes only if a sweep finished in the last three minutes. Check it with:
 

@@ -319,3 +319,26 @@ class Amendment(models.Model):
     @property
     def fields_changed(self) -> list[str]:
         return list(self.changes)
+
+
+class RecordReminder(models.Model):
+    """A tutor was reminded about one appointment's missing records.
+
+    One per appointment and tutor, ever: the unique constraint stops two
+    schedulers, or a sweep run twice, from sending the same reminder
+    (`sympraxi/records/reminders.py`).
+    """
+
+    appointment = models.ForeignKey(
+        Appointment, on_delete=models.CASCADE, related_name="record_reminders"
+    )
+    tutor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+")
+    sent_at = models.DateTimeField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["appointment", "tutor"], name="records_reminder_once"),
+        ]
+
+    def __str__(self) -> str:
+        return f"Record reminder for {self.appointment_id} to {self.tutor_id}"

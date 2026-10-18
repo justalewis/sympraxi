@@ -476,7 +476,10 @@ def test_a_student_cannot_open_drafts_or_anyone_elses_record(client, world) -> N
 def test_record_settings_are_audited(client, world) -> None:
     director = make_member(world.center, Role.DIRECTOR)
     client.force_login(director)
-    response = client.post(url("records:settings", world), {"students_see_staff_notes": "on"})
+    response = client.post(
+        url("records:settings", world),
+        {"students_see_staff_notes": "on", "record_reminder_hours": "24"},
+    )
     assert response.status_code == 302
     world.center.refresh_from_db()
     assert world.center.students_see_staff_notes

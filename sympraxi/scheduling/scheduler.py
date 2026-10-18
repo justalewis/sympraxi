@@ -4,8 +4,9 @@ minute-by-minute jobs.
 Each minute it sends the reminders that are due (`reminders`), flags possible
 no-shows (`attendance.flag_possible_no_shows`), sends the surveys that are
 due (`sympraxi.forms.surveys`), deletes full-center exports whose download
-links have expired (`sympraxi.reports.center_export`) and clocks out staff
-still clocked in after midnight (`sympraxi.staff.timeclock`). Each is safe to run
+links have expired (`sympraxi.reports.center_export`), clocks out staff
+still clocked in after midnight (`sympraxi.staff.timeclock`) and reminds tutors
+about session records they haven't written (`sympraxi.records.reminders`). Each is safe to run
 twice at once, so a second scheduler, or one started during an upgrade while
 the old one is stopping, doesn't send anything twice. After a sweep that
 finishes without an error it writes the heartbeat that
@@ -27,6 +28,7 @@ from django.utils import timezone
 
 from sympraxi import healthcheck
 from sympraxi.forms import surveys
+from sympraxi.records import reminders as record_reminders
 from sympraxi.reports import center_export
 from sympraxi.scheduling import attendance, reminders
 from sympraxi.staff import timeclock
@@ -41,6 +43,7 @@ class Sweep:
     surveys: int = 0
     exports_expired: int = 0
     clocked_out: int = 0
+    record_reminders: int = 0
 
 
 def _refresh_connections() -> None:
@@ -63,6 +66,7 @@ def sweep(*, base_url: str, now: datetime | None = None) -> Sweep:
             surveys=surveys.send_due_invitations(base_url=base_url, now=now),
             exports_expired=center_export.expire(now),
             clocked_out=timeclock.close_forgotten(now),
+            record_reminders=record_reminders.send_record_reminders(base_url=base_url, now=now),
         )
     finally:
         _refresh_connections()
@@ -90,16 +94,19 @@ def run(*, base_url: str, stop: threading.Event, once: bool = False) -> None:
                     result.surveys,
                     result.exports_expired,
                     result.clocked_out,
+                    result.record_reminders,
                 )
             ):
                 logger.info(
                     "Queued %s reminder emails and %s surveys; flagged %s possible no-shows; "
-                    "deleted %s expired exports; clocked out %s people at midnight",
+                    "deleted %s expired exports; clocked out %s people at midnight; "
+                    "sent %s record reminders",
                     result.reminders,
                     result.surveys,
                     result.flagged,
                     result.exports_expired,
                     result.clocked_out,
+                    result.record_reminders,
                 )
         if once:
             break

@@ -307,4 +307,8 @@ class ResourceForm(forms.ModelForm):
 class RecordSettingsForm(forms.ModelForm):
     class Meta:
         model = Center
-        fields = ["students_see_staff_notes", "summary_email_includes_text"]
+        fields = [
+            "students_see_staff_notes",
+            "summary_email_includes_text",
+            "record_reminder_hours",
+        ]
