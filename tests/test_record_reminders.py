@@ -39,7 +39,10 @@ def test_a_tutor_is_reminded_a_day_after_the_session(world) -> None:
     [message] = mail.outbox
     assert message.to == [world.tutor.email]
     assert "A session record to write" in message.subject
-    assert world.student.display_name in message.body
+    # Like every email to a tutor about an appointment, it names no students.
+    assert world.student.display_name not in message.body
+    assert world.student.email not in message.body
+    assert ": 1 record" in message.body
     assert (
         reverse(
             "scheduling:appointment",
@@ -122,8 +125,8 @@ def test_a_group_lists_only_the_students_still_missing_a_record(world) -> None:
     assert sweep() == 1
     [message] = mail.outbox
     [session] = [line for line in message.body.splitlines() if line.startswith("- ")]
-    assert "Riley Second" in session
-    assert world.student.display_name not in session
+    assert session.endswith(": 1 record")
+    assert "Riley Second" not in message.body
 
 
 def test_tutors_whose_role_is_off_get_none(world) -> None:

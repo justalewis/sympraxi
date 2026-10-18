@@ -2,10 +2,10 @@
 
 {% blocktranslate with center=center.name %}These sessions at {{ center }} are still waiting for a session record:{% endblocktranslate %}
 {% for s in sessions %}
-- {{ s.appointment.starts_at|date:"l, F j" }}, {{ s.appointment.starts_at|time:"g:i A" }}: {{ s.students }}
+- {{ s.appointment.starts_at|date:"l, F j" }}, {{ s.appointment.starts_at|time:"g:i A" }}: {% blocktranslate count n=s.count %}{{ n }} record{% plural %}{{ n }} records{% endblocktranslate %}
   {{ s.url }}
 {% endfor %}
-{% translate "Everything you still have to write is on one page:" %}
+{% translate "Sign in to see who they're for. Everything you still have to write is on one page:" %}
 {{ to_write_url }}
 
 {% translate "Students who were no-shows don't need a record. If one of these students didn't come, mark them as a no-show on the appointment page instead." %}

@@ -10,7 +10,10 @@ group. A draft counts as not written yet.
 Each tutor gets one email for everything that fell due since the last sweep,
 and each appointment is mentioned once, ever: `RecordReminder` is written in
 the same transaction as the email is queued, and its unique constraint means a
-second scheduler, or a sweep run twice, sends nothing. A sweep looks back only
+second scheduler, or a sweep run twice, sends nothing. Like every email to a
+tutor about an appointment, it names no students: each session is listed by
+its time and how many records it still needs, with a link to the appointment,
+which needs a sign-in. A sweep looks back only
 `LOOK_BACK` past the due time, so turning reminders on, or a scheduler that
 was down for days, doesn't send a pile of old ones. Tutors whose tutor role
 in the center is off get none.
@@ -92,7 +95,7 @@ def message(
         sessions = [
             {
                 "appointment": a,
-                "students": ", ".join(s.display_name for s in missing(a)),
+                "count": len(missing(a)),
                 "url": base
                 + reverse(
                     "scheduling:appointment",
