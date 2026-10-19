@@ -158,3 +158,41 @@ class SubmissionFile(models.Model):
     @property
     def student_id(self) -> uuid.UUID:
         return self.submission.student_id
+
+
+class Comment(models.Model):
+    """A tutor's comment on a page of a student's draft, in the browser viewer.
+
+    `quote` is the text the tutor selected, if any, and `rects` its place on the
+    page as fractions of the page's width and height ([left, top, width, height]
+    each), so it can be highlighted at any zoom. A comment with neither is about
+    the whole page. The student sees comments only once the feedback is returned.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    submission_file = models.ForeignKey(
+        SubmissionFile, on_delete=models.PROTECT, related_name="comments"
+    )
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+    page = models.PositiveSmallIntegerField()
+    quote = models.CharField(max_length=500, blank=True)
+    rects = models.JSONField(default=list, blank=True)
+    body = models.TextField(max_length=2000)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["page", "created_at"]
+        constraints = [
+            models.CheckConstraint(condition=Q(page__gte=1), name="feedback_comment_page")
+        ]
+
+    def __str__(self) -> str:
+        return f"Page {self.page}: {self.body[:40]}"
+
+    @property
+    def center(self) -> Center:
+        return self.submission_file.center
+
+    @property
+    def student_id(self) -> uuid.UUID:
+        return self.submission_file.student_id

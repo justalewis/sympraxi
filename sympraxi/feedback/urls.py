@@ -1,6 +1,6 @@
 from django.urls import path
 
-from sympraxi.feedback import views
+from sympraxi.feedback import viewer, views
 
 app_name = "feedback"
 
@@ -16,6 +16,10 @@ urlpatterns = [
     path("feedback/<uuid:submission_id>/files/new/", views.add_file, name="add_file"),
     path("feedback/files/<uuid:file_id>/", views.download, name="download"),
     path("feedback/files/<uuid:file_id>/remove/", views.remove_file, name="remove_file"),
+    # The comment viewer
+    path("feedback/files/<uuid:file_id>/view/", viewer.viewer, name="viewer"),
+    path("feedback/files/<uuid:file_id>/pdf/", viewer.pdf, name="pdf"),
+    path("feedback/files/<uuid:file_id>/comments/", viewer.comments, name="comments"),
     # Tutors and directors
     path("feedback/", views.queue, name="queue"),
     path("feedback/<uuid:submission_id>/claim/", views.claim, name="claim"),

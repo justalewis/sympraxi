@@ -12,7 +12,7 @@ A draft conformance report for a pilot campus's accessibility and IT review, lai
 
 ## Summary
 
-Sympraxi aims at WCAG 2.2 AA (02-build-plan.md §1 and §7), which includes the WCAG 2.1 AA level that the ADA Title II rule requires of public colleges. Its pages are server-rendered Django templates built from U.S. Web Design System 3.14 components. Sympraxi ships no JavaScript of its own: htmx and USWDS's script are the only scripts (`frontend/package.json`), and the forms that use htmx also work without it (decisions.md, Phase 1 forms and session records).
+Sympraxi aims at WCAG 2.2 AA (02-build-plan.md §1 and §7), which includes the WCAG 2.1 AA level that the ADA Title II rule requires of public colleges. Its pages are server-rendered Django templates built from U.S. Web Design System 3.14 components. Almost every page uses only htmx and USWDS's script (`frontend/package.json`) and a small file of Sympraxi's own that stops a form being sent twice; the forms that use htmx also work without JavaScript (decisions.md, Phase 1 forms and session records). The one exception is the comment viewer for written-feedback drafts, which draws PDFs with PDF.js and needs JavaScript to be read and commented on in the browser; the file can always be downloaded instead (decisions.md, "Phase 2: comments in the browser"). The viewer has had axe run on it, and a tutor's keyboard-only comment, but no screen-reader test.
 
 What is known today:
 

@@ -455,3 +455,110 @@ summary:focus {
   max-width: 40rem;
   padding: 0 1rem;
 }
+
+/* The comment viewer (written-feedback drafts). The pages are drawn by PDF.js on
+   canvases, with a transparent layer of the page's text on top to select from. */
+.sympraxi-viewer {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 64em) {
+  .sympraxi-viewer {
+    align-items: start;
+    grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+  }
+
+  .sympraxi-viewer__comments {
+    max-height: calc(100vh - 2rem);
+    overflow: auto;
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+.sympraxi-viewer__pages {
+  min-width: 0;
+}
+
+.viewer-page {
+  background: #fff;
+  box-shadow: 0 0 0 1px #71767a;
+  margin: 0 auto 1rem;
+  position: relative;
+}
+
+.viewer-page canvas {
+  display: block;
+}
+
+.viewer-marks {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.viewer-highlight {
+  background: rgb(255 213 0 / 35%);
+  mix-blend-mode: multiply;
+  position: absolute;
+}
+
+.viewer-quote {
+  border-left: 0.25rem solid #71767a;
+  font-style: italic;
+  margin: 0.5rem 0;
+  padding-left: 0.75rem;
+}
+
+.viewer-comment {
+  border-top: 1px solid #c9c9c9;
+  padding: 0.75rem 0;
+}
+
+.viewer-comment .usa-hint {
+  margin: 0;
+}
+
+/* The core of PDF.js's text layer: each word sits, transparent, over where it is
+   drawn, so it can be selected, searched and read by a screen reader. */
+.textLayer {
+  forced-color-adjust: none;
+  inset: 0;
+  line-height: 1;
+  overflow: clip;
+  position: absolute;
+  text-align: initial;
+  transform-origin: 0 0;
+  z-index: 1;
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+}
+
+.textLayer :is(span, br) {
+  color: transparent;
+  cursor: text;
+  position: absolute;
+  transform-origin: 0 0;
+  white-space: pre;
+}
+
+.textLayer > :not(.markedContent),
+.textLayer .markedContent span:not(.markedContent) {
+  --font-height: 0;
+  --rotate: 0deg;
+  --scale-x: 1;
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+}
+
+.textLayer .markedContent {
+  display: contents;
+}
+
+.textLayer ::selection {
+  background: rgb(0 94 162 / 35%);
+}
+

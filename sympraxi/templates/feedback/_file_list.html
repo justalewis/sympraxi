@@ -7,6 +7,7 @@
       {% else %}
         <span>{{ f.file.name }}</span>
       {% endif %}
+      {% if f.file.viewable_name %}<a href="{% url 'feedback:viewer' slug=center.slug file_id=f.pk %}">{% if f.role == "draft" %}{% translate "Read and comment" %}{% else %}{% translate "Read" %}{% endif %}<span class="usa-sr-only"> {{ f.file.name }}</span></a>{% elif f.file.pdf_status == "pending" %}<span class="usa-hint">{% translate "Making a copy to read here" %}</span>{% endif %}
       <span class="usa-hint">{{ f.file.size|filesizeformat }}{% if f.file.removed_at %} · {% translate "Removed" %}{% elif not f.file.is_ready %} · {{ f.file.get_scan_status_display }}{% endif %}</span>
       {% if may_remove and not f.file.removed_at %}<br><a href="{% url 'feedback:remove_file' slug=center.slug file_id=f.pk %}">{% translate "Remove" %}<span class="usa-sr-only"> {{ f.file.name }}</span></a>{% endif %}
     </li>

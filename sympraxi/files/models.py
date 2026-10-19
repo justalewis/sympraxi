@@ -42,6 +42,19 @@ class ScanStatus(models.TextChoices):
 READY = (ScanStatus.CLEAN, ScanStatus.NOT_SCANNED)
 
 
+class PdfStatus(models.TextChoices):
+    """Whether a Word, OpenDocument, rich text or plain text file has a PDF copy to view."""
+
+    NONE = "", _("No viewable copy")
+    PENDING = "pending", _("Making a viewable copy")
+    READY = "ready", _("Viewable")
+    FAILED = "failed", _("Couldn't make a viewable copy")
+
+
+# The kinds the worker can turn into PDFs; a PDF is its own viewable copy.
+CONVERTIBLE = (FileKind.DOCX, FileKind.DOC, FileKind.ODT, FileKind.RTF, FileKind.TXT)
+
+
 class StoredFile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     center = models.ForeignKey(Center, on_delete=models.PROTECT, related_name="+")
@@ -64,6 +77,11 @@ class StoredFile(models.Model):
     removed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
     )
+    # The PDF the worker made from a document, in the same private storage. Empty for
+    # a PDF, which is viewed as it is, and until the copy is made.
+    pdf_name = models.CharField(max_length=200, blank=True)
+    pdf_status = models.CharField(max_length=10, choices=PdfStatus.choices, blank=True)
+    pdf_attempts = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         ordering = ["uploaded_at"]
@@ -74,6 +92,15 @@ class StoredFile(models.Model):
     @property
     def is_ready(self) -> bool:
         return self.removed_at is None and self.scan_status in READY and bool(self.storage_name)
+
+    @property
+    def viewable_name(self) -> str:
+        """The storage name of the PDF to show in the viewer, or empty if there is none."""
+        if not self.is_ready:
+            return ""
+        if self.kind == FileKind.PDF:
+            return self.storage_name
+        return self.pdf_name if self.pdf_status == PdfStatus.READY else ""
 
 
 class AppointmentFile(models.Model):

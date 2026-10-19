@@ -2,13 +2,14 @@
   "name": "sympraxi-frontend",
   "private": true,
   "license": "AGPL-3.0-or-later",
-  "description": "Copies vendored browser assets (USWDS, htmx) into sympraxi/static/vendor.",
+  "description": "Copies vendored browser assets (USWDS, htmx, PDF.js) into sympraxi/static/vendor.",
   "type": "module",
   "scripts": {
     "build": "node scripts/copy-vendor.mjs"
   },
   "dependencies": {
     "@uswds/uswds": "3.14.0",
-    "htmx.org": "2.0.11"
+    "htmx.org": "2.0.11",
+    "pdfjs-dist": "6.4.299"
   }
 }

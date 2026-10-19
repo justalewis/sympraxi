@@ -17,6 +17,7 @@ from typing import IO, Any
 
 from django.conf import settings
 from django.core.files import File
+from django.core.files.base import ContentFile
 from django.core.files.storage import Storage, storages
 from django.db import transaction
 from django.http import HttpRequest
@@ -26,7 +27,15 @@ from django.utils.translation import gettext as _
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center
 from sympraxi.files import checks, clamav
-from sympraxi.files.models import AppointmentFile, ScanStatus, StoredFile
+from sympraxi.files import convert as office
+from sympraxi.files.models import (
+    CONVERTIBLE,
+    READY,
+    AppointmentFile,
+    PdfStatus,
+    ScanStatus,
+    StoredFile,
+)
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.scheduling.models import Appointment
 
@@ -79,7 +88,29 @@ def store(
     if status == ScanStatus.PENDING:
         file_id = str(stored.pk)
         transaction.on_commit(lambda: _enqueue_scan(file_id))
+    else:
+        _queue_conversion(stored)
     return stored
+
+
+def converting() -> bool:
+    return bool(settings.SYMPRAXI_CONVERT_DOCUMENTS)
+
+
+def _queue_conversion(stored: StoredFile) -> None:
+    """Ask the worker for a PDF copy of a document that can be opened (scanned, if scanning)."""
+    if not converting() or stored.kind not in CONVERTIBLE:
+        return
+    stored.pdf_status = PdfStatus.PENDING
+    stored.save(update_fields=["pdf_status"])
+    file_id = str(stored.pk)
+    transaction.on_commit(lambda: _enqueue_conversion(file_id))
+
+
+def _enqueue_conversion(file_id: str) -> None:
+    from sympraxi.files.tasks import convert_file
+
+    convert_file.enqueue(file_id)
 
 
 def _enqueue_scan(file_id: str) -> None:
@@ -112,37 +143,89 @@ def scan(file_id: Any) -> str:
         if verdict.clean:
             stored.scan_status = ScanStatus.CLEAN
             stored.scan_detail = ""
-        else:
-            stored.scan_status = ScanStatus.INFECTED
-            stored.scan_detail = verdict.signature
-            storage().delete(stored.storage_name)
-            stored.storage_name = ""
-            record(
-                AuditAction.FILE_INFECTED,
-                actor_label="virus scanner",
-                center=stored.center,
-                target=stored,
-                signature=verdict.signature,
-            )
+            stored.save()
+            _queue_conversion(stored)
+            return stored.scan_status
+        stored.scan_status = ScanStatus.INFECTED
+        stored.scan_detail = verdict.signature
+        storage().delete(stored.storage_name)
+        stored.storage_name = ""
+        record(
+            AuditAction.FILE_INFECTED,
+            actor_label="virus scanner",
+            center=stored.center,
+            target=stored,
+            signature=verdict.signature,
+        )
         stored.save()
         return stored.scan_status
 
 
+def convert(file_id: Any) -> str:
+    """Make the PDF copy of one document. Returns its status afterwards, or "" if none was due.
+
+    A conversion that fails, or can't be run, marks the file as failed; the
+    original is untouched and still downloads.
+    """
+    with transaction.atomic():
+        stored = (
+            StoredFile.objects.select_for_update(skip_locked=True)
+            .filter(pk=file_id, pdf_status=PdfStatus.PENDING, removed_at__isnull=True)
+            .first()
+        )
+        if stored is None:
+            return ""
+        if not stored.is_ready or stored.kind not in CONVERTIBLE:
+            stored.pdf_status = PdfStatus.NONE
+            stored.save(update_fields=["pdf_status"])
+            return stored.pdf_status
+        stored.pdf_attempts += 1
+        try:
+            with office.workspace() as directory:
+                source = directory / f"document.{stored.kind}"
+                with storage().open(stored.storage_name, "rb") as handle:
+                    source.write_bytes(handle.read())
+                data = office.to_pdf(source, directory, max_bytes=max_bytes())
+        except office.ConversionFailed as error:
+            stored.pdf_status = PdfStatus.FAILED
+            stored.save(update_fields=["pdf_status", "pdf_attempts"])
+            logger.warning("Couldn't convert file %s: %s", stored.pk, error)
+            return stored.pdf_status
+        name = storage().save(f"{stored.center_id}/{uuid.uuid4().hex}.pdf", ContentFile(data))
+        stored.pdf_name = name
+        stored.pdf_status = PdfStatus.READY
+        stored.save(update_fields=["pdf_name", "pdf_status", "pdf_attempts"])
+        return stored.pdf_status
+
+
 def retry_scans(now: datetime | None = None) -> int:
-    """Ask the worker again about files whose scan stalled or couldn't reach clamd."""
-    if not scanning():
-        return 0
+    """Ask the worker again about files whose scan or PDF copy stalled.
+
+    A scan stalls when clamd can't be reached; a copy, when the worker was down.
+    """
     now = now or timezone.now()
-    stalled = StoredFile.objects.filter(
-        scan_status__in=[ScanStatus.PENDING, ScanStatus.ERROR],
-        scan_attempts__lt=MAX_ATTEMPTS,
-        uploaded_at__lt=now - RETRY_AFTER,
-        removed_at__isnull=True,
-    ).values_list("pk", flat=True)
     count = 0
-    for pk in stalled:
-        _enqueue_scan(str(pk))
-        count += 1
+    if scanning():
+        stalled = StoredFile.objects.filter(
+            scan_status__in=[ScanStatus.PENDING, ScanStatus.ERROR],
+            scan_attempts__lt=MAX_ATTEMPTS,
+            uploaded_at__lt=now - RETRY_AFTER,
+            removed_at__isnull=True,
+        ).values_list("pk", flat=True)
+        for pk in stalled:
+            _enqueue_scan(str(pk))
+            count += 1
+    if converting():
+        waiting = StoredFile.objects.filter(
+            pdf_status=PdfStatus.PENDING,
+            pdf_attempts__lt=MAX_ATTEMPTS,
+            scan_status__in=READY,
+            uploaded_at__lt=now - RETRY_AFTER,
+            removed_at__isnull=True,
+        ).values_list("pk", flat=True)
+        for pk in waiting:
+            _enqueue_conversion(str(pk))
+            count += 1
     return count
 
 

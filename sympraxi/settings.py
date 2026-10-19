@@ -59,6 +59,11 @@ SYMPRAXI_TRUST_X_FORWARDED_FOR = env.bool("SYMPRAXI_TRUST_X_FORWARDED_FOR", defa
 # empty means files aren't scanned).
 SYMPRAXI_UPLOAD_MAX_MB = env.int("SYMPRAXI_UPLOAD_MAX_MB", default=25)
 SYMPRAXI_CLAMAV_ADDRESS = env.str("SYMPRAXI_CLAMAV_ADDRESS", default="")
+# Turning Word, OpenDocument, rich text and plain text files into PDFs for the comment
+# viewer needs LibreOffice in the worker's image (docs/install.md, "Files"). Off, only
+# PDFs can be commented on in the browser.
+SYMPRAXI_CONVERT_DOCUMENTS = env.bool("SYMPRAXI_CONVERT_DOCUMENTS", default=False)
+SYMPRAXI_OFFICE_COMMAND = env.str("SYMPRAXI_OFFICE_COMMAND", default="soffice")
 
 # Video rooms (sympraxi/online/): the Jitsi server the installation points at, the
 # app ID it accepts tokens from, and the secret those tokens are signed with.

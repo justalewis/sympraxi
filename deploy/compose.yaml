@@ -43,6 +43,15 @@ services:
 
   worker:
     <<: *app
+    # Built from the Dockerfile's "worker" stage, which adds LibreOffice for the PDF
+    # copies the comment viewer draws (SYMPRAXI_CONVERT_DOCUMENTS in deploy/.env).
+    # With a prebuilt SYMPRAXI_IMAGE, the worker runs that image, without LibreOffice,
+    # unless SYMPRAXI_WORKER_IMAGE names the build that has it.
+    image: ${SYMPRAXI_WORKER_IMAGE:-${SYMPRAXI_IMAGE:-sympraxi-worker:local}}
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      target: worker
     command: ["python", "manage.py", "db_worker"]
     # The image's check calls the web server, which the worker doesn't run.
     # Instead, confirm Django starts and can reach the database.

@@ -19,7 +19,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 # --- Application -----------------------------------------------------------------
-FROM python:3.12-slim-trixie
+FROM python:3.12-slim-trixie AS common
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH"
@@ -53,3 +53,20 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=5 \
 ENV WEB_CONCURRENCY=3
 # The access log hides survey link tokens (sympraxi/core/logs.py).
 CMD ["gunicorn", "sympraxi.wsgi", "--bind", "0.0.0.0:8000", "--timeout", "60", "--access-logfile", "-", "--logger-class", "sympraxi.core.access_log.AccessLog"]
+
+# --- The task worker, with LibreOffice -------------------------------------------
+# Makes the PDF copies of Word, OpenDocument, rich text and plain text files that
+# the comment viewer draws (SYMPRAXI_CONVERT_DOCUMENTS=true; docs/install.md,
+# "Files"). Only the worker needs it, so the web and scheduler images stay small.
+FROM common AS worker
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libreoffice-writer fonts-liberation fonts-dejavu-core \
+    && rm -rf /var/lib/apt/lists/*
+USER sympraxi
+
+# --- The default image: everything but LibreOffice -------------------------------
+# Last on purpose, so `docker build .` makes this one.
+FROM common AS app
+

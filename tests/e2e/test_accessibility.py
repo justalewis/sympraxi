@@ -239,6 +239,11 @@ PAGES = [
     ("director", "/centers/{slug}/feedback/{submission}/assign/"),
     ("director", "/centers/{slug}/feedback/settings/"),
     ("director", "/centers/{slug}/feedback/turnaround/"),
+    # The comment viewer (a waiting draft for the student and a director, a claimed one
+    # for the tutor)
+    ("student", "/centers/{slug}/feedback/files/{submission_file}/view/"),
+    ("director", "/centers/{slug}/feedback/files/{submission_file}/view/"),
+    ("tutor", "/centers/{slug}/feedback/files/{claimed_file}/view/"),
     # Video rooms (the world's appointment is in person, so the room page says so)
     ("student", "/centers/{slug}/appointments/{appointment}/join/"),
     ("tutor", "/centers/{slug}/appointments/{appointment}/join/"),
@@ -370,6 +375,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         submission=world.submission.pk,
         claimed=world.claimed.pk,
         submission_file=world.submission_file.pk,
+        claimed_file=world.claimed_file.pk,
     )
     page = context.new_page()
     return context, page, url
@@ -1510,6 +1516,57 @@ def test_a_student_sends_a_draft_for_feedback_by_keyboard(browser, live_server, 
     page.keyboard.press("Enter")
     page.wait_for_selector("text=Your draft is in the queue.")
     assert page.get_by_role("link", name="essay three.pdf", exact=True).count() == 1
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+VIEWER = "/centers/{slug}/feedback/files/{claimed_file}/view/"
+
+
+def comment_on_the_first_words(page) -> None:
+    """Select the first line of text on the first page and comment on it, from the keyboard."""
+    page.wait_for_selector(".textLayer span", timeout=30000)
+    page.evaluate(
+        """() => {
+            const span = document.querySelector('.textLayer span');
+            const range = document.createRange();
+            range.selectNodeContents(span);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }"""
+    )
+    page.wait_for_function("!document.getElementById('comment-selection').disabled")
+    page.locator("#comment-selection").focus()
+    page.keyboard.press("Enter")
+    page.get_by_label("Your comment").fill("Say where this comes from.")
+    page.get_by_role("button", name="Save the comment").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("#comment-list li")
+
+
+def test_a_tutor_comments_in_the_viewer_under_the_csp(browser, live_server, sign_in) -> None:
+    """PDF.js draws the page, its worker and fonts load under the real policy, a
+    selected line takes a comment, and the comment is still there after a reload."""
+    context, page, url = open_page(browser, live_server, sign_in, "tutor", VIEWER)
+    problems = watch_for_csp_problems(page)
+    page.goto(url)
+    comment_on_the_first_words(page)
+    assert "Say where this comes from." in page.locator("#comment-list").inner_text()
+    assert page.locator(".viewer-highlight").count() >= 1
+    page.reload()
+    page.wait_for_selector(".textLayer span", timeout=30000)
+    assert page.locator("#comment-list li").count() == 1
+    page.wait_for_selector(".viewer-highlight")
+    context.close()
+    assert problems == []
+
+
+def test_the_viewer_with_a_comment_passes_axe(browser, live_server, sign_in) -> None:
+    context, page, url = open_page(browser, live_server, sign_in, "tutor", VIEWER, bypass_csp=True)
+    page.goto(url)
+    comment_on_the_first_words(page)
     results = Axe().run(page, options=AXE_OPTIONS)
     context.close()
     assert results.violations_count == 0, results.generate_report()

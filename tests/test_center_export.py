@@ -56,6 +56,7 @@ FILES = {
     "files.json",
     "submissions.json",
     "submission_files.json",
+    "comments.json",
     "disclosures.json",
     "audit_events.json",
     "audit_events.csv",

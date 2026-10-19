@@ -12,7 +12,33 @@ from sympraxi.files.models import AppointmentFile
 from sympraxi.scheduling.models import Appointment
 from tests.scheduling_world import World
 
-PDF = b"%PDF-1.4\n1 0 obj << /Type /Catalog >> endobj\ntrailer << /Root 1 0 R >>\n%%EOF\n"
+
+def text_pdf(*lines: str) -> bytes:
+    """A real one-page PDF with the lines in Helvetica, small enough to write by hand."""
+    stream = "BT /F1 18 Tf 72 700 Td " + " 0 -28 Td ".join(f"({line}) Tj" for line in lines) + " ET"
+    objects = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R "
+        b"/Resources << /Font << /F1 5 0 R >> >> >>",
+        f"<< /Length {len(stream)} >>\nstream\n{stream}\nendstream".encode(),
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+    ]
+    out = bytearray(b"%PDF-1.4\n")
+    offsets = []
+    for number, body in enumerate(objects, start=1):
+        offsets.append(len(out))
+        out += f"{number} 0 obj\n".encode() + body + b"\nendobj\n"
+    start = len(out)
+    out += f"xref\n0 {len(objects) + 1}\n0000000000 65535 f \n".encode()
+    for offset in offsets:
+        out += f"{offset:010d} 00000 n \n".encode()
+    size = len(objects) + 1
+    out += f"trailer\n<< /Size {size} /Root 1 0 R >>\nstartxref\n{start}\n%%EOF\n".encode()
+    return bytes(out)
+
+
+PDF = text_pdf("The thesis of this draft is clear.", "The second sentence needs a source.")
 TXT = "Draft one.\nSecond paragraph, with an é.\n".encode()
 RTF = b"{\\rtf1\\ansi Draft one.}"
 DOC = bytes.fromhex("d0cf11e0a1b11ae1") + b"\x00" * 504

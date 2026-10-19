@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ stored.name }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=stored.name %}
+  <h1>{{ stored.name }}</h1>
+  <p>{{ reason }}</p>
+  <p>
+    {% if stored.is_ready %}<a href="{{ download }}">{% translate "Download the file" %}</a> · {% endif %}
+    <a href="{{ back }}">{% translate "Back to the submission" %}</a>
+  </p>
+{% endblock content %}

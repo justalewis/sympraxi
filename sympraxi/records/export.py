@@ -41,7 +41,8 @@ FORMAT = "sympraxi.student-record"
 # Version 4 added the record of disclosures.
 # Version 5 added the files on the student's appointments (names and details, not
 # their content, which downloads from each appointment's page).
-# Version 6 added the drafts the student sent for written feedback.
+# Version 6 added the drafts the student sent for written feedback, with the
+# tutor's comments on them.
 VERSION = 6
 
 
@@ -101,7 +102,7 @@ def submissions(membership: Membership) -> QuerySet[Submission]:
     return (
         Submission.objects.filter(center=membership.center, student=membership.user)
         .select_related("tutor")
-        .prefetch_related("files__file")
+        .prefetch_related("files__file", "files__comments__author")
         .order_by("created_at")
     )
 
@@ -128,6 +129,16 @@ def _submission(s: Submission) -> dict[str, Any]:
                 "sha256": f.file.sha256,
                 "uploaded_at": _when(f.file.uploaded_at),
                 "removed_at": _when(f.file.removed_at),
+                "comments": [
+                    {
+                        "page": c.page,
+                        "quote": c.quote,
+                        "body": c.body,
+                        "author": _person(c.author),
+                        "created_at": _when(c.created_at),
+                    }
+                    for c in f.comments.all()
+                ],
             }
             for f in s.files.all()
         ],

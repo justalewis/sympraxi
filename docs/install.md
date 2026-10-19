@@ -214,6 +214,16 @@ docker compose --profile clamav up -d
 
 ClamAV takes a few minutes to load its database the first time; files attached meanwhile wait and are checked once it's ready. Without ClamAV, files can be opened as soon as they're attached and show as not scanned.
 
+### Reading and commenting in the browser
+
+Tutors read a student's draft and comment on it in the browser, without downloading it. PDFs work as they are. To do the same for Word, OpenDocument, rich text and plain text files, the task worker turns each into a PDF with LibreOffice, which is only in the worker's image (the `worker` stage of the Dockerfile; the web and scheduler images don't carry it). Docker Compose builds that image for you when you build from source. To use it:
+
+```bash
+SYMPRAXI_CONVERT_DOCUMENTS=true
+```
+
+in `deploy/.env`, then `docker compose build worker && docker compose up -d`. If you pull a prebuilt `SYMPRAXI_IMAGE`, build or pull the worker image that has LibreOffice and name it in `SYMPRAXI_WORKER_IMAGE`. Leave it off, the default, and only PDFs can be commented on; every other file still downloads. The conversion opens files students sent, so read "Phase 2: comments in the browser" in decisions.md first.
+
 ## Written feedback
 
 Nothing to set up on the server except that the `scheduler` service must be running: it assigns submissions where a center asks it to and emails about the ones that run past their date. A director turns the queue on from **Written feedback** on the center page, under **Settings**; until then students see no page for sending drafts. Drafts are files like any other (see **Files**), so ClamAV, if you run it, scans them too.

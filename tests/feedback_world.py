@@ -45,7 +45,8 @@ def add_queue(world: World) -> World:
     """Open the center's queue and give the world two submissions by its student.
 
     - `submission`: waiting for a tutor, with one draft (`submission_file`).
-    - `claimed`: claimed by the world's tutor, who has started the feedback.
+    - `claimed`: claimed by the world's tutor, who has started the feedback
+      (`claimed_file` is its draft).
     """
     open_queue(world.center)
     world.submission = send(world.center, world.student)
@@ -53,4 +54,5 @@ def add_queue(world: World) -> World:
     world.claimed = send(world.center, world.student, title="Essay 1", name="essay-one.pdf")
     services.claim(world.claimed.pk, world.tutor)
     world.claimed.refresh_from_db()
+    world.claimed_file = world.claimed.files.get()
     return world

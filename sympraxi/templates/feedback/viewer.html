@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ stored.name }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=stored.name %}
+  <h1>{{ stored.name }}</h1>
+  <p><a href="{{ download }}">{% translate "Download the file" %}</a> · <a href="{{ back }}">{% translate "Back to the submission" %}</a></p>
+  <p id="viewer-status" role="status" class="usa-hint">{% translate "Loading the file…" %}</p>
+  <noscript><p>{% translate "Reading and commenting here needs JavaScript. You can download the file instead." %}</p></noscript>
+  {{ config|json_script:"viewer-config" }}
+  <div class="sympraxi-viewer">
+    <div id="viewer-pages" class="sympraxi-viewer__pages"></div>
+    <aside class="sympraxi-viewer__comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">{% translate "Comments" %}</h2>
+      {% if can_comment %}
+        <p class="usa-hint">{% translate "Select text on a page, then choose Comment on the selected text. Or comment on a whole page." %}</p>
+        <p class="sympraxi-form-actions">
+          <button id="comment-selection" class="usa-button usa-button--outline" type="button" disabled>{% translate "Comment on the selected text" %}</button>
+          <button id="comment-page" class="usa-button usa-button--outline" type="button">{% translate "Comment on a page" %}</button>
+        </p>
+        <form id="comment-form" class="usa-form" hidden>
+          <label class="usa-label" for="comment-page-number">{% translate "Page" %}</label>
+          <input class="usa-input" id="comment-page-number" type="number" min="1" inputmode="numeric" required>
+          <blockquote id="comment-quote" class="viewer-quote" hidden></blockquote>
+          <label class="usa-label" for="comment-body">{% translate "Your comment" %}</label>
+          <textarea class="usa-textarea" id="comment-body" rows="4" maxlength="2000" required></textarea>
+          <div class="sympraxi-form-actions">
+            <button class="usa-button" type="submit">{% translate "Save the comment" %}</button>
+            <button id="comment-cancel" class="usa-button usa-button--unstyled" type="button">{% translate "Cancel" %}</button>
+          </div>
+        </form>
+      {% elif not shows_comments %}
+        <p>{% translate "The tutor's comments appear here once your feedback is returned." %}</p>
+      {% endif %}
+      <p id="comment-empty" {% if not shows_comments and not can_comment %}hidden{% endif %}>{% translate "No comments yet." %}</p>
+      <ol id="comment-list" class="usa-list usa-list--unstyled"></ol>
+    </aside>
+  </div>
+  <script type="module" src="{{ script }}"></script>
+{% endblock content %}

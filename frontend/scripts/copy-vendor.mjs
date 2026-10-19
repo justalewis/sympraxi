@@ -24,6 +24,16 @@ const copies = [
   ["@uswds/uswds/LICENSE.md", "uswds/LICENSE.md"],
   ["htmx.org/dist/htmx.min.js", "htmx/htmx.min.js"],
   ["htmx.org/LICENSE", "htmx/LICENSE"],
+  // PDF.js draws PDFs for the comment viewer. The worker, the character maps, the
+  // standard fonts, the color profile and the WebAssembly decoders load by name next
+  // to the library, so they stay in one folder.
+  ["pdfjs-dist/build/pdf.min.mjs", "pdfjs/pdf.min.mjs"],
+  ["pdfjs-dist/build/pdf.worker.min.mjs", "pdfjs/pdf.worker.min.mjs"],
+  ["pdfjs-dist/cmaps", "pdfjs/cmaps"],
+  ["pdfjs-dist/standard_fonts", "pdfjs/standard_fonts"],
+  ["pdfjs-dist/iccs", "pdfjs/iccs"],
+  ["pdfjs-dist/wasm", "pdfjs/wasm"],
+  ["pdfjs-dist/LICENSE", "pdfjs/LICENSE"],
 ];
 
 for (const [from, to] of copies) {
