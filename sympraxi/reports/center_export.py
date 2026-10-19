@@ -20,7 +20,8 @@ spreadsheet), with `manifest.json` saying what each file holds:
   response, its ID or its date is ever listed, because the order and dates
   could tie an anonymous answer to the student who gave it;
 - the center's own resources, staff time clock entries (removed ones too,
-  marked), every student's record of disclosures, and its audit log.
+  marked), every student's record of disclosures, the details of every file on
+  an appointment (not the files themselves), and its audit log.
 
 This is the center's own copy of its records, for its directors only: the
 policy grants `reports.export_center` to directors and never to site
@@ -52,6 +53,7 @@ from django.utils import timezone
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership
 from sympraxi.core.logs import scrub
+from sympraxi.files.models import AppointmentFile
 from sympraxi.forms import export as form_export
 from sympraxi.forms import surveys
 from sympraxi.forms.models import Form, FormKind, FormVersion, Response
@@ -544,6 +546,18 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
             (
                 columns_of(e)
                 for e in TimeEntry.objects.filter(center=center).order_by("started_at", "pk")
+            ),
+        )
+        w.items(
+            "files.json",
+            (
+                {
+                    **columns_of(f.file, leave_out=("storage_name",)),
+                    **columns_of(f, leave_out=("id",)),
+                }
+                for f in AppointmentFile.objects.filter(appointment__schedule__center=center)
+                .select_related("file")
+                .order_by("file__uploaded_at", "pk")
             ),
         )
         w.items(

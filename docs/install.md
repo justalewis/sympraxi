@@ -196,6 +196,24 @@ Nothing to set up on the server. Anyone can turn on a private calendar feed unde
 
 Nothing to set up on the server. Tutors, front desk staff and directors clock in and out under **Time clock** on the center page, and directors see **Timesheets** there, which download for payroll as CSV or a spreadsheet. The `scheduler` service clocks out anyone still clocked in at midnight, in the center's time zone, so it must be running.
 
+## Files
+
+Students and tutors attach drafts to appointments. Files are kept in the `media` volume under `uploads/`, which Caddy doesn't serve; they download only through Sympraxi, to people allowed to open them. The largest file is `SYMPRAXI_UPLOAD_MAX_MB` in `deploy/.env` (25 by default). To allow larger files, raise it and also raise `max_size` in `deploy/Caddyfile`, which turns away any request over 30 MB.
+
+To scan every file for viruses before anyone can open it, run the optional ClamAV service. It needs about 3 GB of memory for its virus database, which it downloads and keeps up to date itself. In `deploy/.env` set:
+
+```bash
+SYMPRAXI_CLAMAV_ADDRESS=clamav:3310
+```
+
+then start it with the rest:
+
+```bash
+docker compose --profile clamav up -d
+```
+
+ClamAV takes a few minutes to load its database the first time; files attached meanwhile wait and are checked once it's ready. Without ClamAV, files can be opened as soon as they're attached and show as not scanned.
+
 ## Registration and intake forms
 
 Nothing to set up on the server. Directors build their center's forms in Sympraxi, under **Forms** on the center page: a registration form, asked once when a student first books, and intake forms, asked at each booking (one per schedule, or a default for every schedule). A form's questions reach students only after a director publishes them. Each later change is published as a new version, and earlier answers keep the wording students saw.

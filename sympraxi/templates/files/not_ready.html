@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ stored.name }}{% endblock head_title %}
+{% block content %}
+  <h1>{{ stored.name }}</h1>
+  {% if stored.removed_at %}
+    <p>{% translate "This file was removed." %}</p>
+  {% elif stored.scan_status == "infected" %}
+    <p>{% translate "A virus scanner flagged this file, so its content was deleted. Ask whoever attached it to check their computer and send a clean copy." %}</p>
+  {% else %}
+    <p>{% translate "This file is still being checked for viruses. Try again in a minute." %}</p>
+  {% endif %}
+  <p><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=attached.appointment_id %}">{% translate "Back to the appointment" %}</a></p>
+{% endblock content %}

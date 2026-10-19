@@ -1,0 +1,28 @@
+{% load i18n %}
+{% if shows_files %}
+  <section aria-labelledby="files" class="sympraxi-files">
+    <h2 id="files">{% translate "Files" %}</h2>
+    {% if files %}
+      <ul class="usa-list usa-list--unstyled">
+        {% for f in files %}
+          <li class="sympraxi-file">
+            {% if f.file.is_ready %}
+              <a href="{% url 'files:download' slug=center.slug file_id=f.pk %}">{{ f.file.name }}</a>
+            {% else %}
+              <span>{{ f.file.name }}</span>
+            {% endif %}
+            <span class="usa-hint">{{ f.file.size|filesizeformat }}{% if f.file.removed_at %} · {% translate "Removed" %}{% elif not f.file.is_ready %} · {{ f.file.get_scan_status_display }}{% endif %}</span>
+            <br><span class="usa-hint">{% blocktranslate with who=f.file.uploaded_by.display_name|default:_("Someone") when=f.file.uploaded_at|date:"M j, g:i A" %}Added by {{ who }}, {{ when }}{% endblocktranslate %}{% if people %} · {% blocktranslate with name=f.student.display_name %}for {{ name }}{% endblocktranslate %}{% endif %}</span>
+            {% if f.note %}<br>{{ f.note }}{% endif %}
+            {% if not f.file.removed_at %}<br><a href="{% url 'files:remove' slug=center.slug file_id=f.pk %}">{% translate "Remove" %}<span class="usa-sr-only"> {{ f.file.name }}</span></a>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{% translate "No files yet." %}</p>
+    {% endif %}
+    {% if may_attach %}
+      <p><a class="usa-button usa-button--outline" href="{% url 'files:upload' slug=center.slug appointment_id=appointment.pk %}">{% translate "Attach a file" %}</a></p>
+    {% endif %}
+  </section>
+{% endif %}

@@ -54,6 +54,12 @@ News: directors post announcements on the center's pages and email groups of
 the center's people (`sympraxi/notify/news.py`). Site administrators do
 neither: they run the installation, not the center.
 
+Files: a student attaches drafts to appointments they're in, a tutor to
+appointments they teach, and directors to any. Each file belongs to one
+student: it is opened by that student, the appointment's tutor and directors,
+never by other students in a group, and front desk staff don't see drafts
+(`sympraxi/files/`).
+
 Disclosures: directors keep each student's record of disclosures of their
 records outside the college's own officials (34 CFR 99.32), and the student
 reads their own on My writing. Site administrators don't: it is part of the
@@ -125,6 +131,10 @@ class Action(StrEnum):
     EXPORT_STUDENT_RECORD = "records.export_student"
     # Read and add to a student's record of disclosures outside the college.
     RECORD_DISCLOSURES = "privacy.record_disclosures"
+    # Attach a file to an appointment.
+    ATTACH_FILES = "files.attach"
+    # Open the files on an appointment.
+    VIEW_FILES = "files.view"
     # The center's own link-only resources and its session-record settings.
     MANAGE_RECORDS = "records.manage"
     # Build, preview and publish the center's forms: registration, intake,
@@ -171,6 +181,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.CHANGE_APPOINTMENT,
             Action.VIEW_OWN_WRITING,
             Action.ANSWER_OWN_FORMS,
+            Action.ATTACH_FILES,
+            Action.VIEW_FILES,
         }
     ),
     Role.TUTOR: frozenset(
@@ -186,6 +198,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_INTAKE,
             Action.VIEW_REGISTRATION,
             Action.CLOCK_OWN,
+            Action.ATTACH_FILES,
+            Action.VIEW_FILES,
         }
     ),
     Role.FRONT_DESK: frozenset(
@@ -243,6 +257,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.MANAGE_ANNOUNCEMENTS,
             Action.SEND_MASS_EMAIL,
             Action.RECORD_DISCLOSURES,
+            Action.ATTACH_FILES,
+            Action.VIEW_FILES,
         }
     ),
 }
@@ -340,6 +356,22 @@ def _answers_own(user: UserLike, obj: Model) -> bool:
     return False
 
 
+def _own_file(user: UserLike, obj: Model) -> bool:
+    """A student opens files that belong to them, on appointments they're in."""
+    student_id = getattr(obj, "student_id", None)
+    if isinstance(obj, Appointment):
+        return _participant(user, obj)
+    return student_id == user.pk
+
+
+def _file_of_own_tutoring(user: UserLike, obj: Model) -> bool:
+    """A tutor opens files on appointments they teach."""
+    if isinstance(obj, Appointment):
+        return obj.tutor_id == user.pk
+    appointment = getattr(obj, "appointment", None)
+    return isinstance(appointment, Appointment) and appointment.tutor_id == user.pk
+
+
 def _intake_of_own_tutoring(user: UserLike, obj: Model) -> bool:
     if isinstance(obj, Appointment):
         return obj.tutor_id == user.pk
@@ -374,6 +406,10 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.STUDENT, Action.ANSWER_OWN_FORMS): _answers_own,
     (Role.TUTOR, Action.VIEW_INTAKE): _intake_of_own_tutoring,
     (Role.TUTOR, Action.VIEW_REGISTRATION): _registration_of_tutored,
+    (Role.STUDENT, Action.ATTACH_FILES): _answers_own,
+    (Role.STUDENT, Action.VIEW_FILES): _own_file,
+    (Role.TUTOR, Action.ATTACH_FILES): _tutor_of,
+    (Role.TUTOR, Action.VIEW_FILES): _file_of_own_tutoring,
     (Role.FRONT_DESK, Action.VIEW_SCHEDULES): _not_hidden,
     (Role.FRONT_DESK, Action.BOOK_FOR_OTHERS): _not_hidden,
     (Role.DIRECTOR, Action.BOOK_FOR_OTHERS): _not_hidden,

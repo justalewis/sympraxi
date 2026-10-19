@@ -6,7 +6,8 @@ no-shows (`attendance.flag_possible_no_shows`), sends the surveys that are
 due (`sympraxi.forms.surveys`), deletes full-center exports whose download
 links have expired (`sympraxi.reports.center_export`), clocks out staff
 still clocked in after midnight (`sympraxi.staff.timeclock`) and reminds tutors
-about session records they haven't written (`sympraxi.records.reminders`). Each is safe to run
+about session records they haven't written (`sympraxi.records.reminders`), and asks
+the worker again about virus scans that stalled (`sympraxi.files.services`). Each is safe to run
 twice at once, so a second scheduler, or one started during an upgrade while
 the old one is stopping, doesn't send anything twice. After a sweep that
 finishes without an error it writes the heartbeat that
@@ -27,6 +28,7 @@ from django.db import close_old_connections, connection
 from django.utils import timezone
 
 from sympraxi import healthcheck
+from sympraxi.files import services as file_services
 from sympraxi.forms import surveys
 from sympraxi.records import reminders as record_reminders
 from sympraxi.reports import center_export
@@ -44,6 +46,7 @@ class Sweep:
     exports_expired: int = 0
     clocked_out: int = 0
     record_reminders: int = 0
+    rescans: int = 0
 
 
 def _refresh_connections() -> None:
@@ -67,6 +70,7 @@ def sweep(*, base_url: str, now: datetime | None = None) -> Sweep:
             exports_expired=center_export.expire(now),
             clocked_out=timeclock.close_forgotten(now),
             record_reminders=record_reminders.send_record_reminders(base_url=base_url, now=now),
+            rescans=file_services.retry_scans(now),
         )
     finally:
         _refresh_connections()

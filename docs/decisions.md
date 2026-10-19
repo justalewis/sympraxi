@@ -2,6 +2,20 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 2: files on appointments (October 2026)
+
+**Each file belongs to one student.** Students attach drafts to appointments they're in, tutors to appointments they teach (choosing which student a file is for in a group), and directors to any. A file is opened by the student it belongs to, the appointment's tutor and the center's directors; other students in a group never see it, and front desk staff don't open drafts. Two actions, `files.attach` and `files.view`, with object rules for students and tutors. Files can't be added to a canceled appointment.
+
+**Only writing, checked by content.** PDF, Word (.docx and the older .doc), OpenDocument text, rich text and plain text, up to `SYMPRAXI_UPLOAD_MAX_MB` (25 by default; Caddy's 30 MB request limit has to rise with it). The extension has to match what the content turns out to be, so a program renamed "essay.pdf" is refused. Word and OpenDocument files are opened as the ZIP archives they are: a .docx must hold a document and no macros, an .odt must say it's text and hold no Basic macros, and none may unpack to far more than its size. The older .doc can carry macros and isn't opened, which is one reason to run the scanner. Names are cleaned (no folders, no control characters) and kept only for display; the stored name is random.
+
+**Nothing serves the files.** They live in the `uploads` storage under `media/uploads/`, readable only by the app's user, and come out only through a page that checks who is asking. Every download is forced to save rather than open (`Content-Disposition: attachment`), carries `Content-Security-Policy: sandbox; default-src 'none'` so a browser that opens it anyway runs nothing, and isn't cached. Uploads, downloads and removals are audited. Backups include them, with the rest of `media`.
+
+**ClamAV, if the campus runs it.** With `SYMPRAXI_CLAMAV_ADDRESS` set, every new file waits as "being checked" until the worker has scanned it with clamd, which Sympraxi speaks to directly (the INSTREAM command, a few lines, no package). A clean scan makes it ready. A flagged file's content is deleted at once and the audit log records the signature. If clamd can't be reached the file keeps waiting, and the scheduler asks the worker again after five minutes, up to five tries. Nobody can open a file that hasn't passed. Without the setting, files are ready right away, marked "not scanned". ClamAV is an opt-in Compose service (`--profile clamav`) because its virus database takes about 3 GB of memory.
+
+**Removing keeps the row.** The person who attached a file, or a director, can remove it: its content is deleted, and the appointment still shows that a file with that name was there. Both exports list each file's name, kind, size, SHA-256 and history, never the stored name; the files themselves download from their appointments.
+
+**Still to come.** Signed short-lived links, for opening a file in the browser viewer (slice 5) without a session, and turning documents into PDFs in the worker belong with the viewer.
+
 ## Phase 2: moving a day online (October 2026)
 
 **For snow days, one page instead of every appointment.** A director picks a day, on one schedule or all, and every scheduled in-person appointment that starts that day in the center's time zone moves online at the same time. It uses its tutor's meeting link on that schedule, and its room is cleared, so the location becomes the link. A review page lists what moves, and which tutors have no link, before anything changes; a tutor without one stays in person until a director adds a link to their assignment. Everything moves in one transaction. It needs `scheduling.manage_schedules`, which only directors have.

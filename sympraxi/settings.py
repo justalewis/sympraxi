@@ -54,6 +54,11 @@ SYMPRAXI_SIGNUP_EMAIL_DOMAINS = [
 ]
 # Only enable behind a reverse proxy that overwrites X-Forwarded-For (Caddy does).
 SYMPRAXI_TRUST_X_FORWARDED_FOR = env.bool("SYMPRAXI_TRUST_X_FORWARDED_FOR", default=False)
+# Files people attach to appointments (sympraxi/files/): the largest allowed, and
+# the ClamAV daemon that scans each one before anyone can open it ("host:port";
+# empty means files aren't scanned).
+SYMPRAXI_UPLOAD_MAX_MB = env.int("SYMPRAXI_UPLOAD_MAX_MB", default=25)
+SYMPRAXI_CLAMAV_ADDRESS = env.str("SYMPRAXI_CLAMAV_ADDRESS", default="")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -82,6 +87,7 @@ INSTALLED_APPS = [
     "sympraxi.reports",
     "sympraxi.staff",
     "sympraxi.notify",
+    "sympraxi.files",
 ]
 
 MIDDLEWARE = [
@@ -146,6 +152,17 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
         "OPTIONS": {
             "location": Path(str(MEDIA_ROOT)) / "center-exports",
+            "base_url": None,
+            "file_permissions_mode": 0o600,
+            "directory_permissions_mode": 0o700,
+        },
+    },
+    # Files people attach to appointments (sympraxi/files/). Never served by the
+    # web server: they download through a page that checks who is asking.
+    "uploads": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {
+            "location": Path(str(MEDIA_ROOT)) / "uploads",
             "base_url": None,
             "file_permissions_mode": 0o600,
             "directory_permissions_mode": 0o700,

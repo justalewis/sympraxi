@@ -26,6 +26,7 @@ from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center
 from sympraxi.centers.views import HtmxHttpRequest
 from sympraxi.core.policy import Action, can, get_for_action
+from sympraxi.files import display as file_display
 from sympraxi.forms import booking as form_questions
 from sympraxi.forms import display as form_answers
 from sympraxi.forms.answering import follow_up_message
@@ -607,6 +608,7 @@ def appointment_detail(request: HttpRequest, slug: str, appointment_id: UUID) ->
         "may_waive": can(user, Action.WAIVE_ATTENDANCE, appointment),
         **brief.appointment_context(request, appointment),
         **form_answers.own_answers(user, appointment),
+        **file_display.appointment_context(request, appointment),
     }
     with timezone.override(center.time_zone):
         return render(request, "scheduling/appointment_detail.html", context)

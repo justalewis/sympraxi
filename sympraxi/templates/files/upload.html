@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Attach a file" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Attach a file" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Attach a file" %}</h1>
+  {% if closed %}
+    <p>{% translate "This appointment was canceled, so files can't be added to it." %}</p>
+    <p><a href="{{ back }}">{% translate "Back to the appointment" %}</a></p>
+  {% else %}
+    <p>{% blocktranslate with tutor=appointment.tutor.display_name day=appointment.starts_at|date:"l, F j" %}For the appointment with {{ tutor }} on {{ day }}. Only the student it's for, the tutor and the center's directors can open it.{% endblocktranslate %}</p>
+    <form class="usa-form usa-form--large" method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      {% include "includes/form_fields.html" %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Attach it" %}</button>
+        <a href="{{ back }}">{% translate "Go back" %}</a>
+      </div>
+    </form>
+  {% endif %}
+{% endblock content %}

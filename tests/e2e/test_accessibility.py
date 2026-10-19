@@ -47,6 +47,7 @@ from tests.factories import (
     UserFactory,
     give_mfa,
 )
+from tests.files_world import PDF, add_files
 from tests.forms_world import add_forms
 from tests.news_world import add_news
 from tests.records_world import add_records
@@ -217,6 +218,10 @@ PAGES = [
     # Record of disclosures (each world's student has one entry)
     ("director", "/centers/{slug}/students/{student_membership}/disclosures/"),
     ("student", "/centers/{slug}/my-writing/disclosures/"),
+    # Files (each world's appointment has the student's draft)
+    ("student", "/centers/{slug}/appointments/{appointment}/files/new/"),
+    ("tutor", "/centers/{slug}/appointments/{appointment}/files/new/"),
+    ("student", "/centers/{slug}/files/{appointment_file}/remove/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -279,17 +284,19 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
                 extra_data={"id_token": sso_idp.entra_claims(email=user.email)},
             )
         sign_in(context, user)
-    world = add_disclosures(
-        add_news(
-            add_time_clock(
-                add_reports(
-                    add_forms(
-                        add_attendance(
-                            add_records(
-                                build_world(
-                                    center,
-                                    student=user if who == "student" else None,
-                                    tutor=user if who == "tutor" else None,
+    world = add_files(
+        add_disclosures(
+            add_news(
+                add_time_clock(
+                    add_reports(
+                        add_forms(
+                            add_attendance(
+                                add_records(
+                                    build_world(
+                                        center,
+                                        student=user if who == "student" else None,
+                                        tutor=user if who == "tutor" else None,
+                                    )
                                 )
                             )
                         )
@@ -337,6 +344,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         time_entry=world.time_entry.pk,
         announcement=world.announcement.pk,
         mass_email=world.mass_email.pk,
+        appointment_file=world.appointment_file.pk,
     )
     page = context.new_page()
     return context, page, url
@@ -1427,6 +1435,30 @@ def test_a_director_reviews_moving_a_day_online_by_keyboard(browser, live_server
     page.get_by_role("button", name="See what moves").focus()
     page.keyboard.press("Enter")
     page.wait_for_selector("h1:has-text('Check what moves online')")
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+def test_a_student_attaches_a_draft_by_keyboard(browser, live_server, sign_in) -> None:
+    """Choose a file, attach it, and find it on the appointment page, which axe checks."""
+    context, page, url = open_page(
+        browser,
+        live_server,
+        sign_in,
+        "student",
+        "/centers/{slug}/appointments/{appointment}/files/new/",
+        bypass_csp=True,
+    )
+    page.goto(url)
+    page.set_input_files(
+        "#id_file",
+        {"name": "second draft.pdf", "mimeType": "application/pdf", "buffer": PDF},
+    )
+    page.get_by_role("button", name="Attach it").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("text=second draft.pdf is attached.")
+    assert page.get_by_role("link", name="second draft.pdf", exact=True).count() == 1
     results = Axe().run(page, options=AXE_OPTIONS)
     context.close()
     assert results.violations_count == 0, results.generate_report()

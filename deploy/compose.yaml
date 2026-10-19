@@ -71,6 +71,17 @@ services:
     # On `docker compose stop` it finishes the sweep in progress, then exits.
     stop_grace_period: 30s
 
+  # Optional: scans each file people attach before anyone can open it. Start it
+  # with `docker compose --profile clamav up -d` and set
+  # SYMPRAXI_CLAMAV_ADDRESS=clamav:3310 in deploy/.env (docs/install.md, "Files").
+  # It needs about 3 GB of memory for its virus database.
+  clamav:
+    image: clamav/clamav:1.4
+    profiles: ["clamav"]
+    restart: unless-stopped
+    volumes:
+      - clamav_db:/var/lib/clamav
+
   caddy:
     image: caddy:2.11.7-alpine
     restart: unless-stopped
@@ -93,3 +104,4 @@ volumes:
   media:
   caddy_data:
   caddy_config:
+  clamav_db:

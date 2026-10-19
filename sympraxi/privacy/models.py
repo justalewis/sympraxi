@@ -71,6 +71,10 @@ ACTION_LABELS = {
     "notify.calendar_feed_replaced": _("Gave a calendar feed a new address"),
     "notify.calendar_feed_turned_off": _("Turned off a calendar feed"),
     "notify.mass_email_sent": _("Emailed a group of the center's people"),
+    "files.uploaded": _("Attached a file to an appointment"),
+    "files.downloaded": _("Downloaded a file from an appointment"),
+    "files.removed": _("Removed a file from an appointment"),
+    "files.infected": _("A virus scanner flagged a file, which was removed"),
 }
 
 

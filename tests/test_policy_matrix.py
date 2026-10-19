@@ -103,6 +103,11 @@ DISCLOSURE_ACTIONS = [
     Action.RECORD_DISCLOSURES,
 ]
 
+FILES_ACTIONS = [
+    Action.ATTACH_FILES,
+    Action.VIEW_FILES,
+]
+
 ACTIONS = (
     CENTER_ACTIONS
     + SCHEDULING_ACTIONS
@@ -113,6 +118,7 @@ ACTIONS = (
     + STAFF_ACTIONS
     + NEWS_ACTIONS
     + DISCLOSURE_ACTIONS
+    + FILES_ACTIONS
 )
 
 # fmt: off
@@ -244,6 +250,20 @@ EXPECTED_DISCLOSURES = {
     "director":    (1,),
     "site_admin":  (0,),
 }
+
+# Files on appointments, asked about the center. For students that means their
+# own appointments and files, and for tutors appointments they teach;
+# tests/test_files.py checks those parts. Front desk staff don't open students'
+# drafts. Site administrators get nothing: the files are student work.
+EXPECTED_FILES = {
+    #              attach  view
+    "none":        (0,     0),
+    "student":     (1,     1),
+    "tutor":       (1,     1),
+    "front_desk":  (0,     0),
+    "director":    (1,     1),
+    "site_admin":  (0,     0),
+}
 # fmt: on
 
 CASES = [
@@ -258,6 +278,7 @@ CASES = [
         (EXPECTED_STAFF, STAFF_ACTIONS),
         (EXPECTED_NEWS, NEWS_ACTIONS),
         (EXPECTED_DISCLOSURES, DISCLOSURE_ACTIONS),
+        (EXPECTED_FILES, FILES_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)

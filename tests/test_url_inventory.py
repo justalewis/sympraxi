@@ -30,6 +30,7 @@ from sympraxi.notify import feeds
 from tests.attendance_world import add_attendance
 from tests.disclosure_world import add_disclosures
 from tests.factories import CenterFactory
+from tests.files_world import add_files
 from tests.forms_world import SURVEY_ANSWERS, add_forms, values
 from tests.news_world import add_news
 from tests.records_world import add_records
@@ -64,6 +65,10 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "privacy:audit_log": (Action.VIEW_AUDIT_LOG, "center"),
     "privacy:disclosures": (Action.RECORD_DISCLOSURES, "student_membership"),
     "privacy:my_disclosures": (Action.VIEW_OWN_WRITING, "center"),
+    # Files on appointments
+    "files:upload": (Action.ATTACH_FILES, "appointment"),
+    "files:download": (Action.VIEW_FILES, "appointment_file"),
+    "files:remove": (Action.VIEW_FILES, "appointment_file"),
     # Booking
     "scheduling:schedules": (Action.VIEW_SCHEDULES, "center"),
     "scheduling:open_times": (Action.VIEW_SCHEDULES, "schedule"),
@@ -251,6 +256,7 @@ URL_KWARGS = {
     "time_entry": "entry_id",
     "announcement": "announcement_id",
     "mass_email": "mass_email_id",
+    "appointment_file": "file_id",
 }
 
 # Pages that need a chosen open time in the query string.
@@ -293,9 +299,13 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return add_disclosures(
-        add_news(
-            add_time_clock(add_reports(add_forms(add_attendance(add_records(build_world(center))))))
+    return add_files(
+        add_disclosures(
+            add_news(
+                add_time_clock(
+                    add_reports(add_forms(add_attendance(add_records(build_world(center)))))
+                )
+            )
         )
     )
 

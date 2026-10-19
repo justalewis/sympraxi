@@ -10,7 +10,8 @@ registration answers are included, earlier ones too (sympraxi/forms/export.py),
 and each session record carries the tutor's answers to the center's
 session-report questions, whether or not the student sees them on My writing.
 Booking blocks are listed with any director's note, and the student's record
-of disclosures outside the college (34 CFR 99.32) is included. Survey answers
+of disclosures outside the college (34 CFR 99.32) is included, and so are the
+details of every file on the student's appointments. Survey answers
 aren't included: they are anonymous and nothing ties them to the student.
 
 Other students are left out. A group appointment shows how many students it
@@ -26,6 +27,7 @@ from django.utils import timezone
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Membership
+from sympraxi.files.models import AppointmentFile
 from sympraxi.forms import export as form_export
 from sympraxi.privacy.models import Disclosure
 from sympraxi.records.models import SessionRecord, WritingProject
@@ -35,7 +37,9 @@ FORMAT = "sympraxi.student-record"
 # Version 2 added registration answers and each appointment's intake answers.
 # Version 3 added each session record's answers to the center's report questions.
 # Version 4 added the record of disclosures.
-VERSION = 4
+# Version 5 added the files on the student's appointments (names and details, not
+# their content, which downloads from each appointment's page).
+VERSION = 5
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
@@ -75,6 +79,34 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
             .order_by("created_at")
         ],
         "disclosures": [_disclosure(d) for d in disclosures(membership)],
+        "files": [_file(f) for f in files(membership)],
+    }
+
+
+def files(membership: Membership) -> QuerySet[AppointmentFile]:
+    return (
+        AppointmentFile.objects.filter(
+            appointment__schedule__center=membership.center, student=membership.user
+        )
+        .select_related("file", "file__uploaded_by")
+        .order_by("file__uploaded_at")
+    )
+
+
+def _file(f: AppointmentFile) -> dict[str, Any]:
+    stored = f.file
+    return {
+        "id": str(f.id),
+        "appointment": str(f.appointment_id),
+        "name": stored.name,
+        "kind": stored.get_kind_display(),
+        "size": stored.size,
+        "sha256": stored.sha256,
+        "note": f.note,
+        "uploaded_by": _person(stored.uploaded_by),
+        "uploaded_at": _when(stored.uploaded_at),
+        "scan": stored.get_scan_status_display(),
+        "removed_at": _when(stored.removed_at),
     }
 
 
