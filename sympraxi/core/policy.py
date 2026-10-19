@@ -94,7 +94,13 @@ from django.http import Http404
 from sympraxi.centers.models import STAFF_ROLES, Center, Membership, Role
 from sympraxi.feedback.models import Submission
 from sympraxi.forms.models import Response
-from sympraxi.records.models import Goal, RecordStatus, SessionRecord, WritingProject
+from sympraxi.records.models import (
+    Goal,
+    RecordStatus,
+    Resource,
+    SessionRecord,
+    WritingProject,
+)
 from sympraxi.scheduling.models import (
     Appointment,
     AppointmentStatus,
@@ -379,7 +385,8 @@ def _writes_for(user: UserLike, obj: Model) -> bool:
         return obj.tutor_id == user.pk
     if isinstance(obj, WritingProject):
         return has_tutored(user, obj.student_id, obj.center_id)
-    return False
+    # A resource isn't about anyone: a tutor may star any the center offers.
+    return isinstance(obj, Resource)
 
 
 def _own_final_record(user: UserLike, obj: Model) -> bool:

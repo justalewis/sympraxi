@@ -559,9 +559,9 @@ def test_the_center_page_links_to_the_records_pages(client, world) -> None:
     tutor_page = client.get(world.center.get_absolute_url()).content.decode()
     assert url("records:to_write", world) in tutor_page
     assert url("records:new", world) in tutor_page
-    assert url("records:resources", world) not in tutor_page
+    assert f'href="{url("records:resources", world)}"' not in tutor_page
     director = make_member(world.center, Role.DIRECTOR)
     client.force_login(director)
     director_page = client.get(world.center.get_absolute_url()).content.decode()
-    assert url("records:resources", world) in director_page
+    assert f'href="{url("records:resources", world)}"' in director_page
     assert url("records:settings", world) in director_page
