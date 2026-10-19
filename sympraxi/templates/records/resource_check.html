@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Check a link" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Check a link" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with title=resource.title %}Check {{ title }}{% endblocktranslate %}</h1>
+  <p>{% translate "Sympraxi visits the address, as the weekly checker does, and says what it found." %} <a href="{{ resource.url }}">{{ resource.url }}</a></p>
+  {% if enabled %}
+    <form method="post" class="sympraxi-form-actions">
+      {% csrf_token %}
+      <button class="usa-button" type="submit">{% translate "Check it now" %}</button>
+      <a href="{{ back }}">{% translate "Go back" %}</a>
+    </form>
+  {% else %}
+    <p>{% translate "The link checker is turned off for this installation." %}</p>
+    <p><a href="{{ back }}">{% translate "Go back" %}</a></p>
+  {% endif %}
+{% endblock content %}

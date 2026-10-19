@@ -65,6 +65,11 @@ SYMPRAXI_CLAMAV_ADDRESS = env.str("SYMPRAXI_CLAMAV_ADDRESS", default="")
 SYMPRAXI_CONVERT_DOCUMENTS = env.bool("SYMPRAXI_CONVERT_DOCUMENTS", default=False)
 SYMPRAXI_OFFICE_COMMAND = env.str("SYMPRAXI_OFFICE_COMMAND", default="soffice")
 
+# The weekly link checker (sympraxi/records/linkcheck.py) asks each resource's
+# website whether the page is still there. It makes requests from this server to
+# other people's sites, so it is off until an installation turns it on.
+SYMPRAXI_LINK_CHECK = env.bool("SYMPRAXI_LINK_CHECK", default=False)
+
 # Video rooms (sympraxi/online/): the Jitsi server the installation points at, the
 # app ID it accepts tokens from, and the secret those tokens are signed with.
 # All three are needed; with any empty, no center can turn video on.

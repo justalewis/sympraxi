@@ -82,6 +82,8 @@ ACTION_LABELS = {
     "feedback.submission_returned": _("Returned written feedback to a student"),
     "feedback.submission_canceled": _("Canceled a submission"),
     "feedback.settings_changed": _("Changed the feedback queue's settings"),
+    "records.link_check_run": _("The link checker went over the resource links"),
+    "records.link_checked": _("Checked a resource link"),
     "feedback.comment_added": _("Commented on a student's draft"),
     "feedback.comment_removed": _("Removed a comment on a student's draft"),
     "online.video_joined": _("Entered a video room"),

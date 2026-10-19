@@ -9,7 +9,8 @@ still clocked in after midnight (`sympraxi.staff.timeclock`) and reminds tutors
 about session records they haven't written (`sympraxi.records.reminders`), asks
 the worker again about virus scans that stalled (`sympraxi.files.services`), gives
 waiting written-feedback submissions to tutors where a center has turned that on, and
-emails about submissions past their date (`sympraxi.feedback.services`). Each is safe to run
+emails about submissions past their date (`sympraxi.feedback.services`), and starts the
+weekly check of resource links when one is due (`sympraxi.records.linkcheck`). Each is safe to run
 twice at once, so a second scheduler, or one started during an upgrade while
 the old one is stopping, doesn't send anything twice. After a sweep that
 finishes without an error it writes the heartbeat that
@@ -33,6 +34,7 @@ from sympraxi import healthcheck
 from sympraxi.feedback import services as feedback_services
 from sympraxi.files import services as file_services
 from sympraxi.forms import surveys
+from sympraxi.records import linkcheck
 from sympraxi.records import reminders as record_reminders
 from sympraxi.reports import center_export
 from sympraxi.scheduling import attendance, reminders
@@ -52,6 +54,7 @@ class Sweep:
     rescans: int = 0
     assigned: int = 0
     overdue_alerts: int = 0
+    link_checks: int = 0
 
 
 def _refresh_connections() -> None:
@@ -78,6 +81,7 @@ def sweep(*, base_url: str, now: datetime | None = None) -> Sweep:
             rescans=file_services.retry_scans(now),
             assigned=feedback_services.auto_assign(base_url=base_url, now=now),
             overdue_alerts=feedback_services.overdue_alerts(base_url=base_url, now=now),
+            link_checks=linkcheck.enqueue_if_due(now),
         )
     finally:
         _refresh_connections()
@@ -108,12 +112,14 @@ def run(*, base_url: str, stop: threading.Event, once: bool = False) -> None:
                     result.record_reminders,
                     result.assigned,
                     result.overdue_alerts,
+                    result.link_checks,
                 )
             ):
                 logger.info(
                     "Queued %s reminder emails and %s surveys; flagged %s possible no-shows; "
                     "deleted %s expired exports; clocked out %s people at midnight; "
-                    "sent %s record reminders; assigned %s submissions and sent %s overdue emails",
+                    "sent %s record reminders; assigned %s submissions and sent %s overdue emails; "
+                    "started %s link checks",
                     result.reminders,
                     result.surveys,
                     result.flagged,
@@ -122,6 +128,7 @@ def run(*, base_url: str, stop: threading.Event, once: bool = False) -> None:
                     result.record_reminders,
                     result.assigned,
                     result.overdue_alerts,
+                    result.link_checks,
                 )
         if once:
             break

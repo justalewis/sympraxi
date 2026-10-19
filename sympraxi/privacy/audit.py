@@ -91,6 +91,8 @@ class AuditAction(StrEnum):
     SUBMISSION_RETURNED = "feedback.submission_returned"
     SUBMISSION_CANCELED = "feedback.submission_canceled"
     QUEUE_SETTINGS_CHANGED = "feedback.settings_changed"
+    LINK_CHECK_RUN = "records.link_check_run"
+    LINK_CHECKED = "records.link_checked"
     COMMENT_ADDED = "feedback.comment_added"
     COMMENT_REMOVED = "feedback.comment_removed"
     VIDEO_JOINED = "online.video_joined"

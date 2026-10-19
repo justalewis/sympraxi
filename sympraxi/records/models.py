@@ -70,6 +70,19 @@ class LinkCheck(models.TextChoices):
     OFF = "off", _("Not checked")
 
 
+class LinkState(models.TextChoices):
+    """What the link checker last found out about a resource's address."""
+
+    UNCHECKED = "", _("Not checked yet")
+    OK = "ok", _("Works")
+    MOVED = "moved", _("Moved")
+    # Failed once. A link is only called broken once a later check fails too.
+    UNREACHABLE = "unreachable", _("Didn't answer")
+    BROKEN = "broken", _("Broken")
+    # The site asked not to be checked, or turned the checker away.
+    BLOCKED = "blocked", _("Couldn't be checked")
+
+
 class ResourceQuerySet(models.QuerySet["Resource"]):
     def available_to(self, center: Center) -> "ResourceQuerySet":
         """Active links a tutor in this center can attach: the shared catalog plus its own."""
@@ -115,6 +128,14 @@ class Resource(models.Model):
     language = models.CharField(_("language"), max_length=10, default="en")
     last_checked = models.DateField(null=True, blank=True)
     last_status = models.PositiveSmallIntegerField(null=True, blank=True)
+    # What the link checker (`sympraxi.records.linkcheck`) found at the last check.
+    link_state = models.CharField(
+        max_length=12, choices=LinkState.choices, blank=True, default=LinkState.UNCHECKED
+    )
+    link_moved_to = models.URLField(max_length=500, blank=True)
+    link_detail = models.CharField(max_length=200, blank=True)
+    # The day the link first failed in a row of failed checks.
+    link_failing_since = models.DateField(null=True, blank=True)
     # A shared entry that leaves the catalog stays here, inactive, because
     # records still point to it.
     is_active = models.BooleanField(_("offer it to tutors"), default=True)
@@ -342,3 +363,22 @@ class RecordReminder(models.Model):
 
     def __str__(self) -> str:
         return f"Record reminder for {self.appointment_id} to {self.tutor_id}"
+
+
+class LinkCheckRun(models.Model):
+    """One pass of the link checker over the links that were due."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    started_at = models.DateTimeField(auto_now_add=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
+    checked = models.PositiveIntegerField(default=0)
+    ok = models.PositiveIntegerField(default=0)
+    moved = models.PositiveIntegerField(default=0)
+    broken = models.PositiveIntegerField(default=0)
+    skipped = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["-started_at"]
+
+    def __str__(self) -> str:
+        return f"Link check {self.started_at:%Y-%m-%d %H:%M}"

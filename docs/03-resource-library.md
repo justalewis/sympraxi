@@ -10,7 +10,7 @@ This document covers what we're allowed to do with each source, how the catalog 
 2. **Never iframe a source.** Purdue's policy is explicit: "Purdue OWL pages may not be presented in frames of any kind." MLA and APA terms also forbid framing, and many writing-center sites send headers that block it anyway. Framing would also load third-party trackers inside our app.
 3. **Never copy text from a source that isn't openly licensed,** including its meta descriptions. Write a fresh summary.
 4. **Copy openly licensed material only into the separate content pack,** with title, author, source and license recorded for each item, and only within that license's terms (§3).
-5. **The automated link checker obeys robots.txt and crawl delays,** and skips sites whose terms ban robots (Writing Commons, MLA). Those entries are checked by hand. The checker's user agent starts with `Mozilla/5.0 (compatible; `, then names the checker. Pressbooks (openoregon.pressbooks.pub, which hosts *About Writing*) returns 403 to user agents without that prefix.
+5. **The automated link checker obeys robots.txt and crawl delays,** and skips sites whose terms ban robots (Writing Commons, MLA). Those entries are checked by hand. The checker's user agent starts with `Mozilla/5.0 (compatible; `, then names the checker (`SympraxiLinkChecker`, in `sympraxi/records/linkcheck.py`; it is off unless an installation turns it on). Pressbooks (openoregon.pressbooks.pub, which hosts *About Writing*) returns 403 to user agents without that prefix.
 
 ## 1. Sources and what we may do
 

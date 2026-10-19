@@ -34,4 +34,6 @@ urlpatterns = [
     path("resources/", views.resource_list, name="resources"),
     path("resources/new/", views.resource_create, name="resource_create"),
     path("resources/<uuid:resource_id>/edit/", views.resource_edit, name="resource_edit"),
+    path("resources/links/", views.resource_links, name="resource_links"),
+    path("resources/<uuid:resource_id>/check/", views.resource_check, name="resource_check"),
 ]

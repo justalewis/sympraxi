@@ -317,6 +317,18 @@ Slices 2, 5 and 6 add packages or containers, and each waits for the maintainer'
 
 **Exit:** a director can answer "what did first-year students come in for this term, by course?" and "what has this student worked on across three terms?" without a spreadsheet.
 
+**Slices, in order** (planned October 19, 2026). Each one ships on its own with every check passing. What the first two phases already built is not repeated: the catalog and its loader, suggestions and search by topic, a center's own link-only resources, the tutor's pre-session brief and a student's history page.
+
+1. **The link checker.** A weekly job checks each catalog entry and each center's own links that are set to automatic: it obeys robots.txt and crawl delays, sends the user agent the library document describes, never fetches an address inside the college's own network, and records what it found. A director sees the links that are broken or have moved, for their center and for the shared catalog. Nothing new to install.
+2. **Tutor favorites, and the resource dashboard.** A tutor stars resources and sees them first in the resource panel. Directors see which resources are attached most, by topic and over terms, and which entries nobody has used.
+3. **Goals and the student timeline.** A student, or a tutor with them, writes goals ("use evidence in a second paragraph", with an optional date) that stay open until met or dropped and show in the tutor's brief. A student's page for staff and their My writing page show one timeline across terms: sessions, goals, writing projects and written-feedback drafts.
+4. **Course and class standing in the reports.** A director marks which registration or intake questions say the student's course and class standing (first-year and so on), and the reports then answer "what did first-year students come in for this term, by course?", with topics across terms. Counts small enough to identify someone are held back, as the survey results are.
+5. **The de-identified research export.** A director records the center's IRB protocol number and its approval dates, and downloads session data with no names, no IDs, no free text and no small groups, with a pseudonym per student that changes with each export. It is audited, needs the protocol number first, and its limits are written down.
+6. **The open-content pack.** An optional pack, kept apart from the code, of openly licensed material with its attribution shown on every item. Needs a decision on what goes in it before anything is built.
+7. **The WCONLINE importer.** Reads WCONLINE's Excel exports (appointments, reports, registrations, time clock) so a center keeps its history. Waits for sample exports from a real center; there is nothing to build it against until then.
+
+Slices 6 and 7 wait on decisions or files from the maintainer.
+
 ### Phase 4: Staff operations and training (4 to 6 weeks)
 
 - Full time clock: network restriction, edits with reasons, approvals, timesheet export for payroll.

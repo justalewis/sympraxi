@@ -232,6 +232,10 @@ Nothing to set up on the server except that the `scheduler` service must be runn
 
 Optional. To give online appointments their own video rooms, run a Jitsi Meet server and put its address and shared secret in `deploy/.env` (`SYMPRAXI_JITSI_DOMAIN`, `SYMPRAXI_JITSI_APP_ID`, `SYMPRAXI_JITSI_APP_SECRET`). Then each center's director turns video on under **Video rooms for online appointments**. Setting Jitsi up, including getting video through a campus firewall, is in [Video rooms with Jitsi](jitsi.md).
 
+## Link checker
+
+Optional. The link checker visits each writing resource's website once a week to see whether the page is still there, and tells each center's directors which links moved or broke (**Links that moved or broke**, under center tools). It makes requests from your server to other sites, which is why it is off. To turn it on, set `SYMPRAXI_LINK_CHECK=true` in `deploy/.env` and restart. The `scheduler` and `worker` services have to be running; the first check starts within a day. It obeys each site's robots.txt, waits at least a second between requests to a site, never connects to an address inside a private network, and needs outbound web access from the worker. Its user agent is `Mozilla/5.0 (compatible; SympraxiLinkChecker/1.0; +https://github.com/justalewis/sympraxi)`, which you can allow or block at your firewall.
+
 ## Shared documents
 
 Optional. To give appointments a document that the tutor and the students write in together during the session, with a chat beside it and a saved history, run the shared-editor service (`collab/`, Hocuspocus). It keeps no data of its own: Sympraxi stores the documents.

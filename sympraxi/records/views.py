@@ -12,6 +12,7 @@ from datetime import timedelta
 from typing import Any, cast
 from uuid import UUID
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -32,7 +33,7 @@ from sympraxi.forms import report
 from sympraxi.forms.answering import CONTINUE, Questions, follow_up_message
 from sympraxi.forms.models import Response
 from sympraxi.privacy.audit import AuditAction, record
-from sympraxi.records import export, services, suggestions
+from sympraxi.records import export, linkcheck, services, suggestions
 from sympraxi.records.display import by_project, topic_axes, topics_by_axis
 from sympraxi.records.forms import (
     Attached,
@@ -47,6 +48,8 @@ from sympraxi.records.forms import (
 )
 from sympraxi.records.models import (
     AttachedResource,
+    LinkCheckRun,
+    LinkState,
     RecordStatus,
     Resource,
     SessionRecord,
@@ -911,6 +914,83 @@ def resource_edit(request: HttpRequest, slug: str, resource_id: UUID) -> HttpRes
         pk=resource_id,
     )
     return _resource_page(request, cast(Center, resource.center), resource, title=_("Edit a link"))
+
+
+@login_required
+def resource_links(request: HttpRequest, slug: str) -> HttpResponse:
+    """The links that moved or stopped working, for the center's own and the shared catalog."""
+    center = center_for(request, Action.MANAGE_RECORDS, slug)
+    problem = [LinkState.MOVED, LinkState.UNREACHABLE, LinkState.BROKEN]
+    own = Resource.objects.filter(center=center, link_state__in=problem).order_by("title")
+    shared = Resource.objects.filter(
+        center__isnull=True, is_active=True, link_state__in=problem
+    ).order_by("title")
+    context = {
+        "center": center,
+        "enabled": settings.SYMPRAXI_LINK_CHECK,
+        "last_run": LinkCheckRun.objects.filter(finished_at__isnull=False).first(),
+        "own": own,
+        "shared": shared,
+        "unchecked": Resource.objects.available_to(center)
+        .filter(link_state=LinkState.UNCHECKED, link_check="auto")
+        .count(),
+        "crumbs": _crumbs(
+            center, (_("Resources"), reverse("records:resources", kwargs={"slug": center.slug}))
+        ),
+    }
+    with timezone.override(center.time_zone):
+        return render(request, "records/resource_links.html", context)
+
+
+@login_required
+def resource_check(request: HttpRequest, slug: str, resource_id: UUID) -> HttpResponse:
+    """Check one of the center's own links now, for a director who just fixed it."""
+    resource = get_for_action(
+        request.user,
+        Action.MANAGE_RECORDS,
+        Resource.objects.select_related("center").filter(center__slug=slug),
+        pk=resource_id,
+    )
+    center = cast(Center, resource.center)
+    back = reverse("records:resource_links", kwargs={"slug": slug})
+    if request.method == "POST":
+        if not settings.SYMPRAXI_LINK_CHECK:
+            messages.error(request, _("The link checker is turned off for this installation."))
+            return redirect(back)
+        result = linkcheck.check_one(resource)
+        record(
+            AuditAction.LINK_CHECKED,
+            request=request,
+            center=center,
+            target=resource,
+            state=result.state,
+        )
+        if result.state == LinkState.OK:
+            messages.success(request, _("The link works."))
+        elif result.state == LinkState.MOVED:
+            messages.warning(
+                request,
+                _("The link works but the page moved to %(url)s.") % {"url": result.moved_to},
+            )
+        else:
+            messages.error(
+                request,
+                _("The link wasn't confirmed: %(why)s")
+                % {"why": result.detail or resource.get_link_state_display()},
+            )
+        return redirect(back)
+    context = {
+        "center": center,
+        "resource": resource,
+        "enabled": settings.SYMPRAXI_LINK_CHECK,
+        "back": back,
+        "crumbs": _crumbs(
+            center,
+            (_("Resources"), reverse("records:resources", kwargs={"slug": slug})),
+            (_("Links to fix"), back),
+        ),
+    }
+    return render(request, "records/resource_check.html", context)
 
 
 @login_required

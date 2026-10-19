@@ -8,7 +8,8 @@ none scores 2 if it has a more specific term under one of them (record:
 parent, or another term under the same parent (record: `citation:apa`,
 resource: `citation` or `citation:mla`). Each matching stage or action adds 1.
 
-A resource with no concern points isn't suggested. Ties go to the center's own
+A resource with no concern points isn't suggested, and neither is one the link
+checker found broken. Ties go to the center's own
 links, then to the title.
 """
 
@@ -18,7 +19,7 @@ from dataclasses import dataclass
 from django.db.models import Q
 
 from sympraxi.centers.models import Center
-from sympraxi.records.models import Axis, Resource, Topic
+from sympraxi.records.models import Axis, LinkState, Resource, Topic
 
 LIMIT = 8
 SEARCH_LIMIT = 20
@@ -49,6 +50,7 @@ def suggest(
         Resource.objects.available_to(center)
         .filter(Q(topics__slug__in=exact | families) | Q(topics__parent__slug__in=families))
         .exclude(pk__in=list(exclude))
+        .exclude(link_state=LinkState.BROKEN)
         .distinct()
         .prefetch_related("topics")
     )
@@ -92,7 +94,11 @@ def search(
     words = query.split()[:8]
     if not words:
         return []
-    found = Resource.objects.available_to(center).exclude(pk__in=list(exclude))
+    found = (
+        Resource.objects.available_to(center)
+        .exclude(pk__in=list(exclude))
+        .exclude(link_state=LinkState.BROKEN)
+    )
     for word in words:
         found = found.filter(
             Q(title__icontains=word) | Q(summary__icontains=word) | Q(publisher__icontains=word)

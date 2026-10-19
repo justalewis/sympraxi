@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Links that moved or broke" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Links to fix" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Links that moved or broke" %}</h1>
+  {% if not enabled %}
+    <p>{% translate "The link checker is turned off for this installation, so nothing here has been checked. Whoever runs Sympraxi can turn it on; docs/install.md explains how." %}</p>
+  {% else %}
+    <p>
+      {% if last_run %}{% blocktranslate with when=last_run.finished_at|date:"M j, Y" checked=last_run.checked %}The last check finished {{ when }} and went over {{ checked }} links.{% endblocktranslate %}{% else %}{% translate "The first check hasn't run yet; it starts within a day." %}{% endif %}
+      {% blocktranslate count n=unchecked %}{{ n }} link hasn't been checked yet.{% plural %}{{ n }} links haven't been checked yet.{% endblocktranslate %}
+      {% translate "A link is called broken once two checks in a row fail, and tutors aren't offered broken links." %}
+    </p>
+  {% endif %}
+
+  <h2>{% translate "Your center's links" %}</h2>
+  {% if own %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Your center's links that need attention" %}</caption>
+      <thead><tr>
+        <th scope="col">{% translate "Title" %}</th>
+        <th scope="col">{% translate "What was found" %}</th>
+        <th scope="col"><span class="usa-sr-only">{% translate "Actions" %}</span></th>
+      </tr></thead>
+      <tbody>
+        {% for r in own %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Title' %}"><a href="{{ r.url }}">{{ r.title }}</a></th>
+            <td data-label="{% translate 'What was found' %}">{{ r.get_link_state_display }}{% if r.link_moved_to %}: <a href="{{ r.link_moved_to }}">{% translate "the new address" %}</a>{% endif %}{% if r.link_detail %}<br><span class="usa-hint">{{ r.link_detail }}</span>{% endif %}{% if r.last_checked %}<br><span class="usa-hint">{% blocktranslate with when=r.last_checked|date:"M j" %}Checked {{ when }}{% endblocktranslate %}</span>{% endif %}</td>
+            <td data-label="{% translate 'Actions' %}">
+              <a href="{% url 'records:resource_edit' slug=center.slug resource_id=r.pk %}">{% translate "Edit" %}<span class="usa-sr-only"> {{ r.title }}</span></a>
+              · <a href="{% url 'records:resource_check' slug=center.slug resource_id=r.pk %}">{% translate "Check again" %}<span class="usa-sr-only"> {{ r.title }}</span></a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "None of your center's links needs attention." %}</p>
+  {% endif %}
+
+  <h2>{% translate "The shared catalog" %}</h2>
+  {% if shared %}
+    <p>{% translate "These come from the shared catalog, which every center uses. You can't edit them here; the project fixes them in the catalog." %}</p>
+    <ul class="usa-list">
+      {% for r in shared %}
+        <li><a href="{{ r.url }}">{{ r.title }}</a> ({{ r.publisher }}) · {{ r.get_link_state_display }}{% if r.link_moved_to %}: <a href="{{ r.link_moved_to }}">{% translate "the new address" %}</a>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "None of the shared catalog's links needs attention." %}</p>
+  {% endif %}
+{% endblock content %}

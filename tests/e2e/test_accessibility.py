@@ -141,6 +141,8 @@ PAGES = [
     ("director", "/centers/{slug}/resources/"),
     ("director", "/centers/{slug}/resources/new/"),
     ("director", "/centers/{slug}/resources/{resource}/edit/"),
+    ("director", "/centers/{slug}/resources/links/"),
+    ("director", "/centers/{slug}/resources/{resource}/check/"),
     ("director", "/centers/{slug}/records/settings/"),
     # Attendance, booking blocks and reminders
     ("tutor", "/centers/{slug}/appointments/{unwritten}/attendance/"),

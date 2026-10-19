@@ -68,6 +68,7 @@
       {% if can_manage_forms %}<li><a href="{% url 'forms:list' slug=center.slug %}">{% translate "Forms: registration, intake, session reports and surveys" %}</a></li>{% endif %}
       {% if can_view_survey_results %}<li><a href="{% url 'forms:survey_results' slug=center.slug %}">{% translate "Survey results" %}</a></li>{% endif %}
       {% if can_manage_records %}<li><a href="{% url 'records:resources' slug=center.slug %}">{% translate "Your center's resources" %}</a></li>{% endif %}
+      {% if can_manage_records %}<li><a href="{% url 'records:resource_links' slug=center.slug %}">{% translate "Links that moved or broke" %}</a></li>{% endif %}
       {% if can_manage_records %}<li><a href="{% url 'records:settings' slug=center.slug %}">{% translate "Session record settings" %}</a></li>{% endif %}
       {% if can_view_members %}<li><a href="{% url 'centers:members' slug=center.slug %}">{% translate "People in this center" %}</a></li>{% endif %}
       {% if can_view_audit_log %}<li><a href="{% url 'privacy:audit_log' slug=center.slug %}">{% translate "Audit log" %}</a></li>{% endif %}

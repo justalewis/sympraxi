@@ -7,7 +7,7 @@
   <h1>{% translate "Your center's resources" %}</h1>
   <p>{% blocktranslate count n=shared_count with publishers=publisher_count %}Tutors can attach {{ n }} link from the shared catalog, from {{ publishers }} publishers, and any links your center adds here.{% plural %}Tutors can attach {{ n }} links from the shared catalog, from {{ publishers }} publishers, and any links your center adds here.{% endblocktranslate %}</p>
   <p>{% translate "Add links to your own handouts or pages. Sympraxi stores the address and your description, never a copy of the page." %}</p>
-  <p><a class="usa-button" href="{% url 'records:resource_create' slug=center.slug %}">{% translate "Add a link" %}</a></p>
+  <p><a class="usa-button" href="{% url 'records:resource_create' slug=center.slug %}">{% translate "Add a link" %}</a> <a href="{% url 'records:resource_links' slug=center.slug %}">{% translate "Links that moved or broke" %}</a></p>
   {% if resources %}
     <table class="usa-table usa-table--borderless usa-table--stacked">
       <caption class="usa-sr-only">{% translate "Your center's links" %}</caption>

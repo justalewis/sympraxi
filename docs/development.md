@@ -96,6 +96,7 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/centers/people.py` | Adding people one at a time or from a CSV file, and turning roles on and off |
 | `sympraxi/staff/` | The time clock: entries, clocking in and out, directors' corrections, the midnight clock-out and timesheets |
 | `sympraxi/notify/` | Private calendar feeds (`feeds.py`), and announcements and mass email (`news.py`) |
+| `sympraxi/records/linkcheck.py` | The weekly link checker: the address guard, robots.txt, delays, and what each answer means |
 | `sympraxi/files/` | Files on appointments: content checks, private storage, ClamAV scans, downloads |
 | `sympraxi/online/` | Video rooms (signed Jitsi tokens, the join window, a center's switch) and the shared document of a session (`room.py`: tokens, saving, history, drawing) |
 | `collab/` | The shared-editor service: one Node file running Hocuspocus, which loads and saves through Sympraxi |
