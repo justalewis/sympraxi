@@ -85,6 +85,8 @@ ACTION_LABELS = {
     "feedback.comment_added": _("Commented on a student's draft"),
     "feedback.comment_removed": _("Removed a comment on a student's draft"),
     "online.video_joined": _("Entered a video room"),
+    "online.room_opened": _("Opened the shared document of a session"),
+    "online.room_version_saved": _("Saved a version of a session's shared document"),
     "online.settings_changed": _("Changed the center's video settings"),
 }
 

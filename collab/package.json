@@ -1,0 +1,15 @@
+{
+  "name": "sympraxi-collab",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "description": "The shared-editor service: Hocuspocus, saving documents through Sympraxi.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@hocuspocus/server": "4.7.1",
+    "@tiptap/y-tiptap": "3.0.10",
+    "yjs": "13.6.33"
+  }
+}

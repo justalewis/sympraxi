@@ -91,6 +91,24 @@ services:
     volumes:
       - clamav_db:/var/lib/clamav
 
+  # Optional: the shared document of a session. Start it with
+  # `docker compose --profile room up -d` and set SYMPRAXI_COLLAB_SECRET in deploy/.env
+  # (docs/install.md, "Shared documents"). It keeps nothing itself: documents are
+  # loaded from and saved to the web service.
+  collab:
+    image: ${SYMPRAXI_COLLAB_IMAGE:-sympraxi-collab:local}
+    build:
+      context: ../collab
+    profiles: ["room"]
+    restart: unless-stopped
+    environment:
+      SYMPRAXI_COLLAB_SECRET: ${SYMPRAXI_COLLAB_SECRET:-}
+      SYMPRAXI_COLLAB_BACKEND: http://web:8000
+      SYMPRAXI_DOMAIN: ${SYMPRAXI_DOMAIN:-}
+    depends_on:
+      web:
+        condition: service_healthy
+
   caddy:
     image: caddy:2.11.7-alpine
     restart: unless-stopped

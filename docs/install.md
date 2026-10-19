@@ -232,6 +232,16 @@ Nothing to set up on the server except that the `scheduler` service must be runn
 
 Optional. To give online appointments their own video rooms, run a Jitsi Meet server and put its address and shared secret in `deploy/.env` (`SYMPRAXI_JITSI_DOMAIN`, `SYMPRAXI_JITSI_APP_ID`, `SYMPRAXI_JITSI_APP_SECRET`). Then each center's director turns video on under **Video rooms for online appointments**. Setting Jitsi up, including getting video through a campus firewall, is in [Video rooms with Jitsi](jitsi.md).
 
+## Shared documents
+
+Optional. To give appointments a document that the tutor and the students write in together during the session, with a chat beside it and a saved history, run the shared-editor service (`collab/`, Hocuspocus). It keeps no data of its own: Sympraxi stores the documents.
+
+1. Put a long random secret in `deploy/.env` (`openssl rand -hex 32`): `SYMPRAXI_COLLAB_SECRET=...`. Sympraxi and the service share it.
+2. Start the service with the rest: `docker compose --profile room up -d`. Compose builds it from `collab/`, or use a prebuilt image named in `SYMPRAXI_COLLAB_IMAGE`. Caddy passes `/collab/` on this site to it, over the same certificate, so there is nothing else to open.
+3. Restart `web` so it reads the secret, then a director turns the shared document on under **Video rooms for online appointments** on the center page.
+
+Caddy answers 404 to `/internal/`, which is how the service reaches Sympraxi from inside the stack; keep that rule if you change the Caddyfile. Without the secret, or without the `room` profile, centers can't turn the shared document on. If the service has to be reached at some other address, set `SYMPRAXI_COLLAB_URL` to its WebSocket address.
+
 ## Registration and intake forms
 
 Nothing to set up on the server. Directors build their center's forms in Sympraxi, under **Forms** on the center page: a registration form, asked once when a student first books, and intake forms, asked at each booking (one per schedule, or a default for every schedule). A form's questions reach students only after a director publishes them. Each later change is published as a new version, and earlier answers keep the wording students saw.

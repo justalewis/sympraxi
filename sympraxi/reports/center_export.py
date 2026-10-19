@@ -58,6 +58,7 @@ from sympraxi.files.models import AppointmentFile
 from sympraxi.forms import export as form_export
 from sympraxi.forms import surveys
 from sympraxi.forms.models import Form, FormKind, FormVersion, Response
+from sympraxi.online.models import RoomDocument, RoomVersion
 from sympraxi.privacy.models import AuditEvent, Disclosure
 from sympraxi.records import export as record_export
 from sympraxi.records.models import AttachedResource, Resource, SessionRecord, WritingProject
@@ -587,6 +588,24 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
                 for c in Comment.objects.filter(submission_file__submission__center=center)
                 .select_related("author")
                 .order_by("created_at", "pk")
+            ),
+        )
+        w.items(
+            "room_documents.json",
+            (
+                columns_of(d, leave_out=("state",))
+                for d in RoomDocument.objects.filter(appointment__schedule__center=center).order_by(
+                    "created_at", "pk"
+                )
+            ),
+        )
+        w.items(
+            "room_versions.json",
+            (
+                columns_of(v)
+                for v in RoomVersion.objects.filter(
+                    document__appointment__schedule__center=center
+                ).order_by("created_at", "pk")
             ),
         )
         w.items(

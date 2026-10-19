@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block head_title %}{% translate "Video settings" %}{% endblock head_title %}
+{% block head_title %}{% translate "Online session settings" %}{% endblock head_title %}
 {% block content %}
-  {% translate "Video settings" as current %}
+  {% translate "Online session settings" as current %}
   {% include "scheduling/_breadcrumbs.html" with current=current %}
-  <h1>{% translate "Video settings" %}</h1>
-  {% if configured %}
-    <p>{% translate "Sympraxi is connected to a Jitsi video server. Turn video on to give each online appointment its own room, opened from the appointment page. Tutors don't need a meeting link, though one they have still works." %}</p>
+  <h1>{% translate "Online session settings" %}</h1>
+  {% if video_configured or room_configured %}
+    {% if video_configured %}
+      <p>{% translate "Sympraxi is connected to a Jitsi video server. Turn video on to give each online appointment its own room, opened from the appointment page. Tutors don't need a meeting link, though one they have still works." %}</p>
+    {% else %}
+      <p>{% translate "This installation isn't connected to a Jitsi video server, so video can't be turned on. Whoever runs Sympraxi can set one up; docs/jitsi.md explains how." %}</p>
+    {% endif %}
+    {% if room_configured %}
+      <p>{% translate "Sympraxi runs the shared-editor service. Turn the shared document on to give each appointment a document the tutor and the students write in together during the session, with a chat beside it and a saved history." %}</p>
+    {% else %}
+      <p>{% translate "This installation doesn't run the shared-editor service, so the shared document can't be turned on. Whoever runs Sympraxi can start it; docs/install.md explains how." %}</p>
+    {% endif %}
     <form class="usa-form usa-form--large" method="post" novalidate>
       {% csrf_token %}
       {% include "includes/form_fields.html" %}
@@ -16,7 +25,7 @@
       </div>
     </form>
   {% else %}
-    <p>{% translate "This installation isn't connected to a Jitsi video server yet, so centers can't turn video on. Whoever runs Sympraxi can set one up; docs/jitsi.md explains how." %}</p>
+    <p>{% translate "This installation isn't connected to a Jitsi video server and doesn't run the shared-editor service, so neither can be turned on. Whoever runs Sympraxi can set them up; docs/jitsi.md and docs/install.md explain how." %}</p>
     <p><a href="{% url 'centers:detail' slug=center.slug %}">{% translate "Go back" %}</a></p>
   {% endif %}
 {% endblock content %}

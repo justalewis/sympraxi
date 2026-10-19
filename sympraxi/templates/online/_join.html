@@ -12,3 +12,14 @@
     {% endif %}
   </section>
 {% endif %}
+{% if shared_document %}
+  <section aria-labelledby="shared-document" class="sympraxi-video">
+    <h2 id="shared-document">{% translate "Shared document" %}</h2>
+    {% if shared_document == "open" %}
+      <p><a class="usa-button" href="{% url 'online:room' slug=center.slug appointment_id=appointment.pk %}">{% translate "Open the shared document" %}</a></p>
+      <p class="usa-hint">{% translate "You and the other people in this session write in it together, with a chat beside it." %}</p>
+    {% else %}
+      <p><a href="{% url 'online:room' slug=center.slug appointment_id=appointment.pk %}">{% translate "See the shared document" %}</a></p>
+    {% endif %}
+  </section>
+{% endif %}

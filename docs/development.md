@@ -3,7 +3,7 @@
 ## Tools
 
 - Python 3.12 or newer, and [uv](https://docs.astral.sh/uv/) (`pip install uv` works).
-- Node.js 24 (only to copy the USWDS, htmx and PDF.js files into place).
+- Node.js 24 (to copy the USWDS, htmx and PDF.js files into place, bundle the shared-document editor, and run `collab/`, whose browser test needs `npm --prefix collab ci`).
 - PostgreSQL 18. With Docker: `docker compose -f compose.dev.yaml up -d`. Without Docker, install it natively. The tests rely on PostgreSQL features (triggers, range types, and an exclusion constraint that needs the `btree_gist` extension), so SQLite isn't supported. `btree_gist` comes with the official Docker images and the Debian, Ubuntu and EDB Windows packages. Minimal builds, such as the one in the `pgserver` Python package, leave it out and can't run the migrations.
 
 ## First run
@@ -97,7 +97,9 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/staff/` | The time clock: entries, clocking in and out, directors' corrections, the midnight clock-out and timesheets |
 | `sympraxi/notify/` | Private calendar feeds (`feeds.py`), and announcements and mass email (`news.py`) |
 | `sympraxi/files/` | Files on appointments: content checks, private storage, ClamAV scans, downloads |
-| `sympraxi/online/` | Video rooms: signed Jitsi tokens, the join window, a center's switch |
+| `sympraxi/online/` | Video rooms (signed Jitsi tokens, the join window, a center's switch) and the shared document of a session (`room.py`: tokens, saving, history, drawing) |
+| `collab/` | The shared-editor service: one Node file running Hocuspocus, which loads and saves through Sympraxi |
+| `frontend/src/room.js` | The shared document's script (Tiptap, Yjs, the chat), bundled by `npm run build` |
 | `sympraxi/feedback/` | The written-feedback queue: submissions, claiming and assigning, overdue alerts, turnaround, and the PDF comment viewer (`viewer.py`, `static/sympraxi/pdf-comments.js`) |
 | `sympraxi/scheduling/services.py` | Every booking rule: limits, notice, cutoff, groups, locks |
 | `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions, closures and tutor caps |

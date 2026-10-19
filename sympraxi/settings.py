@@ -72,6 +72,13 @@ SYMPRAXI_JITSI_DOMAIN = env.str("SYMPRAXI_JITSI_DOMAIN", default="")
 SYMPRAXI_JITSI_APP_ID = env.str("SYMPRAXI_JITSI_APP_ID", default="")
 SYMPRAXI_JITSI_APP_SECRET = env.str("SYMPRAXI_JITSI_APP_SECRET", default="")
 
+# The shared document of a session (sympraxi/online/room.py, collab/): the secret
+# Sympraxi and the editor service share, and where browsers reach the service (empty
+# means /collab/ on the site's own address, which Caddy passes on to it). With no
+# secret, no center can turn the shared document on.
+SYMPRAXI_COLLAB_SECRET = env.str("SYMPRAXI_COLLAB_SECRET", default="")
+SYMPRAXI_COLLAB_URL = env.str("SYMPRAXI_COLLAB_URL", default="")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

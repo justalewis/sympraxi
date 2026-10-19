@@ -70,6 +70,8 @@ have no part in it.
 Video: a student joins the video room of an online appointment they are booked
 in, and a tutor that of one they teach. Directors don't, since they aren't in
 the session; they turn video on for the center with the schedule actions.
+The shared document works the same way: the people in an appointment open it, and
+no one else does, directors included.
 
 Disclosures: directors keep each student's record of disclosures of their
 records outside the college's own officials (34 CFR 99.32), and the student
@@ -157,6 +159,8 @@ class Action(StrEnum):
     MANAGE_QUEUE = "queue.manage"
     # Enter the video room of an online appointment you teach or are booked in.
     JOIN_VIDEO = "online.join"
+    # Open the shared document of an appointment you teach or are booked in, and its history.
+    USE_ROOM = "online.room"
     # The center's own link-only resources and its session-record settings.
     MANAGE_RECORDS = "records.manage"
     # Build, preview and publish the center's forms: registration, intake,
@@ -208,6 +212,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.SUBMIT_WORK,
             Action.VIEW_SUBMISSION,
             Action.JOIN_VIDEO,
+            Action.USE_ROOM,
         }
     ),
     Role.TUTOR: frozenset(
@@ -228,6 +233,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.WORK_QUEUE,
             Action.VIEW_SUBMISSION,
             Action.JOIN_VIDEO,
+            Action.USE_ROOM,
         }
     ),
     Role.FRONT_DESK: frozenset(
@@ -454,6 +460,8 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.TUTOR, Action.VIEW_FILES): _file_of_own_tutoring,
     (Role.STUDENT, Action.JOIN_VIDEO): _participant,
     (Role.TUTOR, Action.JOIN_VIDEO): _tutor_of,
+    (Role.STUDENT, Action.USE_ROOM): _participant,
+    (Role.TUTOR, Action.USE_ROOM): _tutor_of,
     (Role.STUDENT, Action.SUBMIT_WORK): _own_submission,
     (Role.STUDENT, Action.VIEW_SUBMISSION): _own_submission,
     (Role.TUTOR, Action.VIEW_SUBMISSION): _claimed_submission,

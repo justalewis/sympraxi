@@ -24,6 +24,7 @@ from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center
 from sympraxi.core.policy import Action, can
 from sympraxi.online import jwt
+from sympraxi.online import room as shared_room
 from sympraxi.online.models import VideoSettings
 from sympraxi.scheduling.models import Appointment, Modality
 
@@ -106,10 +107,14 @@ def join_url(appointment: Appointment, user: User, *, now: datetime | None = Non
 
 
 def appointment_context(user: Any, appointment: Appointment) -> dict[str, Any]:
-    """What the appointment page shows about the video room, for those who may enter it."""
-    if not has_room(appointment) or not can(user, Action.JOIN_VIDEO, appointment):
-        return {}
-    return {"video": joining(appointment)}
+    """What the appointment page shows about the video room and the shared document,
+    for those who may enter them."""
+    context: dict[str, Any] = {}
+    if has_room(appointment) and can(user, Action.JOIN_VIDEO, appointment):
+        context["video"] = joining(appointment)
+    if shared_room.may_use(user, appointment):
+        context["shared_document"] = shared_room.state(appointment)
+    return context
 
 
 @dataclass

@@ -94,6 +94,8 @@ class AuditAction(StrEnum):
     COMMENT_ADDED = "feedback.comment_added"
     COMMENT_REMOVED = "feedback.comment_removed"
     VIDEO_JOINED = "online.video_joined"
+    ROOM_OPENED = "online.room_opened"
+    ROOM_VERSION_SAVED = "online.room_version_saved"
     VIDEO_SETTINGS_CHANGED = "online.settings_changed"
 
 

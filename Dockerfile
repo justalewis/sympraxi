@@ -6,6 +6,7 @@ WORKDIR /build/frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci --no-audit --no-fund
 COPY frontend/scripts ./scripts
+COPY frontend/src ./src
 RUN mkdir -p ../sympraxi/static && npm run build
 
 # --- Python dependencies, installed with uv (uv itself stays out of the final image)

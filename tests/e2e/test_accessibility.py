@@ -248,6 +248,10 @@ PAGES = [
     ("student", "/centers/{slug}/appointments/{appointment}/join/"),
     ("tutor", "/centers/{slug}/appointments/{appointment}/join/"),
     ("director", "/centers/{slug}/video/"),
+    # The shared document (off in these worlds, so the pages say so; tests/e2e/test_room.py
+    # runs the real editor)
+    ("student", "/centers/{slug}/appointments/{appointment}/room/"),
+    ("tutor", "/centers/{slug}/appointments/{appointment}/room/versions/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has

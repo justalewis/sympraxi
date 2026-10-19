@@ -31,6 +31,8 @@ from sympraxi.centers.models import Membership
 from sympraxi.feedback.models import Submission
 from sympraxi.files.models import AppointmentFile
 from sympraxi.forms import export as form_export
+from sympraxi.online import room as shared_room
+from sympraxi.online.models import RoomDocument
 from sympraxi.privacy.models import Disclosure
 from sympraxi.records.models import SessionRecord, WritingProject
 from sympraxi.scheduling.models import Block, Participant
@@ -43,7 +45,9 @@ FORMAT = "sympraxi.student-record"
 # their content, which downloads from each appointment's page).
 # Version 6 added the drafts the student sent for written feedback, with the
 # tutor's comments on them.
-VERSION = 6
+# Version 7 added the shared documents of the student's appointments. A group's
+# document is included as written, since every student in the group wrote in it.
+VERSION = 7
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
@@ -85,6 +89,7 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
         "disclosures": [_disclosure(d) for d in disclosures(membership)],
         "files": [_file(f) for f in files(membership)],
         "submissions": [_submission(s) for s in submissions(membership)],
+        "shared_documents": [_shared_document(d) for d in shared_documents(membership)],
     }
 
 
@@ -96,6 +101,36 @@ def files(membership: Membership) -> QuerySet[AppointmentFile]:
         .select_related("file", "file__uploaded_by")
         .order_by("file__uploaded_at")
     )
+
+
+def shared_documents(membership: Membership) -> QuerySet[RoomDocument]:
+    """The shared documents of the appointments the student was booked in."""
+    return (
+        RoomDocument.objects.filter(
+            appointment__schedule__center=membership.center,
+            appointment__participants__student=membership.user,
+        )
+        .prefetch_related("versions")
+        .distinct()
+        .order_by("appointment__starts_at")
+    )
+
+
+def _shared_document(d: RoomDocument) -> dict[str, Any]:
+    return {
+        "appointment": str(d.appointment_id),
+        "updated_at": _when(d.updated_at),
+        "text": shared_room.text_of(d.content),
+        "chat": [{"name": m.name, "text": m.text, "at": m.at} for m in shared_room.chat_of(d.chat)],
+        "versions": [
+            {
+                "saved_at": _when(v.created_at),
+                "saved_by": v.label or None,
+                "text": shared_room.text_of(v.content),
+            }
+            for v in d.versions.all()
+        ],
+    }
 
 
 def submissions(membership: Membership) -> QuerySet[Submission]:

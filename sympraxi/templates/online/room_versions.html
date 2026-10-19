@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Saved versions" %}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=_("Saved versions") %}
+  <h1>{% translate "Saved versions of the shared document" %}</h1>
+  <p><a href="{{ room_url }}">{% translate "Back to the shared document" %}</a></p>
+  {% if shown %}
+    <h2>{% blocktranslate with when=shown.created_at|date:"M j, Y, g:i A" %}Version from {{ when }}{% endblocktranslate %}</h2>
+    <p class="usa-hint">{% if shown.label %}{% blocktranslate with name=shown.label %}Saved by {{ name }}{% endblocktranslate %}{% else %}{% translate "Saved automatically" %}{% endif %}</p>
+    {% if shown_html %}<div class="sympraxi-room__saved">{{ shown_html }}</div>{% else %}<p>{% translate "It was empty." %}</p>{% endif %}
+    {% if shown_chat %}
+      <h3>{% translate "Chat at that time" %}</h3>
+      <ol class="usa-list usa-list--unstyled">
+        {% for m in shown_chat %}<li><strong>{{ m.name }}:</strong> {{ m.text }}</li>{% endfor %}
+      </ol>
+    {% endif %}
+    <p><a href="{{ page }}">{% translate "All versions" %}</a></p>
+  {% else %}
+    {% if available %}
+      <form method="post" class="sympraxi-form-actions">
+        {% csrf_token %}
+        <button class="usa-button usa-button--outline" type="submit">{% translate "Save a version now" %}</button>
+      </form>
+    {% endif %}
+    {% if versions %}
+      <ul class="usa-list">
+        {% for v in versions %}
+          <li><a href="{{ page }}?version={{ v.pk }}">{{ v.created_at|date:"M j, Y, g:i A" }}</a> · {% if v.label %}{% blocktranslate with name=v.label %}saved by {{ name }}{% endblocktranslate %}{% else %}{% translate "saved automatically" %}{% endif %}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{% translate "No versions are saved yet. One is saved automatically every few minutes while the document changes." %}</p>
+    {% endif %}
+  {% endif %}
+{% endblock content %}

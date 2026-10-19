@@ -26,6 +26,7 @@ urlpatterns = [
     path("centers/<slug:slug>/", include("sympraxi.feedback.urls")),
     path("centers/<slug:slug>/", include("sympraxi.online.urls")),
     path("survey/", include("sympraxi.forms.survey_urls")),
+    path("internal/collab/", include("sympraxi.online.internal_urls")),
     path("accounts/", include("sympraxi.accounts.urls")),
     path("accounts/", include("allauth.urls")),
     path("admin/", admin.site.urls),

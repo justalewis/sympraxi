@@ -302,7 +302,7 @@ Sizes assume one developer working close to full time with AI coding help. A par
 3. **The asynchronous queue.** A student submits a draft with what kind of feedback they want and when they need it. Tutors claim submissions, or the queue assigns them by load (by focus once tutors have profiles). The tutor writes feedback, as a session record, and can return a commented Word file. Due dates, overdue alerts and turnaround times in the reports. Builds on slice 2.
 4. **Jitsi video.** A center can point Sympraxi at its own Jitsi server: a hard-to-guess room per appointment, a signed token per person (the tutor as moderator), a join window and a lobby, and a deployment guide with TURN over port 443. Centers without Jitsi keep using meeting links.
 5. **Comments in the browser.** Tutors comment on PDFs, and on Word files converted to PDF by the worker, without downloading them. Needs PDF.js and a document converter (LibreOffice, in the worker image), both approved October 19, 2026.
-6. **The live session room.** Video beside a shared editor (Tiptap with Yjs, served by Hocuspocus) with chat in the same document, saved to the session record, with version history and .docx import. Needs a Node service of its own behind Caddy.
+6. **The live session room.** Video beside a shared editor (Tiptap with Yjs, served by Hocuspocus) with chat in the same document, saved to the session record, with version history and .docx import. Needs a Node service of its own behind Caddy. Tiptap, Yjs, Hocuspocus and the service were approved October 19, 2026.
 
 Slices 2, 5 and 6 add packages or containers, and each waits for the maintainer's OK on them first.
 

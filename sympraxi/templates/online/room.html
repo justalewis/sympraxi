@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block head_title %}{% translate "Shared document" %}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=_("Shared document") %}
+  <h1>{% translate "Shared document" %}</h1>
+  <p>
+    <a href="{{ back }}">{% translate "Back to the appointment" %}</a> ·
+    <a href="{{ versions_url }}">{% translate "Saved versions" %}</a>
+  </p>
+  {% if not available %}
+    <p>{% translate "This appointment has no shared document." %}</p>
+  {% elif state == "open" %}
+    <p id="room-status" role="status" class="usa-hint">{% translate "Connecting…" %}</p>
+    <noscript><p>{% translate "The shared document needs JavaScript. What was written so far is saved, and you can read it under Saved versions." %}</p></noscript>
+    {{ config|json_script:"room-config" }}
+    <div class="sympraxi-room">
+      <section class="sympraxi-room__document" aria-labelledby="document-heading">
+        <h2 id="document-heading">{% translate "Document" %}</h2>
+        <div id="room-toolbar" class="sympraxi-room__toolbar" role="toolbar" aria-label="{% translate 'Formatting' %}"></div>
+        <div id="room-editor" class="sympraxi-room__editor"></div>
+        <p id="room-people" class="usa-hint"></p>
+        <p class="sympraxi-form-actions">
+          <button id="room-save" class="usa-button usa-button--outline" type="button">{% translate "Save a version" %}</button>
+        </p>
+      </section>
+      {% if video_url %}
+        <section class="sympraxi-room__video-box" aria-labelledby="video-heading">
+          <h2 id="video-heading">{% translate "Video" %}</h2>
+          <iframe class="sympraxi-room__video" src="{{ video_url }}" title="{% translate 'Video session' %}" allow="camera; microphone; display-capture; autoplay; fullscreen"></iframe>
+        </section>
+      {% endif %}
+      <section class="sympraxi-room__chat" aria-labelledby="chat-heading">
+        <h2 id="chat-heading">{% translate "Chat" %}</h2>
+        <div role="log" aria-live="polite" aria-label="{% translate 'Chat messages' %}">
+          <ol id="room-chat" class="usa-list usa-list--unstyled"></ol>
+        </div>
+        <form id="room-chat-form" class="usa-form">
+          <label class="usa-label" for="room-chat-text">{% translate "Message" %}</label>
+          <input class="usa-input" id="room-chat-text" type="text" maxlength="1000" autocomplete="off">
+          <button class="usa-button" type="submit">{% translate "Send" %}</button>
+        </form>
+      </section>
+    </div>
+    <script type="module" src="{% static 'vendor/room/room.js' %}"></script>
+  {% else %}
+    {% if state == "early" %}
+      <p>{% blocktranslate with when=appointment.starts_at|date:"l, F j, g:i A" %}The shared document opens half an hour before the session, which starts {{ when }}.{% endblocktranslate %}</p>
+    {% else %}
+      <p>{% translate "The session is over, so the document can no longer be edited. This is what was written." %}</p>
+    {% endif %}
+    {% if saved %}
+      <div class="sympraxi-room__saved">{{ saved }}</div>
+    {% else %}
+      <p>{% translate "Nothing was written." %}</p>
+    {% endif %}
+    {% if saved_chat %}
+      <h2>{% translate "Chat" %}</h2>
+      <ol class="usa-list usa-list--unstyled">
+        {% for m in saved_chat %}<li><strong>{{ m.name }}:</strong> {{ m.text }}</li>{% endfor %}
+      </ol>
+    {% endif %}
+  {% endif %}
+{% endblock content %}

@@ -86,6 +86,8 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "feedback:pdf": (Action.VIEW_SUBMISSION, "submission_file"),
     "feedback:comments": (Action.VIEW_SUBMISSION, "submission_file"),
     "online:join": (Action.JOIN_VIDEO, "appointment"),
+    "online:room": (Action.USE_ROOM, "appointment"),
+    "online:room_versions": (Action.USE_ROOM, "appointment"),
     "online:settings": (Action.MANAGE_SCHEDULES, "center"),
     # Booking
     "scheduling:schedules": (Action.VIEW_SCHEDULES, "center"),
@@ -332,8 +334,14 @@ def world(center) -> World:
     )
 
 
+# The editor service's address: no session, only the shared secret (checked in
+# tests/test_room.py), and answered 404 by Caddy from outside.
+SECRET_ENDPOINTS = {"collab:load", "collab:store"}
+
+
 def test_every_url_is_classified() -> None:
-    assert sympraxi_url_names() == PUBLIC | LOGIN_REQUIRED | set(CENTER_PAGES) | set(TOKEN_PAGES)
+    classified = PUBLIC | LOGIN_REQUIRED | set(CENTER_PAGES) | set(TOKEN_PAGES) | SECRET_ENDPOINTS
+    assert sympraxi_url_names() == classified
 
 
 def _token_url(name: str, token: str) -> str:

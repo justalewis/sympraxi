@@ -152,7 +152,7 @@ def test_the_student_export_includes_it(center, director, student) -> None:
     disclosure(center, student, party="Registrar, State University")
     membership = Membership.objects.get(center=center, user=student, role=Role.STUDENT)
     data = export.build(membership, exported_by=director)
-    assert data["version"] == 6
+    assert data["version"] == 7
     [entry] = data["disclosures"]
     assert entry["party"] == "Registrar, State University"
     assert entry["basis"].startswith("Another school")

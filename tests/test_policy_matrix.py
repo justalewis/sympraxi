@@ -110,6 +110,7 @@ FILES_ACTIONS = [
 
 ONLINE_ACTIONS = [
     Action.JOIN_VIDEO,
+    Action.USE_ROOM,
 ]
 
 QUEUE_ACTIONS = [
@@ -292,17 +293,18 @@ EXPECTED_QUEUE = {
     "site_admin":  (0,     0,    0,    0),
 }
 
-# Video rooms, asked about the center. Students and tutors may join the rooms of
+# Video rooms and shared documents, asked about the center. Students and tutors
+# may join the rooms and open the documents of
 # appointments they're in; tests/test_video.py checks that part. Directors and
 # front desk staff aren't in the sessions, so they don't join.
 EXPECTED_ONLINE = {
-    #              join
-    "none":        (0,),
-    "student":     (1,),
-    "tutor":       (1,),
-    "front_desk":  (0,),
-    "director":    (0,),
-    "site_admin":  (0,),
+    #              join  room
+    "none":        (0,    0),
+    "student":     (1,    1),
+    "tutor":       (1,    1),
+    "front_desk":  (0,    0),
+    "director":    (0,    0),
+    "site_admin":  (0,    0),
 }
 # fmt: on
 

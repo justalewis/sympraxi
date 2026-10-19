@@ -2,6 +2,28 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 2: the shared document of a session (October 2026)
+
+**What was added, and approved.** Tiptap 3.32.0 (the editor), Yjs 13.6.33 (the shared document format) and Hocuspocus 4.7.1 (the server and browser provider that carries changes between people), all MIT; and a Node service of its own, `collab/`, which I chose to make as small as possible: one file. You also approved the Node service; esbuild 0.28.2 (MIT) came with it, as a build tool only, because the browser can't load Tiptap's dozens of modules from separate files under a strict policy. It bundles them into one file at `npm run build`, with the packages' license notices next to it. Nothing is loaded from a CDN.
+
+**The service holds nothing.** Sympraxi is where documents are kept. The Hocuspocus service keeps the live copy while people are connected, and loads and saves it through Sympraxi's internal address (`/internal/collab/load/` and `store/`), with a secret that the two share (`SYMPRAXI_COLLAB_SECRET`). Caddy answers 404 to anything under `/internal/` from outside, and the two internal pages are classified in the URL inventory as secret-only endpoints. A save happens two seconds after the last change and at least every ten, so a crash of the service loses a few seconds.
+
+**A token for a person and a document.** The tutor and the students in an appointment open its room page, where Sympraxi signs a token (HS256, the same few lines as for Jitsi) for that person and that document. The service accepts only a token signed with the shared secret, for the document asked for, not expired. A tampered token connects to nothing and saves nothing (tested). The room opens half an hour before the session and takes edits until three hours after it; at other times the page shows what was saved. Directors and front desk staff don't open it: like video, it is for the people in the session.
+
+**Saved as data, shown by us.** The service sends Sympraxi both Yjs's own state (which only it understands) and the same content as a plain ProseMirror document. Sympraxi checks the content's shape and size and stores it. When it shows a document or version it draws it itself from a short list of elements and escapes every word, so nothing a student types can become markup (tested with script tags, a `javascript:` link and an unknown element). Links aren't offered in the editor and are dropped when shown.
+
+**History.** The first change is kept as a version at once. After that, a version is saved when the document changed and the last one is five minutes old, and anyone in the session can save one with a label of their name. Versions are read-only pages. Nothing restores an old version yet.
+
+**Chat is in the same document.** Messages are a Yjs list beside the text, so they are saved and versioned with it, and read-only afterwards. A message's name is whatever the sender's browser says; nothing stops a student's browser from using another name. In a session of two to four people who can see each other, that seemed acceptable, but the stored chat is not proof of who wrote a line. Who opened the room is in the audit log.
+
+**Part of the record.** The document is education-record material like the session record it supports, so both exports include it: the student export (now version 7) holds the text, chat and versions for each appointment the student was booked in, and the center export adds `room_documents.json` and `room_versions.json`. In a group appointment every student in the group wrote in the same document, so each student's export holds it as written.
+
+**Beside the video.** On an online appointment with video on, the room page puts the Jitsi room next to the document in a frame, so a student doesn't leave the page. Only that page allows the video server as a frame source, and only while the room is open, and only the WebSocket address of the editor service is added to what the page may connect to.
+
+**What a strict policy cost.** Tiptap adds a `<style>` element to the page, which the policy blocks, so it is turned off and the few rules it needs are in `sympraxi.css`. Cursors for other people are built with element styles rather than style attributes for the same reason.
+
+**Not done.** Importing a .docx into the document (it would need a converter such as Mammoth, which wasn't on the approved list), restoring a version into the live editor, copying the shared text into the session record's fields, PDF viewing beside the editor, and live captions. The shared document hasn't had a screen-reader test: a live editor is the part of the site most likely to need one.
+
 ## Phase 2: comments in the browser (October 2026)
 
 **What was added.** PDF.js 6.4.299 (Apache-2.0, through npm like USWDS and htmx, copied into `static/vendor/pdfjs/` by `npm run build`) and LibreOffice (MPL-2.0), run headless in the task worker to make a PDF from a Word, OpenDocument, rich text or plain text file. Both were approved on October 19. The 3 MB of PDF.js's character maps, fonts and decoders load by name from the same folder; nothing comes from a CDN.

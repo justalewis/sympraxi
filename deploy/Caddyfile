@@ -2,9 +2,23 @@
 # The domain's DNS must point at this server, and ports 80 and 443 must be open.
 {$SYMPRAXI_DOMAIN} {
 	encode zstd gzip
-	reverse_proxy web:8000
 	header -Server
 	request_body {
 		max_size 30MB
+	}
+
+	# Only the shared-editor service may call this, from inside the stack.
+	handle /internal/* {
+		respond 404
+	}
+
+	# The shared document's WebSocket, when the "room" profile is running.
+	handle /collab/* {
+		uri strip_prefix /collab
+		reverse_proxy collab:1234
+	}
+
+	handle {
+		reverse_proxy web:8000
 	}
 }

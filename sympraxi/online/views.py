@@ -1,5 +1,6 @@
 """Joining a video room, and a center's video settings."""
 
+from typing import Any
 from uuid import UUID
 
 from django import forms
@@ -13,7 +14,7 @@ from django.utils.cache import add_never_cache_headers
 from django.utils.translation import gettext as _
 
 from sympraxi.core.policy import Action
-from sympraxi.online import services
+from sympraxi.online import room, services
 from sympraxi.online.models import VideoSettings
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.scheduling.views import appointment_crumbs, appointment_for, center_for, signed_in
@@ -57,9 +58,19 @@ def join(request: HttpRequest, slug: str, appointment_id: UUID) -> HttpResponse:
 
 
 class VideoSettingsForm(forms.ModelForm[VideoSettings]):
+    """Only the choices the installation can honor: video needs a Jitsi server, the
+    shared document needs the editor service."""
+
     class Meta:
         model = VideoSettings
-        fields = ["is_on"]
+        fields = ["is_on", "room_is_on"]
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        if not services.configured():
+            del self.fields["is_on"]
+        if not room.configured():
+            del self.fields["room_is_on"]
 
 
 @login_required
@@ -77,13 +88,15 @@ def video_settings(request: HttpRequest, slug: str) -> HttpResponse:
                 center=center,
                 target=current,
                 is_on=current.is_on,
+                room_is_on=current.room_is_on,
             )
-        messages.success(request, _("Video settings are saved."))
+        messages.success(request, _("The settings are saved."))
         return redirect(reverse("online:settings", kwargs={"slug": slug}))
     context = {
         "center": center,
         "form": form,
-        "configured": services.configured(),
+        "video_configured": services.configured(),
+        "room_configured": room.configured(),
         "crumbs": [(center.name, reverse("centers:detail", kwargs={"slug": slug}))],
     }
     return render(request, "online/settings.html", context)

@@ -60,4 +60,4 @@ Test it before you promise it. From a computer on the campus network, or on a ph
 
 - Live captions are worth evaluating in Jitsi; Sympraxi does nothing with them yet.
 - Rooms aren't recorded. Recording student sessions raises consent questions (see `docs/01-feature-map.md`), so it stays off until a center asks and there is a way to record the consent.
-- Video sits beside the session record, not inside it. The shared editor that works with the video is a later slice.
+- With the shared document on (see "Shared documents" in install.md), an online appointment's room page puts the video in a frame beside the document. Otherwise the video opens in its own window.
