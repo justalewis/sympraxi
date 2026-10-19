@@ -346,6 +346,12 @@ def test_the_turnaround_page_is_for_directors(client, world) -> None:
     assert "Typical time to return" in page
 
 
+def test_a_director_can_close_the_queue(client, world) -> None:
+    client.force_login(make_member(world.center, Role.DIRECTOR))
+    client.post(url("settings", world), {"lead_days": 2, "max_files": 5, "max_open_per_tutor": 3})
+    assert not services.is_open(world.center)
+
+
 def test_settings_are_saved_and_audited(client, world) -> None:
     client.force_login(make_member(world.center, Role.DIRECTOR))
     client.post(

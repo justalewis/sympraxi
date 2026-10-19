@@ -2,6 +2,18 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 2: Jitsi video rooms (October 2026)
+
+**Optional, and the installation's.** Jitsi isn't added to Compose. An installation points at a Jitsi server it runs (`SYMPRAXI_JITSI_DOMAIN`, `_APP_ID`, `_APP_SECRET` in `deploy/.env`; all three or none), and each center decides whether its online appointments get rooms. The secret stays in `deploy/.env` with the other secrets, and is shared with the Jitsi server (`docs/jitsi.md`). A center without video, or an installation without a server, loses nothing: meeting links work exactly as before.
+
+**A token for a person and a room.** Rooms are named from a keyed hash of the appointment ID (Django's `salted_hmac`), so the name leaks nothing and can't be guessed. Entry needs a signed token, made with the standard library (an HS256 JSON Web Token is a few lines, and not worth a package), holding the room, the person's name and ID, and whether they moderate. It is valid from ten minutes before the start to half an hour after the end, and only the appointment's tutor and its booked students are given one (`online.join`). The tutor moderates and admits students from the lobby, which is a setting on the Jitsi side. No email address goes into the token.
+
+**A redirect, not an embed.** The join page sends the person to their room on the Jitsi domain instead of embedding Jitsi's script, so the site's strict Content-Security-Policy stays as it is and doesn't have to name a second domain. The cost is that a student leaves the Sympraxi window; the room is a full Jitsi page. The redirect response isn't cached and sends no referrer, because the token is in the address. Embedding can come with the live session room (slice 6), where the video sits beside the editor and the policy has to change anyway.
+
+**Links stop being required.** An online tutor assignment normally needs a meeting link. With video on it doesn't, and "Switch a day to online" takes in tutors who have no link. Calendar files for those appointments say to join from the appointment page, since the address isn't one that can be handed out in a file.
+
+**What it doesn't do.** It doesn't record, caption or keep any of the conversation. Who entered which room, when, and whether as moderator is in the audit log.
+
 ## Phase 2: the written-feedback queue (October 2026)
 
 **A queue instead of fake time slots.** A student sends a draft with what they want help with and the day they need it by. Nobody books a time. A center turns the queue on under **Written feedback > Settings** (it is off until a director does), and sets the shortest turnaround it will promise (two days to start), how many files a submission can hold (five) and whether to assign automatically.

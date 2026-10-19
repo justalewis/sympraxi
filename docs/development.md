@@ -97,6 +97,7 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/staff/` | The time clock: entries, clocking in and out, directors' corrections, the midnight clock-out and timesheets |
 | `sympraxi/notify/` | Private calendar feeds (`feeds.py`), and announcements and mass email (`news.py`) |
 | `sympraxi/files/` | Files on appointments: content checks, private storage, ClamAV scans, downloads |
+| `sympraxi/online/` | Video rooms: signed Jitsi tokens, the join window, a center's switch |
 | `sympraxi/feedback/` | The written-feedback queue: submissions, claiming and assigning, overdue alerts, turnaround |
 | `sympraxi/scheduling/services.py` | Every booking rule: limits, notice, cutoff, groups, locks |
 | `sympraxi/scheduling/availability.py` | Open times from weekly hours, exceptions, closures and tutor caps |

@@ -425,6 +425,12 @@ class TutorAssignment(models.Model):
         first = -(-self.min_minutes // step) * step
         return list(range(first, self.max_minutes + 1, step))
 
+    def _center_has_video(self) -> bool:
+        """Whether the schedule's center gives online appointments a video room."""
+        from sympraxi.online.services import video_on
+
+        return bool(self.schedule_id) and video_on(self.schedule.center)
+
     def clean(self) -> None:
         errors: dict[str, Any] = {}
         if self.max_minutes is not None and self.min_minutes is not None:
@@ -438,7 +444,7 @@ class TutorAssignment(models.Model):
                 )
         if not self.offers_in_person and not self.offers_online:
             errors["offers_in_person"] = _("Choose at least one way to meet.")
-        if self.offers_online and not self.meeting_url:
+        if self.offers_online and not self.meeting_url and not self._center_has_video():
             errors["meeting_url"] = _("Online appointments need a meeting link.")
         room = self.room if self.room_id else None
         if room is not None and self.schedule_id and room.center_id != self.schedule.center_id:

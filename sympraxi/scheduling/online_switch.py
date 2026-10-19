@@ -27,6 +27,7 @@ from django.http import HttpRequest
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center
+from sympraxi.online.services import video_on
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.scheduling import notifications
 from sympraxi.scheduling.models import Appointment, AppointmentStatus, Modality, Schedule
@@ -65,8 +66,9 @@ def in_person_on(center: Center, day: date, schedule: Schedule | None = None) ->
 
 def plan(center: Center, day: date, schedule: Schedule | None = None) -> Plan:
     result = Plan()
+    has_video = video_on(center)
     for appointment in in_person_on(center, day, schedule):
-        if appointment.assignment.meeting_url:
+        if appointment.assignment.meeting_url or has_video:
             result.movable.append(appointment)
         else:
             result.stuck.append(appointment)
@@ -84,6 +86,7 @@ def switch(
 ) -> int:
     """Move the day's movable appointments online. Returns how many moved."""
     moved = 0
+    has_video = video_on(center)
     base_url = notifications.base_url(request)
     with transaction.atomic():
         ids = [a.pk for a in plan(center, day, schedule).movable]
@@ -95,7 +98,7 @@ def switch(
         )
         for appointment in locked:
             link = appointment.assignment.meeting_url
-            if not link:
+            if not link and not has_video:
                 continue
             appointment.modality = Modality.ONLINE
             appointment.meeting_url = link

@@ -466,7 +466,7 @@ def assign(request: HttpRequest, slug: str, submission_id: UUID) -> HttpResponse
 def queue_settings(request: HttpRequest, slug: str) -> HttpResponse:
     center = center_for(request, Action.MANAGE_QUEUE, slug)
     current = services.settings_for(center)
-    form = QueueSettingsForm(request.POST or None, instance=current)
+    form = QueueSettingsForm(request.POST if request.method == "POST" else None, instance=current)
     if request.method == "POST" and form.is_valid():
         changed = sorted(form.changed_data)
         form.save()

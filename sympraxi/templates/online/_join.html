@@ -1,0 +1,14 @@
+{% load i18n %}
+{% if video %}
+  <section aria-labelledby="video-room" class="sympraxi-video">
+    <h2 id="video-room">{% translate "Video room" %}</h2>
+    {% if video.state == "open" %}
+      <p><a class="usa-button" href="{% url 'online:join' slug=center.slug appointment_id=appointment.pk %}">{% translate "Join the video session" %}</a></p>
+      <p class="usa-hint">{% translate "It opens in this window. Your tutor lets you in from the lobby." %}</p>
+    {% elif video.state == "early" %}
+      <p>{% blocktranslate with when=video.opens_at|time:"P" %}The video room opens at {{ when }}, ten minutes before the start. Come back to this page then.{% endblocktranslate %}</p>
+    {% else %}
+      <p>{% translate "The video room has closed." %}</p>
+    {% endif %}
+  </section>
+{% endif %}

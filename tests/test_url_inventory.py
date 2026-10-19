@@ -82,6 +82,8 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "feedback:assign": (Action.MANAGE_QUEUE, "submission"),
     "feedback:settings": (Action.MANAGE_QUEUE, "center"),
     "feedback:turnaround": (Action.MANAGE_QUEUE, "center"),
+    "online:join": (Action.JOIN_VIDEO, "appointment"),
+    "online:settings": (Action.MANAGE_SCHEDULES, "center"),
     # Booking
     "scheduling:schedules": (Action.VIEW_SCHEDULES, "center"),
     "scheduling:open_times": (Action.VIEW_SCHEDULES, "schedule"),

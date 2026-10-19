@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Video room" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Video room" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Video room" %}</h1>
+  {% if when is None %}
+    <p>{% translate "This appointment has no video room. If it's online, use the meeting link on the appointment page." %}</p>
+  {% elif when.state == "early" %}
+    <p>{% blocktranslate with when=when.opens_at|date:"l, F j, g:i A" %}The video room opens {{ when }}, ten minutes before the start.{% endblocktranslate %}</p>
+  {% else %}
+    <p>{% translate "The video room has closed." %}</p>
+  {% endif %}
+  <p><a href="{{ back }}">{% translate "Back to the appointment" %}</a></p>
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Video settings" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Video settings" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Video settings" %}</h1>
+  {% if configured %}
+    <p>{% translate "Sympraxi is connected to a Jitsi video server. Turn video on to give each online appointment its own room, opened from the appointment page. Tutors don't need a meeting link, though one they have still works." %}</p>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      {% include "includes/form_fields.html" %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Save" %}</button>
+        <a href="{% url 'centers:detail' slug=center.slug %}">{% translate "Go back" %}</a>
+      </div>
+    </form>
+  {% else %}
+    <p>{% translate "This installation isn't connected to a Jitsi video server yet, so centers can't turn video on. Whoever runs Sympraxi can set one up; docs/jitsi.md explains how." %}</p>
+    <p><a href="{% url 'centers:detail' slug=center.slug %}">{% translate "Go back" %}</a></p>
+  {% endif %}
+{% endblock content %}

@@ -32,6 +32,7 @@ from sympraxi.forms import display as form_answers
 from sympraxi.forms.answering import follow_up_message
 from sympraxi.notify import news
 from sympraxi.notify.models import Audience
+from sympraxi.online import services as video
 from sympraxi.records import brief
 from sympraxi.records.models import SessionRecord
 from sympraxi.scheduling import attendance, blocks, ics, notifications, services
@@ -609,6 +610,7 @@ def appointment_detail(request: HttpRequest, slug: str, appointment_id: UUID) ->
         **brief.appointment_context(request, appointment),
         **form_answers.own_answers(user, appointment),
         **file_display.appointment_context(request, appointment),
+        **video.appointment_context(user, appointment),
     }
     with timezone.override(center.time_zone):
         return render(request, "scheduling/appointment_detail.html", context)

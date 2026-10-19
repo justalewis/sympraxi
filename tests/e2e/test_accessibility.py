@@ -239,6 +239,10 @@ PAGES = [
     ("director", "/centers/{slug}/feedback/{submission}/assign/"),
     ("director", "/centers/{slug}/feedback/settings/"),
     ("director", "/centers/{slug}/feedback/turnaround/"),
+    # Video rooms (the world's appointment is in person, so the room page says so)
+    ("student", "/centers/{slug}/appointments/{appointment}/join/"),
+    ("tutor", "/centers/{slug}/appointments/{appointment}/join/"),
+    ("director", "/centers/{slug}/video/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has

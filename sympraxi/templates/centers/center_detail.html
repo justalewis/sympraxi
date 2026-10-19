@@ -63,6 +63,7 @@
     <h2>{% translate "Center tools" %}</h2>
     <ul class="usa-list">
       {% if can_manage_schedules %}<li><a href="{% url 'scheduling:schedules' slug=center.slug %}">{% translate "Set up schedules, terms and rooms" %}</a></li>{% endif %}
+      {% if can_manage_schedules %}<li><a href="{% url 'online:settings' slug=center.slug %}">{% translate "Video rooms for online appointments" %}</a></li>{% endif %}
       {% if can_manage_blocks %}<li><a href="{% url 'scheduling:blocks' slug=center.slug %}">{% translate "Booking blocks for no-shows and late cancellations" %}</a></li>{% endif %}
       {% if can_manage_forms %}<li><a href="{% url 'forms:list' slug=center.slug %}">{% translate "Forms: registration, intake, session reports and surveys" %}</a></li>{% endif %}
       {% if can_view_survey_results %}<li><a href="{% url 'forms:survey_results' slug=center.slug %}">{% translate "Survey results" %}</a></li>{% endif %}

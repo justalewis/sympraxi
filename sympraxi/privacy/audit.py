@@ -90,6 +90,8 @@ class AuditAction(StrEnum):
     SUBMISSION_RETURNED = "feedback.submission_returned"
     SUBMISSION_CANCELED = "feedback.submission_canceled"
     QUEUE_SETTINGS_CHANGED = "feedback.settings_changed"
+    VIDEO_JOINED = "online.video_joined"
+    VIDEO_SETTINGS_CHANGED = "online.settings_changed"
 
 
 def client_ip(request: HttpRequest) -> str | None:

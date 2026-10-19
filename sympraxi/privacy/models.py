@@ -81,6 +81,8 @@ ACTION_LABELS = {
     "feedback.submission_returned": _("Returned written feedback to a student"),
     "feedback.submission_canceled": _("Canceled a submission"),
     "feedback.settings_changed": _("Changed the feedback queue's settings"),
+    "online.video_joined": _("Entered a video room"),
+    "online.settings_changed": _("Changed the center's video settings"),
 }
 
 

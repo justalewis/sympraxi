@@ -108,6 +108,10 @@ FILES_ACTIONS = [
     Action.VIEW_FILES,
 ]
 
+ONLINE_ACTIONS = [
+    Action.JOIN_VIDEO,
+]
+
 QUEUE_ACTIONS = [
     Action.SUBMIT_WORK,
     Action.WORK_QUEUE,
@@ -127,6 +131,7 @@ ACTIONS = (
     + DISCLOSURE_ACTIONS
     + FILES_ACTIONS
     + QUEUE_ACTIONS
+    + ONLINE_ACTIONS
 )
 
 # fmt: off
@@ -286,6 +291,19 @@ EXPECTED_QUEUE = {
     "director":    (0,     1,    1,    1),
     "site_admin":  (0,     0,    0,    0),
 }
+
+# Video rooms, asked about the center. Students and tutors may join the rooms of
+# appointments they're in; tests/test_video.py checks that part. Directors and
+# front desk staff aren't in the sessions, so they don't join.
+EXPECTED_ONLINE = {
+    #              join
+    "none":        (0,),
+    "student":     (1,),
+    "tutor":       (1,),
+    "front_desk":  (0,),
+    "director":    (0,),
+    "site_admin":  (0,),
+}
 # fmt: on
 
 CASES = [
@@ -302,6 +320,7 @@ CASES = [
         (EXPECTED_DISCLOSURES, DISCLOSURE_ACTIONS),
         (EXPECTED_FILES, FILES_ACTIONS),
         (EXPECTED_QUEUE, QUEUE_ACTIONS),
+        (EXPECTED_ONLINE, ONLINE_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)

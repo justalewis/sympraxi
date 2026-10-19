@@ -15,6 +15,7 @@ from urllib.parse import urlsplit
 from django.conf import settings
 from django.urls import reverse
 
+from sympraxi.online.services import video_on
 from sympraxi.scheduling.models import Appointment, Modality
 
 PRODID = "-//Sympraxi//Scheduling//EN"
@@ -75,7 +76,11 @@ def summary(appointment: Appointment, *, for_tutor: bool) -> str:
 
 def location(appointment: Appointment) -> str:
     if appointment.modality == Modality.ONLINE:
-        return appointment.meeting_url or "Online"
+        if appointment.meeting_url:
+            return appointment.meeting_url
+        if video_on(appointment.schedule.center):
+            return "Online: join from the appointment page"
+        return "Online"
     if appointment.room is not None:
         return ", ".join(p for p in (appointment.room.name, appointment.room.details) if p)
     return appointment.schedule.center.name

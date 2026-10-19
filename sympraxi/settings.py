@@ -60,6 +60,13 @@ SYMPRAXI_TRUST_X_FORWARDED_FOR = env.bool("SYMPRAXI_TRUST_X_FORWARDED_FOR", defa
 SYMPRAXI_UPLOAD_MAX_MB = env.int("SYMPRAXI_UPLOAD_MAX_MB", default=25)
 SYMPRAXI_CLAMAV_ADDRESS = env.str("SYMPRAXI_CLAMAV_ADDRESS", default="")
 
+# Video rooms (sympraxi/online/): the Jitsi server the installation points at, the
+# app ID it accepts tokens from, and the secret those tokens are signed with.
+# All three are needed; with any empty, no center can turn video on.
+SYMPRAXI_JITSI_DOMAIN = env.str("SYMPRAXI_JITSI_DOMAIN", default="")
+SYMPRAXI_JITSI_APP_ID = env.str("SYMPRAXI_JITSI_APP_ID", default="")
+SYMPRAXI_JITSI_APP_SECRET = env.str("SYMPRAXI_JITSI_APP_SECRET", default="")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -89,6 +96,7 @@ INSTALLED_APPS = [
     "sympraxi.notify",
     "sympraxi.files",
     "sympraxi.feedback",
+    "sympraxi.online",
 ]
 
 MIDDLEWARE = [

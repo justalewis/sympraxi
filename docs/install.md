@@ -218,6 +218,10 @@ ClamAV takes a few minutes to load its database the first time; files attached m
 
 Nothing to set up on the server except that the `scheduler` service must be running: it assigns submissions where a center asks it to and emails about the ones that run past their date. A director turns the queue on from **Written feedback** on the center page, under **Settings**; until then students see no page for sending drafts. Drafts are files like any other (see **Files**), so ClamAV, if you run it, scans them too.
 
+## Video rooms
+
+Optional. To give online appointments their own video rooms, run a Jitsi Meet server and put its address and shared secret in `deploy/.env` (`SYMPRAXI_JITSI_DOMAIN`, `SYMPRAXI_JITSI_APP_ID`, `SYMPRAXI_JITSI_APP_SECRET`). Then each center's director turns video on under **Video rooms for online appointments**. Setting Jitsi up, including getting video through a campus firewall, is in [Video rooms with Jitsi](jitsi.md).
+
 ## Registration and intake forms
 
 Nothing to set up on the server. Directors build their center's forms in Sympraxi, under **Forms** on the center page: a registration form, asked once when a student first books, and intake forms, asked at each booking (one per schedule, or a default for every schedule). A form's questions reach students only after a director publishes them. Each later change is published as a new version, and earlier answers keep the wording students saw.
