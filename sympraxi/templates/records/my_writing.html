@@ -6,6 +6,7 @@
   {% include "scheduling/_breadcrumbs.html" with current=current %}
   <h1>{% translate "My writing" %}</h1>
   <p>{% blocktranslate with center=center.name %}This page shows what you worked on in each session at {{ center }}, your next steps, and the resources your tutor shared. A session shows up here once your tutor finishes writing it up.{% endblocktranslate %}</p>
+  <p><a href="{% url 'records:my_goals' slug=center.slug %}">{% translate "Your writing goals" %}</a> · <a href="{% url 'records:my_timeline' slug=center.slug %}">{% translate "Your writing across terms" %}</a></p>
   <p><a href="{% url 'privacy:my_disclosures' slug=center.slug %}">{% translate "Who outside the center has seen your records" %}</a></p>
 
   {% for group in groups %}

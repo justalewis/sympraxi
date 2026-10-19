@@ -191,7 +191,7 @@ def test_the_json_export_holds_everything_about_the_student(client, world, full_
     assert response["Content-Disposition"] == 'attachment; filename="student-record.json"'
     data = json.loads(response.content)
 
-    assert data["format"] == "sympraxi.student-record" and data["version"] == 7
+    assert data["format"] == "sympraxi.student-record" and data["version"] == 8
     assert data["disclosures"] == []
     assert data["student"]["email"] == full_history["student"].email
     assert data["exported_by"]["email"] == director.email

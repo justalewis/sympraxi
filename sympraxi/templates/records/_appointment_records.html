@@ -23,6 +23,15 @@
   <section class="sympraxi-brief" aria-labelledby="brief-{{ brief.student.pk }}">
     <h2 id="brief-{{ brief.student.pk }}">{% blocktranslate with name=brief.student.display_name %}Before the session: {{ name }}{% endblocktranslate %}</h2>
     {% if brief.answers.any %}{% include "forms/_student_answers.html" with row=brief.answers level=3 %}{% endif %}
+    <h3>{% translate "Writing goals" %}</h3>
+    {% if brief.goals %}
+      <ul class="usa-list">
+        {% for g in brief.goals %}<li>{{ g.text }}{% if g.target_on %}, {% blocktranslate with day=g.target_on|date:"F j" %}by {{ day }}{% endblocktranslate %}{% endif %}</li>{% endfor %}
+      </ul>
+    {% else %}
+      <p>{% translate "None set." %}</p>
+    {% endif %}
+    <p><a href="{{ brief.goals_url }}">{% translate "Add or change goals" %}</a></p>
     <h3>{% translate "Open writing projects" %}</h3>
     {% if brief.projects %}
       <ul class="usa-list">

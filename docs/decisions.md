@@ -2,6 +2,18 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 3: writing goals and the timeline across terms (October 2026)
+
+**A goal is a sentence and, if the student wants, a day.** It stays open until someone marks it met or dropped, which keeps who and when; marking it open again clears that, for a mistake. Goals are never deleted, every change is audited, and a student can have 20 open at once, so a list stays a list. A goal can name one of the student's open writing projects. The day, if given, must be from today to two years ahead; one that passes is flagged "past its day", not closed.
+
+**Who writes them.** A student writes their own on **Your writing goals**, reached from My writing. A tutor who works with them (the same test as for their records: an appointment with the student at this center, past or upcoming) or a director writes them with the student, on **Writing goals** from the student's history. One permission, `records.set_goals`, with the usual object rules; front desk staff don't have it. Each goal is part of the education record and is in the student export (now version 8) and the center export (`goals.json`).
+
+**In the brief.** The tutor's pre-session brief now lists the student's open goals above the open writing projects, with a link to add or change them. Met and dropped goals stay out of it.
+
+**One timeline, in terms.** **Across terms** (for staff, from the student's history) and **Your writing across terms** (for the student) merge what the center keeps in separate places into one list, newest first, under the center's terms: sessions, goals when they were set and when they were met or dropped, writing projects when they began, and drafts sent for written feedback and when they came back. Anything outside every term goes last, under its own heading. A session shows its tutor, its project and the first 200 characters of the summary written for the student. Staff notes are never on the timeline. A student sees only their own final records; staff see the records they may open, drafts marked as drafts. Reading a student's timeline is a read of their history, so each one is audited.
+
+**Not done.** A timeline doesn't yet show attendance (no-shows and late cancellations), and goals aren't tied to the topic vocabulary, so the reports can't yet count goals by concern.
+
 ## Phase 3: tutor favorites and the resource report (October 2026)
 
 **Favorites are a person's, and show first.** A tutor stars a resource, and it appears under **Your favorites** at the top of the resource panel on the record form, the ones that share a concern with the topics just tagged ahead of the rest, up to eight, never one already attached. A favorite belongs to the person, not the center: a center's own link is offered only in that center, so a favorite of another center's link is simply not shown here, and one the link checker found broken is left out like any other suggestion. Favorites are private. A director sees only a count: how many of the center's tutors favorited each resource.

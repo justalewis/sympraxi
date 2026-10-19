@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{% if own %}{% translate "Your sessions, goals, writing projects and drafts sent for written feedback, in order, term by term." %}{% else %}{% translate "This student's sessions, goals, writing projects and drafts sent for written feedback, in order, term by term. Staff notes aren't shown here; open a record to read them." %}{% endif %}</p>
+  <p><a href="{{ back.1 }}">{{ back.0 }}</a></p>
+  {% for group in groups %}
+    <section aria-labelledby="term-{{ forloop.counter }}">
+      <h2 id="term-{{ forloop.counter }}">{{ group.label }}</h2>
+      <ol class="usa-list usa-list--unstyled sympraxi-timeline">
+        {% for e in group.entries %}
+          <li class="sympraxi-timeline__entry">
+            <p class="usa-hint"><time datetime="{{ e.when|date:'c' }}">{{ e.when|date:"M j, Y" }}</time></p>
+            <p>{% if e.url %}<a href="{{ e.url }}">{{ e.title }}</a>{% else %}{{ e.title }}{% endif %}</p>
+            {% if e.detail %}<p>{{ e.detail }}</p>{% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </section>
+  {% empty %}
+    <p>{% translate "Nothing yet." %}</p>
+  {% endfor %}
+{% endblock content %}

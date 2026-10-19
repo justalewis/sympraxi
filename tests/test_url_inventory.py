@@ -154,6 +154,10 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "records:favorites": (Action.WRITE_RECORDS, "center"),
     "records:favorite_toggle": (Action.WRITE_RECORDS, "resource"),
     "reports:resources": (Action.VIEW_STATISTICS, "center"),
+    "records:my_goals": (Action.VIEW_OWN_WRITING, "center"),
+    "records:my_timeline": (Action.VIEW_OWN_WRITING, "center"),
+    "records:student_goals": (Action.SET_GOALS, "student_membership"),
+    "records:student_timeline": (Action.VIEW_RECORDS, "student_membership"),
     # Forms. "form" is the default intake form, with a draft; "question" is in the draft.
     "forms:list": (Action.MANAGE_FORMS, "center"),
     "forms:create": (Action.MANAGE_FORMS, "center"),

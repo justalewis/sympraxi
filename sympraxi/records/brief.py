@@ -25,7 +25,8 @@ from sympraxi.centers.models import Membership, Role
 from sympraxi.core.policy import Action, can
 from sympraxi.forms import display as form_answers
 from sympraxi.privacy.audit import AuditAction, record
-from sympraxi.records.models import RecordStatus, SessionRecord, WritingProject
+from sympraxi.records import goals
+from sympraxi.records.models import Goal, RecordStatus, SessionRecord, WritingProject
 from sympraxi.records.services import active_students
 from sympraxi.scheduling.models import Appointment, AppointmentStatus
 
@@ -46,6 +47,8 @@ class Brief:
     membership: Membership
     recent: list[SessionRecord] = field(default_factory=list)
     projects: list[WritingProject] = field(default_factory=list)
+    goals: list[Goal] = field(default_factory=list)
+    goals_url: str = ""
     history_url: str = ""
     answers: form_answers.StudentAnswers | None = None
 
@@ -126,6 +129,11 @@ def appointment_context(request: HttpRequest, appointment: Appointment) -> dict[
             ),
             projects=list(
                 WritingProject.objects.filter(center=center, student=student, is_finished=False)
+            ),
+            goals=goals.open_goals(center, student),
+            goals_url=reverse(
+                "records:student_goals",
+                kwargs={"slug": center.slug, "membership_id": membership.pk},
             ),
             history_url=reverse(
                 "records:student_history",

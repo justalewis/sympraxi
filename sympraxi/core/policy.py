@@ -67,6 +67,10 @@ submission, and directors, open it. Directors assign and release submissions,
 set the queue up and see turnaround. Front desk staff and site administrators
 have no part in it.
 
+Goals: a student writes their own, a tutor who works with them (the same test as for
+their records) writes them with the student, and directors do too. Front desk staff
+don't. A goal is part of the education record, so it is read like one.
+
 Video: a student joins the video room of an online appointment they are booked
 in, and a tutor that of one they teach. Directors don't, since they aren't in
 the session; they turn video on for the center with the schedule actions.
@@ -90,7 +94,7 @@ from django.http import Http404
 from sympraxi.centers.models import STAFF_ROLES, Center, Membership, Role
 from sympraxi.feedback.models import Submission
 from sympraxi.forms.models import Response
-from sympraxi.records.models import RecordStatus, SessionRecord, WritingProject
+from sympraxi.records.models import Goal, RecordStatus, SessionRecord, WritingProject
 from sympraxi.scheduling.models import (
     Appointment,
     AppointmentStatus,
@@ -149,6 +153,9 @@ class Action(StrEnum):
     ATTACH_FILES = "files.attach"
     # Open the files on an appointment.
     VIEW_FILES = "files.view"
+    # Add a writing goal for a student, and mark goals met or dropped: the student for
+    # themselves, a tutor who works with them, directors.
+    SET_GOALS = "records.set_goals"
     # Send a draft to the center's written-feedback queue, and see your own.
     SUBMIT_WORK = "queue.submit"
     # See the waiting submissions, without the student's name, and claim one.
@@ -213,6 +220,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_SUBMISSION,
             Action.JOIN_VIDEO,
             Action.USE_ROOM,
+            Action.SET_GOALS,
         }
     ),
     Role.TUTOR: frozenset(
@@ -234,6 +242,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_SUBMISSION,
             Action.JOIN_VIDEO,
             Action.USE_ROOM,
+            Action.SET_GOALS,
         }
     ),
     Role.FRONT_DESK: frozenset(
@@ -296,6 +305,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.WORK_QUEUE,
             Action.VIEW_SUBMISSION,
             Action.MANAGE_QUEUE,
+            Action.SET_GOALS,
         }
     ),
 }
@@ -356,7 +366,7 @@ def _reads_student(user: UserLike, obj: Model) -> bool:
         return obj.tutor_id == user.pk or has_tutored(user, obj.student_id, obj.center_id)
     if isinstance(obj, Membership):
         return obj.role == Role.STUDENT and has_tutored(user, obj.user_id, obj.center_id)
-    if isinstance(obj, WritingProject):
+    if isinstance(obj, WritingProject | Goal):
         return has_tutored(user, obj.student_id, obj.center_id)
     return False
 
@@ -414,6 +424,13 @@ def _own_submission(user: UserLike, obj: Model) -> bool:
     return getattr(obj, "student_id", None) == user.pk
 
 
+def _own_goal(user: UserLike, obj: Model) -> bool:
+    """A student writes goals for themselves: their own goals, and their own membership."""
+    if isinstance(obj, Membership):
+        return obj.user_id == user.pk and obj.role == Role.STUDENT
+    return getattr(obj, "student_id", None) == user.pk
+
+
 def _claimed_submission(user: UserLike, obj: Model) -> bool:
     """A tutor opens the submissions they have, and the files on them."""
     submission = getattr(obj, "submission", obj)
@@ -458,6 +475,8 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.STUDENT, Action.VIEW_FILES): _own_file,
     (Role.TUTOR, Action.ATTACH_FILES): _tutor_of,
     (Role.TUTOR, Action.VIEW_FILES): _file_of_own_tutoring,
+    (Role.STUDENT, Action.SET_GOALS): _own_goal,
+    (Role.TUTOR, Action.SET_GOALS): _reads_student,
     (Role.STUDENT, Action.JOIN_VIDEO): _participant,
     (Role.TUTOR, Action.JOIN_VIDEO): _tutor_of,
     (Role.STUDENT, Action.USE_ROOM): _participant,

@@ -404,3 +404,57 @@ class ResourceFavorite(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user_id} likes {self.resource_id}"
+
+
+class GoalStatus(models.TextChoices):
+    OPEN = "open", _("Open")
+    MET = "met", _("Met")
+    DROPPED = "dropped", _("Dropped")
+
+
+class Goal(models.Model):
+    """Something a student wants to get better at, kept until it is met or dropped.
+
+    A student writes their own; a tutor who works with them, or a director, can write
+    one with them. Open goals show in the tutor's brief before a session. A goal is part
+    of the student's education record.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    center = models.ForeignKey(Center, on_delete=models.PROTECT, related_name="goals")
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="goals"
+    )
+    text = models.CharField(
+        _("goal"),
+        max_length=300,
+        help_text=_("For example: use evidence in every body paragraph."),
+    )
+    target_on = models.DateField(_("by when"), null=True, blank=True)
+    status = models.CharField(max_length=10, choices=GoalStatus.choices, default=GoalStatus.OPEN)
+    project = models.ForeignKey(
+        WritingProject, on_delete=models.SET_NULL, null=True, blank=True, related_name="goals"
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    closed_at = models.DateTimeField(null=True, blank=True)
+    closed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name="+"
+    )
+
+    class Meta:
+        ordering = ["created_at"]
+        indexes = [
+            models.Index(fields=["center", "student", "status"], name="records_goal_student")
+        ]
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(status="open") | Q(closed_at__isnull=False),
+                name="records_goal_closed_has_time",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return self.text

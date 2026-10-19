@@ -1,6 +1,6 @@
 from django.urls import path
 
-from sympraxi.records import views
+from sympraxi.records import goal_views, views
 
 app_name = "records"
 
@@ -23,11 +23,23 @@ urlpatterns = [
         views.student_history,
         name="student_history",
     ),
+    path(
+        "students/<uuid:membership_id>/goals/",
+        goal_views.student_goals,
+        name="student_goals",
+    ),
+    path(
+        "students/<uuid:membership_id>/timeline/",
+        goal_views.student_timeline,
+        name="student_timeline",
+    ),
     path("students/<uuid:membership_id>/export/", views.export_page, name="export"),
     path("students/<uuid:membership_id>/export.json", views.export_json, name="export_json"),
     path("projects/<uuid:project_id>/edit/", views.project_edit, name="project_edit"),
     # The student's own pages
     path("my-writing/", views.my_writing, name="my_writing"),
+    path("my-writing/goals/", goal_views.my_goals, name="my_goals"),
+    path("my-writing/timeline/", goal_views.my_timeline, name="my_timeline"),
     path("my-writing/<uuid:record_id>/", views.my_record, name="my_record"),
     # Setup, for directors
     path("records/settings/", views.record_settings, name="settings"),

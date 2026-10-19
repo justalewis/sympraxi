@@ -96,6 +96,7 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/centers/people.py` | Adding people one at a time or from a CSV file, and turning roles on and off |
 | `sympraxi/staff/` | The time clock: entries, clocking in and out, directors' corrections, the midnight clock-out and timesheets |
 | `sympraxi/notify/` | Private calendar feeds (`feeds.py`), and announcements and mass email (`news.py`) |
+| `sympraxi/records/goals.py`, `timeline.py`, `goal_views.py` | Writing goals, the timeline across terms, and their pages |
 | `sympraxi/records/favorites.py` | A tutor's favorite resources, and putting the ones that fit the topics first |
 | `sympraxi/reports/resources.py` | The director's report on which resources are attached, by whom, and for which concerns |
 | `sympraxi/records/linkcheck.py` | The weekly link checker: the address guard, robots.txt, delays, and what each answer means |

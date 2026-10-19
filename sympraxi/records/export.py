@@ -34,7 +34,7 @@ from sympraxi.forms import export as form_export
 from sympraxi.online import room as shared_room
 from sympraxi.online.models import RoomDocument
 from sympraxi.privacy.models import Disclosure
-from sympraxi.records.models import SessionRecord, WritingProject
+from sympraxi.records.models import Goal, SessionRecord, WritingProject
 from sympraxi.scheduling.models import Block, Participant
 
 FORMAT = "sympraxi.student-record"
@@ -45,9 +45,10 @@ FORMAT = "sympraxi.student-record"
 # their content, which downloads from each appointment's page).
 # Version 6 added the drafts the student sent for written feedback, with the
 # tutor's comments on them.
+# Version 8 added the student's writing goals.
 # Version 7 added the shared documents of the student's appointments. A group's
 # document is included as written, since every student in the group wrote in it.
-VERSION = 7
+VERSION = 8
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
@@ -90,6 +91,7 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
         "files": [_file(f) for f in files(membership)],
         "submissions": [_submission(s) for s in submissions(membership)],
         "shared_documents": [_shared_document(d) for d in shared_documents(membership)],
+        "goals": [_goal(g) for g in goals_of(membership)],
     }
 
 
@@ -130,6 +132,26 @@ def _shared_document(d: RoomDocument) -> dict[str, Any]:
             }
             for v in d.versions.all()
         ],
+    }
+
+
+def goals_of(membership: Membership) -> QuerySet[Goal]:
+    return Goal.objects.filter(center=membership.center, student=membership.user).select_related(
+        "created_by", "closed_by", "project"
+    )
+
+
+def _goal(g: Goal) -> dict[str, Any]:
+    return {
+        "id": str(g.id),
+        "goal": g.text,
+        "by": g.target_on.isoformat() if g.target_on else None,
+        "status": g.get_status_display(),
+        "project": g.project.title if g.project else None,
+        "added_by": _person(g.created_by),
+        "added_at": _when(g.created_at),
+        "closed_by": _person(g.closed_by),
+        "closed_at": _when(g.closed_at),
     }
 
 

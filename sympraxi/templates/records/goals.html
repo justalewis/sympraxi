@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  <p>{{ intro }}</p>
+  <p><a href="{{ back.1 }}">{{ back.0 }}</a></p>
+
+  <h2>{% translate "Open goals" %}</h2>
+  {% if open_goals %}
+    <ul class="usa-list usa-list--unstyled">
+      {% for g in open_goals %}
+        <li class="sympraxi-goal">
+          <p><strong>{{ g.text }}</strong>{% if g.target_on %} · {% blocktranslate with day=g.target_on|date:"F j, Y" %}by {{ day }}{% endblocktranslate %}{% if g.target_on < today %} <span class="usa-tag">{% translate "past its day" %}</span>{% endif %}{% endif %}{% if g.project %} · {{ g.project.title }}{% endif %}</p>
+          <form method="post" class="sympraxi-form-actions">
+            {% csrf_token %}
+            <input type="hidden" name="goal" value="{{ g.pk }}">
+            <button class="usa-button usa-button--outline" type="submit" name="action" value="met">{% translate "Met" %}<span class="usa-sr-only"> {{ g.text }}</span></button>
+            <button class="usa-button usa-button--unstyled" type="submit" name="action" value="dropped">{% translate "Drop it" %}<span class="usa-sr-only"> {{ g.text }}</span></button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "No open goals." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Add a goal" %}</h2>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add">
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Add the goal" %}</button>
+    </div>
+  </form>
+
+  {% if closed_goals %}
+    <h2>{% translate "Met and dropped" %}</h2>
+    <ul class="usa-list usa-list--unstyled">
+      {% for g in closed_goals %}
+        <li class="sympraxi-goal">
+          <p>{{ g.text }} · <span class="usa-tag">{{ g.get_status_display }}</span>{% if g.closed_at %} {% blocktranslate with day=g.closed_at|date:"M j, Y" %}on {{ day }}{% endblocktranslate %}{% endif %}</p>
+          <form method="post" class="sympraxi-form-actions">
+            {% csrf_token %}
+            <input type="hidden" name="goal" value="{{ g.pk }}">
+            <button class="usa-button usa-button--unstyled" type="submit" name="action" value="open">{% translate "Open it again" %}<span class="usa-sr-only"> {{ g.text }}</span></button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

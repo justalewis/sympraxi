@@ -61,7 +61,13 @@ from sympraxi.forms.models import Form, FormKind, FormVersion, Response
 from sympraxi.online.models import RoomDocument, RoomVersion
 from sympraxi.privacy.models import AuditEvent, Disclosure
 from sympraxi.records import export as record_export
-from sympraxi.records.models import AttachedResource, Resource, SessionRecord, WritingProject
+from sympraxi.records.models import (
+    AttachedResource,
+    Goal,
+    Resource,
+    SessionRecord,
+    WritingProject,
+)
 from sympraxi.reports.models import UNFINISHED, CenterExport, ExportStatus
 from sympraxi.reports.tables import write_csv_rows
 from sympraxi.scheduling.models import (
@@ -588,6 +594,13 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
                 for c in Comment.objects.filter(submission_file__submission__center=center)
                 .select_related("author")
                 .order_by("created_at", "pk")
+            ),
+        )
+        w.items(
+            "goals.json",
+            (
+                columns_of(g)
+                for g in Goal.objects.filter(center=center).order_by("created_at", "pk")
             ),
         )
         w.items(

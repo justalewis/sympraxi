@@ -146,6 +146,10 @@ PAGES = [
     ("tutor", "/centers/{slug}/resources/favorites/"),
     ("tutor", "/centers/{slug}/resources/{resource}/favorite/"),
     ("director", "/centers/{slug}/reports/resources/"),
+    ("student", "/centers/{slug}/my-writing/goals/"),
+    ("student", "/centers/{slug}/my-writing/timeline/"),
+    ("tutor", "/centers/{slug}/students/{student_membership}/goals/"),
+    ("tutor", "/centers/{slug}/students/{student_membership}/timeline/"),
     ("director", "/centers/{slug}/records/settings/"),
     # Attendance, booking blocks and reminders
     ("tutor", "/centers/{slug}/appointments/{unwritten}/attendance/"),

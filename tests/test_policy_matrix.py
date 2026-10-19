@@ -108,6 +108,10 @@ FILES_ACTIONS = [
     Action.VIEW_FILES,
 ]
 
+GOAL_ACTIONS = [
+    Action.SET_GOALS,
+]
+
 ONLINE_ACTIONS = [
     Action.JOIN_VIDEO,
     Action.USE_ROOM,
@@ -133,6 +137,7 @@ ACTIONS = (
     + FILES_ACTIONS
     + QUEUE_ACTIONS
     + ONLINE_ACTIONS
+    + GOAL_ACTIONS
 )
 
 # fmt: off
@@ -306,6 +311,19 @@ EXPECTED_ONLINE = {
     "director":    (0,    0),
     "site_admin":  (0,    0),
 }
+
+# Writing goals, asked about the center. Students write their own and tutors those of
+# students they work with (tests/test_goals.py checks those parts); directors write
+# anyone's. Front desk staff and site administrators don't.
+EXPECTED_GOALS = {
+    #              set
+    "none":        (0,),
+    "student":     (1,),
+    "tutor":       (1,),
+    "front_desk":  (0,),
+    "director":    (1,),
+    "site_admin":  (0,),
+}
 # fmt: on
 
 CASES = [
@@ -323,6 +341,7 @@ CASES = [
         (EXPECTED_FILES, FILES_ACTIONS),
         (EXPECTED_QUEUE, QUEUE_ACTIONS),
         (EXPECTED_ONLINE, ONLINE_ACTIONS),
+        (EXPECTED_GOALS, GOAL_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)
