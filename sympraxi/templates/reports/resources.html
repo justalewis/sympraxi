@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Resources tutors attach" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Resources" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Resources tutors attach" %}</h1>
+  <p class="sympraxi-no-print">{% translate "Which writing resources tutors attached to final session records, how many tutors use each, which of your center's links go unused, and for which concerns tutors find something to give. No student is named." %}</p>
+  {% include "reports/_period_filters.html" %}
+  {% if report %}
+    <p class="sympraxi-report-period"><strong>{{ period.label }}</strong>. {{ period.schedule_label }}.</p>
+    {% include "reports/_downloads.html" %}
+    {% for table in report.tables %}
+      <section class="sympraxi-report-section" aria-labelledby="table-{{ table.name }}">
+        <h2 id="table-{{ table.name }}">{{ table.title }}</h2>
+        {% include "reports/_table.html" %}
+      </section>
+    {% endfor %}
+  {% endif %}
+{% endblock content %}

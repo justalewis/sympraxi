@@ -1,0 +1,6 @@
+{% load i18n %}
+<button type="button" class="usa-button usa-button--unstyled sympraxi-favorite" id="favorite-{{ resource.pk }}"
+        aria-pressed="{% if is_favorite %}true{% else %}false{% endif %}"
+        hx-post="{% url 'records:favorite_toggle' slug=center.slug resource_id=resource.pk %}"
+        hx-target="this" hx-swap="outerHTML"
+        hx-params="csrfmiddlewaretoken">{% if is_favorite %}{% translate "Remove from favorites" %}{% else %}{% translate "Add to favorites" %}{% endif %}<span class="usa-sr-only"> {{ resource.title }}</span></button>

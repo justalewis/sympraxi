@@ -2,6 +2,16 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 3: tutor favorites and the resource report (October 2026)
+
+**Favorites are a person's, and show first.** A tutor stars a resource, and it appears under **Your favorites** at the top of the resource panel on the record form, the ones that share a concern with the topics just tagged ahead of the rest, up to eight, never one already attached. A favorite belongs to the person, not the center: a center's own link is offered only in that center, so a favorite of another center's link is simply not shown here, and one the link checker found broken is left out like any other suggestion. Favorites are private. A director sees only a count: how many of the center's tutors favorited each resource.
+
+**Starring works with and without JavaScript.** Beside each resource in the panel is a button that, with htmx, flips the star in place (it is a plain `button` that does nothing without JavaScript, so it can't submit the half-written record). Without JavaScript, **Your favorite resources** (a page of its own, linked from the center's page) lists them with a search to add more, and each add or remove goes through a small page that asks first. The form isn't submitted to star something, which would lose the tutor's unsaved record.
+
+**One report for directors.** **Resources tutors attach** uses the same period and downloads as the statistics (CSV, XLSX, JSON), counts final session records, and names no student. It shows each resource attached in the period with how many records it went on, how many different tutors attached it, how many of the center's tutors favorited it and what the link checker found; the center's own links that nobody attached in the period, with how many records each was ever attached to; and, for each concern tagged, how many records carry it and how many of those got a resource, which is where tutors find something to give and where the catalog falls short.
+
+**Not done.** Favorite counts don't separate tutors who left the center, and the report can't say whether a student opened a resource.
+
 ## Phase 3: the link checker (October 2026)
 
 **Off until an installation turns it on.** The checker makes requests from the server to other people's websites, and everything else here either stays inside the stack or goes to something the installation named (the mail relay, the identity provider, the Jitsi server). `SYMPRAXI_LINK_CHECK` is false by default; with it off, the director's page says so and nothing is visited. Nothing new to install: it uses Python's standard library.

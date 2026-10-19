@@ -3,6 +3,12 @@
   {# Update the status line outside the list, so screen readers hear what changed. #}
   <span id="resource-status" hx-swap-oob="innerHTML">{% if query %}{% blocktranslate count n=results|length %}{{ n }} resource matches your search.{% plural %}{{ n }} resources match your search.{% endblocktranslate %} {% endif %}{% blocktranslate count n=suggestions|length %}{{ n }} suggestion for the topics you chose.{% plural %}{{ n }} suggestions for the topics you chose.{% endblocktranslate %}</span>
 {% endif %}
+{% if favorites %}
+  <h4>{% translate "Your favorites" %}</h4>
+  <ul class="usa-list usa-list--unstyled sympraxi-resource-list">
+    {% for resource in favorites %}<li class="sympraxi-resource">{% include "records/_resource_item.html" with is_favorite=True %}</li>{% endfor %}
+  </ul>
+{% endif %}
 {% if query %}
   <h4>{% blocktranslate %}Matching “{{ query }}”{% endblocktranslate %}</h4>
   {% if results %}

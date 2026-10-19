@@ -10,6 +10,7 @@ app_name = "reports"
 urlpatterns = [
     path("reports/statistics/", views.statistics_page, name="statistics"),
     path("reports/hours/", views.utilization_page, name="utilization"),
+    path("reports/resources/", views.resources_page, name="resources"),
     path("reports/appointments/", views.appointment_list, name="appointment_list"),
     path("reports/students/", views.student_list, name="student_list"),
     path("reports/export/", views.center_export_page, name="center_export"),

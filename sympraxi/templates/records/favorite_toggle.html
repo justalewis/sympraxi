@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Favorite a resource" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Favorite a resource" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{{ resource.title }}</h1>
+  <p>{{ resource.publisher }}</p>
+  <p>{{ resource.summary }}</p>
+  <form method="post" class="sympraxi-form-actions">
+    {% csrf_token %}
+    <button class="usa-button" type="submit">{% if is_favorite %}{% translate "Remove it from my favorites" %}{% else %}{% translate "Add it to my favorites" %}{% endif %}</button>
+    <a href="{% url 'records:favorites' slug=center.slug %}">{% translate "Go back" %}</a>
+  </form>
+{% endblock content %}

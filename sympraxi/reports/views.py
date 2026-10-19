@@ -25,7 +25,7 @@ from django.views.decorators.http import require_http_methods
 from sympraxi.centers.models import Center
 from sympraxi.core.policy import Action, get_for_action
 from sympraxi.privacy.audit import AuditAction, record
-from sympraxi.reports import center_export, lists, statistics, tables, tasks, utilization
+from sympraxi.reports import center_export, lists, resources, statistics, tables, tasks, utilization
 from sympraxi.reports.forms import AppointmentListForm, Period, PeriodForm, list_choice
 from sympraxi.reports.models import UNFINISHED, CenterExport, ExportStatus
 from sympraxi.reports.tables import FORMATS, Report
@@ -105,6 +105,12 @@ def _period_page(request: HttpRequest, center: Center, build: Any, template: str
 def statistics_page(request: HttpRequest, slug: str) -> HttpResponse:
     center = _center(request, Action.VIEW_STATISTICS, slug)
     return _period_page(request, center, statistics.build, "reports/statistics.html")
+
+
+@login_required
+def resources_page(request: HttpRequest, slug: str) -> HttpResponse:
+    center = _center(request, Action.VIEW_STATISTICS, slug)
+    return _period_page(request, center, resources.build, "reports/resources.html")
 
 
 @login_required

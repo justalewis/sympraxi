@@ -151,6 +151,9 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "records:resource_edit": (Action.MANAGE_RECORDS, "resource"),
     "records:resource_links": (Action.MANAGE_RECORDS, "center"),
     "records:resource_check": (Action.MANAGE_RECORDS, "resource"),
+    "records:favorites": (Action.WRITE_RECORDS, "center"),
+    "records:favorite_toggle": (Action.WRITE_RECORDS, "resource"),
+    "reports:resources": (Action.VIEW_STATISTICS, "center"),
     # Forms. "form" is the default intake form, with a draft; "question" is in the draft.
     "forms:list": (Action.MANAGE_FORMS, "center"),
     "forms:create": (Action.MANAGE_FORMS, "center"),

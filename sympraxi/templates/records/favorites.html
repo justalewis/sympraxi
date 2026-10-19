@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Your favorite resources" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Favorites" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Your favorite resources" %}</h1>
+  <p>{% translate "Favorites show first in the resource panel when you write a session record, the ones that fit the topics you tag ahead of the rest. They are yours; no one else sees them." %}</p>
+  {% if favorites %}
+    <ul class="usa-list usa-list--unstyled sympraxi-resource-list">
+      {% for resource in favorites %}
+        <li class="sympraxi-resource">
+          <p class="sympraxi-resource__title"><a href="{{ resource.url }}" target="_blank" rel="noopener">{{ resource.title }} <span class="sympraxi-resource__meta">{% translate "(opens in a new tab)" %}</span></a></p>
+          <p class="sympraxi-resource__meta">{{ resource.publisher }}{% if resource.is_local %} · {% translate "your center's link" %}{% endif %}</p>
+          <p><a href="{% url 'records:favorite_toggle' slug=center.slug resource_id=resource.pk %}">{% translate "Remove" %}<span class="usa-sr-only"> {{ resource.title }}</span></a></p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "You haven't chosen any favorites yet. Search below, or use Add to favorites beside a resource in a session record." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Find one to add" %}</h2>
+  <form class="usa-form usa-form--large" method="get" role="search">
+    <label class="usa-label" for="favorite-search">{% translate "Search the catalog and your center's links" %}</label>
+    <input class="usa-input" id="favorite-search" type="search" name="q" value="{{ query }}" autocomplete="off">
+    <button class="usa-button" type="submit">{% translate "Search" %}</button>
+  </form>
+  {% if query %}
+    {% if results %}
+      <ul class="usa-list usa-list--unstyled sympraxi-resource-list">
+        {% for resource in results %}
+          <li class="sympraxi-resource">
+            <p class="sympraxi-resource__title">{{ resource.title }}</p>
+            <p class="sympraxi-resource__meta">{{ resource.publisher }}{% if resource.is_local %} · {% translate "your center's link" %}{% endif %}</p>
+            <p class="sympraxi-resource__summary">{{ resource.summary }}</p>
+            <p><a href="{% url 'records:favorite_toggle' slug=center.slug resource_id=resource.pk %}">{% translate "Add to favorites" %}<span class="usa-sr-only"> {{ resource.title }}</span></a></p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>{% translate "Nothing matches that search." %}</p>
+    {% endif %}
+  {% endif %}
+{% endblock content %}

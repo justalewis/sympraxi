@@ -24,6 +24,7 @@
       {% if can_see_own_writing %}<li><a href="{% url 'records:my_writing' slug=center.slug %}">{% translate "My writing: your session summaries and next steps" %}</a></li>{% endif %}
       {% if can_see_records_to_write %}<li><a href="{% url 'records:to_write' slug=center.slug %}">{% translate "Session records to write" %}</a></li>{% endif %}
       {% if can_write_records %}<li><a href="{% url 'records:new' slug=center.slug %}">{% translate "Record a meeting that wasn't booked" %}</a></li>{% endif %}
+      {% if can_write_records %}<li><a href="{% url 'records:favorites' slug=center.slug %}">{% translate "Your favorite resources" %}</a></li>{% endif %}
     </ul>
   {% endif %}
   {% if can_submit_work or can_work_queue or can_manage_queue %}
@@ -48,6 +49,7 @@
       {% if can_view_master_lists %}<li><a href="{% url 'reports:student_list' slug=center.slug %}">{% translate "Students and their visits" %}</a></li>{% endif %}
       {% if can_view_statistics %}<li><a href="{% url 'reports:statistics' slug=center.slug %}">{% translate "Statistics: appointments, visits and topics" %}</a></li>{% endif %}
       {% if can_view_statistics %}<li><a href="{% url 'reports:utilization' slug=center.slug %}">{% translate "Hours offered and booked" %}</a></li>{% endif %}
+      {% if can_view_statistics %}<li><a href="{% url 'reports:resources' slug=center.slug %}">{% translate "Resources tutors attach" %}</a></li>{% endif %}
       {% if can_export_center %}<li><a href="{% url 'reports:center_export' slug=center.slug %}">{% translate "Full export of the center" %}</a></li>{% endif %}
     </ul>
   {% endif %}

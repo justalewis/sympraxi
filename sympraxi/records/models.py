@@ -382,3 +382,25 @@ class LinkCheckRun(models.Model):
 
     def __str__(self) -> str:
         return f"Link check {self.started_at:%Y-%m-%d %H:%M}"
+
+
+class ResourceFavorite(models.Model):
+    """A resource a tutor keeps close: it shows first in their resource panel.
+
+    A favorite belongs to a person, not a center. A center's own link is offered only
+    in that center, so a favorite of one is simply not shown elsewhere.
+    """
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="favorite_resources"
+    )
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name="favorites")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["user", "resource"], name="records_favorite_once"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.user_id} likes {self.resource_id}"

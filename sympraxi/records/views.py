@@ -8,6 +8,7 @@ attaching adds the resource without reloading.
 """
 
 import json
+from collections.abc import Iterable
 from datetime import timedelta
 from typing import Any, cast
 from uuid import UUID
@@ -18,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Prefetch, QuerySet
 from django.http import Http404, HttpRequest, HttpResponse, QueryDict
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -33,7 +34,7 @@ from sympraxi.forms import report
 from sympraxi.forms.answering import CONTINUE, Questions, follow_up_message
 from sympraxi.forms.models import Response
 from sympraxi.privacy.audit import AuditAction, record
-from sympraxi.records import export, linkcheck, services, suggestions
+from sympraxi.records import export, favorites, linkcheck, services, suggestions
 from sympraxi.records.display import by_project, topic_axes, topics_by_axis
 from sympraxi.records.forms import (
     Attached,
@@ -59,6 +60,8 @@ from sympraxi.records.models import (
 from sympraxi.scheduling.models import Appointment, AppointmentStatus, Block, Participant
 from sympraxi.scheduling.views import appointment_for, center_for, signed_in
 
+# The most favorites the record form's panel shows at once.
+FAVORITES_SHOWN = 8
 # How far back the "records to write" list looks.
 TO_WRITE_DAYS = 90
 
@@ -304,6 +307,8 @@ def _record_page(
         "attached": attached,
         "axes": topic_axes(topic_choices(rec.topics.all() if rec else None), form.topic_slugs()),
         "suggestions": suggestions.suggest(center, chosen, exclude=attached_ids),
+        "favorites": _favorites_shown(request.user, center, chosen, attached_ids),
+        "favorite_ids": favorites.ids_for(request.user, center),
         "has_concern": any(t.axis == "concern" for t in chosen),
         "query": query,
         "results": suggestions.search(center, query, exclude=attached_ids) if query else [],
@@ -442,6 +447,15 @@ def _available(center: Center, value: str) -> Resource | None:
     return Resource.objects.available_to(center).filter(pk=pk).first()
 
 
+def _favorites_shown(
+    user: Any, center: Center, chosen: Iterable[Topic], attached: Iterable[Any]
+) -> list[Resource]:
+    """The user's favorites for the panel: not attached yet, those that fit the topics first."""
+    taken = set(attached)
+    found = favorites.for_topics(favorites.favorites_for(user, center), chosen)
+    return [r for r in found if r.pk not in taken][:FAVORITES_SHOWN]
+
+
 def _posted(request: HttpRequest) -> QueryDict:
     return request.POST if request.method == "POST" else request.GET
 
@@ -469,6 +483,8 @@ def resource_panel(request: HtmxHttpRequest, slug: str) -> HttpResponse:
     context = {
         "center": center,
         "suggestions": found,
+        "favorites": _favorites_shown(request.user, center, chosen, exclude),
+        "favorite_ids": favorites.ids_for(request.user, center),
         "has_concern": any(t.axis == "concern" for t in chosen),
         "query": query,
         "results": results,
@@ -914,6 +930,61 @@ def resource_edit(request: HttpRequest, slug: str, resource_id: UUID) -> HttpRes
         pk=resource_id,
     )
     return _resource_page(request, cast(Center, resource.center), resource, title=_("Edit a link"))
+
+
+@login_required
+def favorites_page(request: HttpRequest, slug: str) -> HttpResponse:
+    """A tutor's favorite resources, and a search to add more."""
+    center = center_for(request, Action.WRITE_RECORDS, slug)
+    user = signed_in(request)
+    mine = favorites.favorites_for(user, center)
+    chosen = {r.pk for r in mine}
+    query = request.GET.get("q", "").strip()
+    found = (
+        [r for r in suggestions.search(center, query, exclude=chosen) if r.pk not in chosen]
+        if query
+        else []
+    )
+    context = {
+        "center": center,
+        "favorites": mine,
+        "query": query,
+        "results": found,
+        "crumbs": _crumbs(center),
+    }
+    return render(request, "records/favorites.html", context)
+
+
+@login_required
+def favorite_toggle(request: HtmxHttpRequest, slug: str, resource_id: UUID) -> HttpResponse:
+    """Star or unstar a resource. With htmx the star changes in place; without, a page asks."""
+    center = center_for(request, Action.WRITE_RECORDS, slug)
+    resource = get_object_or_404(Resource.objects.available_to(center), pk=resource_id)
+    user = signed_in(request)
+    if request.method == "POST":
+        now = favorites.toggle(user, resource)
+        if request.htmx:
+            return render(
+                request,
+                "records/_favorite_button.html",
+                {"center": center, "resource": resource, "is_favorite": now},
+            )
+        messages.success(
+            request,
+            _("%(title)s is one of your favorites.") % {"title": resource.title}
+            if now
+            else _("%(title)s is no longer one of your favorites.") % {"title": resource.title},
+        )
+        return redirect("records:favorites", slug=slug)
+    context = {
+        "center": center,
+        "resource": resource,
+        "is_favorite": favorites.is_favorite(user, resource),
+        "crumbs": _crumbs(
+            center, (_("Favorites"), reverse("records:favorites", kwargs={"slug": slug}))
+        ),
+    }
+    return render(request, "records/favorite_toggle.html", context)
 
 
 @login_required
