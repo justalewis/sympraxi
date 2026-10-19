@@ -71,3 +71,21 @@ class CenterExport(models.Model):
             and self.expires_at is not None
             and self.expires_at > now  # type: ignore[operator]
         )
+
+
+class ReportQuestions(models.Model):
+    """Which questions tell the reports a student's class standing and a session's course.
+
+    A question is named by its permanent key, which every version of its form keeps, so
+    the choice survives edits to the form. See `sympraxi.reports.demographics`.
+    """
+
+    center = models.OneToOneField(Center, on_delete=models.CASCADE, related_name="report_questions")
+    standing_key = models.UUIDField(null=True, blank=True)
+    course_key = models.UUIDField(null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "report questions"
+
+    def __str__(self) -> str:
+        return f"Report questions for {self.center_id}"

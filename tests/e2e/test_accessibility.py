@@ -146,6 +146,8 @@ PAGES = [
     ("tutor", "/centers/{slug}/resources/favorites/"),
     ("tutor", "/centers/{slug}/resources/{resource}/favorite/"),
     ("director", "/centers/{slug}/reports/resources/"),
+    ("director", "/centers/{slug}/reports/by-course/"),
+    ("director", "/centers/{slug}/reports/questions/"),
     ("student", "/centers/{slug}/my-writing/goals/"),
     ("student", "/centers/{slug}/my-writing/timeline/"),
     ("tutor", "/centers/{slug}/students/{student_membership}/goals/"),

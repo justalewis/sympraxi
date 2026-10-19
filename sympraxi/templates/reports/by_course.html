@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Topics by course and class standing" %}{% endblock head_title %}
+{% block content %}
+  {% translate "By course and standing" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Topics by course and class standing" %}</h1>
+  <p class="sympraxi-no-print">{% translate "What students came in for, by their class standing and the course they came about, and how that changes from term to term. A group with fewer than five students isn't shown, so no row points at one person." %}</p>
+  {% if not configured.standing_key or not configured.course_key %}
+    <p class="sympraxi-no-print">{% translate "Class standing and course come from questions on your registration and intake forms." %} <a href="{% url 'reports:report_questions' slug=center.slug %}">{% translate "Choose the questions" %}</a></p>
+  {% endif %}
+  <div class="sympraxi-no-print">
+    {% if form.non_field_errors %}
+      <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+        <div class="usa-alert__body"><p class="usa-alert__text">{{ form.non_field_errors|join:" " }}</p></div>
+      </div>
+    {% endif %}
+    <form class="sympraxi-filters" method="get">
+      {% include "includes/field.html" with field=form.term %}
+      {% include "includes/field.html" with field=form.first %}
+      {% include "includes/field.html" with field=form.last %}
+      {% include "includes/field.html" with field=form.schedule %}
+      <div class="usa-form-group">
+        <label class="usa-label" for="standing">{% translate "Class standing" %}</label>
+        <select class="usa-select" id="standing" name="standing">
+          <option value="">{% translate "Every class standing" %}</option>
+          {% for s in standings %}<option value="{{ s }}"{% if s == standing %} selected{% endif %}>{{ s }}</option>{% endfor %}
+        </select>
+      </div>
+      <button class="usa-button" type="submit">{% translate "Show" %}</button>
+    </form>
+  </div>
+  {% if report %}
+    <p class="sympraxi-report-period"><strong>{{ period.label }}</strong>. {{ period.schedule_label }}.{% if standing %} {{ standing }}.{% endif %}</p>
+    {% include "reports/_downloads.html" %}
+    {% for table in report.tables %}
+      <section class="sympraxi-report-section" aria-labelledby="table-{{ table.name }}">
+        <h2 id="table-{{ table.name }}">{{ table.title }}</h2>
+        {% include "reports/_table.html" %}
+      </section>
+    {% endfor %}
+  {% endif %}
+{% endblock content %}

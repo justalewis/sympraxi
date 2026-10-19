@@ -2,6 +2,18 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 3: topics by course and class standing (October 2026)
+
+**Which question says "first-year"?** Class standing and course live in answers to questions a center wrote itself, so a director chooses the two questions on **Questions the reports read** (center tools), from the short-answer and choose-one questions on the published registration and intake forms. The choice is stored as the question's permanent key, which every new version of its form keeps. A form doesn't have to be edited, a new version of it doesn't break the report, and answers given to earlier versions still count. A center that hasn't chosen sees "Not given" throughout, and a prompt to choose.
+
+**Where each value comes from.** Standing is the student's latest answer to that question, from registration or any intake form, as it stands when the report is run, not as it was on the day of the session: a student who was first-year in the fall and answered "sophomore" in the spring is a sophomore in both. Course is the answer to the course question on the intake form for the appointment the record is about, and failing that the course of the record's writing project. Text is tidied (spaces collapsed, courses upper-cased) so "eng  101" and "ENG 101" are one course; a choice uses the label of the option chosen.
+
+**What the report answers.** **Topics by course and class standing** (reports, with the same periods, schedule filter and downloads as the statistics) lists sessions and students by standing and by course, the concerns for each standing and course together, and the concerns in each of the center's last eight terms. A **Class standing** filter narrows the whole page, so "what did first-year students come in for this term, by course?" is one choice and one look at the concerns table. Only final session records are counted, as in the statistics.
+
+**Small groups are held back.** A row for fewer than five different students is not shown, and the table says how many rows were left out, the same line the survey results draw. The totals are not changed, so someone with the page can still work out that a group was small; the report is for directors, who can read the records anyway, and the rule makes the page and its downloads safe to pass on. The de-identified research export (the next slice) uses the same rule on purpose.
+
+**Not done.** Standing is not kept as a history, so a report for an old term uses today's answer; a center that cares can ask the question again each term. The report doesn't yet cross concerns with the stage or tutor-action axes.
+
 ## Phase 3: writing goals and the timeline across terms (October 2026)
 
 **A goal is a sentence and, if the student wants, a day.** It stays open until someone marks it met or dropped, which keeps who and when; marking it open again clears that, for a mistake. Goals are never deleted, every change is audited, and a student can have 20 open at once, so a list stays a list. A goal can name one of the student's open writing projects. The day, if given, must be from today to two years ahead; one that passes is flagged "past its day", not closed.

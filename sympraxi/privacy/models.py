@@ -82,6 +82,9 @@ ACTION_LABELS = {
     "feedback.submission_returned": _("Returned written feedback to a student"),
     "feedback.submission_canceled": _("Canceled a submission"),
     "feedback.settings_changed": _("Changed the feedback queue's settings"),
+    "reports.questions_changed": _(
+        "Chose which questions the reports read for class standing and course"
+    ),
     "records.goal_added": _("Added a writing goal for a student"),
     "records.goal_changed": _("Marked a writing goal met, dropped or open"),
     "records.timeline_viewed": _("Read a student's timeline across terms"),

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Questions the reports read" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Questions the reports read" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Questions the reports read" %}</h1>
+  <p>{% translate "The report of topics by course and class standing reads two questions from your registration and intake forms. Choose which. You don't have to change a form: the choice follows the question through every later version of it, and earlier answers count too." %}</p>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Save" %}</button>
+      <a href="{% url 'reports:by_course' slug=center.slug %}">{% translate "Go to the report" %}</a>
+    </div>
+  </form>
+{% endblock content %}

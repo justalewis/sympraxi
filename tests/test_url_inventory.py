@@ -154,6 +154,8 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "records:favorites": (Action.WRITE_RECORDS, "center"),
     "records:favorite_toggle": (Action.WRITE_RECORDS, "resource"),
     "reports:resources": (Action.VIEW_STATISTICS, "center"),
+    "reports:by_course": (Action.VIEW_STATISTICS, "center"),
+    "reports:report_questions": (Action.MANAGE_FORMS, "center"),
     "records:my_goals": (Action.VIEW_OWN_WRITING, "center"),
     "records:my_timeline": (Action.VIEW_OWN_WRITING, "center"),
     "records:student_goals": (Action.SET_GOALS, "student_membership"),

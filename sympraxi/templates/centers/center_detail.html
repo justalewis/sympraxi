@@ -49,6 +49,7 @@
       {% if can_view_master_lists %}<li><a href="{% url 'reports:student_list' slug=center.slug %}">{% translate "Students and their visits" %}</a></li>{% endif %}
       {% if can_view_statistics %}<li><a href="{% url 'reports:statistics' slug=center.slug %}">{% translate "Statistics: appointments, visits and topics" %}</a></li>{% endif %}
       {% if can_view_statistics %}<li><a href="{% url 'reports:utilization' slug=center.slug %}">{% translate "Hours offered and booked" %}</a></li>{% endif %}
+      {% if can_view_statistics %}<li><a href="{% url 'reports:by_course' slug=center.slug %}">{% translate "Topics by course and class standing" %}</a></li>{% endif %}
       {% if can_view_statistics %}<li><a href="{% url 'reports:resources' slug=center.slug %}">{% translate "Resources tutors attach" %}</a></li>{% endif %}
       {% if can_export_center %}<li><a href="{% url 'reports:center_export' slug=center.slug %}">{% translate "Full export of the center" %}</a></li>{% endif %}
     </ul>
@@ -68,6 +69,7 @@
       {% if can_manage_schedules %}<li><a href="{% url 'online:settings' slug=center.slug %}">{% translate "Video rooms for online appointments" %}</a></li>{% endif %}
       {% if can_manage_blocks %}<li><a href="{% url 'scheduling:blocks' slug=center.slug %}">{% translate "Booking blocks for no-shows and late cancellations" %}</a></li>{% endif %}
       {% if can_manage_forms %}<li><a href="{% url 'forms:list' slug=center.slug %}">{% translate "Forms: registration, intake, session reports and surveys" %}</a></li>{% endif %}
+      {% if can_manage_forms %}<li><a href="{% url 'reports:report_questions' slug=center.slug %}">{% translate "Questions the reports read (class standing and course)" %}</a></li>{% endif %}
       {% if can_view_survey_results %}<li><a href="{% url 'forms:survey_results' slug=center.slug %}">{% translate "Survey results" %}</a></li>{% endif %}
       {% if can_manage_records %}<li><a href="{% url 'records:resources' slug=center.slug %}">{% translate "Your center's resources" %}</a></li>{% endif %}
       {% if can_manage_records %}<li><a href="{% url 'records:resource_links' slug=center.slug %}">{% translate "Links that moved or broke" %}</a></li>{% endif %}

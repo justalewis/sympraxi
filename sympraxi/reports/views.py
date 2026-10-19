@@ -25,8 +25,23 @@ from django.views.decorators.http import require_http_methods
 from sympraxi.centers.models import Center
 from sympraxi.core.policy import Action, get_for_action
 from sympraxi.privacy.audit import AuditAction, record
-from sympraxi.reports import center_export, lists, resources, statistics, tables, tasks, utilization
-from sympraxi.reports.forms import AppointmentListForm, Period, PeriodForm, list_choice
+from sympraxi.reports import (
+    center_export,
+    demographics,
+    lists,
+    resources,
+    statistics,
+    tables,
+    tasks,
+    utilization,
+)
+from sympraxi.reports.forms import (
+    AppointmentListForm,
+    Period,
+    PeriodForm,
+    ReportQuestionsForm,
+    list_choice,
+)
 from sympraxi.reports.models import UNFINISHED, CenterExport, ExportStatus
 from sympraxi.reports.tables import FORMATS, Report
 from sympraxi.scheduling.notifications import base_url
@@ -80,7 +95,13 @@ def _stem(kind: str, first: date, last: date) -> str:
     return f"{kind}-{first.isoformat()}-to-{last.isoformat()}"
 
 
-def _period_page(request: HttpRequest, center: Center, build: Any, template: str) -> HttpResponse:
+def _period_page(
+    request: HttpRequest,
+    center: Center,
+    build: Any,
+    template: str,
+    extra: Any = None,
+) -> HttpResponse:
     form = PeriodForm(request.GET or None, center=center, today=_today(center))
     invalid = form.is_bound and not form.is_valid()
     period = form.period()
@@ -97,6 +118,8 @@ def _period_page(request: HttpRequest, center: Center, build: Any, template: str
         "downloads": downloads(request),
         "crumbs": _crumbs(center),
     }
+    if extra is not None:
+        context.update(extra(period))
     with timezone.override(center.time_zone):
         return render(request, template, context)
 
@@ -111,6 +134,56 @@ def statistics_page(request: HttpRequest, slug: str) -> HttpResponse:
 def resources_page(request: HttpRequest, slug: str) -> HttpResponse:
     center = _center(request, Action.VIEW_STATISTICS, slug)
     return _period_page(request, center, resources.build, "reports/resources.html")
+
+
+@login_required
+def by_course_page(request: HttpRequest, slug: str) -> HttpResponse:
+    """Topics by class standing and course, and across terms."""
+    center = _center(request, Action.VIEW_STATISTICS, slug)
+    standing = request.GET.get("standing", "").strip()[:200]
+
+    def build(center: Center, period: Any) -> Report:
+        return demographics.build(center, period, standing=standing)
+
+    return _period_page(
+        request,
+        center,
+        build,
+        "reports/by_course.html",
+        extra=lambda period: {
+            "standing": standing,
+            "standings": demographics.standings_seen(center, period),
+            "configured": demographics.settings_for(center),
+        },
+    )
+
+
+@login_required
+def report_questions(request: HttpRequest, slug: str) -> HttpResponse:
+    """A director chooses which questions the by-course report reads."""
+    center = _center(request, Action.MANAGE_FORMS, slug)
+    current = demographics.settings_for(center)
+    choices = [(str(key), label) for key, label in demographics.candidates(center)]
+    initial = {
+        "standing": str(current.standing_key or ""),
+        "course": str(current.course_key or ""),
+    }
+    form = ReportQuestionsForm(
+        request.POST if request.method == "POST" else None, choices=choices, initial=initial
+    )
+    if request.method == "POST" and form.is_valid():
+        current.standing_key = (
+            UUID(form.cleaned_data["standing"]) if form.cleaned_data["standing"] else None
+        )
+        current.course_key = (
+            UUID(form.cleaned_data["course"]) if form.cleaned_data["course"] else None
+        )
+        current.save()
+        record(AuditAction.REPORT_QUESTIONS_CHANGED, request=request, center=center, target=current)
+        messages.success(request, _("The reports will read these questions."))
+        return redirect("reports:report_questions", slug=slug)
+    context = {"center": center, "form": form, "crumbs": _crumbs(center)}
+    return render(request, "reports/report_questions.html", context)
 
 
 @login_required

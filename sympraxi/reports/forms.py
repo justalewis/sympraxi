@@ -23,6 +23,29 @@ MAX_DAYS = 366
 DEFAULT_DAYS = 30
 
 
+class ReportQuestionsForm(forms.Form):
+    """Choose the questions that give class standing and course."""
+
+    standing = forms.ChoiceField(
+        label=gettext_lazy("Class standing"),
+        required=False,
+        help_text=gettext_lazy(
+            "For example: first-year, sophomore. Choose a short-answer or choose-one question."
+        ),
+    )
+    course = forms.ChoiceField(
+        label=gettext_lazy("Course"),
+        required=False,
+        help_text=gettext_lazy("The course the student came about, asked at booking."),
+    )
+
+    def __init__(self, *args: Any, choices: list[tuple[str, str]], **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        options = [("", gettext_lazy("None chosen")), *choices]
+        for name in ("standing", "course"):
+            cast(forms.ChoiceField, self.fields[name]).choices = options
+
+
 @dataclass
 class Period:
     """The days a report covers, in the center's time zone, and on which schedules."""
