@@ -37,6 +37,7 @@ from sympraxi.records.models import (
     Topic,
     WritingProject,
 )
+from sympraxi.records.signals import record_finalized
 from sympraxi.scheduling import attendance
 from sympraxi.scheduling.models import Appointment, AppointmentStatus
 
@@ -188,6 +189,7 @@ def finalize(
         _audit(AuditAction.RECORD_FINALIZED, actor, rec, request)
         # A final record means the session happened, so the student came.
         attendance.record_came(rec, actor=actor, now=now, request=request)
+        record_finalized.send(sender=SessionRecord, record=rec)
     if notify:
         base_url = notifications.base_url(request)
         record_id = rec.pk

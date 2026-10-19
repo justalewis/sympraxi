@@ -60,6 +60,13 @@ student: it is opened by that student, the appointment's tutor and directors,
 never by other students in a group, and front desk staff don't see drafts
 (`sympraxi/files/`).
 
+The written-feedback queue (`sympraxi/feedback/`): a student sends a draft and
+sees their own submissions. Tutors and directors see the waiting submissions
+without the student's name or draft, and claim them; only the tutor who has a
+submission, and directors, open it. Directors assign and release submissions,
+set the queue up and see turnaround. Front desk staff and site administrators
+have no part in it.
+
 Disclosures: directors keep each student's record of disclosures of their
 records outside the college's own officials (34 CFR 99.32), and the student
 reads their own on My writing. Site administrators don't: it is part of the
@@ -75,6 +82,7 @@ from django.db.models import Model, QuerySet
 from django.http import Http404
 
 from sympraxi.centers.models import STAFF_ROLES, Center, Membership, Role
+from sympraxi.feedback.models import Submission
 from sympraxi.forms.models import Response
 from sympraxi.records.models import RecordStatus, SessionRecord, WritingProject
 from sympraxi.scheduling.models import (
@@ -135,6 +143,14 @@ class Action(StrEnum):
     ATTACH_FILES = "files.attach"
     # Open the files on an appointment.
     VIEW_FILES = "files.view"
+    # Send a draft to the center's written-feedback queue, and see your own.
+    SUBMIT_WORK = "queue.submit"
+    # See the waiting submissions, without the student's name, and claim one.
+    WORK_QUEUE = "queue.work"
+    # Open a submission: the student, the tutor who has it, and directors.
+    VIEW_SUBMISSION = "queue.view"
+    # Assign and release submissions, set the queue up, and see turnaround.
+    MANAGE_QUEUE = "queue.manage"
     # The center's own link-only resources and its session-record settings.
     MANAGE_RECORDS = "records.manage"
     # Build, preview and publish the center's forms: registration, intake,
@@ -183,6 +199,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.ANSWER_OWN_FORMS,
             Action.ATTACH_FILES,
             Action.VIEW_FILES,
+            Action.SUBMIT_WORK,
+            Action.VIEW_SUBMISSION,
         }
     ),
     Role.TUTOR: frozenset(
@@ -200,6 +218,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.CLOCK_OWN,
             Action.ATTACH_FILES,
             Action.VIEW_FILES,
+            Action.WORK_QUEUE,
+            Action.VIEW_SUBMISSION,
         }
     ),
     Role.FRONT_DESK: frozenset(
@@ -259,6 +279,9 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.RECORD_DISCLOSURES,
             Action.ATTACH_FILES,
             Action.VIEW_FILES,
+            Action.WORK_QUEUE,
+            Action.VIEW_SUBMISSION,
+            Action.MANAGE_QUEUE,
         }
     ),
 }
@@ -372,6 +395,17 @@ def _file_of_own_tutoring(user: UserLike, obj: Model) -> bool:
     return isinstance(appointment, Appointment) and appointment.tutor_id == user.pk
 
 
+def _own_submission(user: UserLike, obj: Model) -> bool:
+    """A student works with their own submissions, and the files on them."""
+    return getattr(obj, "student_id", None) == user.pk
+
+
+def _claimed_submission(user: UserLike, obj: Model) -> bool:
+    """A tutor opens the submissions they have, and the files on them."""
+    submission = getattr(obj, "submission", obj)
+    return isinstance(submission, Submission) and submission.tutor_id == user.pk
+
+
 def _intake_of_own_tutoring(user: UserLike, obj: Model) -> bool:
     if isinstance(obj, Appointment):
         return obj.tutor_id == user.pk
@@ -410,6 +444,9 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.STUDENT, Action.VIEW_FILES): _own_file,
     (Role.TUTOR, Action.ATTACH_FILES): _tutor_of,
     (Role.TUTOR, Action.VIEW_FILES): _file_of_own_tutoring,
+    (Role.STUDENT, Action.SUBMIT_WORK): _own_submission,
+    (Role.STUDENT, Action.VIEW_SUBMISSION): _own_submission,
+    (Role.TUTOR, Action.VIEW_SUBMISSION): _claimed_submission,
     (Role.FRONT_DESK, Action.VIEW_SCHEDULES): _not_hidden,
     (Role.FRONT_DESK, Action.BOOK_FOR_OTHERS): _not_hidden,
     (Role.DIRECTOR, Action.BOOK_FOR_OTHERS): _not_hidden,

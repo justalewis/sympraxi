@@ -18,7 +18,7 @@ from sympraxi.accounts.models import User
 from sympraxi.core.policy import Action, can, get_for_action
 from sympraxi.files import checks, services
 from sympraxi.files.display import students_for
-from sympraxi.files.models import AppointmentFile
+from sympraxi.files.models import AppointmentFile, StoredFile
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.scheduling.views import appointment_crumbs, appointment_for
 
@@ -112,15 +112,16 @@ def _file_for(request: HttpRequest, slug: str, file_id: UUID) -> AppointmentFile
     )
 
 
-@login_required
-def download(request: HttpRequest, slug: str, file_id: UUID) -> HttpResponseBase:
-    attached = _file_for(request, slug, file_id)
-    stored = attached.file
+def serve(
+    request: HttpRequest, stored: StoredFile, *, target: Any, back: str, **audit: Any
+) -> HttpResponseBase:
+    """A file as a download, or the page saying why it can't be opened yet."""
+    center = target.center
     if not stored.is_ready:
         waiting = render(
             request,
             "files/not_ready.html",
-            {"center": attached.center, "attached": attached, "stored": stored},
+            {"center": center, "stored": stored, "back": back},
             status=409,
         )
         add_never_cache_headers(waiting)
@@ -128,9 +129,10 @@ def download(request: HttpRequest, slug: str, file_id: UUID) -> HttpResponseBase
     record(
         AuditAction.FILE_DOWNLOADED,
         request=request,
-        center=attached.center,
-        target=attached,
-        student=str(attached.student_id),
+        center=center,
+        target=target,
+        student=str(target.student_id),
+        **audit,
     )
     handle = services.storage().open(stored.storage_name, "rb")
     response = FileResponse(
@@ -144,6 +146,16 @@ def download(request: HttpRequest, slug: str, file_id: UUID) -> HttpResponseBase
     response["Content-Security-Policy"] = "sandbox; default-src 'none'"
     add_never_cache_headers(response)
     return response
+
+
+@login_required
+def download(request: HttpRequest, slug: str, file_id: UUID) -> HttpResponseBase:
+    attached = _file_for(request, slug, file_id)
+    back = reverse(
+        "scheduling:appointment",
+        kwargs={"slug": slug, "appointment_id": attached.appointment_id},
+    )
+    return serve(request, attached.file, target=attached, back=back)
 
 
 @login_required

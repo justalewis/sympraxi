@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     "sympraxi.staff",
     "sympraxi.notify",
     "sympraxi.files",
+    "sympraxi.feedback",
 ]
 
 MIDDLEWARE = [

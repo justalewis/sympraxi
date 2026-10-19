@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Cancel a submission" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Cancel a submission" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with title=submission.title %}Cancel {{ title }}{% endblocktranslate %}</h1>
+  <p>{% translate "It leaves the queue and no one will write feedback on it. The files stay with the center's records." %}</p>
+  <form method="post" class="sympraxi-form-actions">
+    {% csrf_token %}
+    <button class="usa-button usa-button--secondary" type="submit">{% translate "Cancel the submission" %}</button>
+    <a href="{% url 'feedback:detail' slug=center.slug submission_id=submission.pk %}">{% translate "Go back" %}</a>
+  </form>
+{% endblock content %}

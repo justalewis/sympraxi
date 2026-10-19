@@ -1,0 +1,8 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=person.display_name %}Hello {{ name }},{% endblocktranslate %}
+
+{% blocktranslate count n=count with center=center.name %}A written-feedback submission you have at {{ center }} has passed the day the student asked for. Sign in to see it:{% plural %}{{ n }} written-feedback submissions you have at {{ center }} have passed the day the student asked for. Sign in to see them:{% endblocktranslate %}
+{{ url }}
+
+{{ center.name }}{% if center.contact_email %}
+{{ center.contact_email }}{% endif %}
+{% endautoescape %}

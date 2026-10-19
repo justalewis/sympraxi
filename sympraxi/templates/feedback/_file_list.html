@@ -1,0 +1,14 @@
+{% load i18n %}
+<ul class="usa-list usa-list--unstyled">
+  {% for f in files %}
+    <li class="sympraxi-file">
+      {% if f.file.is_ready %}
+        <a href="{% url 'feedback:download' slug=center.slug file_id=f.pk %}">{{ f.file.name }}</a>
+      {% else %}
+        <span>{{ f.file.name }}</span>
+      {% endif %}
+      <span class="usa-hint">{{ f.file.size|filesizeformat }}{% if f.file.removed_at %} · {% translate "Removed" %}{% elif not f.file.is_ready %} · {{ f.file.get_scan_status_display }}{% endif %}</span>
+      {% if may_remove and not f.file.removed_at %}<br><a href="{% url 'feedback:remove_file' slug=center.slug file_id=f.pk %}">{% translate "Remove" %}<span class="usa-sr-only"> {{ f.file.name }}</span></a>{% endif %}
+    </li>
+  {% endfor %}
+</ul>

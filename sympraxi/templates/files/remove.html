@@ -8,7 +8,7 @@
   {% if attached.file.removed_at %}
     <p>{% translate "This file has already been removed." %}</p>
   {% elif may_remove %}
-    <p>{% translate "Its content is deleted. The appointment still shows that a file with this name was attached." %}</p>
+    <p>{% translate "Its content is deleted. The page still shows that a file with this name was attached." %}</p>
     <form method="post" class="sympraxi-form-actions">
       {% csrf_token %}
       <button class="usa-button usa-button--secondary" type="submit">{% translate "Remove the file" %}</button>

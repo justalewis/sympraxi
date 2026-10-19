@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Your submissions" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Your submissions" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Your submissions" %}</h1>
+  {% if is_open %}
+    <p><a class="usa-button" href="{% url 'feedback:submit' slug=center.slug %}">{% translate "Send a draft for written feedback" %}</a></p>
+  {% else %}
+    <p>{% translate "This center isn't taking drafts for written feedback right now." %}</p>
+  {% endif %}
+  {% if submissions %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Drafts you sent for written feedback" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Title" %}</th>
+          <th scope="col">{% translate "Needed by" %}</th>
+          <th scope="col">{% translate "Where it stands" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in submissions %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Title' %}"><a href="{% url 'feedback:detail' slug=center.slug submission_id=s.pk %}">{{ s.title }}</a></th>
+            <td data-label="{% translate 'Needed by' %}">{{ s.due_at|date:"M j, Y" }}</td>
+            <td data-label="{% translate 'Where it stands' %}">{{ s.get_status_display }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "You haven't sent anything yet." %}</p>
+  {% endif %}
+{% endblock content %}

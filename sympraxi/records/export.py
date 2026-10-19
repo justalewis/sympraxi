@@ -11,7 +11,8 @@ and each session record carries the tutor's answers to the center's
 session-report questions, whether or not the student sees them on My writing.
 Booking blocks are listed with any director's note, and the student's record
 of disclosures outside the college (34 CFR 99.32) is included, and so are the
-details of every file on the student's appointments. Survey answers
+details of every file on the student's appointments, and every draft they sent
+for written feedback with the files on it. Survey answers
 aren't included: they are anonymous and nothing ties them to the student.
 
 Other students are left out. A group appointment shows how many students it
@@ -27,6 +28,7 @@ from django.utils import timezone
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Membership
+from sympraxi.feedback.models import Submission
 from sympraxi.files.models import AppointmentFile
 from sympraxi.forms import export as form_export
 from sympraxi.privacy.models import Disclosure
@@ -39,7 +41,8 @@ FORMAT = "sympraxi.student-record"
 # Version 4 added the record of disclosures.
 # Version 5 added the files on the student's appointments (names and details, not
 # their content, which downloads from each appointment's page).
-VERSION = 5
+# Version 6 added the drafts the student sent for written feedback.
+VERSION = 6
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
@@ -80,6 +83,7 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
         ],
         "disclosures": [_disclosure(d) for d in disclosures(membership)],
         "files": [_file(f) for f in files(membership)],
+        "submissions": [_submission(s) for s in submissions(membership)],
     }
 
 
@@ -91,6 +95,43 @@ def files(membership: Membership) -> QuerySet[AppointmentFile]:
         .select_related("file", "file__uploaded_by")
         .order_by("file__uploaded_at")
     )
+
+
+def submissions(membership: Membership) -> QuerySet[Submission]:
+    return (
+        Submission.objects.filter(center=membership.center, student=membership.user)
+        .select_related("tutor")
+        .prefetch_related("files__file")
+        .order_by("created_at")
+    )
+
+
+def _submission(s: Submission) -> dict[str, Any]:
+    return {
+        "id": str(s.id),
+        "title": s.title,
+        "course": s.course,
+        "wanted": s.wanted,
+        "needed_by": _when(s.due_at),
+        "status": s.get_status_display(),
+        "sent_at": _when(s.created_at),
+        "tutor": _person(s.tutor),
+        "claimed_at": _when(s.claimed_at),
+        "returned_at": _when(s.returned_at),
+        "canceled_at": _when(s.canceled_at),
+        "record": str(s.record_id) if s.record_id else None,
+        "files": [
+            {
+                "from": f.get_role_display(),
+                "name": f.file.name,
+                "size": f.file.size,
+                "sha256": f.file.sha256,
+                "uploaded_at": _when(f.file.uploaded_at),
+                "removed_at": _when(f.file.removed_at),
+            }
+            for f in s.files.all()
+        ],
+    }
 
 
 def _file(f: AppointmentFile) -> dict[str, Any]:

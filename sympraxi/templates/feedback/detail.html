@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ submission.title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=submission.title %}
+  <h1>{{ submission.title }}</h1>
+  <p><span class="usa-tag">{{ submission.get_status_display }}</span>
+    {% if overdue %}<span class="usa-tag usa-tag--error">{% translate "Past the day it was needed" %}</span>{% endif %}</p>
+  <ul class="usa-list usa-list--unstyled">
+    {% if not is_student %}<li>{% translate "From:" %} {{ submission.student.display_name }}</li>{% endif %}
+    {% if submission.course %}<li>{% translate "Course:" %} {{ submission.course }}</li>{% endif %}
+    <li>{% translate "Needed by:" %} {{ submission.due_at|date:"l, F j, Y" }}</li>
+    <li>{% translate "Sent:" %} {{ submission.created_at|date:"M j, Y, g:i A" }}</li>
+    {% if submission.tutor %}<li>{% translate "Tutor:" %} {{ submission.tutor.display_name }}</li>{% endif %}
+    {% if submission.returned_at %}<li>{% translate "Returned:" %} {{ submission.returned_at|date:"M j, Y, g:i A" }}</li>{% endif %}
+  </ul>
+  <h2>{% translate "What feedback was asked for" %}</h2>
+  <p>{{ submission.wanted|linebreaksbr }}</p>
+
+  {% if feedback_url %}
+    <p><a class="usa-button" href="{{ feedback_url }}">{% if is_student %}{% translate "Read your feedback" %}{% elif is_tutor and submission.status == "claimed" %}{% translate "Write the feedback" %}{% else %}{% translate "Open the feedback" %}{% endif %}</a></p>
+  {% endif %}
+
+  <h2 id="drafts">{% if is_student %}{% translate "Your files" %}{% else %}{% translate "The student's files" %}{% endif %}</h2>
+  {% if drafts %}
+    {% include "feedback/_file_list.html" with files=drafts %}
+  {% else %}
+    <p>{% translate "No files." %}</p>
+  {% endif %}
+  {% if may_add_draft %}
+    <p><a href="{% url 'feedback:add_file' slug=center.slug submission_id=submission.pk %}">{% translate "Add another draft" %}</a></p>
+  {% endif %}
+
+  {% if sent_back or may_send_back %}
+    <h2 id="returned">{% translate "Files from the tutor" %}</h2>
+    {% if sent_back %}
+      {% include "feedback/_file_list.html" with files=sent_back %}
+    {% else %}
+      <p>{% translate "None yet." %}</p>
+    {% endif %}
+    {% if may_send_back %}
+      <p><a href="{% url 'feedback:add_file' slug=center.slug submission_id=submission.pk %}">{% translate "Send a commented file back" %}</a></p>
+    {% endif %}
+  {% endif %}
+
+  {% if may_assign or may_cancel %}
+    <p class="sympraxi-form-actions">
+      {% if may_assign %}<a class="usa-button usa-button--outline" href="{% url 'feedback:assign' slug=center.slug submission_id=submission.pk %}">{% if submission.tutor %}{% translate "Give it to someone else" %}{% else %}{% translate "Give it to a tutor" %}{% endif %}</a>{% endif %}
+      {% if may_cancel %}<a href="{% url 'feedback:cancel' slug=center.slug submission_id=submission.pk %}">{% translate "Cancel this submission" %}</a>{% endif %}
+    </p>
+  {% endif %}
+{% endblock content %}

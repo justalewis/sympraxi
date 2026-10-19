@@ -53,6 +53,7 @@ from django.utils import timezone
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership
 from sympraxi.core.logs import scrub
+from sympraxi.feedback.models import Submission, SubmissionFile
 from sympraxi.files.models import AppointmentFile
 from sympraxi.forms import export as form_export
 from sympraxi.forms import surveys
@@ -556,6 +557,25 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
                     **columns_of(f, leave_out=("id",)),
                 }
                 for f in AppointmentFile.objects.filter(appointment__schedule__center=center)
+                .select_related("file")
+                .order_by("file__uploaded_at", "pk")
+            ),
+        )
+        w.items(
+            "submissions.json",
+            (
+                columns_of(s)
+                for s in Submission.objects.filter(center=center).order_by("created_at", "pk")
+            ),
+        )
+        w.items(
+            "submission_files.json",
+            (
+                {
+                    **columns_of(f.file, leave_out=("storage_name",)),
+                    **columns_of(f, leave_out=("id",)),
+                }
+                for f in SubmissionFile.objects.filter(submission__center=center)
                 .select_related("file")
                 .order_by("file__uploaded_at", "pk")
             ),

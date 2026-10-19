@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Turnaround for written feedback" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Turnaround" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Turnaround for written feedback" %}</h1>
+  <form class="usa-form usa-form--large" method="get" novalidate>
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Show" %}</button>
+    </div>
+  </form>
+  <p>{% blocktranslate with start=start|date:"M j, Y" end=end|date:"M j, Y" %}Drafts sent from {{ start }} through {{ end }}.{% endblocktranslate %}</p>
+  <table class="usa-table usa-table--borderless usa-table--stacked">
+    <caption class="usa-sr-only">{% translate "Written feedback in this period" %}</caption>
+    <thead class="usa-sr-only">
+      <tr>
+        <th scope="col">{% translate "Measure" %}</th>
+        <th scope="col">{% translate "Number" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">{% translate "Sent" %}</th><td>{{ stats.sent }}</td></tr>
+      <tr><th scope="row">{% translate "Returned" %}</th><td>{{ stats.returned }}</td></tr>
+      <tr><th scope="row">{% translate "Returned by the day asked for" %}</th><td>{{ stats.on_time }}</td></tr>
+      <tr><th scope="row">{% translate "Typical time to return, in hours" %}</th><td>{% if stats.median_hours is None %}{% translate "None returned yet" %}{% else %}{{ stats.median_hours|floatformat:1 }}{% endif %}</td></tr>
+      <tr><th scope="row">{% translate "Still open" %}</th><td>{{ stats.open }}</td></tr>
+      <tr><th scope="row">{% translate "Open and past due" %}</th><td>{{ stats.overdue }}</td></tr>
+      <tr><th scope="row">{% translate "Canceled" %}</th><td>{{ stats.canceled }}</td></tr>
+    </tbody>
+  </table>
+  {% if stats.by_tutor %}
+    <h2>{% translate "By tutor" %}</h2>
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Returned feedback by tutor" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Tutor" %}</th>
+          <th scope="col">{% translate "Returned" %}</th>
+          <th scope="col">{% translate "Typical hours" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in stats.by_tutor %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Tutor' %}">{{ row.tutor.display_name }}</th>
+            <td data-label="{% translate 'Returned' %}">{{ row.returned }}</td>
+            <td data-label="{% translate 'Typical hours' %}">{{ row.median_hours|floatformat:1 }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock content %}

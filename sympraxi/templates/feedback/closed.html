@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Written feedback" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Written feedback" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Written feedback" %}</h1>
+  <p>{% translate "This center isn't taking drafts for written feedback right now." %}</p>
+  <p><a href="{% url 'feedback:mine' slug=center.slug %}">{% translate "Your earlier submissions" %}</a></p>
+{% endblock content %}

@@ -1,0 +1,8 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=person.display_name %}Hello {{ name }},{% endblocktranslate %}
+
+{% blocktranslate with center=center.name when=due_at|date:"l, F j" %}A written-feedback submission at {{ center }} has been given to you. The student needs the feedback by {{ when }}. Sign in to see it and who it is from:{% endblocktranslate %}
+{{ url }}
+
+{{ center.name }}{% if center.contact_email %}
+{{ center.contact_email }}{% endif %}
+{% endautoescape %}

@@ -71,10 +71,16 @@ ACTION_LABELS = {
     "notify.calendar_feed_replaced": _("Gave a calendar feed a new address"),
     "notify.calendar_feed_turned_off": _("Turned off a calendar feed"),
     "notify.mass_email_sent": _("Emailed a group of the center's people"),
-    "files.uploaded": _("Attached a file to an appointment"),
-    "files.downloaded": _("Downloaded a file from an appointment"),
-    "files.removed": _("Removed a file from an appointment"),
+    "files.uploaded": _("Attached a file"),
+    "files.downloaded": _("Downloaded a file"),
+    "files.removed": _("Removed a file"),
     "files.infected": _("A virus scanner flagged a file, which was removed"),
+    "feedback.submission_sent": _("Sent a draft to the feedback queue"),
+    "feedback.submission_claimed": _("Claimed a submission from the feedback queue"),
+    "feedback.submission_assigned": _("A submission was assigned to a tutor"),
+    "feedback.submission_returned": _("Returned written feedback to a student"),
+    "feedback.submission_canceled": _("Canceled a submission"),
+    "feedback.settings_changed": _("Changed the feedback queue's settings"),
 }
 
 

@@ -2,6 +2,26 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 2: the written-feedback queue (October 2026)
+
+**A queue instead of fake time slots.** A student sends a draft with what they want help with and the day they need it by. Nobody books a time. A center turns the queue on under **Written feedback > Settings** (it is off until a director does), and sets the shortest turnaround it will promise (two days to start), how many files a submission can hold (five) and whether to assign automatically.
+
+**Anonymous until claimed.** The queue shows tutors the title, the course, what was asked for and the date, but not the student's name or the draft. The name and the files open once the tutor claims it, the queue assigns it or a director gives it to them. Directors see names throughout, since they can open anything. This is the permission model for it: `queue.submit` (students), `queue.work` (tutors and directors), `queue.view` (the student, the tutor who has it, directors) and `queue.manage` (directors). Front desk staff and site administrators have none of them.
+
+**The feedback is a session record.** Claiming starts a record with no appointment, which is how a meeting that wasn't booked already works, so tutors write on the page they know and everything downstream keeps working: topics, the center's session-report questions, the student's My writing page, amendments after it is final, the FERPA export. Finalizing the record is what returns the submission, through a `record_finalized` signal rather than a second button, so a submission can never read "returned" while its record is still a draft. The student gets the usual "your summary is ready" email. The record starts at 30 minutes and the tutor sets the real figure.
+
+**Commented files stay hidden until the return.** A tutor can send back commented Word or PDF files while the submission is theirs. The student can't open them, or see their names, until the feedback is final. A student can add drafts and remove their own files until then.
+
+**No release.** A claimed submission doesn't go back to the queue. Its record is the tutor's working draft, and a draft that nobody can write would be left behind with the tutor's name on it. A director reassigns it instead, and the draft moves to the new tutor. Students can cancel only while nobody has it; after that, a director cancels.
+
+**Assignment by load, not focus.** The plan said "focus and load." Tutors have no recorded focus yet (the training records in Phase 4 are the natural place), so automatic assignment looks at load alone: each waiting submission, earliest date first, goes to the tutor with the fewest open submissions, until everyone has the center's limit (three to start). A tutor assigned work is emailed that something is theirs, without the student's name or the title.
+
+**Overdue.** The day a student asks for runs to 11:59 p.m. in the center's time zone. The scheduler emails the tutor who has an overdue submission, and each director, once per submission: a count and a link, no names. Marking a submission is done in the same step that picks it, so a second scheduler sends nothing. Returned and canceled work is never overdue.
+
+**Turnaround.** Directors see sent, returned, returned by the day asked for, the typical hours to return (the median) and the overdue count for any dates, with the same figures by tutor. It names tutors, never students, like the other statistics. Both exports list submissions (the student export is version 6; the center export adds `submissions.json` and `submission_files.json`).
+
+**Still to come.** Commenting in the browser, rather than on a downloaded copy, is slice 5.
+
 ## Phase 2: files on appointments (October 2026)
 
 **Each file belongs to one student.** Students attach drafts to appointments they're in, tutors to appointments they teach (choosing which student a file is for in a group), and directors to any. A file is opened by the student it belongs to, the appointment's tutor and the center's directors; other students in a group never see it, and front desk staff don't open drafts. Two actions, `files.attach` and `files.view`, with object rules for students and tutors. Files can't be added to a canceled appointment.

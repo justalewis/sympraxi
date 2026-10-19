@@ -10,5 +10,5 @@
   {% else %}
     <p>{% translate "This file is still being checked for viruses. Try again in a minute." %}</p>
   {% endif %}
-  <p><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=attached.appointment_id %}">{% translate "Back to the appointment" %}</a></p>
+  <p><a href="{{ back }}">{% translate "Go back" %}</a></p>
 {% endblock content %}

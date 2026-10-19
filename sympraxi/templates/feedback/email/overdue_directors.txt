@@ -1,0 +1,10 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=person.display_name %}Hello {{ name }},{% endblocktranslate %}
+
+{% blocktranslate count n=count with center=center.name %}A written-feedback submission at {{ center }} has passed the day the student asked for.{% plural %}{{ n }} written-feedback submissions at {{ center }} have passed the day the students asked for.{% endblocktranslate %}{% if waiting %} {% blocktranslate count n=waiting %}{{ n }} of them is still waiting for a tutor.{% plural %}{{ n }} of them are still waiting for a tutor.{% endblocktranslate %}{% endif %}
+
+{% translate "The queue shows who has each one, and you can give them to someone else:" %}
+{{ url }}
+
+{{ center.name }}{% if center.contact_email %}
+{{ center.contact_email }}{% endif %}
+{% endautoescape %}

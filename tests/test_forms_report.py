@@ -494,7 +494,7 @@ def test_the_export_includes_every_answer(client, world) -> None:
     rec = final(world)
     director = director_of(world.center)
     data = export.build(membership(world.center, world.student), exported_by=director)
-    assert data["version"] == 5
+    assert data["version"] == 6
     [found] = [r for r in data["session_records"] if r["id"] == str(rec.pk)]
     [given] = found["report_answers"]
     assert {a["question"]: a["answer"] for a in given["answers"]} == {

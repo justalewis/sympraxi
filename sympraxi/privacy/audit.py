@@ -84,6 +84,12 @@ class AuditAction(StrEnum):
     FILE_DOWNLOADED = "files.downloaded"
     FILE_REMOVED = "files.removed"
     FILE_INFECTED = "files.infected"
+    SUBMISSION_SENT = "feedback.submission_sent"
+    SUBMISSION_CLAIMED = "feedback.submission_claimed"
+    SUBMISSION_ASSIGNED = "feedback.submission_assigned"
+    SUBMISSION_RETURNED = "feedback.submission_returned"
+    SUBMISSION_CANCELED = "feedback.submission_canceled"
+    QUEUE_SETTINGS_CHANGED = "feedback.settings_changed"
 
 
 def client_ip(request: HttpRequest) -> str | None:

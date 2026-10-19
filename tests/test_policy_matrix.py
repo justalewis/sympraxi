@@ -108,6 +108,13 @@ FILES_ACTIONS = [
     Action.VIEW_FILES,
 ]
 
+QUEUE_ACTIONS = [
+    Action.SUBMIT_WORK,
+    Action.WORK_QUEUE,
+    Action.VIEW_SUBMISSION,
+    Action.MANAGE_QUEUE,
+]
+
 ACTIONS = (
     CENTER_ACTIONS
     + SCHEDULING_ACTIONS
@@ -119,6 +126,7 @@ ACTIONS = (
     + NEWS_ACTIONS
     + DISCLOSURE_ACTIONS
     + FILES_ACTIONS
+    + QUEUE_ACTIONS
 )
 
 # fmt: off
@@ -264,6 +272,20 @@ EXPECTED_FILES = {
     "director":    (1,     1),
     "site_admin":  (0,     0),
 }
+
+# The written-feedback queue, asked about the center. Students send drafts and
+# open their own; tutors work the queue and open what they've claimed;
+# directors do both and run it. Front desk staff and site administrators have
+# no part in it: the drafts are student work.
+EXPECTED_QUEUE = {
+    #              submit  work  view  manage
+    "none":        (0,     0,    0,    0),
+    "student":     (1,     0,    1,    0),
+    "tutor":       (0,     1,    1,    0),
+    "front_desk":  (0,     0,    0,    0),
+    "director":    (0,     1,    1,    1),
+    "site_admin":  (0,     0,    0,    0),
+}
 # fmt: on
 
 CASES = [
@@ -279,6 +301,7 @@ CASES = [
         (EXPECTED_NEWS, NEWS_ACTIONS),
         (EXPECTED_DISCLOSURES, DISCLOSURE_ACTIONS),
         (EXPECTED_FILES, FILES_ACTIONS),
+        (EXPECTED_QUEUE, QUEUE_ACTIONS),
     )
     for role, expected in table.items()
     for i, action in enumerate(actions)

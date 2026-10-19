@@ -5,7 +5,7 @@
   {% include "scheduling/_breadcrumbs.html" with current=title %}
   <h1>{{ title }}</h1>
   {% if intro %}<p>{{ intro }}</p>{% endif %}
-  <form class="usa-form usa-form--large" method="post" novalidate>
+  <form class="usa-form usa-form--large" method="post"{% if multipart %} enctype="multipart/form-data"{% endif %} novalidate>
     {% csrf_token %}
     {% include "includes/form_fields.html" %}
     <div class="sympraxi-form-actions">

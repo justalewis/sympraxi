@@ -47,6 +47,7 @@ from tests.factories import (
     UserFactory,
     give_mfa,
 )
+from tests.feedback_world import add_queue
 from tests.files_world import PDF, add_files
 from tests.forms_world import add_forms
 from tests.news_world import add_news
@@ -222,6 +223,22 @@ PAGES = [
     ("student", "/centers/{slug}/appointments/{appointment}/files/new/"),
     ("tutor", "/centers/{slug}/appointments/{appointment}/files/new/"),
     ("student", "/centers/{slug}/files/{appointment_file}/remove/"),
+    # The written-feedback queue (a waiting submission, and one the tutor has)
+    ("student", "/centers/{slug}/feedback/send/"),
+    ("student", "/centers/{slug}/feedback/mine/"),
+    ("student", "/centers/{slug}/feedback/{submission}/"),
+    ("student", "/centers/{slug}/feedback/{submission}/files/new/"),
+    ("student", "/centers/{slug}/feedback/{submission}/cancel/"),
+    ("student", "/centers/{slug}/feedback/files/{submission_file}/remove/"),
+    ("tutor", "/centers/{slug}/feedback/"),
+    ("tutor", "/centers/{slug}/feedback/{submission}/claim/"),
+    ("tutor", "/centers/{slug}/feedback/{claimed}/"),
+    ("tutor", "/centers/{slug}/feedback/{claimed}/files/new/"),
+    ("director", "/centers/{slug}/feedback/"),
+    ("director", "/centers/{slug}/feedback/{submission}/"),
+    ("director", "/centers/{slug}/feedback/{submission}/assign/"),
+    ("director", "/centers/{slug}/feedback/settings/"),
+    ("director", "/centers/{slug}/feedback/turnaround/"),
 ]
 
 # Pages that change once single sign-on is set up: (who, path, variant). "sso" has
@@ -305,6 +322,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
             )
         )
     )
+    world = add_queue(world)
     if who == "blocked_student":
         Membership.objects.filter(user=world.blocked_student).delete()
         Participant.objects.filter(student=world.blocked_student).update(student=user)
@@ -345,6 +363,9 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         announcement=world.announcement.pk,
         mass_email=world.mass_email.pk,
         appointment_file=world.appointment_file.pk,
+        submission=world.submission.pk,
+        claimed=world.claimed.pk,
+        submission_file=world.submission_file.pk,
     )
     page = context.new_page()
     return context, page, url
@@ -1459,6 +1480,32 @@ def test_a_student_attaches_a_draft_by_keyboard(browser, live_server, sign_in) -
     page.keyboard.press("Enter")
     page.wait_for_selector("text=second draft.pdf is attached.")
     assert page.get_by_role("link", name="second draft.pdf", exact=True).count() == 1
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert results.violations_count == 0, results.generate_report()
+
+
+def test_a_student_sends_a_draft_for_feedback_by_keyboard(browser, live_server, sign_in) -> None:
+    """Fill in the form, choose a file, send it with Enter, and land on the submission."""
+    context, page, url = open_page(
+        browser,
+        live_server,
+        sign_in,
+        "student",
+        "/centers/{slug}/feedback/send/",
+        bypass_csp=True,
+    )
+    page.goto(url)
+    page.get_by_label("Title").fill("Essay 3")
+    page.get_by_label("What feedback do you want?").fill("Is my conclusion strong enough?")
+    page.set_input_files(
+        "#id_file",
+        {"name": "essay three.pdf", "mimeType": "application/pdf", "buffer": PDF},
+    )
+    page.get_by_role("button", name="Send it").focus()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("text=Your draft is in the queue.")
+    assert page.get_by_role("link", name="essay three.pdf", exact=True).count() == 1
     results = Axe().run(page, options=AXE_OPTIONS)
     context.close()
     assert results.violations_count == 0, results.generate_report()

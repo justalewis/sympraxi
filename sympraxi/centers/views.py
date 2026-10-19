@@ -7,6 +7,7 @@ from django_htmx.middleware import HtmxDetails
 
 from sympraxi.centers.models import Center, Membership
 from sympraxi.core.policy import Action, can, get_for_action, roles_in
+from sympraxi.feedback import services as feedback_services
 from sympraxi.forms.models import Form, FormKind
 from sympraxi.notify import news
 
@@ -26,6 +27,10 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_see_own_writing": can(request.user, Action.VIEW_OWN_WRITING, center),
         "can_see_records_to_write": can(request.user, Action.VIEW_RECORD_STATUS, center),
         "can_write_records": can(request.user, Action.WRITE_RECORDS, center),
+        "queue_is_open": feedback_services.is_open(center),
+        "can_submit_work": can(request.user, Action.SUBMIT_WORK, center),
+        "can_work_queue": can(request.user, Action.WORK_QUEUE, center),
+        "can_manage_queue": can(request.user, Action.MANAGE_QUEUE, center),
         "can_manage_records": can(request.user, Action.MANAGE_RECORDS, center),
         "can_mark_attendance": can(request.user, Action.MARK_ATTENDANCE, center),
         "can_manage_blocks": can(request.user, Action.MANAGE_BLOCKS, center),

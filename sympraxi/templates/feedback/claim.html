@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Claim a submission" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Claim a submission" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Claim a submission" %}</h1>
+  {% if submission.status == "waiting" %}
+    <p>{% blocktranslate with title=submission.title day=submission.due_at|date:"l, F j" %}You'll read {{ title }} and write your feedback by {{ day }}. You'll see who it's from once it's yours.{% endblocktranslate %}</p>
+    <p>{{ submission.wanted|linebreaksbr }}</p>
+    <form method="post" class="sympraxi-form-actions">
+      {% csrf_token %}
+      <button class="usa-button" type="submit">{% translate "Claim it" %}</button>
+      <a href="{{ queue_url }}">{% translate "Go back" %}</a>
+    </form>
+  {% else %}
+    <p>{% translate "Someone else has this submission, or it was canceled." %}</p>
+    <p><a href="{{ queue_url }}">{% translate "Back to the queue" %}</a></p>
+  {% endif %}
+{% endblock content %}
