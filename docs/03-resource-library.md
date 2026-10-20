@@ -89,14 +89,16 @@ A script can pull candidate titles and URLs from these feeds into a review queue
 
 ## 3. Content pack
 
-The optional content pack (a separate repository) holds full copies of openly licensed material so a center can attach a handout that lives on its own server.
+The optional content pack holds full copies of openly licensed material so a center can attach a handout that lives on its own server. It lives in this repository, in `content-pack/`, in two folders so the line between them is plain: `cc-by/` (CC BY and CC0, loaded by every installation) and `noncommercial/` (anything with a NonCommercial term, loaded only with `--include-noncommercial` and left out of the Docker image). The code is AGPL; the text in the pack keeps each item's own license. Each item carries its author, source, license and a note of what changed, and its page shows that credit above the text. See `content-pack/README.md`.
 
 - **CC BY** material (*About Writing*, the CC BY OpenStax snapshot) can be adapted: shortened, re-sequenced, or rewritten for a center's students. Each item keeps its attribution.
 - **NoDerivatives** material (UNC, Writing Spaces, some Writing Commons articles) can only be included whole and unchanged.
 - **ShareAlike** material can be adapted, but the adaptation must carry the same license.
 - **NonCommercial** material is fine for colleges running their own copy. The pack's README says so plainly.
 
-The first release doesn't need the content pack. Links cover the quick-win version of this feature.
+The first release doesn't need the content pack. Links cover the quick-win version of this feature. The mechanism is built (October 2026); the pack starts empty until the first items are added from sources whose license has been checked at the item.
+
+Checked on October 20, 2026: the license file of the OpenStax *Writing Guide with Handbook* at commit a6c9552 is CC BY 4.0 (the repository's current README says CC BY-NC-SA, so only that commit may be used as CC BY). Writing Spaces essays default to CC BY-NC-ND (3.0 on the volume 1 and 2 front matter, 4.0 on volumes 3 and 4) under the Writing Spaces Terms of Use, and an author can choose a different license, so each essay's own license page decides; volumes 5 and 6 and the Terms of Use itself were not confirmed. Because of NoDerivatives, a Writing Spaces essay could only be included whole and unchanged, and that tier is not in the first pack.
 
 ## 4. Topic vocabulary, draft 0
 

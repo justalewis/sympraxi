@@ -2,6 +2,20 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 3: the open-content pack (October 2026)
+
+**The mechanism, with no content yet.** `content-pack/` in this repository holds openly licensed text; `manage.py load_content_pack` loads it, `upgrade.sh` runs it with `load_catalog`, and a signed-in person reads an item at `/library/<id>/`. It started as a separate repository in the plan and is in this one on your instruction. What keeps the separation the library document asked for is two folders: `cc-by/` loads everywhere, and `noncommercial/` loads only with `--include-noncommercial` and is in `.dockerignore`, so the image doesn't carry it unless a build copies it in. The code is AGPL and the text keeps its own licenses, which the pack's README says in its first section.
+
+**Each item is a resource too.** Loading makes a `Resource` (catalog id `pack:<id>`, address `/library/<id>/`, link checking off) beside the `ContentItem` that holds the text, so attaching, suggestions by topic, favorites, the record's resource list and the reports all work with no change. `load_catalog` leaves `pack:` resources alone; without that it would have retired them. An item that leaves the pack is marked inactive, never deleted, because records may have it attached.
+
+**Credit is required, and shown first.** Every item names its author, the page it came from, its license and the license's address, and says what changed (or "none"); the loader refuses the whole pack, loading nothing, if any item lacks one, uses a license that doesn't belong in its folder, has an unknown topic, or has no text after cleaning. The page puts the credit above the text. A NoDerivatives item must say `whole: true` and `changes: none`, and the page says it is shown whole and unchanged.
+
+**The text is rebuilt, not trusted.** An item's HTML is rebuilt from paragraphs, headings (a first-level heading becomes second-level, since the page has its own), lists, emphasis, quotations, code, tables and web links, and everything else is dropped: scripts, styles, frames, forms, SVG, images, attributes such as `onclick` and `style`, and any link that isn't http, https or a page anchor. It is cleaned again when shown. This uses Python's standard library; no package was added. Images are left out on purpose, because they often carry a different license from the text.
+
+**What was checked, and what wasn't.** On October 20 the license file at the OpenStax commit a6c9552 was read and is CC BY 4.0 (the repository's README today says CC BY-NC-SA, so only that commit is usable). Writing Spaces essays are CC BY-NC-ND by default under their own Terms of Use, which did not load, and an author may choose another license, so each essay needs its own check; volumes 5 and 6 weren't confirmed. No book called "Technical Writing Spaces" turned up; two technical writing books do exist (LBCC's Maker's Space Edition, CC BY 4.0; the University of Minnesota's, CC BY-NC-SA 4.0). Fetching *About Writing* from the command line returned 403 even with the checker's user agent.
+
+**Not done.** No items are in the pack yet. Adding them means downloading each source (the OpenStax snapshot is a ZIP from GitHub; *About Writing* needs a browser-style export), which waits for your go-ahead on what to download and from where.
+
 ## Phase 3: the de-identified research export (October 2026)
 
 **Only under a protocol, and only while it is current.** A director records the IRB protocol number, the investigator and the dates the approval covers on **De-identified research export** (reports). The export works on days those dates cover and no others, and says why when it can't: no number, no dates, not yet started, ended. Sympraxi can't check any of this with the IRB; it records what a director says, so a download is tied to a protocol number in the audit log, and a lapsed approval stops being usable without anyone remembering to turn it off. Its own permission (`reports.export_research`) goes to directors only, never to site administrators.

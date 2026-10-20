@@ -101,6 +101,7 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/reports/research.py` | The de-identified research export: protocol check, per-export student codes, generalizing small groups |
 | `sympraxi/reports/demographics.py` | Topics by class standing and course, and across terms, with small groups held back |
 | `sympraxi/reports/resources.py` | The director's report on which resources are attached, by whom, and for which concerns |
+| `sympraxi/records/contentpack.py`, `library_views.py` | The open-content pack: cleaning the text, loading `content-pack/`, and an item's page with its credit |
 | `sympraxi/records/linkcheck.py` | The weekly link checker: the address guard, robots.txt, delays, and what each answer means |
 | `sympraxi/files/` | Files on appointments: content checks, private storage, ClamAV scans, downloads |
 | `sympraxi/online/` | Video rooms (signed Jitsi tokens, the join window, a center's switch) and the shared document of a session (`room.py`: tokens, saving, history, drawing) |

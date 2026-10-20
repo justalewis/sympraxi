@@ -39,6 +39,7 @@ from sympraxi.scheduling.models import Attendance, Block, Participant
 from sympraxi.scheduling.timeutils import local_date
 from tests import sso_idp
 from tests.attendance_world import add_attendance
+from tests.content_world import make_content_item
 from tests.disclosure_world import add_disclosures
 from tests.factories import (
     TOTP_SECRET,
@@ -148,6 +149,7 @@ PAGES = [
     ("director", "/centers/{slug}/reports/resources/"),
     ("director", "/centers/{slug}/reports/by-course/"),
     ("director", "/centers/{slug}/reports/research/"),
+    ("student", "/library/{content_item}/"),
     ("director", "/centers/{slug}/reports/questions/"),
     ("student", "/centers/{slug}/my-writing/goals/"),
     ("student", "/centers/{slug}/my-writing/timeline/"),
@@ -389,6 +391,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         mass_email=world.mass_email.pk,
         appointment_file=world.appointment_file.pk,
         submission=world.submission.pk,
+        content_item=make_content_item().pk,
         claimed=world.claimed.pk,
         submission_file=world.submission_file.pk,
         claimed_file=world.claimed_file.pk,

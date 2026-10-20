@@ -28,6 +28,7 @@ from sympraxi.forms import surveys
 from sympraxi.forms.models import SurveyInvitation
 from sympraxi.notify import feeds
 from tests.attendance_world import add_attendance
+from tests.content_world import make_content_item
 from tests.disclosure_world import add_disclosures
 from tests.factories import CenterFactory
 from tests.feedback_world import add_queue
@@ -52,7 +53,8 @@ PUBLIC = {
 
 # Pages about the signed-in person's own account, outside any center. Anyone
 # signed in may use them; they show and change only that person's settings.
-LOGIN_REQUIRED = {"accounts:profile", "accounts:reminders", "notify:calendar"}
+# library:item is an open-content page any signed-in person may read; it needs an item id.
+LOGIN_REQUIRED = {"accounts:profile", "accounts:reminders", "notify:calendar", "library:item"}
 
 # Center-scoped pages, the action each one requires, and the object the action is
 # checked against ("center", or an attribute of the test World).
@@ -410,9 +412,15 @@ def test_public_pages_load_anonymously(client, db, name) -> None:
     assert client.get(reverse(name)).status_code == 200
 
 
+def _login_url(name: str) -> str:
+    if name == "library:item":
+        return reverse(name, kwargs={"item_id": make_content_item().pk})
+    return reverse(name)
+
+
 @pytest.mark.parametrize("name", sorted(LOGIN_REQUIRED))
 def test_account_pages_need_sign_in(client, db, name) -> None:
-    response = client.get(reverse(name))
+    response = client.get(_login_url(name))
     assert response.status_code == 302
     assert response["Location"].startswith(reverse("account_login"))
 
@@ -423,7 +431,7 @@ def test_account_pages_open_for_everyone_signed_in(
     client, person_with_role, center, name, role
 ) -> None:
     client.force_login(person_with_role(role, center))
-    assert client.get(reverse(name)).status_code == 200
+    assert client.get(_login_url(name)).status_code == 200
 
 
 @pytest.mark.parametrize("name", sorted(CENTER_PAGES))

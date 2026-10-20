@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ item.title }}{% endblock head_title %}
+{% block content %}
+  <h1>{{ item.title }}</h1>
+  <aside class="usa-summary-box sympraxi-credit" aria-labelledby="credit-heading">
+    <div class="usa-summary-box__body">
+      <h2 class="usa-summary-box__heading" id="credit-heading">{% translate "Credit" %}</h2>
+      <div class="usa-summary-box__text">
+        <p>{% blocktranslate with author=item.author %}By {{ author }}.{% endblocktranslate %}{% if item.source_title %} {% blocktranslate with source=item.source_title %}From {{ source }}.{% endblocktranslate %}{% endif %} <a href="{{ item.source_url }}" rel="noopener noreferrer">{% translate "The original" %}</a></p>
+        <p>{% translate "License:" %} <a href="{{ item.license_url }}" rel="noopener noreferrer">{{ item.license }}</a>.</p>
+        <p>{% if item.whole %}{% translate "Shown whole and unchanged." %}{% elif item.changes == "none" %}{% translate "No changes were made." %}{% else %}{% blocktranslate with changes=item.changes %}Changes: {{ changes }}{% endblocktranslate %}{% endif %}</p>
+        {% if item.tier == "noncommercial" %}<p>{% translate "This may be used for noncommercial purposes only." %}</p>{% endif %}
+      </div>
+    </div>
+  </aside>
+  <div class="sympraxi-library-text">{{ body }}</div>
+{% endblock content %}

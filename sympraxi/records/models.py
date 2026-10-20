@@ -458,3 +458,40 @@ class Goal(models.Model):
 
     def __str__(self) -> str:
         return self.text
+
+
+class ContentTier(models.TextChoices):
+    CC_BY = "cc-by", _("Open to copy and adapt, with credit")
+    NONCOMMERCIAL = "noncommercial", _("For noncommercial use")
+
+
+class ContentItem(models.Model):
+    """The full text of an openly licensed item in the content pack.
+
+    There is always a `Resource` beside it, which is what tutors attach; its address is this
+    item's page in Sympraxi. See `sympraxi.records.contentpack` for the rules.
+    """
+
+    id = models.SlugField(max_length=100, primary_key=True)
+    resource = models.OneToOneField(Resource, on_delete=models.PROTECT, related_name="content_item")
+    pack = models.CharField(max_length=100)
+    tier = models.CharField(max_length=20, choices=ContentTier.choices)
+    title = models.CharField(max_length=300)
+    author = models.CharField(max_length=300)
+    source_title = models.CharField(max_length=300, blank=True)
+    source_url = models.URLField(max_length=500)
+    license = models.CharField(max_length=50)
+    license_url = models.URLField(max_length=500)
+    # What was changed from the original ("none" if nothing), shown with the credit.
+    changes = models.CharField(max_length=500)
+    # Shown exactly as published: required for NoDerivatives material.
+    whole = models.BooleanField(default=False)
+    body = models.TextField()
+    retrieved_on = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["pack", "title"]
+
+    def __str__(self) -> str:
+        return self.title

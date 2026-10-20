@@ -172,7 +172,13 @@ REQUIRED = ("id", "title", "url", "publisher", "license", "summary", "topics")
 def _load_resources(
     entries: Iterable[dict[str, Any]], topics: dict[str, Topic], report: LoadReport
 ) -> None:
-    existing = {r.catalog_id: r for r in Resource.objects.filter(catalog_id__isnull=False)}
+    # Resources from the content pack (`pack:...`) belong to its loader, not to this file.
+    existing = {
+        r.catalog_id: r
+        for r in Resource.objects.filter(catalog_id__isnull=False).exclude(
+            catalog_id__startswith="pack:"
+        )
+    }
     seen: set[str] = set()
     for entry in entries:
         missing = [k for k in REQUIRED if not entry.get(k)]

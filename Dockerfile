@@ -37,6 +37,8 @@ COPY manage.py LICENSE ./
 COPY sympraxi ./sympraxi
 # The topic vocabulary and resource catalog, loaded by `manage.py load_catalog`.
 COPY catalog ./catalog
+# The open-content pack (content-pack/cc-by; its noncommercial folder is in .dockerignore).
+COPY content-pack ./content-pack
 COPY --from=assets /build/sympraxi/static/vendor ./sympraxi/static/vendor
 RUN SYMPRAXI_SECRET_KEY=build-only DATABASE_URL=postgres://build@localhost/build \
     python manage.py collectstatic --noinput

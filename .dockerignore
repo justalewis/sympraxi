@@ -15,3 +15,5 @@ playwright-report
 .ruff_cache
 .pytest_cache
 .hypothesis
+# Material with a NonCommercial term stays out of the image unless a build copies it in.
+content-pack/noncommercial

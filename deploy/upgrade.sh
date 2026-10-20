@@ -21,5 +21,6 @@ docker compose up -d --wait db
 docker compose stop scheduler
 docker compose run --rm web python manage.py migrate --noinput
 docker compose run --rm web python manage.py load_catalog
+docker compose run --rm web python manage.py load_content_pack
 docker compose up -d --wait
 echo "Upgrade finished."
