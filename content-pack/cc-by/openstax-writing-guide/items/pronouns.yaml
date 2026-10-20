@@ -1,0 +1,126 @@
+id: pronouns
+title: Pronouns
+source_url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00181/index.cnxml
+summary: Choosing pronouns that agree with what they refer to and that make their reference clear.
+topics:
+  concern:
+  - grammar:pronouns
+changes: Converted from the book's source format to plain HTML. Images, figures, and exercises whose text
+  lives elsewhere in the book are left out. Wording is unchanged.
+body: "<p>You likely use <em>Pronouns</em> —words that substitute for nouns or noun phrases—in every text\
+  \ that you write, including this portfolio reflection. Pronouns are one of the eight main parts of speech,\
+  \ the others being nouns, verbs, adverbs, adjectives, prepositions, conjunctions, and interjections.</p>\n\
+  <h2>Reference, Antecedent, and Case</h2>\n<h3>Reference</h3>\n<p>Pronoun reference is the practice of\
+  \ using pronouns to replace nouns. The important thing to know about pronoun reference is that every\
+  \ pronoun must match the noun it replaces in terms of gender and number. <em>Gender</em> refers to the\
+  \ noun as either masculine, feminine, or neuter.</p>\n<p><strong>Masculine: Jorge</strong> is an educated\
+  \ man. <strong>He</strong> is Toby’s neighbor.</p>\n<p><strong>Feminine:</strong> Rico’s <strong>sister</strong>\
+  \ decided to go skating. <strong>She</strong> came back early.</p>\n<p><strong>Neuter:</strong> The\
+  \ <strong>car</strong> has four new <strong>tires</strong>. <strong>It</strong> runs much better with\
+  \ <strong>them</strong>.</p>\n<p>However, if you’re not certain of someone’s gender identity or don’t\
+  \ want to project it on them, use the gender-neutral pronouns <em>them</em>, <em>they</em>, and <em>their</em>.\
+  \ See Spotlight on… Pronouns in Context for more about using gender-neutral pronouns.</p>\n<p><strong>Gender\
+  \ neutral:</strong> Pat likes to eat pizza. They like pineapple and bacon with lots of cheese.</p>\n\
+  <p><strong>Number</strong> means singular or plural.</p>\n<p><strong>Singular:</strong> Toby has <strong>one\
+  \ daughter</strong>. <strong>She</strong> is studying art.</p>\n<p><strong>Plural:</strong> Jorge has\
+  \ <strong>two children</strong>. <strong>They</strong> go to the same school.</p>\n<p>In addition to\
+  \ gender and number, <em>clarity</em> is often a major issue when using pronouns. For example: <em>When\
+  \ Lizzie smacked her arm into the glass window, she broke it.</em> Did Lizzie break her arm, or did\
+  \ she break the window? In this case, the reference is not clear. One way to clarify the meaning would\
+  \ be to write the sentence this way: <em>Lizzie broke the window when she smacked her arm into it</em>.</p>\n\
+  <h3>Antecedent</h3>\n<p>The <em>antecedent</em> is the noun, nouns, or other pronoun or pronouns that\
+  \ the pronoun replaces. The antecedent usually appears earlier in the sentence or in a previous sentence,\
+  \ and the pronoun appears later in the same sentence or in another sentence.</p>\n<p><strong>Example\
+  \ 1:</strong> Although my <strong>friends</strong> tease me about my dancing style, I love <strong>them</strong>\
+  \ anyway.</p>\n<p><strong>Example 2:</strong> <strong>Mariah</strong> said <strong>she</strong> wanted\
+  \ to go home.</p>\n<p><strong>Example 3:</strong> The <strong>car</strong> was far away. Jessica couldn’t\
+  \ see what model <strong>it</strong> was.</p>\n<h3>Case</h3>\n<p>Pronoun case refers to the grammatical\
+  \ function of the pronoun in a sentence. Pronouns that are the <em>subjects</em> (the person, place,\
+  \ or thing that performs the action of the verb or represents what or whom sentence is about) of a sentence\
+  \ are written in the <em>subjective case</em>. For example: <strong><em>I</em></strong> <em>like pizza</em>.\
+  \ Pronouns that are <em>objects</em> (nouns or pronouns affected by the action of a verb) of a sentence\
+  \ or preposition are written in the <em>objective case</em>. For example: <em>Laura gave <strong>him</strong></em>\
+  \ <em>the baseball. Jorge and Toby were standing in front of <strong>us</strong></em> <em>in line</em>.\
+  \ Lastly, <em>possessive pronouns</em> pronouns show ownership and are written in the <em>possessive\
+  \ case</em>. For example: <em>The cat picked up <strong>its</strong></em> <em>toy. Those notes are <strong>his</strong></em>\
+  \ <em>and <strong>mine</strong>.</em></p>\n<p>You already know that you cannot have a sentence without\
+  \ a subject and that subjects and objects in sentences must be nouns or pronouns. Remember, a pronoun\
+  \ is a stand-in for a noun. It is always playing substitute for a noun or nouns “already out there somewhere.”\
+  \ Imagine writing without pronouns:</p>\n<blockquote><p>When <strong>Marcy</strong> woke this morning,\
+  \ <strong>Marcy</strong> had a headache, so <strong>Marcy</strong> went to <strong>Marcy’s</strong>\
+  \ medicine cabinet and took one of <strong>Marcy’s</strong> headache pills that <strong>Marcy’s</strong>\
+  \ doctor had prescribed for <strong>Marcy</strong>.</p></blockquote>\n<p>Instead:</p>\n<blockquote><p>When\
+  \ Marcy woke this morning, <strong>she</strong> had a headache, so <strong>she</strong> went to <strong>her</strong>\
+  \ medicine cabinet and took one of <strong>her</strong> headache pills that <strong>her</strong> doctor\
+  \ had prescribed for <strong>her</strong>.</p></blockquote>\n<h2>Types of Pronouns</h2>\n<p>When you\
+  \ think of pronouns, <em>personal pronouns</em> such as those discussed in the previous section, referring\
+  \ to a specific person or object, are likely the first that come to mind. However, the world of pronouns\
+  \ extends to reflexive, indefinite, and demonstrative pronouns as well.</p>\n<h3>Personal Pronouns</h3>\n\
+  <p>Knowing the difference between <em>subject personal pronouns</em> and <em>object personal pronouns</em>\
+  \ will help you use them correctly.</p>\n<table><tr><th><strong>Form</strong></th><th><strong>First\
+  \ Person</strong></th><th><strong>Second Person</strong></th><th><strong>Third Person</strong></th></tr><tr><td><strong>Subject</strong></td><td>I,\
+  \ we</td><td>you</td><td>he, she, it, they</td></tr><tr><td><strong>Object</strong></td><td>me, us</td><td>you</td><td>him,\
+  \ her, it, them</td></tr><tr><td><strong>Possessive</strong></td><td>my, mine, our, ours</td><td>your,\
+  \ yours</td><td>his, hers, its, their, theirs</td></tr></table>\n<table><tr><th><strong>Subject Position</strong></th><th><strong>Object\
+  \ Position</strong></th></tr><tr><td>I\n    you\n    she\n    he\n    it\n    we\n    they\n    who\n\
+  \    whoever</td><td>me\n    you\n    her\n    him\n    it\n    us\n    them\n    whom\n    whomever</td></tr></table>\n\
+  <p>Seeing both versions across from each other helps emphasize that each personal pronoun has its counterpart.\
+  \ In other words, if it isn’t <em>we</em>, then it is <em>us</em>, and if it isn’t <em>me</em>, then\
+  \ it is <em>I</em>.</p>\n<p><strong>Correct</strong> → <strong><em>She</em></strong> <em>is such a sweet\
+  \ little dog</em>.</p>\n<p><strong>Incorrect</strong> <em>→ <strong>Her</strong></em> <em>is such a\
+  \ sweet little dog.</em></p>\n<p>It is fairly obvious here which pronoun is correct. You have been saying\
+  \ it correctly all along, probably without being able to articulate the grammatical rule that made you\
+  \ do so. However, knowing the subject or <em>object distinction</em> can be especially helpful in knowing\
+  \ whether to use <em>I</em> or <em>me</em>. People often make mistakes when a sentence has a plural\
+  \ object. For example:</p>\n<p>Jasmine and <strong>I</strong> ordered pizza for dinner. The pizza was\
+  \ delivered to Jasmine and <strong>me</strong>.</p>\n<p>In the first sentence, the plural subject is\
+  \ <em>Jasmine</em> and <em>I</em>. <em>I</em> is the subject personal pronouns. In the second sentence,\
+  \ <em>me</em> is an <em>object of the preposition</em> (<em>to</em>), and the object personal pronoun—<em>me</em>—is\
+  \ correct. If the second sentence had the singular object pronoun <em>me</em>, no problem would arise.\
+  \ You would simply say that the pizza was delivered <em>to me</em>, not <em>to I</em>. Remember that\
+  \ an object personal pronoun stays an object personal pronoun no matter how many other objects are part\
+  \ of it.</p>\n<h3>Reflexive Pronouns</h3>\n<p><em>Reflexive pronouns</em> are straightforward. They\
+  \ are pronouns that “reflect,” as an image does in a mirror. They refer to the same person or thing.</p>\n\
+  <p><strong>John</strong> couldn’t stop looking at <strong>himself</strong> in the mirror.</p>\n<p><em>John</em>\
+  \ is the original noun, or antecedent, and <em>himself</em> is the pronoun that points back at him.\
+  \ Note that reflexive pronouns <em>always</em> end in <em>self</em> or <em>selves</em>.</p>\n<table><tr><th><strong>First\
+  \ Person</strong></th><th><strong>Second Person</strong></th><th><strong>Third Person</strong></th></tr><tr><td>myself,\
+  \ ourselves</td><td>yourself, yourselves</td><td>himself, herself, itself, themselves</td></tr></table>\n\
+  <h3>Indefinite Pronouns</h3>\n<p>While reflexive pronouns always refer to themselves—that is, the subject\
+  \ and object are the same person, place, thing, or idea—<em>indefinite pronouns</em> are the opposite.\
+  \ As their name suggests, they are not definite; they are <em>in</em>definite and do not refer to specific\
+  \ nouns. They do get their meaning across, but the nouns they refer to are not known. These are some\
+  \ of the most common indefinite pronouns:</p>\n<table><tr><td>all\n    another\n    any\n    anybody\n\
+  \    anything\n    both\n    each</td><td>either\n    everybody\n    everyone\n    everything\n    few\n\
+  \    many\n    more</td><td>most\n    much\n    nobody\n    none\n    no one\n    nothing\n    one</td><td>other\n\
+  \    several\n    some\n    somebody\n    someone\n    something</td></tr></table>\n<h3>Demonstrative\
+  \ Pronouns</h3>\n<p><em>Demonstrative pronouns</em> point directly at something. They use all their\
+  \ pronoun power to indicate their preference, so much so that when someone uses a demonstrative pronoun,\
+  \ it is hard <em>not</em> to imagine them pointing at something directly. Good news and bad news come\
+  \ along with demonstrative pronouns. The good news is that there are only four demonstrative pronouns:\
+  \ <em>this</em>, <em>that</em>, <em>these</em>, and <em>those</em>. The bad news—and it’s not really\
+  \ bad—is that words that commonly play the role of pronouns are multitalented. The same word can play\
+  \ another role (part of speech) in a sentence. Sometimes these four words function as <em>adjectives</em>,\
+  \ which always modify nouns and pronouns. In the sentence <em>That is my car</em>, the word <em>that</em>\
+  \ is playing the role of a pronoun. It is the subject of the sentence. Only nouns or pronouns can be\
+  \ subjects. However, if the sentence read <em>That car is mine</em>, then <em>that</em> would be an\
+  \ adjective because it modifies (tells something about) the noun <em>car</em>.</p>\n<h2>Common Mix-Ups</h2>\n\
+  <ul><li><strong>It’s</strong> vs. <strong>its:</strong> This is an easy one to mix up but easy to correct.\
+  \ <strong>It’s</strong> means <strong>it is</strong> or <strong>it has</strong>. For example: <strong><em>It’s</em></strong>\
+  \ <em>a hot day</em> or <strong><em>It is</em></strong> <em>a hot day</em>. <strong>Its</strong> refers\
+  \ to possession. For example: <em>This car has <strong>its</strong></em> <em>problems</em>. To be sure\
+  \ you are correct, substitute <em>it is</em>. To say <em>The car has <strong>it is</strong></em> <em>problems</em>\
+  \ makes no sense, so <strong>its</strong> is correct.</li><li><strong>Who</strong> vs. <strong>whom:</strong>\
+  \ Perhaps the most effective way to recognize which to use is to equate <strong>who</strong> to <em>he</em>\
+  \ and <strong>whom</strong> to <em>him</em>. For example: <strong><em>Who/Whom</em></strong> <em>wrote\
+  \ the book? <strong>He</strong></em> <em>wrote the book</em>, so <em>who</em> is correct. Remember that\
+  \ <em>whom</em> is in the objective case. Think about it like this: <strong><em>whom</em></strong> is\
+  \ like <em>them</em>, so you might say, <em>This is for them</em>. Therefore, <em>This is for whom?</em>\
+  \ or <em>Whom is this for?</em> would be correct.</li><li><strong>I</strong> vs. <strong>me:</strong>\
+  \ <strong>I</strong> is always a subject; <strong>me</strong> is always an object. So <em>Demarcus and\
+  \ I left the building</em> is correct because <em>I</em> is the subject. Conversely, <em>Give the package\
+  \ to me</em> and <em>You gave me good advice</em> are both correct because <em>me</em> is an object.\
+  \ Remember to use the correct pronoun with compound objects, as in the sentence <em>Reflection has helped\
+  \ other class members and <strong>me</strong></em> <em>improve our writing</em>.</li></ul>\n<p>In Chapter\
+  \ 20, you have learned how to use different types of pronouns to substitute for nouns and noun phrases.\
+  \ You have also learned about common mix-ups when using pronouns.</p>"

@@ -14,7 +14,9 @@ Short records of choices made while building, with the reason, so later contribu
 
 **What was checked, and what wasn't.** On October 20 the license file at the OpenStax commit a6c9552 was read and is CC BY 4.0 (the repository's README today says CC BY-NC-SA, so only that commit is usable). Writing Spaces essays are CC BY-NC-ND by default under their own Terms of Use, which did not load, and an author may choose another license, so each essay needs its own check; volumes 5 and 6 weren't confirmed. No book called "Technical Writing Spaces" turned up; two technical writing books do exist (LBCC's Maker's Space Edition, CC BY 4.0; the University of Minnesota's, CC BY-NC-SA 4.0). Fetching *About Writing* from the command line returned 403 even with the checker's user agent.
 
-**Not done.** No items are in the pack yet. Adding them means downloading each source (the OpenStax snapshot is a ZIP from GitHub; *About Writing* needs a browser-style export), which waits for your go-ahead on what to download and from where.
+**First items.** On October 20 the OpenStax snapshot (a ZIP from GitHub, 78 MB, outside the repository) was downloaded with your go-ahead and twenty sections were converted into `content-pack/cc-by/openstax-writing-guide/`: thesis and reasoning, paragraphs and transitions, integrating and punctuating quotations, six editing sections (commas, agreement, sentence structure, pronouns, tense, confused words), citation, research and ethics. Each has its own wording unchanged, a summary in our words, and topic tags. Images and embedded exercises are left out.
+
+**Not done.** *About Writing* needs a browser-style export or files you supply. The Writing Spaces essays in your Drive folder are CC BY-NC-ND 4.0 (checked on volume 4's Holmes essay), so they can only go in whole and unchanged; the pack's text format would reflow them, and the Drive connector returns text rather than the PDF, so they are not included and the library should link to them instead.
 
 ## Phase 3: the de-identified research export (October 2026)
 

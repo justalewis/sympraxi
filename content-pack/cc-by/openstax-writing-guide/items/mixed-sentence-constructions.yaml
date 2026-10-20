@@ -1,0 +1,62 @@
+id: mixed-sentence-constructions
+title: Mixed sentence constructions
+source_url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00094/index.cnxml
+summary: Why a sentence that starts one way and ends another confuses readers, and how to repair it.
+topics:
+  concern:
+  - grammar:sentence-structure
+changes: Converted from the book's source format to plain HTML. Images, figures, and exercises whose text
+  lives elsewhere in the book are left out. Wording is unchanged.
+body: "<p>A mixed-construction sentence contains parts that do not fit together because of grammatical\
+  \ structure or meaning. These sentence errors occur when writers begin a statement in one way, or one\
+  \ direction, and then unintentionally change grammatical paths. This kind of sentence construction can\
+  \ detract from an otherwise solidly analytical text.</p>\n<ul><li><strong>Mixed Sentence 1:</strong>\
+  \ Learning to ballroom dance it has shown increased agility, and you live longer.\n    <strong>First\
+  \ Problem:</strong> The reader expects a verb to follow “learning to ballroom dance” so that <em>learning</em>\
+  \ will mean something. But the word <em>it</em> interrupts before the verb appears. <em>It</em> collides\
+  \ with the first part of the sentence rather than completing it, and the sentence ends up making little\
+  \ sense.\n    <strong>Second Problem:</strong> The second part of the sentence, “and you live longer,”\
+  \ is confusing because it introduces <em>you</em> instead of continuing the idea of learning to ballroom\
+  \ dance.\n    To eliminate confusion, you would have to rewrite either the first or the second part\
+  \ of the sentence.\n    <strong>Revised:</strong> Studies have shown that learning to ballroom dance\
+  \ increases agility and lengthens life span.</li></ul>\n<p>In fact, because it is the dancing itself\
+  \ and not the learning that has these effects, the sentence could be edited further.</p>\n<blockquote><p><strong>Further\
+  \ Revision:</strong> Ballroom dancing has been shown to increase agility and lengthen life.</p></blockquote>\n\
+  <p>In the following examples, the writer needs to revise either the second part to fit with the first\
+  \ part or the first part to fit with the second.</p>\n<ul><li><strong>Mixed Sentence 2:</strong> By\
+  \ starting my general studies classes last semester gave me the opportunity to take classes in my major\
+  \ this fall.\n    <strong>Second Part Revised:</strong> By starting my general studies classes last\
+  \ spring<strong>, I had</strong> the opportunity to take classes in my major this fall.\n    <strong>First\
+  \ Part Revised:</strong> <strong>Starting</strong> my general studies classes last spring gave me the\
+  \ opportunity to take classes in my major this fall.</li></ul>\n<p>Read the following mixed-construction\
+  \ sentences, and note the ways they have been corrected.</p>\n<ul><li><strong>Mixed Sentence 3:</strong>\
+  \ For people who have hobbies, they are happier than others.\n    <strong>Revision:</strong> People\
+  \ who have hobbies are happier than others.</li><li><strong>Mixed Sentence 4:</strong> The required\
+  \ qualification is someone who writes well.\n    <strong>Problem:</strong> The qualification is the\
+  \ <em>ability to write well</em>, not the person.\n    <strong>Revision:</strong> The required qualification\
+  \ is the ability to write well.\n    <strong>Further Revision:</strong> The company requires someone\
+  \ who writes well.</li><li><strong>Mixed Sentence 5:</strong> Nurses, an excellent career choice, involves\
+  \ an extra semester.\n    <strong>Problem:</strong> <em>Nurses</em> are not a profession, <em>nursing</em>\
+  \ is.\n    <strong>Revision:</strong> Nursing, an excellent career choice, involves an extra semester.</li></ul>\n\
+  <p><em>Just because . . . doesn’t mean</em> constructions are common in speech but should be avoided\
+  \ in writing. They are another example of mixed sentence construction.</p>\n<ul><li><em><strong>Just\
+  \ Because . . .</strong> Construction:</em> Just because I want to work in Washington doesn’t mean I’ll\
+  \ get a good job there.\n    <strong>Revision:</strong> Simply wanting to work in Washington doesn’t\
+  \ guarantee a good job there. <strong>Revision:</strong> Although I want to work in Washington, I will\
+  \ need to find a good job there.</li></ul>\n<p>Another common mixed construction in spoken English involves\
+  \ the use of <em>is when</em>. This construction should also be avoided in writing.</p>\n<ul><li><em><strong>Is\
+  \ When</strong> Construction:</em> A feeling of accomplishment is when I finish revising a paper.\n\
+  \    <strong>Problem:</strong> “A feeling of accomplishment” is a noun phrase followed by a linking\
+  \ verb. This construction means that what follows the verb either describes the noun or renames it in\
+  \ different words. Therefore, to balance the sentence, you need an adjective or noun to complete the\
+  \ subject. <em>When</em>, however, is an adverb referring to time, and in this sentence, it begins an\
+  \ adverb clause. In other words, “a feeling” cannot be the same as or described in terms of time.\n\
+  \    <strong>Revision:</strong> A feeling of accomplishment <strong>is finishing</strong> revising a\
+  \ paper.\n    <strong>Revision:</strong> <strong>I feel a sense</strong> of accomplishment <strong>when\
+  \ I</strong> finish revising a paper.</li></ul>\n<h2>Your Turn</h2>\n<p>Now, correct the following mixed-construction\
+  \ sentences. After you have finished, go back and check your rhetorical analysis for mixed-construction\
+  \ sentences, and revise them as needed.</p>\n<ol><li>Putting your computer to sleep is when you can\
+  \ save the most electricity.</li><li>If you plant your seeds too close, anyone knows tomatoes cannot\
+  \ grow with corn.</li><li>Swimming in deep water is the danger of tides.</li><li>Just because you like\
+  \ math doesn’t mean to eliminate classes in the humanities.</li><li>For people who want to be firefighters\
+  \ may have to work long and often intense shifts.</li></ol>"

@@ -1,0 +1,101 @@
+id: subject-verb-agreement
+title: Subject-verb agreement
+source_url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00064/index.cnxml
+summary: Matching a verb to its subject in number, including the tricky cases of intervening phrases,
+  compound subjects and collective nouns.
+topics:
+  concern:
+  - grammar:subject-verb-agreement
+  - grammar:verbs
+changes: Converted from the book's source format to plain HTML. Images, figures, and exercises whose text
+  lives elsewhere in the book are left out. Wording is unchanged.
+body: '<p>Readers of formal documents such as proposals expect writers to be aware of the conventions
+  of grammar and punctuation. One such convention is <em>subject-verb agreement</em>.</p>
+
+  <p>The <em>subject</em> of a sentence names something. The predicate contains the <em>verb</em>, which
+  expresses an action, an occurrence, or a state of being. The subject and verb in a sentence must agree.
+  In standard English, “agreement“ means that a singular subject must have a singular verb (<em>The <strong>bus</strong>
+  <strong>leaves</strong> in five minutes</em>) and a plural subject must have a plural verb (<em>The
+  <strong>buses</strong> <strong>leave</strong> in five minutes</em>). However, some English dialects
+  omit the <em>-s</em> ending for singular verbs or use a singular verb with a plural subject: <em>The
+  <strong>man</strong> <strong>ask</strong> for help. Property <strong>taxes</strong> <strong>was raised</strong>
+  last year.</em></p>
+
+  <p>Subject-verb agreement gets tricky in several sentence constructions, which are described below.
+  To check for subject-verb agreement in your writing, proofread your final draft by finding each subject
+  and verb. Then use the following questions to test whether the subject and verb agree. For more on subject-verb
+  agreement, see Verbs.</p>
+
+  <p><strong><em>Is the subject compound?</em></strong> Two or more subjects joined by <em>and</em> take
+  a plural verb in most sentences:</p>
+
+  <blockquote><p><strong>Basketball and wrestling</strong> <strong>are</strong> my favorite sports.</p></blockquote>
+
+  <p>However, when the parts of the subject form a single idea or unit, the verb is singular:</p>
+
+  <blockquote><p><strong>Red beans and rice</strong> <strong>is</strong> my favorite meal.</p><p><strong>Ten
+  dollars</strong> <strong>is</strong> enough money for lunch.</p></blockquote>
+
+  <p>When compound subjects are joined by <em>or</em> or <em>nor,</em> the verb should agree with the
+  word closest to it:</p>
+
+  <blockquote><p>Either your uncles or your <strong>mother</strong> <strong>remembers</strong> your grandmother’s
+  gumbo recipe.</p><p>Either your mother or your <strong>uncles</strong> <strong>remember</strong> your
+  grandmother’s gumbo recipe.</p></blockquote>
+
+  <p><strong><em>Do other words come between the subject and verb?</em></strong> The verb must agree with
+  the subject even when words and phrases come between them:</p>
+
+  <blockquote><p>The <strong>price</strong> of these shoes at all stores <strong>is</strong> unbelievable.</p><p>A
+  <strong>suitcase</strong> containing sweaters, coats, and jackets <strong>was</strong> found in the
+  street.</p></blockquote>
+
+  <p><strong><em>Does the verb come before the subject?</em></strong> The subject and verb must agree
+  even when the verb comes before the subject:</p>
+
+  <blockquote><p><strong>Are</strong> <strong>Daniela and Juliana</strong> waiting at the restaurant?</p><p>There
+  <strong>were</strong> three <strong>dogs</strong> in the yard, all barking at the same time.</p><p>In
+  my pocket <strong>are</strong> a <strong>wallet and two pens</strong>.</p></blockquote>
+
+  <p><strong><em>Is the subject an indefinite pronoun, such as</em> everyone<em>?</em></strong> Indefinite
+  pronouns do not refer to specific people or things. Most indefinite pronouns take a singular verb, but
+  not all.</p>
+
+  <p>The indefinite pronouns that take a singular verb include <em>anybody, anyone, anything, each, either,
+  everybody, everyone, everything, neither, nobody, no one, nothing, one, somebody, someone,</em> and
+  <em>something</em>.</p>
+
+  <blockquote><p><strong>Everyone</strong> on the team <strong>practices</strong> all season.</p><p><strong>Neither</strong>
+  of the wide receivers <strong>feels</strong> ready for the season to end.</p></blockquote>
+
+  <p>These indefinite pronouns take a plural verb: <em>both, few, many, others,</em> and <em>several.</em></p>
+
+  <blockquote><p><strong>Several</strong> of the athletes on the team <strong>come</strong> from the same
+  high school.</p><p><strong>Both</strong> wide receivers <strong>have</strong> excellent stats.</p></blockquote>
+
+  <p>A few indefinite pronouns take a singular or plural verb depending on whether the word they refer
+  to is singular or plural. These include <em>all, any, enough, more, most, none,</em> and <em>some.</em>
+  With these pronouns, use a singular or plural verb that fits the context of your sentence.</p>
+
+  <blockquote><p><strong>All</strong> of these students <strong>take</strong> at least one class in science
+  or math. (plural)</p><p><strong>Most</strong> of his work <strong>is</strong> original. (singular)</p></blockquote>
+
+  <p><strong><em>Is the subject a collective noun?</em></strong> Collective nouns, such as <em>audience,
+  band, class, crowd, family, group,</em> or <em>team,</em> can take a singular or a plural verb depending
+  on the context. When group members act individually, use a plural verb. Writers often add the word <em>members</em>
+  for clarity. When the group acts as a single unit, which is the most common construction, use a singular
+  verb:</p>
+
+  <blockquote><p>The <strong>band</strong> <strong>rehearses</strong> every Thursday.</p><p>The union
+  (members) still disagree on the contract terms.</p></blockquote>
+
+  <h2>Practice Subject-Verb Agreement</h2>
+
+  <p>Select the correct verb to complete each sentence.</p>
+
+  <ol><li>Under the table ________ his slippers and socks. (is, are)</li><li>The choir usually ________
+  in the auditorium. (meets, meet)</li><li>Some of the actors ________ two roles. (performs, perform)</li><li>Some
+  of this song ________ familiar. (sounds, sound)</li><li>Either my brother or my sisters ________ the
+  keys to the truck. (has, have)</li><li>________ Whitney and her friend need a ride to the station? (does,
+  do)</li><li>The situation concerning the reports and their authors ________ under investigation. (is,
+  are)</li><li>Fifteen dollars and 40 cents ________ the amount of change she received. (is, are)</li></ol>'

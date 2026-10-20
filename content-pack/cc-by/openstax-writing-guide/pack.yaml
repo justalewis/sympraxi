@@ -1,0 +1,10 @@
+id: openstax-writing-guide
+source_title: Writing Guide with Handbook
+author: OpenStax, led by senior contributing authors Michelle Bachelor Robinson, Maria Jerskey and others
+  named in the book's preface
+license: CC-BY-4.0
+license_url: https://creativecommons.org/licenses/by/4.0/
+retrieved: '2026-10-20'
+notes: From the openstax/osbooks-writing-guide snapshot at commit a6c95528390e3a2936f5bf87c49ac1a4995a0a6e,
+  whose LICENSE file is CC BY 4.0. The repository's later versions are CC BY-NC-SA and are not used. OpenStax
+  and Rice University do not endorse Sympraxi.

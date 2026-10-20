@@ -96,7 +96,7 @@ The optional content pack holds full copies of openly licensed material so a cen
 - **ShareAlike** material can be adapted, but the adaptation must carry the same license.
 - **NonCommercial** material is fine for colleges running their own copy. The pack's README says so plainly.
 
-The first release doesn't need the content pack. Links cover the quick-win version of this feature. The mechanism is built (October 2026); the pack starts empty until the first items are added from sources whose license has been checked at the item.
+The first release doesn't need the content pack. Links cover the quick-win version of this feature. The mechanism is built (October 2026); the pack ships with twenty sections of the OpenStax *Writing Guide with Handbook* (the CC BY snapshot) and grows only from sources whose license has been checked at the item.
 
 Checked on October 20, 2026: the license file of the OpenStax *Writing Guide with Handbook* at commit a6c9552 is CC BY 4.0 (the repository's current README says CC BY-NC-SA, so only that commit may be used as CC BY). Writing Spaces essays default to CC BY-NC-ND (3.0 on the volume 1 and 2 front matter, 4.0 on volumes 3 and 4) under the Writing Spaces Terms of Use, and an author can choose a different license, so each essay's own license page decides; volumes 5 and 6 and the Terms of Use itself were not confirmed. Because of NoDerivatives, a Writing Spaces essay could only be included whole and unchanged, and that tier is not in the first pack.
 

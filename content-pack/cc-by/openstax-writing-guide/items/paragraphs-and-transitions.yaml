@@ -1,0 +1,114 @@
+id: paragraphs-and-transitions
+title: Paragraphs and transitions
+source_url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00104/index.cnxml
+summary: How a paragraph holds one main idea, how sentences inside it connect, and how transitions carry
+  a reader between paragraphs.
+topics:
+  concern:
+  - organization:paragraphs
+  - organization:transitions
+changes: Converted from the book's source format to plain HTML. Images, figures, and exercises whose text
+  lives elsewhere in the book are left out. Wording is unchanged.
+body: '<p>In the initial drafts of your paper, you may have concentrated on single ideas for your body
+  paragraphs and single thoughts within those paragraphs. Your argument will read more smoothly, however,
+  if you use transitional words and phrases to show readers how your ideas are connected or opposed to
+  each other.</p>
+
+  <h2>Using Transitional Words and Phrases</h2>
+
+  <p>To organize your paper most effectively, use <em>transitional words or phrases</em>, which show readers
+  the relationship between different ideas—that is, how ideas connect with or are separate from each other.
+  In the paragraph below, transitional words and phrases are underlined.</p>
+
+  <p>To get a copy of your transcript from Abbott Community College, <strong>first</strong> log on to
+  the college web site. <strong>Next</strong>, click the “Transcript” link <strong>to the left of</strong>
+  the college logo. <strong>When</strong> the link opens, fill out the information requested in the boxes.
+  <strong>Then</strong> upload a copy of your student ID <strong>and</strong> pay $10 electronically.
+  <strong>Finally</strong>, submit your form. Your transcript will be emailed to you, <strong>but</strong>
+  you may have to wait up to three days <strong>before</strong> you receive it.</p>
+
+  <p>The transitional words and phrases show readers the sequence of steps they need to follow to get
+  a transcript. If you remove the transitional words and phrases, the paragraph would be choppy, and readers
+  might not follow the steps as easily.</p>
+
+  <p>Transitions also help guide readers between paragraphs. Below are the body paragraphs a student wrote
+  about the need for a traffic light at a street that leads into his college. The first version has no
+  transitions.</p>
+
+  <p>Many vehicles speed through the intersection without regard to the posted speed limit. A traffic
+  signal would make vehicles slow down. They would not be able to speed through the signal.</p>
+
+  <p>Pedestrian safety is a problem. Many students and others cross this intersection when coming to or
+  leaving campus, and they must dodge traffic to get across. A traffic signal would allow them to cross
+  at appropriate times.</p>
+
+  <p>The amount of traffic has increased dramatically. A manufacturing plant opened four blocks from the
+  intersection. The number of businesses in the strip mall at the intersection has grown by 50 percent.
+  The college has changed its traffic routing for football games. Fans must enter via this intersection.</p>
+
+  <p>The most compelling reason to install a traffic signal is that the number of accidents has risen
+  far past an acceptable limit. According to recent police reports, a traffic accident occurs at least
+  three times a month. One accident resulted in a loss of life.</p>
+
+  <p>The student then added transitions and changed the wording accordingly to help readers follow his
+  ideas. The underlined transitions at the beginning of each paragraph alert readers to the four reasons
+  he presents and to where he changes from one to another. The underlined transitions within the paragraphs
+  help readers understand the relationship of ideas.</p>
+
+  <p><strong>First</strong>, many vehicles speed through the intersection without regard to the posted
+  speed limit. A traffic signal would make vehicles slow down, <strong>for</strong> they would not be
+  able to speed through the signal.</p>
+
+  <p><strong>Second</strong>, pedestrian safety is a problem. Many students and others cross this intersection
+  when coming to or leaving campus, and <strong>now</strong> they must dodge traffic to get across. A
+  traffic signal, <strong>therefore</strong>, would allow them to cross at appropriate times.</p>
+
+  <p><strong>Another reason to install the traffic signal has to do with</strong> the amount of traffic,
+  which has increased dramatically <strong>in recent years</strong>. <strong>Two years ago</strong>, a
+  manufacturing plant opened four blocks from the intersection. <strong>In the past 16 months</strong>,
+  the number of businesses in the strip mall <strong>at the intersection</strong> grew by 50 percent.
+  <strong>Furthermore</strong>, the college has changed its traffic routing for football games, <strong>and
+  now</strong> fans must enter via this intersection.</p>
+
+  <p><strong>Finally</strong>, the most compelling reason to install a traffic signal is that the number
+  of accidents has risen far past an acceptable limit. According to recent police reports, a traffic accident
+  occurs at that intersection at least three times a month. <strong>In fact</strong>, one of those accidents
+  resulted in a loss of life.</p>
+
+  <h2>Frequently Used Transitional Words and Phrases</h2>
+
+  <p><strong>Addition:</strong> again, and, further, in addition, next, then, also, as well as</p>
+
+  <p><em>Cause-and-effect</em><strong>:</strong> accordingly, consequently, for this reason, hence, therefore,
+  thus, as a result</p>
+
+  <p><em>Amplification</em><strong>:</strong> again, also, apparently, first (second, third), moreover,
+  indeed, more, most, in fact</p>
+
+  <p><em>Chronological order</em><strong>:</strong> after, before, during, earlier, finally, first (second,
+  third), immediately, last, next, then, later</p>
+
+  <p><em>Concession or agreement</em><strong>:</strong> although, at least, at any rate, certainly, (even)
+  though, in spite of, of course, still, nevertheless, nonetheless</p>
+
+  <p><em>Compare and contrast</em><strong>:</strong> at the same time, comparatively, conversely, however,
+  instead, likewise, moreover, nevertheless, on the contrary, on the other hand, rather, similarly, still,
+  yet, despite</p>
+
+  <p><em>Detail</em><strong>:</strong> including, in particular, namely, specifically, to list</p>
+
+  <p><em>Emphasis</em> <strong>or</strong> <em>clarification</em><strong>:</strong> above all, again,
+  certainly, especially, furthermore, in fact, particularly, indeed</p>
+
+  <p><em>Example</em><strong>:</strong> chiefly, for example (instance), in other words, in particular,
+  mainly, specifically</p>
+
+  <p><em>Intention</em><strong>:</strong> for this purpose, in order to do this, to this end, with this
+  in mind</p>
+
+  <p><em>Location</em><strong>:</strong> above, along, behind, below, here, near, next to, opposite, to
+  the left (right) of, under</p>
+
+  <p><em>Summary</em><strong>:</strong> finally, in conclusion, in short, in other words, thus</p>
+
+  <p>For more information about paragraphs and transitions, see Paragraphs and Transitions.</p>'

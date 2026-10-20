@@ -1,0 +1,85 @@
+id: commas-with-essential-and-nonessential-information
+title: Commas with essential and nonessential information
+source_url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00084/index.cnxml
+summary: How to tell whether a phrase is essential to a sentence's meaning and when that decides whether
+  commas set it off.
+topics:
+  concern:
+  - grammar:punctuation
+changes: Converted from the book's source format to plain HTML. Images, figures, and exercises whose text
+  lives elsewhere in the book are left out. Wording is unchanged.
+body: '<p>A comma is a mark of separation. It alerts readers to a brief pause or pauses within a sentence
+  that is part of your analytical report.</p>
+
+  <h2>Nonessential and Essential information</h2>
+
+  <p><em>Nonessential information</em> refers to information within a sentence that is <em>not</em> necessary
+  for the reader to understand its meaning. <em>Essential information</em> refers to information within
+  a sentence that <em>is</em> necessary for the reader to understand its meaning.</p>
+
+  <h3>Nonessential Information</h3>
+
+  <p>Placing commas around a word or group of words within a sentence usually indicates that the information
+  is not necessary for readers to understand the sentence’s meaning. In the example below, the underlined
+  words refer to and explain the phrase <em>current math curriculum</em>, but they can be removed without
+  changing the meaning of the sentence: the math curriculum currently in use isn’t meeting current needs.
+  The information is interesting and perhaps useful, but it is “extra” and does not change the basic meaning
+  of the sentence.</p>
+
+  <blockquote><p>The current math curriculum<strong>, which was adopted by the school district 10 years
+  ago,</strong> no longer meets the needs of the students.</p></blockquote>
+
+  <h3>Essential Information</h3>
+
+  <p>Certain words in a sentence are often necessary for readers to understand its meaning. In the example
+  below, the word <em>current</em> was removed from between the words <em>The</em> and <em>math</em> and
+  replaced by the underlined words that tell readers <em>which</em> curriculum no longer meets students’
+  needs. It is essential because without it, confusion may arise about which math curriculum no longer
+  meets students’ needs.</p>
+
+  <blockquote><p>The math curriculum <strong>that the district adopted 10 years ago</strong> no longer
+  meets the needs of the students.</p></blockquote>
+
+  <h2>To Comma or Not to Comma?</h2>
+
+  <p>Place commas around nonessential information, but not around essential information. You can test
+  whether information is nonessential by removing the information. If the meaning of the sentence is unchanged,
+  the information is nonessential. If the meaning becomes too general or changes in any way, the information
+  is essential. Often, nonessential information is introduced with the word <em>which</em> and essential
+  information with <em>that</em>.</p>
+
+  <h3>Place Commas around Nonessential Information</h3>
+
+  <p>Place commas around information that is not essential to the meaning of a sentence, as illustrated
+  in the following sentences:</p>
+
+  <ul><li>The entire math department<strong>, which consists of 16 teachers and 7 staff members,</strong>
+  has requested a review of the curriculum.</li><li>The department chair<strong>, who has led the math
+  department for 11 years,</strong> has agreed to the teachers’ request.</li><li>The curriculum will become
+  effective in June<strong>, when the school year is finished</strong>.</li></ul>
+
+  <h3>Do Not Place Commas around Essential Information</h3>
+
+  <p>Do not place commas around information that is essential to the meaning of a sentence, as illustrated
+  in the following sentences:</p>
+
+  <ul><li>According to the department chair, the math curriculum needs to focus on skills <strong>that
+  students need after high school graduation</strong>.</li><li>The math teachers <strong>who teach Algebra
+  1 and Algebra 2</strong> have requested a review of the curriculum.</li><li>The teachers are concerned
+  <strong>that students are not retaining what they have learned</strong>.</li><li>The department has
+  consulted the curriculum expert <strong>Malcolm Green</strong>.</li></ul>
+
+  <p>See Punctuation for more on commas.</p>
+
+  <h2>Practice Using Commas</h2>
+
+  <p>Read each of the following sentences. Decide whether the underlined portion of each sentence is nonessential
+  or essential. Place commas before, after, or around the nonessential information as appropriate.</p>
+
+  <ol><li>The department has consulted the curriculum expert Malcolm Green <strong>whose textbook is widely
+  used</strong>.</li><li>Two members of the math department <strong>Janelle Brady and Tye Lavalle</strong>
+  are retiring next year.</li><li>The textbooks <strong>that are now in use</strong> are outdated.</li><li>Students
+  have given feedback on the online classes <strong>that have replaced in-person classes</strong>.</li><li>The
+  math department now offers more evening classes <strong>which attract more students</strong> and fewer
+  summer classes.</li><li>Several instructors <strong>who teach math</strong> also teach computer science
+  classes.</li></ol>'

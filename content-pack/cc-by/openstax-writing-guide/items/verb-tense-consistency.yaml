@@ -1,0 +1,107 @@
+id: verb-tense-consistency
+title: Verb tense consistency
+source_url: https://github.com/openstax/osbooks-writing-guide/blob/a6c95528390e3a2936f5bf87c49ac1a4995a0a6e/modules/m00054/index.cnxml
+summary: Keeping tense steady within a passage and shifting it only when the time of the action changes.
+topics:
+  concern:
+  - grammar:verbs
+changes: Converted from the book's source format to plain HTML. Images, figures, and exercises whose text
+  lives elsewhere in the book are left out. Wording is unchanged.
+body: '<p>When you edit, you make changes at the sentence level: phrasing, grammar, mechanics, and wording.
+  Read your paper aloud to check for needed editing. Alternately, you could have your device read the
+  paper to you if it has that feature. As you read or listen, if you notice that something does not sound
+  quite right, your draft probably needs editing at that point. Additionally, if your electronic draft
+  shows blue underlining, check whether you should accept the changes suggested by your software. Once
+  you have thoroughly reviewed each sentence in your draft, read aloud or listen to the entire piece again
+  to see how it flows, making any additional needed changes as you go along.</p>
+
+  <h2>English Varieties and Verbs</h2>
+
+  <p>This section focuses on English verb tense consistency when editing. Every English speaker converses
+  in one or more forms of the language. In the past, people have referred to these forms as <em>dialects</em>.
+  Today, linguists more commonly call them <em>English varieties</em>. Every <em>English variety</em>
+  uses verbs, as do most languages. Verbs are the words that express the action in a sentence. Their most
+  distinguishing feature is that they change according to tense—that is, they take on different forms
+  to express action that happened in the past, happens in the present, or will happen in the future.</p>
+
+  <p>As you edit your profile, you will need to match the English variety you use to the expectations
+  of your audience. If your instructor is your only reader, you will probably need to use an English variety
+  appropriate for an academic setting. If the instructor has asked you to write a profile to appeal to
+  another audience, think about how the English variety you choose might connect better with that audience.</p>
+
+  <p>In every English variety, the form of the verb changes to indicate whether something is happening
+  currently or has happened already. These changes that indicate time differences are called <em>verb
+  tenses</em>. If an action or description occurs now or occurs regularly, in the present time, writers
+  use the <em>present tense</em>. Conversely, if the action occurred in the past and no longer occurs,
+  writers use the <em>past tense</em>.</p>
+
+  <ul><li><strong>Present tense:</strong> She walks to class.</li><li><strong>Past tense:</strong> She
+  walked to class yesterday.</li></ul>
+
+  <p>In simple sentences such as these, choosing a verb tense is fairly straightforward. The author decides
+  when to place the event in time and chooses the corresponding verb form. Although people easily use
+  different verb tenses every day, getting them right in writing can be tricky at times. Writers may accidentally
+  change from past to present tense within a text—or even within the same sentence—for no particular reason.
+  Consider these examples:</p>
+
+  <ul><li><strong>Sentence 1:</strong> I lost a glove on my walk, but I <strong>find</strong> it later.</li><li><strong>Sentence
+  2:</strong> I lost a glove on my walk, but I <strong>found</strong> it later.</li></ul>
+
+  <p>In Sentence 1, the verb <em>lost</em> places the action in the past; the present-tense verb <em>find</em>
+  is not consistent with that pattern. The revision in Sentence 2 places all of the action in the same
+  time frame: the past. Because changing the tense for no reason can confuse the audience, be sure to
+  use the same verb tense throughout, whether events happen in the past or they happen in the present.</p>
+
+  <p>However, you <em>do</em> need to change tenses to indicate a difference in time, and such differences
+  occur often. This situation is why choosing verb tenses in writing can sometimes pose challenges for
+  writers. If you are using the present tense in writing but you want to tell about something that happened
+  in the past, you need to change tenses to make that time difference clear. Look at these sentences:</p>
+
+  <ul><li><strong>Sentence 1:</strong> The artist <strong>uses</strong> bright colors in her paintings.
+  She <strong>says</strong> that when she <strong>is</strong> a child, these colors <strong>attract</strong>
+  her.</li><li><strong>Sentence 2:</strong> The artist <strong>uses</strong> bright colors in her paintings.
+  She <strong>says</strong> that when she <strong>was</strong> a child, these colors <strong>attracted</strong>
+  her.</li></ul>
+
+  <p>The writer is discussing the artist in the present tense, and the artist is speaking in the present
+  tense. However, she is telling about her childhood, which took place in the past. Therefore, she and
+  the writer use both past and present tense to make the time distinction clear. To put all events in
+  the present tense would not make sense in such cases. Look at the verb tense consistency revisions Houston
+  Byrd made to his essay in Focusing on the Angle of Your Subject. When he tells about his trip to the
+  store, describes it, and refers to his interview with the owner, he generally uses—or has revised to
+  use—the past tense, whereas most of the essay is written in the present tense.</p>
+
+  <h3>Proofreading</h3>
+
+  <p>Another type of editing is proofreading. When you proofread, you check for small details, such as
+  typing mistakes, that need fixing. If your instructor has asked you to follow a given style guide, such
+  as MLA or APA, make sure your draft is formatted according to those guidelines. If any words are underlined
+  in red on your electronic document (indicating a misspelling), address those issues as you complete
+  your draft. Lastly, read each sentence individually, starting at the bottom of the draft, to make sure
+  your spelling and punctuation meet the requirements for the genre and audience.</p>
+
+  <p>You may feel that you are not yet a strong enough writer to edit or proofread on your own. If so,
+  take advantage of your instructor’s office hours or your college’s writing center for support in developing
+  your work.</p>
+
+  <h2>Practice with Verb Tense Consistency</h2>
+
+  <p>Depending on your writing context, you may be asked to write mainly in either the past or the present
+  tense. For example, MLA style asks writers to refer to textual materials in the present tense, even
+  though they have already been written.</p>
+
+  <p>With a peer partner, practice choosing the most effective verb forms in the following sentences.
+  Complete the exercise twice—once for a text written mainly in the present tense, and once again for
+  a text written mainly in past tense. Because events happen at different times, you may have a combination
+  of tenses.</p>
+
+  <ol><li>Carla D. Hayden (writes, wrote) ________ about John Lewis’s courageous stance against injustice
+  when he (led, leads) the Selma protests.</li><li>People throughout the country (admire, admired) ________
+  John Lewis and (mourn, mourned) ________ his death.</li><li>In 1995, Hayden (receives, received) ________
+  the Librarian of the Year Award, and in 2016, she (is, was) ________ listed by <em>Fortune</em> magazine
+  as one of the world’s 50 greatest leaders.</li></ol>
+
+  <p>To check your draft for verb tense issues, read your profile aloud to a peer partner. If you notice
+  that some verbs are in the past tense and some are in the present, make them all one consistent tense
+  throughout the text—<em>unless</em> they indicate a change in time, which they often do. Making your
+  verb tenses consistent will help clarify your ideas for readers.</p>'

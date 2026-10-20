@@ -11,7 +11,7 @@ from django.core.management.base import CommandError
 from django.urls import reverse
 
 from sympraxi.records import catalog, contentpack, suggestions
-from sympraxi.records.models import ContentItem, LinkCheck, Resource
+from sympraxi.records.models import ContentItem, ContentTier, LinkCheck, Resource
 from tests.factories import CenterFactory, UserFactory
 from tests.records_world import make_topics, topics
 
@@ -227,9 +227,16 @@ def test_a_missing_pack_folder_loads_nothing(tmp_path) -> None:
     assert contentpack.load(tmp_path / "nowhere").created == 0
 
 
-def test_the_repositorys_own_pack_loads_cleanly(vocab) -> None:
+@pytest.mark.django_db
+def test_the_repositorys_own_pack_loads_cleanly() -> None:
     """Whatever is checked in under content-pack/ must pass the loader's rules."""
-    contentpack.load()
+    call_command("load_catalog", stdout=StringIO())
+    report = contentpack.load()
+    assert report.created >= 1
+    for content in ContentItem.objects.all():
+        assert content.tier == ContentTier.CC_BY
+        assert content.license in contentpack.CC_BY
+        assert content.resource.topics.exists()
 
 
 def test_the_command_reports_and_refuses(tmp_path, vocab) -> None:
