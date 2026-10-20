@@ -92,6 +92,8 @@ class AuditAction(StrEnum):
     SUBMISSION_CANCELED = "feedback.submission_canceled"
     QUEUE_SETTINGS_CHANGED = "feedback.settings_changed"
     REPORT_QUESTIONS_CHANGED = "reports.questions_changed"
+    RESEARCH_SETTINGS_CHANGED = "reports.research_settings_changed"
+    RESEARCH_EXPORTED = "reports.research_exported"
     GOAL_ADDED = "records.goal_added"
     GOAL_CHANGED = "records.goal_changed"
     TIMELINE_VIEWED = "records.timeline_viewed"

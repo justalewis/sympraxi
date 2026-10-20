@@ -98,6 +98,7 @@ Useful options: `--students`, `--duration` (seconds over which students arrive),
 | `sympraxi/notify/` | Private calendar feeds (`feeds.py`), and announcements and mass email (`news.py`) |
 | `sympraxi/records/goals.py`, `timeline.py`, `goal_views.py` | Writing goals, the timeline across terms, and their pages |
 | `sympraxi/records/favorites.py` | A tutor's favorite resources, and putting the ones that fit the topics first |
+| `sympraxi/reports/research.py` | The de-identified research export: protocol check, per-export student codes, generalizing small groups |
 | `sympraxi/reports/demographics.py` | Topics by class standing and course, and across terms, with small groups held back |
 | `sympraxi/reports/resources.py` | The director's report on which resources are attached, by whom, and for which concerns |
 | `sympraxi/records/linkcheck.py` | The weekly link checker: the address guard, robots.txt, delays, and what each answer means |

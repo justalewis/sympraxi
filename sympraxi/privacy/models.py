@@ -82,6 +82,8 @@ ACTION_LABELS = {
     "feedback.submission_returned": _("Returned written feedback to a student"),
     "feedback.submission_canceled": _("Canceled a submission"),
     "feedback.settings_changed": _("Changed the feedback queue's settings"),
+    "reports.research_settings_changed": _("Recorded the IRB protocol for research exports"),
+    "reports.research_exported": _("Downloaded a de-identified research export"),
     "reports.questions_changed": _(
         "Chose which questions the reports read for class standing and course"
     ),

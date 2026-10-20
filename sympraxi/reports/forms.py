@@ -8,10 +8,11 @@ from zoneinfo import ZoneInfo
 
 from django import forms
 from django.utils.formats import date_format
+from django.utils.translation import gettext, gettext_lazy
 from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy
 
 from sympraxi.centers.models import Center
+from sympraxi.reports.models import ResearchSettings
 from sympraxi.scheduling.forms import DateInput
 from sympraxi.scheduling.models import Schedule, Term
 from sympraxi.scheduling.timeutils import Interval, date_range_bounds, week_start
@@ -21,6 +22,27 @@ from sympraxi.scheduling.timeutils import Interval, date_range_bounds, week_star
 MAX_DAYS = 366
 # Without a term, reports cover this many days up to today.
 DEFAULT_DAYS = 30
+
+
+class ResearchSettingsForm(forms.ModelForm):
+    """The IRB protocol the research export is made under."""
+
+    class Meta:
+        model = ResearchSettings
+        fields = ["protocol_number", "investigator", "approved_on", "expires_on"]
+        widgets = {
+            "approved_on": forms.DateInput(attrs={"type": "date"}),
+            "expires_on": forms.DateInput(attrs={"type": "date"}),
+        }
+
+    def clean(self) -> dict[str, Any]:
+        data = super().clean() or {}
+        first, last = data.get("approved_on"), data.get("expires_on")
+        if first and last and last < first:
+            self.add_error("expires_on", gettext("The approval can't end before it starts."))
+        if data.get("protocol_number", "").strip() and not (first and last):
+            self.add_error(None, gettext("Give both dates the protocol is approved for."))
+        return data
 
 
 class ReportQuestionsForm(forms.Form):

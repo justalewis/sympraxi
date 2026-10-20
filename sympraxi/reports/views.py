@@ -29,6 +29,7 @@ from sympraxi.reports import (
     center_export,
     demographics,
     lists,
+    research,
     resources,
     statistics,
     tables,
@@ -40,6 +41,7 @@ from sympraxi.reports.forms import (
     Period,
     PeriodForm,
     ReportQuestionsForm,
+    ResearchSettingsForm,
     list_choice,
 )
 from sympraxi.reports.models import UNFINISHED, CenterExport, ExportStatus
@@ -184,6 +186,76 @@ def report_questions(request: HttpRequest, slug: str) -> HttpResponse:
         return redirect("reports:report_questions", slug=slug)
     context = {"center": center, "form": form, "crumbs": _crumbs(center)}
     return render(request, "reports/report_questions.html", context)
+
+
+@login_required
+def research_page(request: HttpRequest, slug: str) -> HttpResponse:
+    """The IRB protocol, and the de-identified export it allows."""
+    center = _center(request, Action.EXPORT_RESEARCH, slug)
+    current = research.settings_for(center)
+    today = _today(center)
+    form = ResearchSettingsForm(
+        request.POST if request.method == "POST" else None, instance=current
+    )
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            record(
+                AuditAction.RESEARCH_SETTINGS_CHANGED,
+                request=request,
+                center=center,
+                target=current,
+                protocol=current.protocol_number,
+            )
+            messages.success(request, _("The protocol is recorded."))
+            return redirect("reports:research", slug=slug)
+        return _research_context(request, center, current, form, today, None, None)
+    reason = research.allowed(current, today)
+    period_form = PeriodForm(request.GET or None, center=center, today=today)
+    invalid = period_form.is_bound and not period_form.is_valid()
+    period = period_form.period()
+    period_form.initial_for(period)
+    fmt = _wanted_format(request)
+    report = None
+    if not reason and not invalid:
+        report = research.build(center, period, today=today)
+        if fmt is not None:
+            record(
+                AuditAction.RESEARCH_EXPORTED,
+                request=request,
+                center=center,
+                protocol=current.protocol_number,
+                format=fmt,
+                sessions=len(report.tables[0].rows),
+                period=period.label,
+            )
+            return download(report, fmt, stem=_stem("research", period.first, period.last))
+    return _research_context(request, center, current, form, today, period_form, (period, report))
+
+
+def _research_context(
+    request: HttpRequest,
+    center: Center,
+    current: Any,
+    form: Any,
+    today: date,
+    period_form: Any,
+    result: Any,
+) -> HttpResponse:
+    period, report = result if result else (None, None)
+    context = {
+        "center": center,
+        "settings_form": form,
+        "reason": research.allowed(current, today),
+        "form": period_form,
+        "period": period,
+        "report": report,
+        "downloads": downloads(request) if report else [],
+        "min_students": research.MIN_STUDENTS,
+        "crumbs": _crumbs(center),
+    }
+    with timezone.override(center.time_zone):
+        return render(request, "reports/research.html", context)
 
 
 @login_required

@@ -43,7 +43,8 @@ Reports: directors see the center's statistics and the hours tutors offered and
 students booked. Front desk staff and directors see the master lists, which
 name students: a day's or a week's appointments, and the students who booked
 in a period with their visits. Only directors export the whole center, and
-site administrators never do: the export holds every session record.
+site administrators never do: the export holds every session record. The same goes for the
+de-identified research export, which a director makes only under a protocol they have recorded.
 
 Time clock: tutors, front desk staff and directors clock themselves in and out
 and see their own hours. Directors see everyone's timesheets and add, change
@@ -199,6 +200,9 @@ class Action(StrEnum):
     VIEW_MASTER_LISTS = "reports.view_master_lists"
     # One ZIP of everything the center keeps, session records included.
     EXPORT_CENTER = "reports.export_center"
+    # A de-identified file of session data for an IRB-approved project, and the record of the
+    # protocol it is made under.
+    EXPORT_RESEARCH = "reports.export_research"
     # Clock yourself in and out, and see your own hours.
     CLOCK_OWN = "staff.clock_own"
     # Everyone's timesheets, and adding, changing and removing their entries.
@@ -301,6 +305,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_STATISTICS,
             Action.VIEW_MASTER_LISTS,
             Action.EXPORT_CENTER,
+            Action.EXPORT_RESEARCH,
             Action.CLOCK_OWN,
             Action.MANAGE_TIME,
             Action.MANAGE_ANNOUNCEMENTS,

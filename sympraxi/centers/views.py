@@ -31,6 +31,7 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_submit_work": can(request.user, Action.SUBMIT_WORK, center),
         "can_work_queue": can(request.user, Action.WORK_QUEUE, center),
         "can_manage_queue": can(request.user, Action.MANAGE_QUEUE, center),
+        "can_export_research": can(request.user, Action.EXPORT_RESEARCH, center),
         "can_manage_records": can(request.user, Action.MANAGE_RECORDS, center),
         "can_mark_attendance": can(request.user, Action.MARK_ATTENDANCE, center),
         "can_manage_blocks": can(request.user, Action.MANAGE_BLOCKS, center),

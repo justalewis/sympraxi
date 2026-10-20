@@ -2,6 +2,20 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 3: the de-identified research export (October 2026)
+
+**Only under a protocol, and only while it is current.** A director records the IRB protocol number, the investigator and the dates the approval covers on **De-identified research export** (reports). The export works on days those dates cover and no others, and says why when it can't: no number, no dates, not yet started, ended. Sympraxi can't check any of this with the IRB; it records what a director says, so a download is tied to a protocol number in the audit log, and a lapsed approval stops being usable without anyone remembering to turn it off. Its own permission (`reports.export_research`) goes to directors only, never to site administrators.
+
+**One row per final session record, saying nothing about who.** No names, emails, student, appointment or record IDs, tutors, dates, or anything a person wrote (no summaries, notes, goals, project titles, free-text answers). A session is placed by term and week of the term, its length by a band (1 to 15 minutes, and so on), whether it was in person, online or unbooked, its place among that student's sessions in the file, its concerns, stages and tutor actions by topic key, and the number of resources attached.
+
+**Student codes that can't be joined.** A student is a 12-character code, an HMAC of their ID under a random key made for this one download and never stored. Within a file, one student has one code, so a project can follow someone across sessions. In any other file they have another, so two exports can't be matched, and no one, the center included, can turn a code back into a person. The cost is that a project can't follow students across exports; if it needs to, that is a conversation with the IRB about consent and a different kind of data, not a setting here.
+
+**Small groups are generalized, not dropped.** Dropping rows would bias the data; hiding values keeps every session. Class standing and course appear only if at least five different students share them; otherwise the value is "Other" (the same five the by-course report uses). A course is kept only if it looks like a course code, so a sentence a student typed can never reach the file. A topic used by fewer than five students becomes its parent topic, or disappears. The last table in the file says how many standings, courses and topics were changed.
+
+**What it still can't promise.** Someone who knows the students at a small center may recognize one from the combination of term, week and topics; a project that joins this file with another source can narrow it further. FERPA allows releasing de-identified data once the school has made a reasonable determination that no student could be identified (34 CFR 99.31(b)). This file is built to support that determination, and the page says that the IRB and the registrar make it. Every download, and every change to the protocol, is audited.
+
+**Not done.** No consent flag (a student can't opt out), no suppression of weeks in small terms, and no differential privacy; each is a choice for the IRB, not a default.
+
 ## Phase 3: topics by course and class standing (October 2026)
 
 **Which question says "first-year"?** Class standing and course live in answers to questions a center wrote itself, so a director chooses the two questions on **Questions the reports read** (center tools), from the short-answer and choose-one questions on the published registration and intake forms. The choice is stored as the question's permanent key, which every new version of its form keeps. A form doesn't have to be edited, a new version of it doesn't break the report, and answers given to earlier versions still count. A center that hasn't chosen sees "Not given" throughout, and a prompt to choose.

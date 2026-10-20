@@ -89,3 +89,25 @@ class ReportQuestions(models.Model):
 
     def __str__(self) -> str:
         return f"Report questions for {self.center_id}"
+
+
+class ResearchSettings(models.Model):
+    """The IRB protocol a center's research export is made under.
+
+    The export (`sympraxi.reports.research`) works only while the approval dates cover
+    today. These are facts a director records; Sympraxi can't check them with the IRB.
+    """
+
+    center = models.OneToOneField(
+        Center, on_delete=models.CASCADE, related_name="research_settings"
+    )
+    protocol_number = models.CharField(_("IRB protocol number"), max_length=100, blank=True)
+    investigator = models.CharField(_("investigator"), max_length=200, blank=True)
+    approved_on = models.DateField(_("approved on"), null=True, blank=True)
+    expires_on = models.DateField(_("approved through"), null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "research settings"
+
+    def __str__(self) -> str:
+        return f"Research settings for {self.center_id}"

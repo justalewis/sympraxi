@@ -87,6 +87,7 @@ REPORTS_ACTIONS = [
     Action.VIEW_STATISTICS,
     Action.VIEW_MASTER_LISTS,
     Action.EXPORT_CENTER,
+    Action.EXPORT_RESEARCH,
 ]
 
 STAFF_ACTIONS = [
@@ -220,14 +221,14 @@ EXPECTED_FORMS = {
 # directors export the whole center. Site administrators get none: the export
 # holds every session record, and the lists and statistics are about students.
 EXPECTED_REPORTS = {
-    #              statistics  master  export
-    #                          lists   center
-    "none":        (0,         0,      0),
-    "student":     (0,         0,      0),
-    "tutor":       (0,         0,      0),
-    "front_desk":  (0,         1,      0),
-    "director":    (1,         1,      1),
-    "site_admin":  (0,         0,      0),
+    #              statistics  master  export  research
+    #                          lists   center  export
+    "none":        (0,         0,      0,       0),
+    "student":     (0,         0,      0,       0),
+    "tutor":       (0,         0,      0,       0),
+    "front_desk":  (0,         1,      0,       0),
+    "director":    (1,         1,      1,       1),
+    "site_admin":  (0,         0,      0,       0),
 }
 
 # Time clock. Staff clock themselves in and out; directors see and correct

@@ -42,7 +42,7 @@
       {% if can_manage_time %}<li><a href="{% url 'staff:entries' slug=center.slug %}">{% translate "Timesheets" %}</a></li>{% endif %}
     </ul>
   {% endif %}
-  {% if can_view_statistics or can_view_master_lists or can_export_center %}
+  {% if can_view_statistics or can_view_master_lists or can_export_center or can_export_research %}
     <h2>{% translate "Reports" %}</h2>
     <ul class="usa-list">
       {% if can_view_master_lists %}<li><a href="{% url 'reports:appointment_list' slug=center.slug %}">{% translate "Appointment list for a day or a week, to print" %}</a></li>{% endif %}
@@ -51,6 +51,7 @@
       {% if can_view_statistics %}<li><a href="{% url 'reports:utilization' slug=center.slug %}">{% translate "Hours offered and booked" %}</a></li>{% endif %}
       {% if can_view_statistics %}<li><a href="{% url 'reports:by_course' slug=center.slug %}">{% translate "Topics by course and class standing" %}</a></li>{% endif %}
       {% if can_view_statistics %}<li><a href="{% url 'reports:resources' slug=center.slug %}">{% translate "Resources tutors attach" %}</a></li>{% endif %}
+      {% if can_export_research %}<li><a href="{% url 'reports:research' slug=center.slug %}">{% translate "De-identified research export" %}</a></li>{% endif %}
       {% if can_export_center %}<li><a href="{% url 'reports:center_export' slug=center.slug %}">{% translate "Full export of the center" %}</a></li>{% endif %}
     </ul>
   {% endif %}

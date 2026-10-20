@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "De-identified research export" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Research export" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "De-identified research export" %}</h1>
+  <p>{% blocktranslate with k=min_students %}A table with one row for each final session record, for a project with IRB approval. It has no names, emails, IDs, dates, tutors or anything a person wrote. Each student is a code that is new in every export, so two files can't be matched. Class standing and course appear only where at least {{ k }} students share them; topics used by fewer are generalized or dropped.{% endblocktranslate %}</p>
+  <p>{% translate "This is not a guarantee. In a small center, someone who knows the students could still recognize one. The IRB and your registrar decide whether the file is de-identified enough to release; the last table says what was generalized." %}</p>
+
+  <h2>{% translate "The protocol" %}</h2>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% if settings_form.non_field_errors %}
+      <div class="usa-alert usa-alert--error usa-alert--slim" role="alert">
+        <div class="usa-alert__body"><p class="usa-alert__text">{{ settings_form.non_field_errors|join:" " }}</p></div>
+      </div>
+    {% endif %}
+    {% include "includes/form_fields.html" with form=settings_form %}
+    <div class="sympraxi-form-actions"><button class="usa-button" type="submit">{% translate "Record the protocol" %}</button></div>
+  </form>
+
+  <h2>{% translate "The export" %}</h2>
+  {% if reason %}
+    <p>{{ reason }}</p>
+  {% elif form %}
+    <div class="sympraxi-no-print">
+      <form class="sympraxi-filters" method="get">
+        {% include "includes/field.html" with field=form.term %}
+        {% include "includes/field.html" with field=form.first %}
+        {% include "includes/field.html" with field=form.last %}
+        {% include "includes/field.html" with field=form.schedule %}
+        <button class="usa-button" type="submit">{% translate "Show" %}</button>
+      </form>
+    </div>
+    {% if report %}
+      <p class="sympraxi-report-period"><strong>{{ period.label }}</strong>. {{ period.schedule_label }}.</p>
+      <p>{% blocktranslate count n=report.tables.0.rows|length %}{{ n }} session in this file. Downloading it is recorded in the audit log.{% plural %}{{ n }} sessions in this file. Downloading it is recorded in the audit log.{% endblocktranslate %} {% translate "Every download has new student codes." %}</p>
+      {% include "reports/_downloads.html" %}
+      <section class="sympraxi-report-section" aria-labelledby="table-about">
+        <h2 id="table-about">{{ report.tables.1.title }}</h2>
+        {% with table=report.tables.1 %}{% include "reports/_table.html" %}{% endwith %}
+      </section>
+    {% endif %}
+  {% endif %}
+{% endblock content %}
