@@ -1,6 +1,7 @@
 """Builders for form tests: forms with questions, published versions and answers."""
 
 import secrets
+import time
 from collections.abc import Iterable
 from datetime import date, timedelta
 from decimal import Decimal
@@ -188,6 +189,9 @@ def answer(
 ) -> Response:
     version = form.published()
     assert version is not None
+    # Responses are ordered by when they were made, and two made inside one clock tick
+    # (about 15 ms on Windows) would tie.
+    time.sleep(0.02)
     return services.save_response(
         version=version,
         values=values(version, by_label),

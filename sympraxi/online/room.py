@@ -213,8 +213,11 @@ def _automatic_version(document: RoomDocument, now: datetime) -> None:
     last = document.versions.order_by("-created_at").first()
     if last is not None and now - last.created_at < AUTO_VERSION_AFTER:
         return
-    if last is not None and last.content == document.content and last.chat == document.chat:
-        return
+    if last is not None:
+        # Versions made in the same instant are all "the latest": none may match.
+        latest = document.versions.filter(created_at=last.created_at)
+        if any(v.content == document.content and v.chat == document.chat for v in latest):
+            return
     RoomVersion.objects.create(
         document=document, label="", content=document.content, chat=document.chat
     )

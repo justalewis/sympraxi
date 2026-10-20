@@ -4,6 +4,9 @@ from sympraxi.records.models import ContentItem, ContentTier, LinkCheck, Resourc
 
 
 def make_content_item(item_id: str = "thesis-basics") -> ContentItem:
+    existing = ContentItem.objects.filter(pk=item_id).first()
+    if existing is not None:
+        return existing
     resource = Resource.objects.create(
         catalog_id=f"pack:{item_id}",
         title="Thesis basics",
