@@ -337,6 +337,15 @@ Slices 6 and 7 wait on decisions or files from the maintainer.
 - Workshops with rosters and attendance.
 - Tutor training: modules (pages, readings, video links), short quizzes, required hours, observation forms built with the form builder, mentor sign-off, completion tracking.
 
+**Slices, planned October 20, 2026.** Each is built, checked and pushed before the next.
+
+1. **Time clock, finished.** An optional list of networks a center's staff may clock in from, with a director override; a director approves a person's hours for a pay period, which locks those entries until the approval is withdrawn with a reason; the timesheet download shows approval and can be limited to approved hours, with a payroll ID and pay code per person for the payroll office.
+2. **Kiosk check-in and waiting room.** A front-desk page for a shared screen where a student arrives by typing or swiping a student ID (a card reader that types the number and presses Enter works), is marked as arrived, and appears in a waiting room list that tutors and the front desk see; walk-ins join the same list.
+3. **Waiting list with holds.** A student can join the waiting list for a full or past-cutoff schedule; when an appointment is canceled, the first student on the list is offered the slot for a short hold, then the next, and a student who accepts is booked.
+4. **Workshops.** A director schedules a workshop with a capacity; students register or are added; the leader takes attendance; the roster and attendance appear in the center's reports.
+5. **Tutor training modules.** Training modules made of pages, readings and video links, with short quizzes, required hours (fed by the time clock's training category), and a per-tutor progress page.
+6. **Observations, mentor sign-off and cohorts.** Observation forms built with the form builder, a mentor assigned to each new tutor who signs off on completed modules and observations, and a cohort page showing who has finished onboarding.
+
 **Exit:** a new tutor cohort can complete onboarding inside the system, and payroll can use its timesheets.
 
 ### Phase 5: Campus integration and 1.0 (6 to 8 weeks)
