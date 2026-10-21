@@ -135,6 +135,14 @@ Site administrators keep a break-glass sign-in with their password and two-facto
 - Every Microsoft sign-in says the email address wasn't confirmed: the `email` or `xms_edov` optional claim is missing (step 4).
 - Sympraxi shows "Sign-in didn't work": the provider's answer failed a check, for example a token from another tenant. Site administrators can see it under **Site administration** → **Audit events**, as a failed sign-in with the provider and the reason.
 
+### Other OpenID Connect providers, CAS, and student IDs
+
+For Okta, Keycloak or another OpenID Connect provider, set `SYMPRAXI_OIDC_ISSUER` (the https address that serves `/.well-known/openid-configuration`), `SYMPRAXI_OIDC_CLIENT_ID`, `SYMPRAXI_OIDC_CLIENT_SECRET`, and optionally `SYMPRAXI_OIDC_NAME` (the button's label). In the provider, register the redirect address `https://<your site>/accounts/oidc/oidc/login/callback/`. `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` must be set.
+
+For CAS, set `SYMPRAXI_CAS_SERVER_URL` (for example `https://cas.example.edu/cas`), `SYMPRAXI_CAS_VERSION` (2 or 3; default 3), and have the CAS administrator register `https://<your site>/accounts/cas/return/` as an allowed service. Sympraxi reads the person's email from the CAS attribute named in `SYMPRAXI_CAS_EMAIL_ATTRIBUTE` (default `mail`), their name from `SYMPRAXI_CAS_NAME_ATTRIBUTE` (default `displayName`), and, if you set it, a student ID from `SYMPRAXI_CAS_STUDENT_ID_ATTRIBUTE`. `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` must be set. `SYMPRAXI_BASE_URL` must be the public address, because the ticket is checked against it.
+
+To bring the student ID in from an OpenID Connect sign-in, set `SYMPRAXI_SSO_STUDENT_ID_CLAIM` to the claim's name.
+
 ## What's running
 
 | Service | Role |

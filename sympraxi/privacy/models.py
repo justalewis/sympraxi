@@ -106,6 +106,8 @@ ACTION_LABELS = {
     "training.content_changed": _("Changed tutor training content"),
     "training.settings_changed": _("Changed the training hours requirement"),
     "training.module_completed": _("Finished a training module"),
+    "auth.sso_student_id_set": _("Took a student ID from the college sign-in"),
+    "auth.sso_student_id_mismatch": _("The college sign-in sent a different student ID"),
     "sms.consent_given": _("Agreed to text message reminders"),
     "sms.consent_verified": _("Confirmed a phone number for text reminders"),
     "sms.consent_revoked": _("Turned off text message reminders"),

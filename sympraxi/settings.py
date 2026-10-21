@@ -285,8 +285,24 @@ SYMPRAXI_TRUST_IDP_MFA = env.bool("SYMPRAXI_TRUST_IDP_MFA", default=False)
 # a break-glass password sign-in at /accounts/login/local/.
 SYMPRAXI_SSO_ONLY = env.bool("SYMPRAXI_SSO_ONLY", default=False)
 
-SYMPRAXI_SSO_PROVIDERS = sso_config.providers_from_env(env, trust_idp_mfa=SYMPRAXI_TRUST_IDP_MFA)
-sso_config.check_sso_only(SYMPRAXI_SSO_ONLY, SYMPRAXI_SSO_PROVIDERS)
+# Which claim from the identity provider holds the student ID, if it sends one. A
+# sign-in fills in a missing student ID; it never overwrites one a director entered.
+SYMPRAXI_SSO_STUDENT_ID_CLAIM = env.str("SYMPRAXI_SSO_STUDENT_ID_CLAIM", default="")
+
+# CAS, for colleges that sign in through an Apereo CAS server.
+SYMPRAXI_CAS_SERVER_URL = env.str("SYMPRAXI_CAS_SERVER_URL", default="").strip()
+SYMPRAXI_CAS_VERSION = env.int("SYMPRAXI_CAS_VERSION", default=3)
+SYMPRAXI_CAS_EMAIL_ATTRIBUTE = env.str("SYMPRAXI_CAS_EMAIL_ATTRIBUTE", default="mail")
+SYMPRAXI_CAS_NAME_ATTRIBUTE = env.str("SYMPRAXI_CAS_NAME_ATTRIBUTE", default="displayName")
+SYMPRAXI_CAS_STUDENT_ID_ATTRIBUTE = env.str("SYMPRAXI_CAS_STUDENT_ID_ATTRIBUTE", default="")
+sso_config.check_cas(SYMPRAXI_CAS_SERVER_URL, SYMPRAXI_SIGNUP_EMAIL_DOMAINS)
+
+SYMPRAXI_SSO_PROVIDERS = sso_config.providers_from_env(
+    env, trust_idp_mfa=SYMPRAXI_TRUST_IDP_MFA, email_domains=SYMPRAXI_SIGNUP_EMAIL_DOMAINS
+)
+sso_config.check_sso_only(
+    SYMPRAXI_SSO_ONLY, SYMPRAXI_SSO_PROVIDERS, cas=bool(SYMPRAXI_CAS_SERVER_URL)
+)
 
 SOCIALACCOUNT_ADAPTER = "sympraxi.accounts.adapter.SocialAccountAdapter"
 SOCIALACCOUNT_PROVIDERS = {"openid_connect": {"APPS": SYMPRAXI_SSO_PROVIDERS}}

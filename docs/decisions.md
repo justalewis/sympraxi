@@ -12,6 +12,16 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 5: more ways to sign in (October 2026)
+
+**A generic OpenID Connect provider.** Besides Microsoft Entra and Google, a college can point Sympraxi at any OpenID Connect provider (Okta, Keycloak, Shibboleth's OIDC add-on and others) with an issuer address, a client ID and a secret. It uses PKCE, and checks the issuer, that the provider says the email is verified, and that the address is at one of `SYMPRAXI_SIGNUP_EMAIL_DOMAINS`. That list is required for this provider, because unlike Entra's tenant or Google's hosted domain, a generic provider doesn't say which people belong to the college.
+
+**CAS.** A college that runs a CAS server (2.0 or 3.0) can sign people in through it. The person is sent to CAS and comes back with a one-time ticket; Sympraxi asks the CAS server, from its own server and over https, who the ticket is for. The XML answer is refused if it declares a DTD or entity. CAS has no "email verified", so the address must come from an attribute (or the CAS name) and be at an allowed domain. The first sign-in ties the CAS name to the account with that email; later sign-ins match on the CAS name, so an address handed to a new person doesn't hand over the old person's records. Two-factor, the sign-in audit and SSO-only mode apply as with the other providers.
+
+**Student ID from the provider.** A host can name the claim (`SYMPRAXI_SSO_STUDENT_ID_CLAIM`) or CAS attribute that carries the college's student ID. It fills a blank student ID, never overwrites one, and records a mismatch (or a clash with another account) in the audit log instead of changing anything.
+
+**Not done.** SAML needs a new library with native XML-signature code, so it waits for approval to add one. Colleges on Shibboleth can use its OIDC add-on or CAS in the meantime.
+
 ## Phase 5: text message reminders (October 2026)
 
 **Consent comes first.** A person gives a mobile number and ticks a box that is never pre-ticked. Beside it is the exact wording they agree to (who texts, why, how often, that message and data rates may apply, and how to stop). That wording, its version, the time and the address they agreed from are stored. They then prove the number is theirs with a six-digit code texted to it (good for 15 minutes, five tries, one new code a minute). Only after that can they be texted a reminder. Agreeing is not a condition of using the center, and the wording says so.

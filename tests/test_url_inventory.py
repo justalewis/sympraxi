@@ -444,6 +444,10 @@ SECRET_ENDPOINTS = {"collab:load", "collab:store"}
 # request signed by the provider (tests/test_sms.py).
 SIGNED_ENDPOINTS = {"sms:inbound"}
 
+# The CAS sign-in pages. Public, and answer 404 until the host sets a CAS server
+# (tests/test_sso_more.py checks the flow).
+CAS_ENDPOINTS = {"accounts:cas_login", "accounts:cas_callback"}
+
 # The JSON API. It answers to a bearer token, not a session; tests/test_integrations.py
 # checks what each does. Here: none answers without one.
 API_ENDPOINTS = {
@@ -464,6 +468,7 @@ def test_every_url_is_classified() -> None:
         | SECRET_ENDPOINTS
         | API_ENDPOINTS
         | SIGNED_ENDPOINTS
+        | CAS_ENDPOINTS
     )
     assert sympraxi_url_names() == classified
 
@@ -533,6 +538,11 @@ def test_dead_and_unknown_tokens_look_alike(client, db, name) -> None:
 @pytest.mark.parametrize("name", sorted(PUBLIC - {"core:source"}))
 def test_public_pages_load_anonymously(client, db, name) -> None:
     assert client.get(reverse(name)).status_code == 200
+
+
+@pytest.mark.parametrize("name", sorted(CAS_ENDPOINTS))
+def test_cas_pages_are_off_without_a_cas_server(client, db, name) -> None:
+    assert client.get(reverse(name)).status_code == 404
 
 
 def _login_url(name: str) -> str:

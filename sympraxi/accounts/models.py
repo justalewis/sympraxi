@@ -102,3 +102,19 @@ class User(AbstractUser):
 
     def get_short_name(self) -> str:
         return self.display_name
+
+
+class CasLink(models.Model):
+    """Ties an account to the name a CAS server knows the person by.
+
+    The first CAS sign-in links the name to the account with the person's address; later
+    sign-ins match on the name, so an address handed to someone new doesn't hand over the
+    old person's account.
+    """
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cas_link")
+    cas_user = models.CharField(max_length=200, unique=True)
+    linked_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"{self.user} is {self.cas_user} at CAS"

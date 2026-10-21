@@ -127,6 +127,8 @@ class AuditAction(StrEnum):
     TRAINING_CONTENT_CHANGED = "training.content_changed"
     TRAINING_SETTINGS_CHANGED = "training.settings_changed"
     TRAINING_MODULE_COMPLETED = "training.module_completed"
+    SSO_STUDENT_ID_SET = "auth.sso_student_id_set"
+    SSO_STUDENT_ID_MISMATCH = "auth.sso_student_id_mismatch"
     SMS_CONSENT_GIVEN = "sms.consent_given"
     SMS_CONSENT_VERIFIED = "sms.consent_verified"
     SMS_CONSENT_REVOKED = "sms.consent_revoked"

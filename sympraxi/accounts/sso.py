@@ -18,6 +18,7 @@ With SYMPRAXI_TRUST_IDP_MFA on, a token whose `amr` claim contains "mfa" also
 stands in for Sympraxi's own two-factor step. Nothing else in the token does.
 """
 
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -26,7 +27,7 @@ from django.conf import settings
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from sympraxi.accounts.sso_config import ENTRA, GOOGLE, entra_issuer
+from sympraxi.accounts.sso_config import ENTRA, GOOGLE, OIDC, entra_issuer
 
 # Set in the session when a staff member's sign-in proved multi-factor login at
 # the identity provider and the installation trusts that.
@@ -70,7 +71,7 @@ LOCAL_LOGIN_OFF = Rejection(
 def provider_apps() -> list[dict[str, Any]]:
     """The providers this installation has, as built from the environment."""
     apps = settings.SOCIALACCOUNT_PROVIDERS.get("openid_connect", {}).get("APPS", [])
-    return [app for app in apps if app.get("provider_id") in (ENTRA, GOOGLE)]
+    return [app for app in apps if app.get("provider_id") in (ENTRA, GOOGLE, OIDC)]
 
 
 def app_settings(provider_id: str) -> dict[str, Any] | None:
@@ -92,7 +93,9 @@ def sso_only() -> bool:
 
     Only with a provider set up: otherwise nobody but site admins could sign in.
     """
-    return bool(settings.SYMPRAXI_SSO_ONLY and provider_apps())
+    return bool(
+        settings.SYMPRAXI_SSO_ONLY and (provider_apps() or settings.SYMPRAXI_CAS_SERVER_URL)
+    )
 
 
 def id_token_claims(sociallogin: Any) -> dict[str, Any]:
@@ -126,6 +129,14 @@ def check_claims(provider_id: str, claims: dict[str, Any]) -> Rejection | None:
         if str(claims.get("hd", "")).lower() != config["hosted_domain"]:
             return WRONG_ORGANIZATION
         verified = _is_true(claims.get("email_verified"))
+    elif provider_id == OIDC:
+        # Nothing in a generic token names the college, so the issuer must be the
+        # configured one and the address's domain (checked below) must be the college's.
+        if str(claims.get("iss", "")).rstrip("/") != str(config["server_url"]).rstrip("/"):
+            return WRONG_ORGANIZATION
+        verified = _is_true(claims.get("email_verified"))
+        if not settings.SYMPRAXI_SIGNUP_EMAIL_DOMAINS:
+            return WRONG_EMAIL_DOMAIN
     else:
         return WRONG_ORGANIZATION
     email = asserted_email(claims)
@@ -139,6 +150,46 @@ def check_claims(provider_id: str, claims: dict[str, Any]) -> Rejection | None:
 
 def check(sociallogin: Any) -> Rejection | None:
     return check_claims(sociallogin.account.provider, id_token_claims(sociallogin))
+
+
+def student_id_in(claims: dict[str, Any]) -> str | None:
+    """The student ID the provider sent, if the host named the claim and the value is sane."""
+    name = settings.SYMPRAXI_SSO_STUDENT_ID_CLAIM
+    value = claims.get(name) if name else None
+    text = str(value).strip() if isinstance(value, str | int) else ""
+    return text if re.fullmatch(r"[A-Za-z0-9_\-]{1,64}", text) else None
+
+
+def fill_student_id(user: Any, claims: dict[str, Any], request: HttpRequest | None = None) -> None:
+    """Give an account that has no student ID the one the provider sent.
+
+    A student ID a director entered is never overwritten, and an ID already on another
+    account is left alone; either way the mismatch is in the audit log, because it means
+    the center's records and the college's disagree.
+    """
+    from sympraxi.accounts.models import User
+    from sympraxi.privacy.audit import AuditAction, record
+
+    sent = student_id_in(claims)
+    if sent is None or user.pk is None:
+        return
+    if user.student_id == sent:
+        return
+    if user.student_id:
+        record(AuditAction.SSO_STUDENT_ID_MISMATCH, request=request, actor=user, target=user)
+        return
+    if User.objects.filter(student_id=sent).exclude(pk=user.pk).exists():
+        record(
+            AuditAction.SSO_STUDENT_ID_MISMATCH,
+            request=request,
+            actor=user,
+            target=user,
+            conflict=True,
+        )
+        return
+    user.student_id = sent
+    user.save(update_fields=["student_id"])
+    record(AuditAction.SSO_STUDENT_ID_SET, request=request, actor=user, target=user)
 
 
 def mark_email_verified(sociallogin: Any) -> None:

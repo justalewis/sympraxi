@@ -50,7 +50,8 @@ class AccountAdapter(DefaultAccountAdapter):
         page they come from, so hiding the form is not the only thing stopping them.
         """
         signal_kwargs = kwargs.get("signal_kwargs") or {}
-        if sso.sso_only() and not signal_kwargs.get("sociallogin") and not user.is_superuser:
+        signed_in_by_sso = signal_kwargs.get("sociallogin") or signal_kwargs.get("cas")
+        if sso.sso_only() and not signed_in_by_sso and not user.is_superuser:
             record(
                 AuditAction.LOGIN_FAILED,
                 request=request,
@@ -120,6 +121,8 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         if rejection is not None:
             self._reject(request, sociallogin, rejection)
         sso.mark_email_verified(sociallogin)
+        if sociallogin.is_existing:
+            sso.fill_student_id(sociallogin.user, sso.id_token_claims(sociallogin), request)
 
     def on_authentication_error(
         self,
@@ -165,4 +168,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
             part for part in (claims.get("given_name"), claims.get("family_name")) if part
         )
         user.full_name = str(name or user.email.split("@")[0])[:200]
+        sent = sso.student_id_in(claims)
+        if sent and not type(user).objects.filter(student_id=sent).exists():
+            user.student_id = sent
         return user

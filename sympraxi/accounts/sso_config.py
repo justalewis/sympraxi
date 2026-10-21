@@ -17,12 +17,15 @@ settings.py imports this module, so it must not import anything from Django apps
 import json
 import uuid
 from typing import Any
+from urllib.parse import urlsplit
 
 import environ
 from django.core.exceptions import ImproperlyConfigured
 
 ENTRA = "entra"
 GOOGLE = "google"
+# Any other OpenID Connect provider (Okta, Auth0, Keycloak, ...), set up as one app.
+OIDC = "oidc"
 
 # Where each provider's sign-in page lives. The sign-in buttons are forms, and the
 # Content Security Policy's form-action must allow the redirect to these origins.
@@ -38,7 +41,9 @@ SHARED_TENANTS = frozenset({"common", "organizations", "consumers"})
 SCOPES = ["openid", "profile", "email"]
 
 
-def providers_from_env(env: environ.Env, *, trust_idp_mfa: bool) -> list[dict[str, Any]]:
+def providers_from_env(
+    env: environ.Env, *, trust_idp_mfa: bool, email_domains: list[str] | None = None
+) -> list[dict[str, Any]]:
     """The allauth app entries for every provider whose variables are set."""
     apps = []
     entra = _read(
@@ -57,6 +62,20 @@ def providers_from_env(env: environ.Env, *, trust_idp_mfa: bool) -> list[dict[st
     )
     if google:
         apps.append(google_app(**google, trust_idp_mfa=trust_idp_mfa))
+    oidc = _read(
+        env,
+        issuer="SYMPRAXI_OIDC_ISSUER",
+        client_id="SYMPRAXI_OIDC_CLIENT_ID",
+        secret="SYMPRAXI_OIDC_CLIENT_SECRET",  # noqa: S106
+    )
+    if oidc:
+        apps.append(
+            oidc_app(
+                **oidc,
+                name=env.str("SYMPRAXI_OIDC_NAME", default="").strip() or "Single sign-on",
+                email_domains=email_domains or [],
+            )
+        )
     return apps
 
 
@@ -151,13 +170,72 @@ def google_app(
     }
 
 
+def oidc_issuer(value: str) -> str:
+    """The issuer address, https only, without a trailing slash."""
+    parts = urlsplit(value)
+    if parts.scheme != "https" or not parts.netloc or parts.query or parts.fragment:
+        raise ImproperlyConfigured(
+            "SYMPRAXI_OIDC_ISSUER must be your provider's issuer address, starting with "
+            "https://, such as https://example.okta.com/oauth2/default."
+        )
+    return value.rstrip("/")
+
+
+def oidc_app(
+    *, issuer: str, client_id: str, secret: str, name: str, email_domains: list[str]
+) -> dict[str, Any]:
+    issuer = oidc_issuer(issuer)
+    if not email_domains:
+        # Unlike Entra's tenant or Google's domain, a generic provider has nothing in its
+        # token that says "this college", so the address's domain has to.
+        raise ImproperlyConfigured(
+            "SYMPRAXI_OIDC_ISSUER needs SYMPRAXI_SIGNUP_EMAIL_DOMAINS set to your college's "
+            "email domain, so only your college's addresses can sign in."
+        )
+    return {
+        "provider_id": OIDC,
+        "name": name,
+        "client_id": client_id,
+        "secret": secret,
+        "settings": {
+            "server_url": issuer,
+            "token_auth_method": "client_secret_post",
+            "oauth_pkce_enabled": True,
+            "fetch_userinfo": False,
+            "scope": SCOPES,
+        },
+    }
+
+
+def check_cas(server_url: str, email_domains: list[str]) -> None:
+    if not server_url:
+        return
+    parts = urlsplit(server_url)
+    if parts.scheme != "https" or not parts.netloc:
+        raise ImproperlyConfigured(
+            "SYMPRAXI_CAS_SERVER_URL must start with https://, such as https://cas.example.edu/cas."
+        )
+    if not email_domains:
+        raise ImproperlyConfigured(
+            "CAS needs SYMPRAXI_SIGNUP_EMAIL_DOMAINS set to your college's email domain, "
+            "because CAS says who signed in but not that their address is the college's."
+        )
+
+
 def login_origins(apps: list[dict[str, Any]]) -> list[str]:
-    return [LOGIN_ORIGINS[app["provider_id"]] for app in apps]
+    origins = []
+    for app in apps:
+        if app["provider_id"] == OIDC:
+            parts = urlsplit(app["settings"]["server_url"])
+            origins.append(f"{parts.scheme}://{parts.netloc}")
+        else:
+            origins.append(LOGIN_ORIGINS[app["provider_id"]])
+    return origins
 
 
-def check_sso_only(sso_only: bool, apps: list[dict[str, Any]]) -> None:
+def check_sso_only(sso_only: bool, apps: list[dict[str, Any]], *, cas: bool = False) -> None:
     """SSO-only with no provider would leave only site administrators able to sign in."""
-    if sso_only and not apps:
+    if sso_only and not apps and not cas:
         raise ImproperlyConfigured(
             "SYMPRAXI_SSO_ONLY needs a single sign-on provider. Set one up, or turn it off."
         )
