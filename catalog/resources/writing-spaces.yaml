@@ -1,0 +1,712 @@
+# Writing Spaces: Readings on Writing, volumes 1 to 6 (volume 6 is Technical Writing
+# Spaces), edited by Charles Lowe, Pavel Zemliansky and others, Parlor Press. Links
+# only: the essays are CC BY-NC-ND by default, so no text is copied. See publishers.yaml.
+
+- id: writing-spaces-what-is-academic-writing
+  title: What is Academic Writing
+  url: https://parlormultimedia.com/writingspaces/past-volumes/a-students-guide-to-collaborative-writing-technologies/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: An introduction for college writers to what academic writing is and what it asks of them.
+  topics:
+    concern:
+    - assignment:genre-conventions
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By L. Lennie Irvin, in Writing Spaces: Readings on Writing, Volume 1. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-so-youve-got-a-writing-assignment-now-what
+  title: So You've Got a Writing Assignment. Now What?
+  url: https://parlormultimedia.com/writingspaces/past-volumes/so-youve-got-a-writing-assignment-now-what/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: A first-year writer's guide to getting started once an assignment has been handed out.
+  topics:
+    concern:
+    - assignment:prompt
+    stage:
+    - understanding-assignment
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Corrine E. Hinton, in Writing Spaces: Readings on Writing, Volume 1. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-why-visit-your-campus-writing-center
+  title: Why Visit Your Campus Writing Center?
+  url: https://parlormultimedia.com/writingspaces/past-volumes/why-visit-your-campus-writing-center/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: A director's case to students for bringing their writing to a campus writing center.
+  topics:
+    concern:
+    - process:using-feedback
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Ben Rafoth, in Writing Spaces: Readings on Writing, Volume 1. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-finding-the-good-argument-or-why-bother-with
+  title: Finding the Good Argument OR Why Bother With Logic?
+  url: https://parlormultimedia.com/writingspaces/past-volumes/finding-the-good-argument-or-why-bother-with-logic/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Why a writer should care about logic and how it helps in finding a sound argument.
+  topics:
+    concern:
+    - argument:development
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Rebecca Jones, in Writing Spaces: Readings on Writing, Volume 1. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-reflective-writing-and-the-revision-process-what-were
+  title: 'Reflective Writing and the Revision Process: What Were You Thinking?'
+  url: https://parlormultimedia.com/writingspaces/past-volumes/reflective-writing-and-the-revision-process-what-were-you-thinking/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: An essay on how writing a reflection about a draft can guide a student's choices when revising
+    it.
+  topics:
+    concern:
+    - genre:reflection
+    stage:
+    - revising
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Sandra Giles, in Writing Spaces: Readings on Writing, Volume 1. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-navigating-genres
+  title: Navigating Genres
+  url: https://parlormultimedia.com/writingspaces/past-volumes/navigating-genres/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: An essay for students on recognizing a genre and the expectations that come with it.
+  topics:
+    concern:
+    - assignment:genre-conventions
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Kerry Dirk, in Writing Spaces: Readings on Writing, Volume 1. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-looking-for-trouble-finding-your-way-into-a
+  title: 'Looking for Trouble: Finding Your Way into a Writing Assignment'
+  url: https://parlormultimedia.com/writingspaces/past-volumes/looking-for-trouble-finding-your-way-into-a-writing-assignment/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: A student-facing approach to finding a way into an assignment by looking for something to work
+    out.
+  topics:
+    concern:
+    - assignment:prompt
+    stage:
+    - understanding-assignment
+    - generating-ideas
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Catherine Savini, in Writing Spaces: Readings on Writing, Volume 2. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-how-to-read-like-a-writer
+  title: How to Read Like a Writer
+  url: https://parlormultimedia.com/writingspaces/past-volumes/how-to-read-like-a-writer/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Reading a text for the choices its writer made, so those choices can inform your own writing.
+  topics:
+    concern:
+    - reading:comprehension
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Mike Bunn, in Writing Spaces: Readings on Writing, Volume 2. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-introduction-to-primary-research-observations-surveys-and-interviews
+  title: 'Introduction to Primary Research: Observations, Surveys, and Interviews'
+  url: https://parlormultimedia.com/writingspaces/past-volumes/introduction-to-primary-research-observations-surveys-and-interviews/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: An introduction to gathering your own data with observations, surveys and interviews.
+  topics:
+    concern:
+    - research
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Dana Lynn Driscoll, in Writing Spaces: Readings on Writing, Volume 2. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-walk-talk-cook-eat-a-guide-to-using
+  title: 'Walk, Talk, Cook, Eat: A Guide to Using Sources'
+  url: https://parlormultimedia.com/writingspaces/past-volumes/walk-talk-cook-eat-a-guide-to-using-sources/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: A guide for student writers to using sources in their own writing.
+  topics:
+    concern:
+    - evidence:integrating-sources
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Cynthia R. Haller, in Writing Spaces: Readings on Writing, Volume 2. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-reading-games-strategies-for-reading-scholarly-sources
+  title: 'Reading Games: Strategies for Reading Scholarly Sources'
+  url: https://parlormultimedia.com/writingspaces/past-volumes/reading-games-strategies-for-reading-scholarly-sources/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Strategies a student can use to read scholarly articles and books with a purpose in mind.
+  topics:
+    concern:
+    - reading:comprehension
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Karen Rosenberg, in Writing Spaces: Readings on Writing, Volume 2. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-annoying-ways-people-use-sources
+  title: Annoying Ways People Use Sources
+  url: https://parlormultimedia.com/writingspaces/past-volumes/annoying-ways-people-use-sources/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Common mistakes in how writers bring sources into their work and how to avoid annoying a reader.
+  topics:
+    concern:
+    - evidence:integrating-sources
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Kyle D. Stedman, in Writing Spaces: Readings on Writing, Volume 2. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-everything-changes-or-why-mla-isnt-always-right
+  title: Everything Changes, or Why MLA Isn’t (Always) Right
+  url: https://parlormultimedia.com/writingspaces/past-volumes/everything-changes-or-why-mla-isnt-always-right/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Why documentation style changes and why following MLA is a matter of judgment as well as rules.
+  topics:
+    concern:
+    - citation:mla
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Janice R. Walker, in Writing Spaces: Readings on Writing, Volume 2. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-critical-thinking-in-college-writing-from-the-personal
+  title: 'Critical Thinking in College Writing: From the Personal to the Academic'
+  url: https://parlormultimedia.com/writingspaces/past-volumes/critical-thinking-in-college-writing-from-the-personal-to-the-academic/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: How critical thinking carries a student from personal opinion to academic writing.
+  topics:
+    concern:
+    - argument:analysis
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Gita DasBender, in Writing Spaces: Readings on Writing, Volume 2. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-punctuations-rhetorical-effects
+  title: Punctuation's Rhetorical Effects
+  url: https://parlormultimedia.com/writingspaces/past-volumes/punctuations-rhetorical-effects-2/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: How punctuation marks affect a reader, treated as a rhetorical choice a writer makes on purpose.
+  topics:
+    concern:
+    - grammar:punctuation
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Kevin Cassell, in Writing Spaces: Readings on Writing, Volume 3. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-writing-with-force-and-flair
+  title: Writing with Force and Flair
+  url: https://parlormultimedia.com/writingspaces/past-volumes/writing-with-force-and-flair/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: An essay for student writers on giving their sentences more energy, force and style.
+  topics:
+    concern:
+    - style
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By William T. FitzGerald, in Writing Spaces: Readings on Writing, Volume 3. The volume
+    page says only that its essays are Creative Commons licensed; the essay''s own notice decides the
+    license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-grammar-rhetoric-and-style
+  title: Grammar, Rhetoric, and Style
+  url: https://parlormultimedia.com/writingspaces/past-volumes/grammar-rhetoric-and-style-2/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: How grammar, rhetoric and style work together in the choices a writer makes in a sentence.
+  topics:
+    concern:
+    - grammar
+    - style
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Craig Hulst, in Writing Spaces: Readings on Writing, Volume 3. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-understanding-discourse-communities
+  title: Understanding Discourse Communities
+  url: https://parlormultimedia.com/writingspaces/past-volumes/grammar-rhetoric-and-style/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: What a discourse community is and how its expectations shape the writing done in it.
+  topics:
+    concern:
+    - assignment:genre-conventions
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Dan Melzer, in Writing Spaces: Readings on Writing, Volume 3. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-assessing-source-credibility-for-crafting-a-well-informed
+  title: Assessing Source Credibility for Crafting a Well-Informed Argument
+  url: https://parlormultimedia.com/writingspaces/past-volumes/assessing-source-credibility-for-crafting-a-well-informed-argument/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Judging whether a source is credible enough to use in an argument.
+  topics:
+    concern:
+    - research:evaluating-sources
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Kate Warrington, Natasha Kovalyova and Cindy King, in Writing Spaces: Readings on
+    Writing, Volume 3. The volume page says only that its essays are Creative Commons licensed; the essay''s
+    own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-how-to-write-meaningful-peer-response-praise
+  title: How to Write Meaningful Peer Response Praise
+  url: https://parlormultimedia.com/writingspaces/past-volumes/how-to-write-meaningful-peer-response-praise/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: How to give a peer praise that is specific enough to help.
+  topics:
+    concern:
+    - process:using-feedback
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Ron DePeter, in Writing Spaces: Readings on Writing, Volume 3. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-effectively-and-efficiently-reading-the-credibility-of-online
+  title: Effectively and Efficiently Reading the Credibility of Online Sources
+  url: https://parlormultimedia.com/writingspaces/past-volumes/effectively-and-efficiently-reading-the-credibility-of-online-sources/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Ways to read online sources quickly for signs of whether they can be trusted.
+  topics:
+    concern:
+    - research:evaluating-sources
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Ellen Carillo and Alice Horning, in Writing Spaces: Readings on Writing, Volume 4.
+    The volume page says only that its essays are Creative Commons licensed; the essay''s own notice decides
+    the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-writing-with-your-peers
+  title: Writing with Your Peers
+  url: https://parlormultimedia.com/writingspaces/past-volumes/writing-with-your-peers/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: An essay for students on working with peers on their writing, from sharing a draft to responding.
+  topics:
+    concern:
+    - process:using-feedback
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Raquel Corona, Kami Day and Michele Eodice, in Writing Spaces: Readings on Writing,
+    Volume 4. The volume page says only that its essays are Creative Commons licensed; the essay''s own
+    notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-whats-that-supposed-to-mean-using-feedback-on
+  title: What's That Supposed to Mean? Using Feedback on Your Writing
+  url: https://parlormultimedia.com/writingspaces/whats-that-supposed-to-mean-using-feedback-on-your-writing/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: How to make sense of feedback on a draft and use it in revising.
+  topics:
+    concern:
+    - process:using-feedback
+    stage:
+    - revising
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Jillian Grauman, in Writing Spaces: Readings on Writing, Volume 4. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-public-writing-for-social-change
+  title: Public Writing for Social Change
+  url: https://parlormultimedia.com/writingspaces/past-volumes/public-writing-for-social-change/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Planning writing for a public audience, from finding an issue to circulating the piece.
+  topics:
+    concern:
+    - assignment:audience-purpose
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Ashley J. Holmes, in Writing Spaces: Readings on Writing, Volume 4. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-make-your-move-writing-in-genres
+  title: 'Make Your ‘Move’: Writing in Genres'
+  url: https://parlormultimedia.com/writingspaces/make-your-move-writing-in-genres/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Thinking about a genre as a set of moves a writer makes.
+  topics:
+    concern:
+    - assignment:genre-conventions
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Brad Jacobson, Madelyn Pawlowski and Christine M. Tardy, in Writing Spaces: Readings
+    on Writing, Volume 4. The volume page says only that its essays are Creative Commons licensed; the
+    essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-what-are-we-being-graded-on
+  title: What Are We Being Graded On?
+  url: https://parlormultimedia.com/writingspaces/what-are-we-being-graded-on/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: A student-facing look at what the criteria used to grade writing are asking a writer to do.
+  topics:
+    concern:
+    - assignment:prompt
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Jeremy Levine, in Writing Spaces: Readings on Writing, Volume 4. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-changing-your-mindset-about-revision
+  title: Changing Your Mindset about Revision
+  url: https://parlormultimedia.com/writingspaces/changing-your-mindset-about-revision/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: A way for students to rethink what revision is and why it takes more than editing.
+  topics:
+    concern:
+    - process:using-feedback
+    stage:
+    - revising
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By L. Lennie Irvin, in Writing Spaces: Readings on Writing, Volume 5. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-the-good-the-bad-and-the-ugly-of
+  title: The Good, the Bad, and the Ugly of Peer Review
+  url: https://parlormultimedia.com/writingspaces/the-good-the-bad-and-the-ugly-of-peer-review/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: What goes well and badly in student peer review and how to get more out of it.
+  topics:
+    concern:
+    - process:using-feedback
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Erin E. Kelly, in Writing Spaces: Readings on Writing, Volume 5. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-doing-research-is-fun-citing-sources-is-not
+  title: '“Doing Research Is Fun; Citing Sources Is Not”: Understanding the Fuzzy Definition of Plagiarism'
+  url: https://parlormultimedia.com/writingspaces/doing-research-is-fun-citing-sources-is-not-understanding-the-fuzzy-definition-of-plagiarism/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Why the line around plagiarism is not always clear and how a writer can stay on the right side
+    of it.
+  topics:
+    concern:
+    - evidence:plagiarism
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Rachel Buck and Silvia Vaccino-Salvadore, in Writing Spaces: Readings on Writing,
+    Volume 5. The volume page says only that its essays are Creative Commons licensed; the essay''s own
+    notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-reading-in-conversation-a-students-guide-to-social
+  title: 'Reading in Conversation: A Student’s Guide to Social Annotation'
+  url: https://parlormultimedia.com/writingspaces/reading-in-conversation-a-students-guide-to-social-annotation/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: A student's guide to annotating a text together with other readers, in conversation with them.
+  topics:
+    concern:
+    - reading:annotation
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Michelle Sprouse, in Writing Spaces: Readings on Writing, Volume 5. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-everythings-biased-a-guide-to-determining-when-bias
+  title: 'Everything’s Biased: A Guide to Determining When Bias Matters'
+  url: https://parlormultimedia.com/writingspaces/everythings-biased-a-guide-to-determining-when-bias-matters/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: How to decide when bias in a source matters for your purposes.
+  topics:
+    concern:
+    - research:evaluating-sources
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Danielle DeRise, in Writing Spaces: Readings on Writing, Volume 5. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-what-is-rhetoric-a-choose-your-own-adventure
+  title: What Is Rhetoric? A ‘Choose Your Own Adventure’ Primer
+  url: https://parlormultimedia.com/writingspaces/what-is-rhetoric-a-choose-your-own-adventure-primer/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: A branching, choose-your-own-adventure introduction to what rhetoric is and how writers use
+    it.
+  topics:
+    concern:
+    - assignment:audience-purpose
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By William Duffy, in Writing Spaces: Readings on Writing, Volume 5. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-who-is-the-user-researching-audiences-for-technical
+  title: Who Is the User? Researching Audiences for Technical Documents
+  url: https://parlormultimedia.com/writingspaces/past-volumes/who-is-the-user-researching-audiences-for-technical-documents/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Researching who will use a technical document and what they need from it before you write it.
+  topics:
+    concern:
+    - assignment:audience-purpose
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Emma J. Rose, in Writing Spaces: Readings on Writing, Volume 6. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-assessing-sources-for-technical-communication-research
+  title: Assessing Sources for Technical Communication Research
+  url: https://parlormultimedia.com/writingspaces/past-volumes/assessing-sources-for-technical-communication-research/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Judging whether a source is good enough to use in a technical communication research project.
+  topics:
+    concern:
+    - research:evaluating-sources
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Therese I. Pennell, in Writing Spaces: Readings on Writing, Volume 6. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-last-to-be-written-first-to-be-read
+  title: 'Last to Be Written, First to Be Read: Writing Memos, Abstracts and Executive Summaries'
+  url: https://parlormultimedia.com/writingspaces/past-volumes/last-to-be-written-first-to-be-read-writing-memos-abstracts-and-executive-summaries/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: 'Writing the short documents that readers see first: memos, abstracts and executive summaries.'
+  topics:
+    concern:
+    - assignment:genre-conventions
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By K. Alex Ilyasova, in Writing Spaces: Readings on Writing, Volume 6. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-drafting-technical-definitions-and-descriptions
+  title: Drafting Technical Definitions and Descriptions
+  url: https://parlormultimedia.com/writingspaces/past-volumes/drafting-technical-definitions-and-descriptions/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Drafting the technical definitions and descriptions that readers of technical documents rely
+    on to follow them.
+  topics:
+    concern:
+    - assignment:genre-conventions
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Quan Zhou, in Writing Spaces: Readings on Writing, Volume 6. The volume page says
+    only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-lets-party-composing-a-review-of-the-literature
+  title: 'Let’s Party: Composing a Review of the Literature on a Technical Topic'
+  url: https://parlormultimedia.com/writingspaces/lets-party-composing-a-review-of-the-literature-on-a-technical-topic/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Composing a review of the literature on a technical topic, with a party as the guiding image.
+  topics:
+    concern:
+    - genre:literature-review
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Daniel P. Richards, in Writing Spaces: Readings on Writing, Volume 6. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
+- id: writing-spaces-technical-scientific-and-business-presentations-strategies-for-success
+  title: 'Technical, Scientific, and Business Presentations: Strategies for Success'
+  url: https://parlormultimedia.com/writingspaces/technical-scientific-and-business-presentations-strategies-for-success/
+  publisher: Writing Spaces
+  license: CC-BY-NC-ND-4.0
+  can_vendor: false
+  link_check: auto
+  summary: Strategies for giving technical, scientific and business presentations that an audience can
+    follow and use.
+  topics:
+    concern:
+    - speaking:presentation
+  audience:
+  - undergraduate
+  language: en
+  license_note: 'By Darina M. Slattery, in Writing Spaces: Readings on Writing, Volume 6. The volume page
+    says only that its essays are Creative Commons licensed; the essay''s own notice decides the license.'
+  last_checked: 2026-10-20
+  last_status: 200
