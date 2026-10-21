@@ -1,0 +1,644 @@
+id: ws6-how-to-write-for-global-audiences
+title: How to Write for Global Audiences?
+author: Birgitta Meex
+source_title: 'Technical Writing Spaces: Readings on Writing, Volume 6'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-6/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Birgitta Meex in Technical Writing Spaces: Readings on Writing, Volume 6, for student
+  writers, titled “How to Write for Global Audiences?.”'
+topics:
+  concern:
+  - assignment:audience-purpose
+whole: true
+changes: none
+body: '<p>Audiences</p>
+
+  <p>Birgitta Meex</p>
+
+  <p>Are you convinced that global companies are doing fine producing content just for one language, region,
+  and audience?1 And do you think that if it works in English, it’ll work in other languages as well?
+  Global content starts with translation, right? And the translator will take care of the needs of local
+  audiences in other countries and regions. This situation is not always—or often—the case. The better
+  you understand how such processes actually work, the more effectively you will be able to work on international
+  projects for global clients.2</p>
+
+  <p>In this chapter, you’ll hear about real-world examples and stories that say otherwise. You ‘ll learn
+  why you should plan for global and write content that is “global-ready”, i.e., that is suitable for
+  international markets in terms of words, images, and design. You’ll also learn how to create such content.
+  Besides facilitating translation and localization processes, optimizing and preparing content for translation
+  and adaptation to other languages and cultures has many advantages. The objective of the chapter is
+  to help you understand how you, as a writer, can create texts that translators can easily work with
+  and that can be read and understood by greater global audiences.</p>
+
+  <p>Writing in a translation-friendly manner not only directly impacts the quality of the translation.
+  It boosts the quality of the source text itself (even if you aren’t yet translating your content) and
+  it affects reuse and accessibility. Texts written with translation in mind have been shown to be processed
+  and understood more easily (also by native readers). They drive</p>
+
+  <p>1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>2  I would like to thank the editors, Kirk St.Amant and Pavel Zemliansky, and two anonymous reviewers
+  for their helpful suggestions and their valuable and constructive comments on earlier drafts of the
+  manuscript. I am also indebted to Ken De Wachter from Flynxo for providing me with real-life examples
+  that are used throughout this chapter to illustrate the pitfalls and strategies outlined. I also thank
+  Annie Halseth for her meticulous editing work.</p>
+
+  <p>user engagement, minimize mistakes and risks, save time and money and speed up time to market. This
+  chapter reviews potential problems that may occur from inappropriately written source texts and offers
+  you ways to identify and solve those problems (in terms of do’s and don’ts) or to avoid these problems
+  occurring in the first place. In short, it will teach you how to become a better technical writer or
+  technical editor.</p>
+
+  <h3>English in the Globalized World</h3>
+
+  <p>So why would you bother about translation and localization at all? Because today’s economy is global,
+  and companies increasingly operate across the world. A 2016 survey by Wells Fargo found that a large
+  majority (87%) of US companies seeks business opportunities in international markets (https://newsroom.wf.com/press-release/wholesale-banking/despite-weak-global-economy-us-companies-still-turning).
+  Tapping into new markets is an excellent way for companies to grow, to diversify and to attract foreign
+  investments and talent. If these companies want to launch their products and services globally and in
+  language markets other than their own, these products and services must be accompanied by information
+  for use in the respective local language (IEC/IEEE 82079-1 Edition 2.0, 2019-05, Machinery Directive).</p>
+
+  <p>Besides this legal obligation, users continue to prefer to access information in their own language.
+  Companies are therefore strongly advised to make their content locally consumable by making it linguistically
+  and culturally appropriate for the target country and language (locale). Even domestic markets are made
+  up of growing numbers of non-native speakers and their respective cultures. For example, think of the
+  large Spanish speaking community in the U.S., whose first language is not English. Or think of the different
+  language communities in one country adhering to different cultural value systems (e.g., Belgium, Switzerland,
+  and Canada).</p>
+
+  <p>The process of addressing local users’ cultural and functional expectations and needs is called localization
+  (or L10n3 if you want to be cool). One way to understand localization is as follows:</p>
+
+  <p>Localization is essential to effectively addressing global markets. Being able to communicate with
+  your target market in</p>
+
+  <p>3  L10n is the common alphanumeric acronym for localization. 10 stands for the number of missing
+  letters between the first letter l and the last letter n in the word.</p>
+
+  <p>their language, with cultural context and incorporating industry-specific aspects can mean the difference
+  between a blockbuster product and an also-ran. (Steve Davis in Lionbridge Definitive-Guide-to-Website-Translation).</p>
+
+  <p>So, the U.S.-English sentence “From the driver’s position on the left side of the car, you can see
+  the sign ‘20 miles to destination’” would need to be converted to (localized) “From the driver’s position
+  on the right side of the car, you can see the sigh ‘32 kilometers to destination’”. The idea is to take
+  all items that are specific to a certain culture and revise them to reflect the expectations and experiences
+  of a different culture.</p>
+
+  <p>A prerequisite for smooth localization is internationalization (I18n4), which can be thought of as
+  follows:</p>
+
+  <p>Internationalization is the process of generalizing a product so that it can handle multiple languages
+  and cultural conventions without the need for re-design. Internationalization takes place at the level
+  of program design and document development. (LISA5, cited in Esselink 25)</p>
+
+  <p>The goal of internationalization is to remove all culture-specific items from a text so the resulting
+  document can be understood by individuals from a range of cultural backgrounds (e.g., An English-language
+  text any English speaker around the world could understand.) For example, if not well-designed, product
+  information such as date formats, numbers, currency, contact or product warranty information may cause
+  localization problems.</p>
+
+  <p>Different regulations in different countries are another case in point. Consider for example the
+  famous German garbage disposal system (Mülltrennung). German citizens use four different color-coded
+  recycling bins to sort and separate garbage straight at their homes: green, blue, yellow, brown, and
+  grey ones. In many other countries, recyclable items are simply put in one larger container, without
+  sorting them, leaving the sorting to the recyclers. When writing e.g. disposal information, you have
+  to take into account that country and culture-specific regulations cannot be adopted in every language
+  and for every target market. Compare in this respect the following instructions from a manual:</p>
+
+  <p>4  I18n is the common alphanumeric acronym for internationalization. 18 stands for the number of
+  missing letters between the first letter i and the last letter n in the word.</p>
+
+  <p>5  The “Localisation Industry Standard Association” existed from 1990 to February 2011.</p>
+
+  <p>If the product is no longer required, disassemble all components and dispose plastic packaging in
+  the yellow bin and packaging made of paper and cardboard in the blue bin.</p>
+
+  <p>If the product is no longer required, disassemble all components and dispose of them in accordance
+  with the applicable waste disposal laws in your country.</p>
+
+  <p>The first instruction has not been properly internationalized and may therefore cause localization
+  problems. It is only understandable by somebody who is familiar with the German waste disposal system,
+  even so after translation. The second instruction, by contrast, has been made culturally neutral, which
+  means that it has been written to serve a wide variety of markets, languages, cultures, and target audiences.</p>
+
+  <p>Localization and internationalization are complementary concepts, both of which are important to
+  the overall localization process. They are two of the four interdependent processes that constitute
+  the acronym GILT: Globalization, Internationalization, Localization and Translation (Cadieux and Esselink).
+  Successful globalization (G11n6) is not possible without a firm localization strategy, which in turn
+  relies on a proper internationalization and product design. Esperança Bielsa, a professor at the Universitat
+  Autonoma de Barcelona in Spain, has been examining the relationship between translation and globalization
+  for almost two decades. She sees translation as “a key mediator of global communication” (Bielsa). According
+  to her, the role of language and translation in globalization has been systematically ignored. After
+  all, globalization is dependent on translation for information to circulate globally. Translation is
+  essentially about striking a balance between the local (users’ language and culture respecting their
+  habits, behaviors, frustrations, needs, and wants) and the global (brand consistency) (see e.g., Bielsa
+  138; Singh 86; Lionbridge; Wermuth and Meex 41). In the next section, we will see how globalization
+  and digitalization have affected translation.</p>
+
+  <h3>The Growth of Translation</h3>
+
+  <p>In the previous section, we positioned translation as a crucial determinant of globalization. Digitalization
+  and globalization have caused an exponential growth of the production of (mainly technical) content,
+  and</p>
+
+  <p>6  G11n is the common alphanumeric acronym for globalization. stands for the number of missing letters
+  between the first letter g and the last letter n in the word.</p>
+
+  <p>along with it, of translation volumes, both with respect to the number of languages involved and
+  the number of standard pages per language. A recent survey (Meex and Straub) by tekom7 among German
+  manufacturing, software, and service companies revealed that on average, 11.0 different information
+  products are created, which in turn are translated into 13.0 different languages.</p>
+
+  <p>According to the same survey, 46 % of technical documentation is translated into more than 10 languages.
+  On its website, Alpha Omega Translations, a US translation company based in Alexandria VA, states that
+  “English is the most common source language for translation in the world, but not far behind are French,
+  German, Russian, and Italian. The most common target languages are German, French, Japanese, Spanish,
+  and English” (https://tinyurl.com/3f8weyep). Source text quality is crucial, because issues with the
+  source text can easily snowball into translation issues, next to usability and legal issues.</p>
+
+  <h3>Understanding Source Text</h3>
+
+  <p>Translation refers to “the process by which the meaning of a text written in a source language is
+  communicated through an equivalent text in the target language” (Olvera-Lobo and Castillo-Rodríguez
+  34). The original language in which a text is written is called the “source language,” and the original
+  document written in that language (the document you will translate) is called the “source text.” The
+  language you wish to translate the text into is referred to as the “target language,” and a text written
+  in the target language is commonly referred to as target text. Also, the information you provide is
+  often referred to as “content,” so when we use the word content in this chapter, we are referring to
+  the information you provide for others to read and/or translate.</p>
+
+  <p>In the case of technical documentation, technical writers create the source content (i.e., text to
+  be translated), which is later translated and localized into other languages. Put differently, the work
+  of the technical translator is preceded by that of the technical writer, who creates texts that are
+  easy to translate and localize, or the technical editor, who revises source texts written to make them
+  easier to translate and localize. Many aspects of content creation are relevant for later translation
+  and localization, whether</p>
+
+  <p>7  Tekom is the largest association for technical communication in Europe. Its history dates back
+  to 1978, the year tekom Deutschland was founded. The European umbrella association, tekom Europe, was
+  founded in 2013 (https://www.technical-communication.org).</p>
+
+  <p>it be a human translation or a machine translation. Given that the vast majority of translators are
+  native speakers of the target language, the quality of the source text becomes even more important.</p>
+
+  <p>One single mistake or inconsistency in the source text is likely to multiply by a domino effect across
+  multiple language versions in the whole life cycle of a document, resulting in a loss of quality and
+  resources. We can illustrate this by means of two verbs for user actions in the context of software:
+  “Remove” and “Delete.” You may be familiar with Google Drive, an application which allows users to “create,
+  organize, discover, and share content stored on Google Drive” (https://tinyurl.com/yc4j4d8t). If you
+  want to get rid of a doc, you see the “Remove” option combined with the trash icon in the menu on the
+  Drive User Interface (UI). This may be somewhat confusing for you as a user (or for a translator for
+  that matter), knowing that trash can icons are commonly used for deleting. You may ask yourself whether
+  there is a difference between “Remove” and “Delete” and if so, what the difference is. Things become
+  even more complicated when you notice that in other Google applications (more specifically in Google
+  Contacts) the “Delete” option is also used with a trash can. So, what is the difference, if any? Let
+  me explain it to you.</p>
+
+  <p>If you delete something, the information will be gone forever. If you remove something, it still
+  exists in the file system, but it is not visible for the user in the file manager anymore. However,
+  it turns out that in the case of Google, both the deleted and the removed information can be restored!8
+  This is confusing and inconsistent and may cause localization problems along the software life cycle.
+  Imagine that you were supposed to translate these action verbs into German, you would probably be uncertain
+  about whether to use “entfernen” (= remove) or “löschen” (= delete) in German. By the way, in the German
+  language version of Google Drive, “entfernen” (= remove) is used, thus preserving the same inconsistency
+  as in the English source text.</p>
+
+  <p>To sum up: when writing, always make clear to your users what will happen with their items. Educate
+  them what the difference is. And create a consistent experience for your users! As Leah Guren, an experienced
+  technical communication trainer and consultant from Tel Aviv, puts it: “Bad original content leads to
+  even worse localized content!” (“Where Minimalism”).</p>
+
+  <p>To improve the source text and to facilitate translation, proofreading may be required. Proofreading
+  is usually performed on the target text at the final</p>
+
+  <p>8  I’m indebted to Alex Zlatkus for this example. Alex is a product designer from Boston, MA. He
+  shared his experience and story in UX Magazine in 2020: https://uxmag. com/articles/ui-copy-remove-vs-delete.</p>
+
+  <p>stage of the translation process, but sometimes also on the source text. By definition, proofreading
+  comes after revision and deals with the surface-level of the text only. Spelling, punctuation, grammar,
+  and terminology are checked, whereas aspects of style and correctness of content are not. In his 2020
+  blog article, Stany Van Gelder, an information designer from Brussels, correctly states that “the more
+  digitization, the higher the importance of proofreading” (https://tinyurl.com/3sa2n7yr). In the case
+  of machine translation, adjusting the text before it is translated is called pre-editing, whereas post-editing
+  refers to “fixing machine translation output to bring it closer to a human translation standard” (https://tinyurl.com/t8bbnpd8).</p>
+
+  <h3>Linguistic and Cultural Competence</h3>
+
+  <p>The international horizontal standard9 for the development of information for use IEC/IEEE 82079-1
+  (Edition 2.0, 2019-05: 28) postulates that “[t]he source text should be reviewed for accuracy, consistency,
+  and usability before it is translated.” To produce quality documentation for the global market that
+  is “locally consumable,” companies need to overcome language and culture barriers and cater their content
+  addressing the cultural and functional needs of local users and customers (Wermuth and Meex 41), i.e.
+  analyze their native languages, values, and behaviors (Singh 86) as well as rhetorical and usability
+  expectations (St.Amant).</p>
+
+  <p>To ensure smooth cultural adaptation and customization (i.e. localization), writers and translators
+  alike need to have cultural competence next to linguistic and textual competence, as explicitly stated
+  in international standards and competence frameworks (Meex and Straub): ISO:17100 2015 (the International
+  Quality Standard for the translation services sector), tekom Cross-Industry Competence Framework for
+  Technical Communication (https://tinyurl.com/3ee2paej), TecCOMFrame (https:// tinyurl.com/3uu85rjy).</p>
+
+  <h3>How to Write for Translation and Localization: Tips and Tricks</h3>
+
+  <p>In this section you can find a selection of ten top writing rules that you can easily implement in
+  your writing. They reflect bundles of best practices from the workplace and are commonly found in guidebooks.
+  The selection has been compiled and slightly adapted from the following sources, which I also</p>
+
+  <p>9  A horizontal standard is a broad, general standard that is applicable across industries and product
+  sectors.</p>
+
+  <p>use in my technical communication class at KU Leuven: The Global English style Guide: Writing Clear,
+  Translatable Documentation for a Global Market (Kohl), The Definitive Guide to Website Translation (Lionbridge),
+  Rule-based writing: English for non-native writers (tekom), and two workshops that were given by Leah
+  Guren at the Translation Technology Summer School at KU Leuven and at tcworld in Stuttgart.</p>
+
+  <p>Addressing translation needs involves writing in ways that help translators better understand the
+  meaning of the words you use, the objectives of the texts you create, and the contexts in which technical
+  documentation will be used. Doing so often involves following certain kinds of strategies that clarify
+  meaning and avoid confusion when writing texts—factors that enhance the usability of text for both native
+  and non-native readers of a given language as well as for translators. Creating texts that are easier
+  to understand and to translate often involve ten core strategies:</p>
+
+  <p>Strategy 1. Keep It Short and Simple (KISS Principle)</p>
+
+  <p>The core idea of the KISS principle is to use as few and simple words as possible to get your message
+  across. Addressing this principle involves doing the following.</p>
+
+  <ul><li>Use short words. Avoid nominalizations and long noun strings. • Use short sentences and use
+  simple sentence constructions. Ideally, English sentences shouldn’t have more than 15-20 words. So,
+  break up sentences and use bullets and numbered lists. • Use a verb-centered writing style.</li></ul>
+
+  <p>Leah Guren (“Where Minimalism”) advices to write according to the principles of minimalism and to
+  remove all fluff. She defines minimalism as “the philosophy of providing just the right information
+  as briefly and simply as possible.” With fluff she means:</p>
+
+  <ul><li>Extra and unnecessary words and information • Complicated vocabulary • Overly formal writing
+  • Vague writing • Incorrect repetition</li></ul>
+
+  <p>Remember that “[a] good technical writer reduces the word count to just the right brevity without
+  being obscure.” (https://tinyurl.com/y386wfy9) Keep also in mind that English sentences tend to get
+  longer when they’re translated. See also 10. Plan for text expansion.</p>
+
+  <h3>Example (Lionbridge 21):</h3>
+
+  <ul><li>Negative: the computer monitor sun glare • Positive: the sun glare on the computer monitor</li></ul>
+
+  <p>Strategy 2. Be Direct</p>
+
+  <p>Directness is important to writing in general and to writing for translation in particular because
+  it is lean and efficient. It facilitates understanding in both the source and target languages and is
+  easier to translate. This is especially relevant for procedural information, where you want to reach
+  out to your audience and explain to them how they can use a product or service in a safe, efficient,
+  and effective way. To be more direct when writing, consider doing the following things:</p>
+
+  <ul><li>Directly address your audience. • Use the imperative for instructions and read-to-do content.
+  • Use the active voice in instructions and warnings. However, don’t demonize the passive! Passive constructions
+  are useful to describe automatic processes, for error messages and troubleshooting information and to
+  give general information in tutorials. In these cases, the agent of the action is unknown or not relevant.
+  • Write in the simple present tense. • Avoid modality (e.g., modal verbs and modal adverbs). • Write
+  positively. Avoid double negations. • Don’t be polite! It’s uncommon to use the word ‘please’ in technical
+  instructions.</li></ul>
+
+  <h3>Negative example passive voice (tekom, “Rule-Based Writing” 125):</h3>
+
+  <ul><li>The software is updated on a regular basis. (user instruction) • Positive examples active and
+  passive voice (tekom, “Rule-Based</li></ul>
+
+  <p>Writing” 125): • Update the software on a regular basis. (user instruction) • The software is updated
+  on a regular basis. (automatic process) • A mistake has been made. (user error message) • Phone calls
+  are made by dialing the telephone number. (general information)</p>
+
+  <h3>Example passive voice with modal verb (Kohl 42):</h3>
+
+  <ul><li>Negative: The following steps should be performed to modify the Initial Contact Date.</li><li>Positive:
+  To modify the Initial Contact Date, perform/follow these steps.</li></ul>
+
+  <h3>Strategy 3. Be Specific</h3>
+
+  <p>Specificity helps avoid confusion and error in translation by spelling out relationships between
+  items (words, clauses, and sentences). Say exactly what you mean and don’t leave out connecting devices
+  such as conjunctions, relative pronouns, and prepositions. To be more specific when writing, focus on
+  the following factors:</p>
+
+  <ul><li>Avoid incomplete constructions. • Avoid unclear references across sentences. • Don’t omit functional
+  words. Use syntactic cues: determiners (definite and indefinite articles), relative pronouns, prepositions,
+  conjunctions, and auxiliary verbs. They make sentence structure more explicit. • Formulate complete
+  constructions: use conditional clauses with if . . . then, use sentences containing verbs, use articles,
+  use complete words, and always start relative clauses with a relative pronoun (tekom, “Rule-Based Writing”).</li></ul>
+
+  <h3>Negative examples:</h3>
+
+  <ul><li>If the red light stops blinking, push the START button (tekom, “Rule-Based Writing”).</li><li>Preand
+  post-editing (tekom, “Rule-Based Writing”). • The software he licensed expires tomorrow (Lionbridge
+  21). • Ensure the power switch is turned off (Kohl 13).</li></ul>
+
+  <h3>Positive examples:</h3>
+
+  <ul><li>If the red light stops blinking, then push the START button (tekom, “Rule-Based Writing”).</li><li>Pre-editing
+  and post-editing (tekom, “Rule-Based Writing”). • The software that he licensed expires tomorrow (Lionbridge
+  21). • Ensure that the power switch is turned off (Kohl 13).</li></ul>
+
+  <h3>Strategy 4. Be Consistent</h3>
+
+  <p>Consistency is essential to helping translators who work with source texts because it facilitates
+  their work a lot: it is less time-consuming and results in better matches in translation memory in that
+  the source terms match the previously translated terms in the TM. For example, the translator doesn’t
+  have to spend precious time figuring out whether a different term in the source text refers to another
+  concept or whether it is ‘just’ a means to vary language, that is a different wording to say the same
+  thing. Consistency also results in higher quality of the translation (translations are less error-prone)
+  and in better consistency in the target texts too. To be consistent in writing, try to do the following:</p>
+
+  <ul><li>Use the same wording for the same content type (e.g., in headings). • Avoid variation of sentences,
+  formulations, terms, and tone for identical statements. • Use consistent terminology. Avoid synonyms:
+  use one term for one concept.</li></ul>
+
+  <p>Positive example from Apple Support (https://support.apple.com/ iphone):</p>
+
+  <ul><li>Set up your new iPhone • Manage your Apple ID • Customize your Home Screen</li></ul>
+
+  <p>Examples for synonyms (from Philips Hue):</p>
+
+  <ul><li>conventional lighting/traditional lighting/classic lighting • Bridge/bridge/Hue bridge/Philips
+  Hue bridge (with and without capitalization and reference to product line or brand)</li></ul>
+
+  <h3>Strategy 5. Avoid Ambiguous Words and Constructions</h3>
+
+  <p>Ambiguity causes translation problems because it is not always obvious from the context which concept
+  is intended. The context may even be missing. You can do the following things to avoid these problems
+  when drafting texts:</p>
+
+  <ul><li>Avoid homonyms. A homonym is “a word that is spelled and pronounced like another word but is
+  different in meaning” (Merriam-Webster). Or put differently, homonyms have the same external form but
+  refer to different concepts. They may confuse both the user and the translator.</li><li>Use nouns as
+  nouns and verbs as verbs. • Avoid ing- (gerund) constructions. • Avoid phrasal verbs. • Avoid jargon.
+  • Avoid idioms</li></ul>
+
+  <p>Negative examples:</p>
+
+  <ul><li>Flying planes can be dangerous (tekom “Rule-based Writing”).</li><li>→ It can be dangerous to
+  fly planes (tekom “Rule-based Writing”). • Prostitutes appeal to pope. • British left waffles on Falkland
+  Islands. (former news headline)</li></ul>
+
+  <p>Decontextualized sentences may be ambiguous to the extent that they become humoristic!</p>
+
+  <p>Example for homonym: An SME (subject matter expert) at Collibra came across the following homonym
+  in a user interface (UI) text during revision: “Update your business terms.” This sentence had been
+  translated incorrectly into other languages. The Dutch translation “Update uw zakelijke voorwaarden
+  (English: ‘terms and conditions’)” was edited out and replaced by “Update uw zakelijke termen (English:
+  ‘expressions, words’).</p>
+
+  <p>Example for jargon: A case study on the quality of translations of Google Help content revealed that
+  not just highly technical terms may cause problems. Also “basic” tech terms, such as browser and URL,
+  may confuse users (Lindsey and Swisher). It is a good idea to give an example to illustrate what the
+  term means, for example: browsers, such as Chrome and Firefox (https://tinyurl. com/2cnub5ua). Whether
+  or not to translate English terminology such as “wearable”, “selfie”, “got it” is another issue and
+  depends on the market.</p>
+
+  <p>Example for idiom: Imagine, for example, the U.S. English expression “The product is a homerun.”
+  It was rendered literally as “The product quickly returns us to our home environment” in some translations
+  but was translated metaphorically as “The product is an amazing success in others. “Be on a roll” is
+  another example. It is highly informal and its specific, metaphorical meaning of ‘to be having a successful
+  or lucky period’ cannot be derived from its constituent parts. Therefore it is likely to cause comprehension
+  problems for non-native readers.</p>
+
+  <h3>Strategy 6. Use A Clear Structure</h3>
+
+  <p>By clear structure, I mean that the information is arranged in a logical order and hierarchy. A template
+  or information model may help you draft your ideas into a meaningful collection down from the macro-level
+  of an information product to the micro-level. A well-organized and consistent structure facilitates
+  both the writer’s and the translator’s tasks. With everything in place, you can fully concentrate on
+  drafting or translating the content and don’t have to think about what to put where. As Val Swisher
+  puts it: “when all hardware installation guides follow the same structure, the translations also follow
+  a consistent structure” (Swisher). To structure texts more clearly, you can do the following:</p>
+
+  <ul><li>Structure your text with headings. Place the relevant information at the beginning.</li><li>Structure
+  the parts of a sentence according to the learning and situational logic (iconic principle). Mention
+  the goal before the instruction. For example: “To make the text bold, click the Bold button.” Avoid
+  as soon as, prior, previously, and before. And mention the location where you have to perform the action
+  before the action/instruction. For example: “On the ribbon, click the Underline button.”</li><li>Use
+  standard English word order: subject – verb –object modifiers (Lionbridge 21).</li><li>Avoid complex
+  structures. Do not use nested clauses. Do not break the flow of a sentence with a list.</li></ul>
+
+  <h3>Examples:</h3>
+
+  <ul><li>Negative: Perform these steps to modify the Initial Contact Date (Adapted from Kohl 42).</li><li>Positive:
+  To modify the Initial Contact Date, perform these steps (Kohl 42).</li></ul>
+
+  <p>Strategy 7: Avoid Manual Formatting and Text in Graphics Manual formatting means that you format
+  your text manually by selecting formatting options for e.g., Font and Paragraph instead of using Styles.
+  You can also use spacings (tabs, hard returns, soft returns, page breaks) to separate text manually.
+  Such manual formatting can cause problems for translators because it creates several segments in the
+  translation memory. Also, text in graphics is a pain for translators because it complicates easy access
+  to the text. To avoid such problems, consider doing the following things when creating texts:</p>
+
+  <ul><li>Do not use extra tabs, extra spaces, and hard returns. • Do not use manual page breaks. • Do
+  not use hard-coded variables. • Do not use ASCII fonts instead of Unicode.</li><li>Do not use embedded
+  graphics and text in graphics. Use a separate layer instead.</li></ul>
+
+  <p>These are bad examples of tool usage that negatively impact translation memory systems and the final
+  formatting of your translated content.</p>
+
+  <h3>Strategy 8. Be Neutral</h3>
+
+  <p>By “neutral,” I mean globally understandable and accessible. Being neutral makes texts easier to
+  translate and to localize because they lack concepts that might not work or cause problems in the target
+  language or the target culture. Cultural-specific concepts or expressions may be completely meaningless
+  in other languages and hence difficult to localize. To create texts that are more neutral and easy to
+  translate you can do a number of things when writing texts.</p>
+
+  <ul><li>Avoid culturally-specific wording, concepts, imagery (e.g., hand icons, metaphor icons), maps
+  and flags, and humor. This also includes colloquial English and regional registers.</li><li>Use inclusive
+  and non-evaluative language. Write gender-neutral. • Use metric and imperial values consistently (Guren
+  “Is</li></ul>
+
+  <p>Your Content”). • Use a 24-hour time designation without AM or PM and add UTC for universal reference
+  (18:00 UTC -3) (Guren “Is Your Content”). • Use modified ISO date format (08 June 2018). Never use number-only
+  dates (08/06/18) (Guren “Is Your Content”).</p>
+
+  <p>Some negative examples (taken from tekom, “Rule-Based Writing” 142, 144):</p>
+
+  <ul><li>The area is as big as ten football pitches. • Please collect the organic waste in the brown
+  bio-waste container. • The usage of the software is so simple that even John or Jane Doe can work with
+  it. • The risk assessment has to be carried out in accordance with the standard specified in VDE 0050-1.
+  • Laymen (instead of laypersons), old versions (instead of previous versions)</li></ul>
+
+  <p>The Google case study mentioned above found that users perceived US content as too friendly. They
+  also felt that it contained too much empathetic and reassuring language. Phrases such as the following
+  are not meaningful to local needs:</p>
+
+  <ul><li>Don’t worry, your emails aren’t lost. • It’s OK, you can still do this or that. • Remember that
+  Google will never ask for your password.</li></ul>
+
+  <p>In short, respect the conventions of the locale.</p>
+
+  <h3>Strategy 9: Write in Topics</h3>
+
+  <p>The basic information unit in technical communication is a topic. Writing in topics means you should
+  split up large blocks of content into smaller chunks to make the information more accessible and digestible.
+  Writing in this way helps with translation because topics are easier to manage and translate than lengthy
+  chapters and documents. Topics are usable in diverse contexts and content and format are separated.
+  To write in this way you can do a number of things.</p>
+
+  <ul><li>Write once, reuse, and link many times. • Don’t write prose and big blocks of text. Use structured
+  authoring methods instead: create small chunks of content that stand on their own and from which larger
+  pieces of content can be built. • Standardize your topics to divide and create your content.</li></ul>
+
+  <p>Example: task, description, example, entry for glossary</p>
+
+  <p>Strategy 10: Plan for Text Expansion</p>
+
+  <p>When content is translated from one language to another, we may witness what is termed text expansion
+  or text contraction. Text expansion is when the target text involves more characters, words, and/or
+  space. It often occurs in translation because languages differ with respect to the space they occupy,
+  and it can be problematic because nowadays content is increasingly delivered and consumed on smaller
+  screens with limited screen size. Just think of text appearing on buttons, in menu items and in check
+  boxes. You can use certain approaches to plan for and address text expansion when writing.</p>
+
+  <p>Plan in advance for expansion of the translated content. If texts are translated from source English
+  text to other Western languages such as German and French, plan for text expansion by up to 35% (The
+  Definitive Guide to Website Translation, Lionbridge). This is especially relevant for user interface
+  texts and navigation menus.</p>
+
+  <p>To implement these and other rules, companies create a term base and a style guide that can greatly
+  help the translation process. According to a Lionbridge blog post, a translation style guide is:</p>
+
+  <p>“[A] set of rules for how your company presents itself textually and visually. Think of it as a guidebook
+  for your language service provider (LSP) that includes rules about voice, writing style, sentence structure,
+  spelling, and usage for your company.” (https://tinyurl. com/227zckmj)</p>
+
+  <p>Developing such a translation style guide is actually the first step in the translation and localization
+  process (https://tinyurl.com/227zckmj). In your future work as a technical writer, you may be involved
+  in creating these important tools central to creating effective translations.</p>
+
+  <h3>Conclusion</h3>
+
+  <p>In today’s globalized world, the demand for high quality localized content is growing. Localization
+  entails:</p>
+
+  <ul><li>Translation of source content into one or more target languages • Adaptation of the translated
+  content to the needs and cultural specificity of the local market (locale)</li></ul>
+
+  <p>Source text quality together with internationalization is crucial for successful localization. Source
+  text quality serves as the foundation for translated content for different target languages, markets,
+  and locales. As the number of target languages into which an information product is localized increases,
+  so does the impact of the source content. However, besides international audiences also native readers
+  benefit from translation-friendly writing.</p>
+
+  <p>In technical communication, quality content is lean, structured, clear, neutral, retrievable, maintainable,
+  understandable, accessible, exchangeable, reusable, and above all consistent and translatable. Then:
+  “consistent source content produces consistent translated content” (Swisher). By deploying a number
+  of writing strategies, you as a writer can contribute to achieve all of these! The creation of tools
+  such as style guides, and glossaries can help you handle your content creation. And last but not least:
+  developing your writing for translation skills can help you succeed in the globalized job market of
+  today.</p>
+
+  <h3>Works Cited</h3>
+
+  <p>Bielsa, Esperança. “Globalisation and Translation: A Theoretical Approach.” Language and Intercultural
+  Communication, vol. 5, no. 2, 2005, pp. 131-144.</p>
+
+  <p>Cadieux, Marc A., and Bert Esselink. “GILT: Globalization,</p>
+
+  <p>Internationalization, Localization, Translation.” Globalization Insider, vol. 11, no. 1.5, 2002,
+  pp. 1–5. Esselink, Bert. A Practical Guide to Localization. John Benjamins, 2000. Guren, Leah. Workshop.“Where
+  Minimalism Meets L10N. Leaner content = cleaner translation.” Translation Technology Summer School,
+  3 Sept. 2019. -. Workshop. “Is Your Content Ready for the World? Conducting a global audit.” tcworld
+  conference, 12-14 Nov. 2019. “Homonym.” Merriam-Webster.com Dictionary, Merriam-Webster, https://www.
+  merriam-webster.com/dictionary/homonym. IEC_IEEE_82079-1. Preparation of information for use (instructions
+  for use) of products – Part 1: Principles and general requirements. IEC, 2019. ISO 17100. Translation
+  services -- Requirements for translation services. ISO, 2015. Kohl, John R. The Global English Style
+  Guide: Writing Clear, Translatable Documentation for a Global Market. SAS Institute Inc, 2008. Lindsey,
+  Jon A., and Val Swisher. “Optimizing Content for Improved Translation Effectiveness: Google Case Study”.
+  Webinar BrightTALK, 19 Sep. 2017. Lionbridge Definitive-Guide-to-Website-Translation, 2020. “How to
+  Create a Translation Style Guide and Terminology Glossary.” Lionbridge blog post, 5 Nov. 2016, https://www.lionbridge.com/blog/
+  translation-localization/how-to-create-a-translation-style-guide-and-terminology-glossary/. Machinery
+  Directive. Directive 2006/42/EC of the European Parliament and of the Council of 17 May 2006 on machinery,
+  and amending Directive 95/16/ EC (recast). https://ec.europa.eu/growth/single-market/european-standards/
+  harmonised-Standards/machinery_nl, 2006. Meex, Birgitta, and Daniela Straub. “How to Bridge the Gap
+  Between Translators and Technical Communicators?” The Journal of Internationalization and Localization,
+  vol. 3, no. 2, 2016, pp. 133-151. Olvera-Lobo, María Dolores, and Celia Castillo-Rodríguez. “Website
+  Localisation in the Corporate Context: A Spanish Perspective.” Journal of Digital Information Management,
+  vol. 17, no. 1, 2019, pp. 34. Singh, Nitish. Localization Strategies for Global E-Business. UP, 2012.
+  St.Amant, Kirk. “Writing in Global Contexts: Composing Usable Texts for Audiences from Different Cultures”
+  Writing Spaces: Readings on Writing, vol. 3, edited by Dana Driscoll, Mary Stewart and Matthew Vetter,
+  WritingSpaces.org, Parlor Press, and The WAC Clearinghouse, 2020, pp. 147-61. https:// wac.colostate.edu/books/writingspaces/writingspaces3/.
+  Swisher, Val. “How Topic-based Authoring Benefits Translation.” madcap software, 9 June 2016, https://www.madcapsoftware.com/blog/
+  topic-based-authoring-benefits-translation. TecCOMFrame. “A Joint European Academic Competence Framework
+  and Curricula for the Training of Technical Communicators.” 2017, https:// www.teccom-frame.eu/.</p>
+
+  <p>tekom. “Competence Framework for Technical Communication: Competencies for Technical Communicators.”
+  2015, http://competencies.technical-communication.org.</p>
+
+  <p>tekom. Rule-Based Writing. English for Non-Native Writers. 2017b. Van Gelder, Stany. “Why is proofreading
+  of translations a must?”</p>
+
+  <p>Van Gelder, Stany. “Why is proofreading of translations a must?”, Connexion blog post, 30 Jan. 2020,
+  https://www.connexion.eu/blog/ why-proofreading-translations-must. Connexion blog post, 30 Jan. 2020,
+  https://www.connexion.eu/blog/ why-proofreading-translations-must. Wermuth, Cornelia and Birgitta Meex.
+  “Attila Hildmann Goes International: An Explorative Study on the Localization of a German Chef’s Website
+  for a US Target Audience.” The Journal of Internationalization and Localization, vol. 4, no. 1, 2017,
+  pp. 40-70. Zlatkus, Alex. “UI copy: Remove vs Delete. The difference between “remove” and “delete,”
+  and how to ensure your user understands.” UX Magazine, June 4, 2020, https://uxmag.com/articles/ui-copy-remove-vs-delete.</p>
+
+  <p>Teacher Resources</p>
+
+  <p>Overview and Teacher Strategies</p>
+
+  <p>I approached this chapter with three goals in mind. First, this chapter wants to provide a context
+  for understanding the importance of source text quality as a prerequisite for successful translation
+  and localization in today’s growing global environment. Second, given that students will likely write
+  for audiences around the globe, they should understand why it is important to draft content that is
+  global-ready and know which methods they can use to facilitate translatability and with it, consistency,
+  comprehensibility and usability of technical content. Third, this chapter offers students a selection
+  of writing rules, which they can easily implement in their own writing.</p>
+
+  <p>Faculty may use this chapter in teaching hands-on technical writing courses. In these courses, students
+  need to learn and practice the core fundaments of good source content creation. In my technical communication
+  classes at KU Leuven, I usually ask my students to first analyze and then rewrite an existing manual.
+  For first year composition students, an instruction manual for household appliances, consumer electronics
+  or daily medical devices is accessible and not too technical. Students discover the many inconsistencies
+  that the manual contains and report their findings in an oral or written assignment.</p>
+
+  <p>This chapter is particularly suitable for teaching with the flipped classroom approach. In this blended
+  learning approach, students read the chapter and review additional course material at home. They practice
+  working in class. This approach has the advantage of leaving more room for collaboration, discussion,
+  and direct feedback. Alternatively, faculty may use the chapter to introduce students to the subject
+  and assign them tasks (analyzing, rewriting, and composing) that they should complete at home. Finally,
+  instructors of writing may also participate in academic bilateral or multilateral writing/editing-translation
+  projects with faculty from neighboring disciplines such as translation and usability studies to give
+  their students experience in preparing texts for translation and localization and in working with translators.
+  The partners in the well-established Trans-Atlantic &amp; Pacific Project (TAPP) have been cooperating
+  in bilateral writing-translation projects since 2001 (https://tinyurl.com/mr2ebxb9).</p>
+
+  <h3>Discussion Questions and Sample Activities</h3>
+
+  <p>Discussion questions that can help students further explore these ideas on language and translation
+  could include the following:</p>
+
+  <p>1. Have you ever used a style guide? Which one(s)? For which purpose?</p>
+
+  <p>2. Consult English style guides and guidebooks for information on how to create effective source
+  texts (for example, Kohl’s Global English style guide or tekom’s writing rules if you are a non-native
+  writer of English) for more writing rules. Different students may use different style guides. Review
+  the rules and make your own selection (one that fits your specific purpose and situation) and compilation
+  of rules. Look for additional real-world examples to illustrate your compilation or use examples from
+  your own writing.</p>
+
+  <p>3. Now it’s time to attack and rewrite an existing text! Bring a manual from home. Analyze and evaluate
+  the content. Look for unnecessary information, inconsistencies, and other shortcomings. Also describe
+  what is good. Rewrite and optimize the content by implementing the writing rules in this chapter.</p>
+
+  <p>4. Consult the list of the top 50 websites from the latest version of the Web Globalization Report
+  Card: e.g., https://www.bytelevel. com/reportcard2023/. Visit and compare the global website and one
+  localized version of the website of a company of your choice. Present your findings to the class.</p>
+
+  <p>5. Build a tandem with a student in translation studies. Discuss the problems you are experiencing
+  when writing technical texts. Listen to the issues that your partner is having when he or she is translating
+  a text. In the next stage, you can provide your partner with a source text that you have prepared for
+  translation and localization.</p>'

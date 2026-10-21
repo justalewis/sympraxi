@@ -1,0 +1,503 @@
+id: ws4-technologies-of-trust-creating-networks-of-goodwill
+title: 'Technologies of Trust: Creating Networks of Goodwill for Collaboration'
+author: Lance Cummings, Becka Jackson, and Moriah Yancey
+source_title: 'Writing Spaces: Readings on Writing, Volume 4'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-4/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Lance Cummings, Becka Jackson, and Moriah Yancey in Writing Spaces: Readings on
+  Writing, Volume 4, for student writers, titled “Technologies of Trust: Creating Networks of Goodwill
+  for Collaboration.”'
+topics:
+  concern:
+  - process
+whole: true
+changes: none
+body: '<p>Creating Networks of Goodwill for Collaboration</p>
+
+  <p>Lance Cummings, Becka Jackson, and Moriah Yancey</p>
+
+  <p>Overview</p>
+
+  <p>Most students dread that fateful “group project,” often for good reasons. Our past experiences with
+  group work sometimes don’t speak well to this kind of project.* But most writing in the 21st century
+  is deeply collaborative and happens mostly in digital spaces. Observing the writing process in the professional
+  world can give us new ways of looking at the collaborative writing process. In the end, good writing
+  is built on trust—trust in people and trust in systems put in place to help you communicate. This chapter
+  reviews new collaborative technologies used to manage writing projects in the professional world, gives
+  examples of trust at work in a thriving software company, and discusses how to transfer these strategies
+  to university writing projects.</p>
+
+  <p>Okay, we get it. You hate group projects. We’re sure you’ve heard teachers say, “Group work is inevitable.”
+  But have you considered why you hate group work so much? Is it because you hate people? Yeah, people
+  can be difficult to work with, but that seems a little harsh. When asked, students often talk about
+  the following:</p>
+
+  <ul><li>Unfair distribution of work or award • Difficulty organizing effective meetings • The panicked
+  last-minute push to get things done • Not knowing the status of the project</li></ul>
+
+  <p>* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>So, maybe it’s not that you hate people, but the way you’ve worked in groups before has been stressful.</p>
+
+  <p>In the end, good writing is built on trust—trust in the people and the systems put in place to help
+  you. Think about it. Even language itself is built on trust. You trust language can be understood by
+  other people. You must trust that the technology you use works. When you press send on that email, how
+  do you know that person will receive it? You trust the system. You trust that email will show up in
+  the right place…and that people check their email.</p>
+
+  <p>When collaborating, we often don’t trust the people around us. We don’t trust the systems we have
+  in place to manage the work. Good collaboration, then, is about building trust and keeping communication
+  channels open. In today’s world, this means using technology and tools to make this process more efficient
+  and less complicated. Good writers must learn strategies for building confidence in each other and the
+  writing process. Any group project that you do in school is an opportunity for you to explore these
+  safely. Yes, if your system fails, you might get a bad grade, but you are not going to lose your job.</p>
+
+  <p>In this article, we are going to think of your student group as an organization by looking at the
+  strategies tech industries use to get things. Quite simply, an organization is a group of people with
+  a common purpose and commonly held goals (Debs 162). Think of your little group as a small organization.
+  Using specific project management tools, technologies, and strategies is key to creating goodwill in
+  even the smallest organization or group.</p>
+
+  <h3>Distributed Workflows in the 21st Century Workplace</h3>
+
+  <p>We often think of the classroom as preparation for our future workplaces. However, the workplace
+  can also inform our classroom experience. In today’s workplace, writing and creative projects are developed
+  in what we call a distributed workflow, where decision-making is shared across organizational roles
+  and tasks are distributed across networks in order to encourage innovation and adaption in a quickly
+  changing world (Hemp, 2008). In other words, managers or CEOs who try to make all the decisions or control
+  the workflow stifle innovation. In school, teachers often tell you what to write and organize the schedule
+  and tasks for you, but this can produce less creative or innovative projects. Managers in a distributed
+  workflow are not likely to do this for you. Each team or group of employees is responsible for their
+  own process. At the same time, most of these writing projects succeed or fail based on how the community
+  of collaborators works.</p>
+
+  <p>To better understand how professional writers build goodwill, two of us, Becka and Moriah, will share
+  our experiences as technical writers for product teams at nCino, a global software company headquartered
+  in Wilmington, NC. Moriah joined nCino in October 2018, and her engineering team develops features that
+  enhance retail and small business banking. Becka joined nCino in June 2019, and her engineering team
+  develops features that power machine learning and automation. Understanding how workplaces adapt writing
+  can help you see collaborative writing in new ways.</p>
+
+  <p>nCino is a cloud-based software company that builds an innovative Bank Operating System. Understanding
+  this software isn’t as important as understanding how the writing process has changed. In most writing
+  classes, your project will be organized in what’s called the waterfall method, which should look very
+  familiar to you: Brainstorming  Research  Rough draft  Feedback  Revision  Final Project</p>
+
+  <p>Figure 1. Waterfall vs. Agile. Image shows the two design methods and their steps.“Waterfall_Vs_Agile”
+  via Wikimedia Commons is licensed under CC BYSA 4.0</p>
+
+  <p>The waterfall system can’t always be trusted, especially for collaborative work. As your projects
+  get larger and more complex, this idea of a draft becomes more intimidating.</p>
+
+  <p>“Okay, everyone we need a draft by such and such day and time. See you then.” But when the day arrives,
+  somebody hasn’t done their work. Somebody else ran into a challenge that they couldn’t solve on their
+  own.</p>
+
+  <p>And another person decided they would just write the whole thing. Things are a mess.</p>
+
+  <p>This problem is compounded in technology companies. To write instructions for software, like Microsoft
+  Word or nCino’s Bank Operating System, where does one start? Even when a draft is completed, the software
+  is always changing. These texts are never finished. You might document an entire app only to find out
+  that the product team needs a different instructional document, requiring you to start over. Becka describes
+  what this is like for writers:</p>
+
+  <p>The workflow for technical writing is different than what we were taught in academic writing. There
+  is no syllabus or rubric that we can reference. Technical writers are responsible for determining how
+  to write and what to write, and essentially act as their own project managers. However, everyone on
+  the team is responsible for the success of the whole project, from the code to the documentation.</p>
+
+  <p>To solve this problem, a group of software developers created what’s called “agile project management”
+  (Beck, et al.). The core element of agile processes is adaptability and constant communication. Moriah
+  illustrates the importance of this new way of understanding writing projects with her experience as
+  a technical writer:</p>
+
+  <p>Every release, the technical writers follow an agile process to write release documentation. Although
+  nCino strives to create new, innovative features, they also endeavor to improve their existing products.
+  When we create new documentation for every release, we also edit current articles to provide information
+  about new functions of existing features. While we are working on creating new documentation, either
+  from scratch or from existing articles, we are also answering document comments that come from the last
+  release’s articles.</p>
+
+  <p>Though writing instructors will emphasize that writing is recursive— or a process that goes back
+  and forth between stages—writing content in the 21st century rarely reflects the linear process we have
+  in our minds from classroom experience.</p>
+
+  <h3>Techniques for Managing Collaborative Projects with Agile Processes</h3>
+
+  <p>Though your writing project is probably not as complex as Moriah’s, and you definitely have an end
+  date (when it will finally be graded), the same techniques used to manage this complexity in the workplace
+  can help manage your collaborative projects. Each of the main principles of agile can be applied to
+  your writing project in the classroom.</p>
+
+  <p>1. Focus on Teams and Interaction: We are not obsessed with a particular process or particular tool.
+  When we organize a team and a project, we focus on what kind of interaction will help this specific
+  group of people get the job done, then what kinds of tools and processes will help that interaction
+  happen. You might decide that everyone will write their own section of the draft. Using Google Docs
+  is a good tool for this. Or if no one really likes checking their email, you might decide to use GroupMe
+  instead, for daily communication.</p>
+
+  <p>2. Strive for Testable Drafts Instead of Perfection: Getting something on paper, no matter how small
+  or imperfect, so that we can test it with our stakeholders is our priority. In class, you might test
+  out an argumentative point by just writing a few paragraphs with the research that you’ve found and
+  show it to your instructor to see if you are on the right track.</p>
+
+  <p>3. Foster Audience Dialogue: Check in with your audience to align expectations and intentions. For
+  example, if you are writing a paper to persuade students to vote, you could take a testable draft to
+  a group of students to see whether your persuasive methods and assumptions seem to have an impact.</p>
+
+  <p>4. Respond to Change Rather than Follow a Plan: When new information or input about your project
+  comes in, be adaptable. There is no point in detailing a plan if you don’t know what those details are
+  before you’ve started the project. For example, you thought you were writing a paper persuading students
+  to vote. Turns out what students really need is a how-to guide. Good thing you took a testable draft
+  to open a dialogue with your audience!</p>
+
+  <p>Being flexible allows you to adapt, which in turn helps your group avoid pitfalls common with the
+  waterfall drafting method.</p>
+
+  <p>So your instructor is going to give you some deadlines. If you are lucky, they might even give you
+  some activities to help you along the way. But don’t trust that system as the only framework you need.
+  As a group, you need to build your own system. This means building processes, using tools on the backend
+  that work with your goals, and taking collective responsibility for your project.</p>
+
+  <h3>Creating an Environment of Trust</h3>
+
+  <p>When assigned a group project, feeling negativity or distrust toward group members because of past
+  experiences is normal. To put collaboration strategies into practice, you’ll need to set aside this
+  initial reaction. Your group dynamic plays a huge role in the success of your project.</p>
+
+  <p>Consider the relationship between a workplace and its employees. According to Moriah and Becka, nCino
+  credits their success to their company’s inclusive, hard-working culture. The company’s core values
+  empower employees to bring their authentic selves to work. nCino values each employee and enforces the
+  idea that no one position is greater than the other because teamwork is what brings a great product
+  to market—a key element of a distributed workflow. According to Moriah, this requires a great deal of
+  trust all around:</p>
+
+  <p>There’s a lot of trust at nCino. No one is micro-managing you, ever. That can be both daunting and
+  exhilarating to people who have always had structure or someone checking behind everything that they
+  do. nCino wants to create an environment where everyone is empowered to do their best work.</p>
+
+  <p>Try thinking about your own team in this way. You are not trying to make everyone do things; you
+  are trying to create an environment of goodwill where everyone wants to help each other out.</p>
+
+  <p>When collaborating on large projects, maintaining this goodwill requires constant communication.
+  James Porter, a scholar who studies how people communicate in networks, calls this phatic communication
+  or the skill “of creating effective communication channels, keeping them open, and establishing ongoing
+  and fruitful relationships” (174). Under this lens, writing and communication becomes less about transmitting
+  information or persuading people and more about building relationships through “good will, trust, cooperation,
+  partnership, and harmony” (175). The whole point of communication is to interact and build connections
+  with others. This fundamentally changes how we think about writing:</p>
+
+  <ul><li>A political essay is about building better connections with people of other persuasions that
+  we need to make political change.</li><li>A business proposal is about creating goodwill between an
+  entrepreneur and an investor or bank.</li><li>A business tweet is about maintaining connections with
+  customers. • A scholarly article is about keeping channels of communication open between people researching
+  similar things. In Ancient Greece, accomplishing any of these meant that communicators needed to be
+  good people—what they called ethos. You might look at group work as a character-building experience.
+  You are not just “getting something done,” you are learning to build and maintain productive relationships.</li></ul>
+
+  <p>Cultivating Your Group Culture The first step of establishing ongoing fruitful relationships is to
+  make sure everyone is on the same page. This is why most organizations have a clear mission statement,
+  such as the following from nCino: “To transform the financial services industry through innovation,
+  reputation and speed” (“Culture and Careers”). Every employee knows their goal is to help nCino create
+  innovative banking software fast. Note, though, the importance of “ethos”. nCino doesn’t just want to
+  get things done, they want to build a reputation that creates a tight community with banks and their
+  customers. Sometimes organizations even explicitly state what kind of culture or community they want
+  to maintain.</p>
+
+  <p>Figure 2. nCino Cultural Code showing six core values: “Bring You’re A-game,” “Do the Right Thing,”
+  “Respect Each Other,” “Make Someone’s Day,” “Have Fun,” and “Be a Winner!”. Screen shot from nCino.com
+  and used with permission.</p>
+
+  <p>Check out nCino’s cultural code in figure 2. Note that only two of their core values are about getting
+  things done. The rest are about building and maintaining strong relationships. In your own group, think
+  about what kind of “culture” you want to create for this project. Is your goal simply to get an A or
+  just to pass reasonably well? If not everyone is interested in an A, then not everyone is going to put
+  in the same effort. It might help to think outside the classroom. How might your project impact the
+  community, the university, or students? Or is there something specific that you want to learn?</p>
+
+  <p>As a group, write out your purpose statement. Sometimes it is helpful to even create a team charter
+  that lays out the rules of behavior—much like nCino’s core cultural values. Once that’s done, your “organization”
+  can work on building a system that everyone can trust to get things done in a way that matches these
+  guiding statements.</p>
+
+  <h3>Building a Trustworthy Project Management System</h3>
+
+  <p>Since your project management needs will vary from those of software developers, you don’t necessarily
+  need to use all the elements of an agile process. In fact, the advantage of this system is its adaptability.
+  That said, the key elements are useful for almost any project:</p>
+
+  <p>1. Limit the scope</p>
+
+  <p>2. Prioritize your tasks</p>
+
+  <p>3. Create opportunity for multiple iterations</p>
+
+  <p>4. Keep communication channels open</p>
+
+  <p>If you try to keep all the tasks and processes in your head, you will not only create more stress
+  for yourself, but also more opportunities for your collaboration to fall apart. If you can rely on your
+  system, then you don’t need to fret and worry about the project when you are working on it or meeting
+  as a group.</p>
+
+  <p>1. Limit the Scope</p>
+
+  <p>A trustworthy system always keeps the scope manageable. You can’t write the definitive book on any
+  topic for a semester-long class. Be specific about what you want to do, and then be specific about what
+  steps will get you there. For example, if you are writing a student guide on voting, the first step
+  is to ask students why they don’t vote and write a small section about that to see if you are on the
+  right track.</p>
+
+  <p>Many companies divide large projects in what they call sprints. These are much smaller tasks that
+  can be achieved in one to two weeks. For a university class, you may not have much more than two weeks
+  to accomplish your project—in my classes, I now imagine my class as one big project and divide that
+  into sprints, but most instructors don’t do this. This is why scope is so important. Look at the assignment
+  sheet and divide the writing into smaller components, so you can focus on each one at a time.</p>
+
+  <p>So, before you even begin your project, list out all the tasks required to get that project done.
+  If you end up with an overwhelming list that is difficult to schedule in sprints or sections, then your
+  scope is too large (students rarely have scopes that are too small, so get as small as possible). Identify
+  important milestones for each class meeting or for two to three checkpoints each week.</p>
+
+  <p>2. Prioritize &amp; Organize</p>
+
+  <p>For software developers, a “complete” text is impossible. Software is too big, complicated, and always
+  changing. Let’s be honest, it’s possible you won’t get all the tasks done on your list. So, look at
+  the assignment sheet and determine which tasks are essential and which are not.</p>
+
+  <p>Prioritization is where agile processes truly shine. If you’ve written out all the tasks associated
+  with your project, you probably feel overwhelmed. Consistently reflecting on your list is key. Tasks
+  can be prioritized in four ways: difficulty, size, urgency, or importance. Many organizations use a
+  combination of prioritization methods, or different methods for different task types. Each of these
+  characteristics are relative—what’s important, difficult or big for one group may not be for the next
+  group. So agile processes provide simple metrics.</p>
+
+  <p>Table 1. Prioritization Methods.</p>
+
+  <p>Method Difficulty Size</p>
+
+  <p>Name Fibonacci T-Shirt</p>
+
+  <p>Difficulty 1, 2, 3, 5, 8, 13 S, M, L, XL</p>
+
+  <p>Urgency</p>
+
+  <p>Severity Matrix Low, Medium, High, Urgent</p>
+
+  <p>Importance MoSCoW</p>
+
+  <p>Must Have, Should Have, Could Have, Won’t Have</p>
+
+  <p>You also want to be clear about who is doing what. Group work falls apart when no one knows what
+  everyone else is doing. If we are really diligent about writing down all our tasks, the list will be
+  daunting, even when prioritized. This is why a trustworthy system includes tracking and communication.</p>
+
+  <p>Creating a Kanban system is one of the easiest ways to accomplish this. Though the word Kanban may
+  seem unfamiliar, you’ll likely recognize the workflow instantly. In the 1940s, Toyota sought to optimize
+  their workflow by using a “supermarket” system. They organized tasks with shelves, using sticky notes
+  on a wall or whiteboard where everyone can see all the tasks simultaneously. Though there are many ways
+  to do this, the most basic system looks like this:</p>
+
+  <h3>Inbox or Backlog  To Do (or Next)  Doing  Done</h3>
+
+  <p>Figure 3. Kanban Board showing the “To Do,” “Doing,” and “Done” columns. Image by Jeff.lasovski licensed
+  under CC BY-SA 3.0.</p>
+
+  <p>As a team, everyone decides what are the most important tasks and places them in the To-Do or Next
+  column. When a team member is looking for a new task, they simply go to this column and find the most
+  important. They write their name on the sticky note and move it to the Doing column. Everyone knows
+  that task is being worked on and can move on to a different task. This also provides a sense of accountability,
+  especially if a task is dependent on someone else finishing their work.</p>
+
+  <p>When Toyota developed their Kanban system in the 1940s, they simply used a wall with sticky notes.
+  Now you’ll find many software platforms that help groups organize their workflow in this way. Which
+  tools you choose doesn’t really matter, as long as you and your team can access the board and update
+  it regularly.</p>
+
+  <h3>Table 2. Kanban Tools</h3>
+
+  <p>Tool Whiteboard &amp; Sticky Notes Microsoft Word or Google Docs Notion Trello Microsoft Project</p>
+
+  <p>Notes Simplest if you meet often in the same location Just create a Table manually or move tasks
+  from one document to the next Allows you to see tasks as a Kanban board or lists. Free for students
+  Popular task management system that organizes notes and tasks in cards and columns Kanban system that
+  integrates with other Microsoft tools</p>
+
+  <p>Moriah notes that many employees at nCino use these kinds of tools to stay transparent with their
+  teams and communicate different needs. nCino actually allows each team to choose whichever tool they
+  find most useful. For example, most of the tech writers use JIRA:</p>
+
+  <p>We use JIRA (a Kanban program) to plan our work, but we also use it to show our own managers as well
+  as our development teams where we are in our documentation process. We also use JIRA as a tool in our
+  review process to get reviews from other tech writers and from members of our development teams. We
+  are not limited to JIRA.</p>
+
+  <p>Thinking back to the agile techniques of audience dialogue and adapting to change, it is important
+  to be honest about limitations and scope, and a good task management system can help with this. If the
+  team has taken on too much scope, it is best to adapt the plan as soon as possible rather than push
+  on with the original plan.</p>
+
+  <p>Your group goals should guide your prioritization. If your goal is to get an A, prioritize the tasks
+  that connect to the instructor’s rubric or assignment sheet. If your goal is to create a project that
+  can be used by students, prioritize those tasks. It is usually a good idea to do the most difficult
+  first. Also, decide on a convenient space where everyone can keep close track of all the tasks and how
+  they are progressing.</p>
+
+  <p>3. Create Opportunities for Multiple Iterations</p>
+
+  <p>At the end of each sprint, you should have what is usually called a deliverable—this is not a draft.
+  You might call this a prototype or a piece of a draft. The draft that you bring to peer review or workshop
+  should not be your first deliverable. Each sprint should end with something you can show your instructor,
+  a user, a potential audience, or just your fellow team members. Here are just a few examples:</p>
+
+  <ul><li>Analysis of some research • Introduction draft that tests your idea of audience • Outline •
+  Group of images you might use • Draft survey or interview questions • Audio/Visual Demo</li></ul>
+
+  <p>Keep in mind that you may never use any particular deliverable in a final draft. Or you might use
+  it with some alterations. Or you might completely rewrite or redo the deliverable. Though it is always
+  useful to have something that can go into your final project, the goal here is to get feedback. Perfection
+  is unnecessary and counterproductive.</p>
+
+  <p>Before starting a project, identify a deliverable for each sprint or timeline. Sometimes your instructor
+  will not assign opportunities for these kinds of small deliverables, though check the schedule and assignment
+  sheet. Now align your tasks with each deliverable. You’ve just created your sprints. After each deliverable,
+  it is important to reflect and discuss with your team how your project is going, so that you can make
+  adjustments.</p>
+
+  <p>4. Keep Communication Channels Open</p>
+
+  <p>Perhaps the most important element of any project management system is communication. Most agile
+  projects involve what are called stand-up meetings. When you are working at a company, these happen
+  every day to make sure everyone knows what everyone else is doing and what issues have come up. The
+  three main questions are:</p>
+
+  <p>1. What have you done?</p>
+
+  <p>2. What will you do?</p>
+
+  <p>3. What challenges have arisen?</p>
+
+  <p>These should be very short meetings; each person talks for no longer than a minute. If everyone stands-up,
+  it is much more likely that people will stick to this rule.</p>
+
+  <p>Communicating about each task and your group’s overall workflow is key, regardless of what kind of
+  system you use. If you are using sticky notes, you can annotate each note as you work on the tasks and
+  talk about them as a group. If you are using Trello or MS projects, you can assign tasks to group members,
+  make notes, and add attachments.</p>
+
+  <p>These days it is also important to have another channel of communication, besides email, to keep
+  each other up to date. Most businesses now use what are called Enterprise Social Networks (ESN) — basically,
+  social media just for the organization or company. Chances are your university has one that faculty
+  may or may not be using. Here are just a few popular ones:</p>
+
+  <ul><li>Facebook Workplace • Google Chat • Microsoft Teams • Slack</li></ul>
+
+  <p>Employees (and probably students) find email overwhelming and difficult to maintain. If you email
+  a teammate a short question, it is likely to get buried. Most workers these days reserve email for more
+  formal exchanges with groups of employees, management, or external stakeholders. Teams use ESNs to keep
+  communication channels open, give updates, and ask quick questions</p>
+
+  <p>Decide as a group how often you need to check in. Though it may not be every day, it should be at
+  least 3 times a week and outside of class. This doesn’t necessarily have to be in person either. You
+  can use a messenger app, your university’s learning management system, or some other collaboration tool
+  that your group thinks will work best. The key is to make it as convenient as possible.</p>
+
+  <h3>Conclusion</h3>
+
+  <p>You may have encountered collaborative work in limited ways in your education thus far. The American
+  education system still tends to rely on the evaluation of individual competencies, which is often called
+  a “meritocracy.” Theoretically, you advance based on the merit of your own success. This is not entirely
+  true in the 21st-century workplace. Yes, you may be awarded for personal wins, but ultimately your success
+  will often depend on others and how well you work with others. You might be a fantastic writer or scientist
+  or computer programmer, but if you can’t build and maintain systems of trust—a community of collaborators—then
+  your success in the workplace will be limited. As Moriah recently put it: “People trust you irrevocably
+  to just do your job, no matter what.”</p>
+
+  <p>That kind of responsibility can be scary, if we are honest with ourselves. Most writers have to adapt
+  to this new distributed workflow when they join the workforce. Becka experienced this soon after she
+  was hired:</p>
+
+  <p>At first, the lack of structured oversight in technical writing can be stressful or overwhelming,
+  especially when compared to the traditional academic experience. But ultimately, this is what enables
+  us to grow and innovate like we do. While the ideas and business value concepts come from the executives,
+  the engineers and writers decide how to accomplish this work because they’re the ones who complete it.</p>
+
+  <p>Since all writing is collaborative one way or another, all writing is about building trust in some
+  way. It is essential to choose technologies that will contribute to this trust no matter what your writing
+  environment. The success of your project depends it. As a university student, now is the time not only
+  to become a better writer, but a better collaborator.</p>
+
+  <h3>Works Cited</h3>
+
+  <p>Beck, Kent, et al. “Manifesto for Agile Software Development.” Agile Manifesto, 2001, http://www.agilemanifesto.org.
+  Accessed 29 Mar. 2021.</p>
+
+  <p>“Culture and Careers.” nCino, 2021, https://www.ncino.com/culture-careers/. Accessed 29 Mar. 2021.</p>
+
+  <p>Debs, Mary Beth. “Corporate Authority Sponsoring Rhetorical Practice.” Writing in the Workplace:
+  New Research Perspectives, Southern Illinois University Press, 1993, pp. 158-70.</p>
+
+  <p>Hemp, Paul. “Where We Find Tomorrow’s Leaders?” Harvard Business Review, 1 January 2008, https://hbr.org/2008/01/where-will-we-find-tomorrows-leaders.
+  Accessed 21 April 2021.</p>
+
+  <p>Porter, James E. “Professional Communication as Phatic: From Classical Eunoia to Personal Artificial
+  Intelligence.” Business and Professional Communication Quarterly, vol. 2, no. 4, 2017, pp. 174-93.</p>
+
+  <p>Teacher Resources for Technologies of Trust: Creating Networks of Goodwill for Collaboration</p>
+
+  <p>Overview and Teaching Strategies</p>
+
+  <p>This chapter explores the differences between writing in the workplace and how we often assign large
+  writing projects in the university. In large organizations, writing is mostly collaborative, requiring
+  more systematic approaches to project management. Too often in the university, we assign group work
+  without explicitly teaching how to organize projects, especially with writing. Students who graduate
+  and get writing jobs must learn to adapt quickly to these collaborative environments. We can better
+  prepare students to thrive in the workplace and enhance group work in academia by getting them to think
+  about the collaborative process, just as we get them to think about the writing process. Though the
+  strategies and ideas in this chapter are not prescriptive, they can get students thinking about the
+  tools and processes they use to manage large writing projects. Students will also become familiar with
+  key methodologies and tools already being used in the professional world. Not only will your groups
+  work go better, but students will also be better prepared for workplace writing, regardless of whether
+  they end up in a writing-focused role or not.</p>
+
+  <p>This chapter really just scratches the surface by highlighting the most salient methodologies and
+  tools used in many software and technology industries. We’ve included thoughts from actual workplace
+  writers, as well as some practical tips for application. This reading can be used to help groups organize
+  their project before getting started. If you want to dig deeper into collaborative writing, students
+  can explore specific strategies or tools. Below, we offer a few questions and activities that can be
+  used for these instances.</p>
+
+  <h3>Questions</h3>
+
+  <p>1. In the introduction of this essay, the authors list reasons why we all hate group work. How do
+  these reasons compare to your own experiences? Would you add any reasons? What ways have you worked
+  to overcome these obstacles in the past?</p>
+
+  <p>2. What kinds of tools have you used to communicate in group work? How have you managed editing or
+  group communication? Discuss advantages and disadvantages.</p>
+
+  <p>3. This article mentions several tools and applications used to collaborate in the workplace. Research
+  one of these or an alternative. Test it out. Report back to the class about the affordances and constraints
+  of the tool, so that each group can decide whether or not to use it.</p>
+
+  <h3>Activities</h3>
+
+  <p>Team Charter Spend a class in groups getting to know each other and learning what drives each person
+  in the group. Have students create a team charter together on Google Docs. Team charters often include
+  things like:</p>
+
+  <ul><li>Mission statement • Assessment strategy (How will we know we’ve succeeded?) • Cultural code
+  or respect compact • Communication processes • Other ground rules or working agreements</li></ul>
+
+  <p>App Analysis Explore with your class the biggest concerns about group work, then identify a group
+  of apps or tools that might mitigate those concerns. For example, if lack of communication is a concern,
+  then choose some messaging apps. Have each group explore one of these apps for a couple days and report
+  back to the class with their findings.</p>
+
+  <p>Workplace Culture Have students discuss what kinds of culture they’ve encountered in their workplaces
+  or in different school settings. Have each group choose an organization and analyze their mission or
+  culture page on the web. Discuss what cultural elements might transfer to your particular group project.</p>'

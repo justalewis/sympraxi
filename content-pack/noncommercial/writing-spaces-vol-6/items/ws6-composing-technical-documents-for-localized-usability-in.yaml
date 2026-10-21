@@ -1,0 +1,631 @@
+id: ws6-composing-technical-documents-for-localized-usability-in
+title: Composing Technical Documents for Localized Usability in the International Context
+author: Keshab Raj Acharya
+source_title: 'Technical Writing Spaces: Readings on Writing, Volume 6'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-6/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Keshab Raj Acharya in Technical Writing Spaces: Readings on Writing, Volume 6, for
+  student writers, titled “Composing Technical Documents for Localized Usability in the International
+  Context.”'
+topics:
+  concern:
+  - assignment:audience-purpose
+whole: true
+changes: none
+body: '<p>Documents for Localized</p>
+
+  <p>Usability in the International</p>
+
+  <p>Context</p>
+
+  <p>Keshab Raj Acharya</p>
+
+  <p>With the international spread of business, you are now globally connected.1 This global interconnectedness
+  has increased your ability to understand and function as an informed member of and participant in diverse
+  national and global cultures. To design and compose more effective texts (print, digital, multimedia,
+  visual) for audiences from other cultures, you need to understand how cultural factors affect people’s
+  perception of your message in those cultures.</p>
+
+  <p>Culture matters in defining your behaviors, norms, values, and belief systems. These cultural factors
+  affect how audiences in the international context perceive and react to the message you share with them.
+  These cultural factors also mean that writing for international audiences is different from writing
+  for your domestic audiences. This chapter uses different examples to illustrate these ideas. Specifically,
+  the chapter uses these examples to demonstrate the need for writing usable, meaningful, and credible
+  messages for audiences from other cultures. The chapter also introduces the process of document localization
+  as a tool for creating such messages from the perspectives of multicultural audiences. The chapter concludes
+  by providing guidelines and best practices for composing culturally usable, meaningful, and credible
+  texts for diverse audiences in international contexts.</p>
+
+  <p>In your technical writing class, you might be given a number of assignments to complete individually
+  or in teams. These assignments might include different technical documents, such as instruction manuals,
+  memos,</p>
+
+  <p>1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>proposals, reports, emails, and product descriptions. In composing these documents, your main goal
+  is to have your work seen as credible or trustworthy by the intended audience. Composing such credible
+  texts requires an in-depth understanding of:</p>
+
+  <ul><li>The audience you are writing for. (Who are they?) • The purpose for which your audience is reading
+  your work. (What do you want your readers to do after reading your work?) • The context in which the
+  audience will use your work. (Where are they when reading and using it?) • The type of document you
+  are composing. (What are you writing, and in what format?)</li></ul>
+
+  <p>Understanding these factors can be challenging even in contexts familiar to you, but these dynamics
+  become even more complex when writing for audiences across cultures.</p>
+
+  <p>Culture can be defined as “the sum total of the beliefs, rules, techniques, institutions, and artifacts
+  that characterize human populations” (Ball and McCulloch 258). Culture is a “set of values and beliefs,
+  or a cluster of learned behaviors” people share with other members in a particular society (Lebrón 126).
+  In other words, culture encompasses the set of behaviors, norms, values, and belief systems—the cultural
+  aspects held in common by a group of people in a society. As such, culture varies, and these variations
+  affect how your audience understands and uses the documents you produce. In short, writing technical
+  documents for audiences from other cultures involves understanding the cultural aspects of your target
+  audiences (St.Amant 148–151).</p>
+
+  <h3>Rhetorical Contexts of Technical Writing</h3>
+
+  <p>Rhetoric is the process of creating messages that address the expectations and needs of your intended
+  audience. The more you understand what your audience knows about a topic and how members of that audience
+  discuss it, the more effectively you can compose messages that your audience can understand and use
+  effectively—for example, using instructions to assemble a new cabinet. Technical documents need to be
+  clear, concise, accurate, and professional. Clarity, accuracy, and precision are essential elements
+  in composing usable, meaningful, and credible technical documents for readers from other cultures. Composing
+  a usable or easy-to-use text is not enough; you must also think about how meaningful—that is, how the
+  text resonates with different cultures—and how credible the text is for your target audience.</p>
+
+  <p>Consider a situation in which you want to use a printer in your university library to print out a
+  class assignment. You go to the printing station where only one printer is available. As soon as you
+  hit the print command button, you see an error message pop up on the screen, notifying that the paper
+  tray is empty. You have ten minutes left before the library closes, and nobody is available to assist
+  you. You look around and find reams of printing paper in a cabinet. Now, you take out a few sheets for
+  printing, but you don’t know how to load the paper into the machine. On the wall adjacent to the printer,
+  you see a set of instructions. They read:</p>
+
+  <p>If the printer has run out of paper, fill the tray back up and press the power button to go on with
+  the print job.</p>
+
+  <p>If you are a native English speaker, you might not have any problem understanding and following the
+  instructions. You know what the instructions mean, so you can perform the actions they describe and
+  successfully complete the desired task.</p>
+
+  <p>Consider you are an international student with a limited command of English. Unlike the native English
+  speaker, you are unfamiliar with some of the terms in the instructions. While reading the instructions,
+  you become confused because you don’t know what the phrases such as “run of,” “back up,” and “go on
+  with” mean. You grapple with making sense of these phrases for a moment, but you have no idea that:</p>
+
+  <ul><li>“run out of” means “consume or deplete all of something” • “fill [something] back up” means
+  “replace the contents of a container” • “go on with” means “continue or proceed.”</li></ul>
+
+  <p>As a result of not being able to accomplish the task, you leave the printing station in frustration
+  and anger. Who do you blame? Yourself, or the unknown person who wrote these instructions? Why?</p>
+
+  <h3>Creating Usable Text</h3>
+
+  <p>One of the main goals of technical communication is to compose information in plain language that
+  everyone—regardless of educational background or language proficiency—can read, understand, and use.</p>
+
+  <p>Composing documents in plain language means enabling your audience to “find what they need, understand
+  what they find, and use what they understand appropriately” (Redish 163). Plain language is particularly
+  important for international audiences, many of whom are not native speakers, or who might use a different
+  dialect of a language, such as English, to communicate. In the printer example, it is best to remove
+  phrasal verbs and use plain language, such as the following:</p>
+
+  <p>The printer needs more paper. Refill the paper tray and press the power button to continue.</p>
+
+  <p>The lesson here is one of culture and comprehension. Unless your text meets the audience’s expectations
+  and needs, they will not be able to perform their desired tasks. In other words, when you are composing
+  messages for the international audience, you should focus on usability—that is, creating texts that
+  are easy to read, understand, and use in a range of cultural environments. From a usability perspective,
+  your text should be easy for your readers to read, understand, and use in their own cultural contexts
+  and locations.</p>
+
+  <p>Now, let us consider another scenario. You are an American student who just arrived in the UK for
+  a study abroad program. After arriving on campus, you decide to deposit some money in a nearby bank.
+  As you enter the bank, the supervisor asks if you would like to open a “current account.” You are unsure
+  what to say because you have no idea what the “current account” means. When the supervisor clarifies,
+  you understand that “current account” means “checking account” in your home country. While completing
+  the application form, you are asked to enter your date of birth, which you write as “11/09/2003” (i.e.,
+  November 09, 2003) just as you would in the US. However, the supervisor misinterprets it as “September
+  11, 2003” due to the UK’s date format being “day/month/year” (09 November 2003) instead of the “month/day/year”
+  format used in the US. Consequently, you are requested to complete a new application form with your
+  date of birth formatted according to the UK standard.</p>
+
+  <p>Both this example of the bank account application and the prior example of the printer instructions
+  involve usability. Both also reveal that rhetoric—or the process of creating messages that address expectations
+  and needs of your intended audiences—can be central to usability in intercultural, cross-cultural, and/or
+  international situations even when all parties are native speakers of the same language (e.g., a US
+  student and a UK bank supervisor). In the process of composing texts (print, digital, multimedia, visual)
+  for audiences from other cultures, it is important to recognize how rhetoric plays a crucial role in
+  addressing their needs and expectations.</p>
+
+  <p>Both examples also reveal how usability is a matter of understanding the rhetorical expectations
+  of multicultural audiences and creating texts that meet those expectations. For instance, among the
+  key characteristics of professional communication in the US cultural context are directness (the quality
+  of being clear, straightforward, and to the point), brevity (the quality of being brief or short in
+  duration or amount), concision (the quality of being concise by avoiding unnecessary words, redundancies,
+  or wordiness), and precision (the quality of being exact and accurate). But people in Japan often prefer
+  a much more “roundabout approach, in which ideas are conveyed through implication rather than stated
+  explicitly” (Ingre and Basil 7). Essentially, understanding the rhetorical conventions of writing in
+  the target culture—or the culture with which you are sharing information—is essential for composing
+  effective technical documents.</p>
+
+  <p>In sum, what works in your cultural context might not work in another. For this reason, it is important
+  to be culturally aware of your audience’s rhetorical expectations and needs when creating technical
+  documents for an international audience. By considering these factors, you can produce usable, meaningful,
+  and credible texts that meet the needs of your target audience in the international context.</p>
+
+  <h3>Understanding Cultural Differences</h3>
+
+  <p>Differences in cultural rhetorical expectations can result in misunderstanding (a mistaken or incorrect
+  understanding), misperception (a false or inaccurate perception), and misinterpretation (making a wrong
+  interpretation) when sharing information across cultures. From the perspective of international cultural
+  contexts, these aspects can lead to workplace conflicts, poor interpersonal and intergroup relationships,
+  and inefficiency. Therefore, composing texts for multicultural audiences requires a deeper understanding
+  of cultural diversity—the differences in audiences’ behaviors, norms, values, and belief systems.</p>
+
+  <p>Learning to understand other cultures is valuable and enriching, and can provide new avenues to succeed
+  in today’s globalized world. To gain a deeper understanding of audiences in international contexts,
+  you can start by answering four core questions:</p>
+
+  <ul><li>Who are my readers/for what cultures am I writing? • What do I want my readers to do after they
+  read my document? • In what context do my readers use my document? • What type of document am I composing?</li></ul>
+
+  <p>If you have clear answers to such questions, you are in a better position to compose usable, meaningful,
+  and credible documents for multicultural audiences.</p>
+
+  <p>While writing for other cultures, you should also be careful about the writing conventions of the
+  target culture—the culture for whom you are writing. For example, in Eastern Asia, it’s common to start
+  with general descriptions followed by opinions and statements, whereas in the Western world, the main
+  idea is typically stated upfront, followed by supporting details (Li et al. 337). Similarly, when communicating
+  with people in England, it is advisable to use British terms such as “lift,” “boot,” and “biscuits”
+  instead of American terms such as “elevator,” “trunk,” and “cookies.”</p>
+
+  <p>Thus, the more you learn about your audience and the context of use, the better you will be able
+  to generate usable, meaningful, and credible documents. In short, when you write for multicultural audiences,
+  you need to employ more effective approaches for localized usability.</p>
+
+  <h3>Creating Texts for Localized Usability</h3>
+
+  <p>Localization is the process of adapting content to support users’ requirements in a specific target
+  locale. In simple terms, localization means making your content usable, meaningful, and credible for
+  your intended audience in a specific target culture. Broadly speaking, localization involves creating
+  materials such as print, digital, multimedia, and visual texts to meet the rhetorical expectations and
+  needs of audiences in different cultures. By addressing these expectations and needs, localization makes
+  materials easier for individuals from those cultures to understand and use. In this way, localization
+  is a central approach to usability for intercultural, cross-cultural, and international communication.</p>
+
+  <p>Writing for localized usability means avoiding assumptions based on your language, location, and
+  culture. To succeed in writing for localized usability, you need to focus on:</p>
+
+  <ul><li>Sociocultural factors: the forces that influence individual’s thoughts, feelings, and behaviors
+  within cultures and society</li><li>Culturally localized user experiences: users’ practical experiences
+  and skills gained through observations or interactions with other people in the local community</li><li>Local
+  contexts: the surrounding environmental factors that influence how a product, service, or user interface
+  is perceived and used by people in a particular region or locality</li></ul>
+
+  <p>Culture has a major impact on the usability of documents. For instance, users from different cultures
+  may not use a document if it does not align with their behaviors, norms, values, and belief systems.
+  Because culture strongly influences how users perceive your document, understanding your audience’s
+  culture and the context of use is vital to the localized usability of your document.</p>
+
+  <p>Regardless of document types, producing an effective document typically requires completing the four
+  basic tasks:</p>
+
+  <ul><li>Deliver ease-of-use information: because different individuals in different situations have
+  different information needs</li><li>Use persuasive reasoning or logic: because readers may disagree
+  with the meaning of the information provided and the action to be taken</li><li>Weigh the ethical issues:
+  because unethical communication lacks credibility and promote unethical behaviors</li><li>Practice good
+  teamwork: because many organizations produce documents by a team of colleagues with varying skills and
+  experiences</li></ul>
+
+  <p>By tailoring your content to the preferences of your intended audiences, you can reduce the risk
+  of misunderstanding information you share with them. The more you understand your audience’s rhetorical
+  expectations and cultural needs, the more likely you are to communicate information that is understood
+  and used as intended. In essence, the better you understand the text localization process, the more
+  effectively you can compose usable, meaningful, and credible documents for multicultural audiences in
+  the globalized world.</p>
+
+  <h3>Document Localization Process</h3>
+
+  <p>In the globally interconnected world, you are expected to produce documents in ways that audiences
+  from other cultures can understand and use within their local settings or environments. From an international
+  perspective, a usable text is one that supports knowledge, experiences, and skills of users from related
+  cultures. For this, you need to know how you can compose the localized document that can address rhetorical
+  expectations and needs of particular users from particular cultures.</p>
+
+  <p>Adopting the document localization process can help you address these factors and produce effective
+  documents for multicultural audiences. As shown in Figure 17.1, you can begin the documentation process
+  with a documentation plan, which entails a preliminary study of the document type and purpose, audience,
+  and context of use. As the documentation project progresses, the next crucial phase involves delving
+  into cultural factors. During this phase, it becomes essential to carefully examine these cultural elements
+  to tailor the materials appropriately, aligning them with the cultural expectations associated with
+  document usability (St.Amant 154). In the third phase, you start drafting and reviewing the document
+  with cultural considerations and contextual awareness of the user’s situation.</p>
+
+  <h3>Figure 17.1: Document Localization Process</h3>
+
+  <p>At this phase, you thoroughly review the text to ensure its functionality, accuracy, accessibility,
+  and writing quality. While document functionality is concerned with how the document conveys information
+  to its users, accuracy involves correctly presenting information without ambiguity or errors. Likewise,
+  accessible documents ensure that all users, including those with disabilities, receive the same information.
+  Good technical writing avoids unnecessary wordiness, jargon (overtly technical language), and reads
+  smoothly.</p>
+
+  <p>As you perform the tasks from 1 to 3, you should also focus on the cultural expectations of rhetoric
+  (presenting information in a credible way), document type (memos, letters, reports, proposals, instructions,
+  reviews, newsletters, presentations, etc.) and the context of use.</p>
+
+  <p>Additionally, you need to be aware of other factors that influence the perceptions of the user of
+  your document, including:</p>
+
+  <ul><li>Content management: organizing the content based on importance or priority</li><li>Typography:
+  the technique of arranging fonts, font sizes, line lengths, line spacing or leading, letter spacing
+  or tracking, and other elements to help readers find the information they need quickly and easily</li><li>Abbreviations
+  and acronyms: words formed from initial letters of a phrase and pronounced as a word like NASA</li><li>Slang,
+  jargon, idioms, humor, and clichés</li></ul>
+
+  <p>Furthermore, you need to carefully implement various rhetorical strategies during this third phase,
+  including design elements (such as page layout and typography) and the principles of design. Some powerful
+  and durable design principles include:</p>
+
+  <ul><li>Proximity: putting two related items (a visual that accompanies a text) close to each other
+  so that the reader will interpret them as related to each other</li><li>Alignment: placing texts or
+  visuals so their edges line up along the same rows or columns, or their bodies along a common center</li><li>Contrast:
+  arranging elements for emphasis and difference (light vs dark, sans serif vs serif)</li><li>Repetition:
+  reusing of the same or similar elements throughout the document (e.g., icons, numbers, lines). (Williams
+  85-94)</li></ul>
+
+  <p>You may also consider adding localized components to support regional differences and technical requirements
+  in the target culture for which you are preparing the document.</p>
+
+  <p>In your next phase, you can run a usability test to ensure that your document works as intended for
+  your target audience. Usability testing is the process that employs representative participants from
+  the target culture to evaluate the degree to which your document meets their needs and expectations.
+  This process helps you quickly identify any problems with your document and decide how to fix them for
+  localized usability.</p>
+
+  <p>To collect users’ insights, you can employ various user research methods, such as focus groups, individual
+  interviews, surveys, and ethnography. Ethnographic methods involve gathering information about your
+  document from users in a real-world setting rather than in a usability lab. There are many online resources
+  listed in the Appendix that you can use to learn how to conduct a usability test.</p>
+
+  <p>After the test, you come to your final stage. Here, you analyze user feedback to improve your document
+  by revising, reorganizing, and restructuring the contents rhetorically from a user’s perspective. In
+  addition to this, you may also need to incorporate other essential elements for publishing and completing
+  the project. This could involve effectively integrating design elements and adhering to design principles
+  that enhance localized usability. To achieve this, you need to consider some guidelines and best practices
+  discussed below.</p>
+
+  <h3>Guidelines and Best Practices</h3>
+
+  <p>The way a document is organized may vary from culture to culture. Unlike Canadians, for example,
+  who like recommendations at the beginning of a report, Germans prefer the background first and recommendation
+  later (Varner and Beamer 73). Similarly, unlike German and Japanese email messages, Arabic email messages
+  have a high level of appreciation and praise</p>
+
+  <p>(Danielewicz-Betz 30). So, when writing for an international audience, it is important to be culturally
+  aware and sensitive. This entails recognizing and respecting the norms, values, and belief systems of
+  your readers, which can greatly enhance the impact and reception of your message.</p>
+
+  <h3>Language Expectations</h3>
+
+  <p>The use of language in your document should be in its most accepted form, adhering to the writing
+  conventions of the target culture where the document is used. English has many standard varieties around
+  the world, such as North American English, British English, Australian English, and Indian English.
+  So, while composing text for an audience from another culture, you are more likely to succeed using
+  common English words, short sentences, and short paragraphs than using high-sounding phrases, long sentences,
+  and long paragraphs.</p>
+
+  <h3>When writing for international audiences, consider the following:</h3>
+
+  <ul><li>Use plain language and avoid slang, jargon, idioms, clichés, phrasal verbs, humor (especially,
+  puns), and metaphors (a comparison between two things that are otherwise unrelated).</li><li>Avoid acronyms.
+  An international audience may not know, for instance, what “NASA” “ASAP,” “FYI,” and “SSN” mean unless
+  you define them.</li><li>Don’t use the same word to mean different things (e.g., lie, wind, bark).</li><li>Avoid
+  using special characters such as “/\:;,*? &lt;&gt;” in the file name. • Pay attention to punctuation,
+  such as quotation marks (“ ”) in</li></ul>
+
+  <p>English, low quotes (,, ”) in German, and guillemets (&lt;&lt; &gt;&gt;) in French. • Use “international”
+  English as used by the target audiences in their cultural context. For instance, different spellings
+  in the words such as “localise,” “colour,” “centre,” “licence,” and “traveller” are common in the countries
+  like Nepal, UK, and India. • Limit pronouns as they can cause confusion. For instance, the French word
+  “il” could mean “he” or “it,” so your French reader may be unclear about your subject. • Use appropriate
+  salutations. For instance, first names are seldom used by those doing business in Nepal or Germany.
+  Unlike in the US cultural context, salutations such as “Dear sir” are more common than “Dear professor”
+  or “Dear Dr. [last name]” in the Nepali cultural context when writing a letter or email to a male professor.</p>
+
+  <h3>Document Formatting Expectations</h3>
+
+  <p>As you prepare documents for your international audience, you need to make certain decisions carefully,
+  including how to format the document. Indeed, words are important to any writer, but in technical writing,
+  how the words look on the page is nearly as important as what the words say. If you want your readers
+  to stay focused on your document, you need to make it visually appealing as well. In formatting a document
+  for multicultural audiences, consider how you can:</p>
+
+  <ul><li>Allow for sufficient text expansion based on the requirements and preferences of the target
+  audience. Text expansion occurs when the target language (the language your audience translates into)
+  takes up more space than the source language.</li><li>Consider where you should put your title, headings,
+  and subheadings in your document.</li><li>Leave appropriate margins in your document. • Consider your
+  audience’s preferences when using columns, paragraphs, bullets, and numbers. • Keep your document’s
+  formatting consistent throughout to avoid confusing your target audience. • Implement the principles
+  of design and design elements (such as font, font size, lower or upper case, line length, line spacing,
+  and color scheme) that are acceptable in the target culture with which you share the document.</li></ul>
+
+  <h3>Expectations for Visuals and Colors</h3>
+
+  <p>Visuals and colors are often used in technical documents in order to enhance meaning (Cohn 25-27).
+  These features also help capture your audience’s attention. But you need to use such features carefully,
+  for they might have different meanings in different cultures. For instance, the meanings of colors can
+  vary depending on the culture of the target audience:</p>
+
+  <ul><li>While white in Western culture symbolizes purity, it is associated with death and mourning in
+  many southeast Asian cultures.</li><li>Red commonly indicates warning or danger in North America, Europe,
+  and Japan but it symbolizes good luck and happiness in China.</li><li>In most part of North America,
+  yellow represents happiness and warmth but Latin America sees yellow as a sign of death, sorrow, and
+  mourning. In Germany, yellow is the color of envy. (Dimitrieska and Efremova 80-83)</li></ul>
+
+  <p>Color is an important aspect in every culture. So, understanding the meanings of colors in other
+  cultures is crucial when adding color to your document.</p>
+
+  <p>Supplementing written texts with visuals such as graphics and photographs can also help achieve conciseness,
+  clarity, and appeal. However, incorporating visuals into a text for another culture requires a better
+  understanding of the implications of those visuals in that particular culture. For instance, Chinese
+  users tend to favor diverting, cartoon-like visuals much more than Western users (Li et al. 150).</p>
+
+  <p>While integrating colors and visual elements into your document for multicultural audiences, consider
+  the following:</p>
+
+  <ul><li>Define and explain color symbology and use colors appropriately for the target audiences.</li><li>Use
+  visuals and symbols that are acceptable and meaningful to the target culture.</li><li>When using human
+  figures, consider using simple, abstract figures devoid of recognizable human face and hairstyle. Omit
+  any indication of skin color and use unshaded line drawings of people.</li><li>Avoid using hand gestures
+  unless you are familiar with their specific meanings and cultural significance in the target culture.</li></ul>
+
+  <p>Certainly, you may not be able to account for all the different cultural contexts where colors, visuals,
+  and gestures convey different meanings. But conducting user research and usability testing can help
+  you better understand what colors and visuals your audience prefers and why.</p>
+
+  <h3>Formatting Numbers, Dates, and Currencies</h3>
+
+  <p>Consider that different cultures use distinct formats for numbers, dates, and currencies. For example,
+  phone numbers and time representations (such as 12-hour vs. 24-hour) vary around the world. To make
+  your technical documents usable, meaningful, and credible in other cultures, you need to consider the
+  following:</p>
+
+  <ul><li>Date format: Different countries use different date formats. For example:</li></ul>
+
+  <p>U.S. 5/29/2023 5-29-2023 5/29/23</p>
+
+  <p>Ghana 29/5/2023 29-5-2023</p>
+
+  <p>Portugal 23.05.29 2023/05/29 29-05-2023</p>
+
+  <p>Luxembourg 29.05.2023</p>
+
+  <p>Units of measurement: Be mindful of the type of measurement units being used in other cultures. For
+  instance, while “kilometer” is commonly used in countries like Nepal, India, Pakistan, and China, “mile”
+  is the preferred unit in the United States, Myanmar, Liberia, and Puerto Rico.</p>
+
+  <ul><li>Currency: Pay attention to how currency values are formatted and written. For example:</li></ul>
+
+  <p>U.S.</p>
+
+  <p>Nepal</p>
+
+  <p>India</p>
+
+  <p>$430.50 US$430.50</p>
+
+  <p>रू ४३०.५० ४३० रपु यै ाँ ५० प सै ा</p>
+
+  <p>₹४३०.५० ४३० रपु य े ५० प सै े</p>
+
+  <ul><li>Large numbers: Commas and/or periods are used in different places in different countries. For
+  example,</li></ul>
+
+  <p>1,234,567.89 (US) 1.234.567,89 or 1234 567,89 (France) 12,34,567.89 (Nepal)</p>
+
+  <ul><li>Paper size: Consider the paper size your target audience uses, especially for electronic documents.
+  For example, in Nepal, A4 paper (210 x 297 mm, or 8.27 x 11.7 inches) is used in place of American letter-size
+  (8.5 x 11 inches).</li></ul>
+
+  <p>Thus, different cultures may perceive your composition of information in a variety of unexpected
+  ways, so carefully consider the organization of contents, language expectations, colors, visuals, and
+  measurement units, just to mention a few.</p>
+
+  <h3>Researching Other Cultural Expectations</h3>
+
+  <p>Learning about, and paying close attention to, your audience and the context of use are vital to
+  composing a text for localized usability. Of course, you might face some challenges for preparing technical
+  documents for multicultural audiences. For instance, you might not know how to conduct user research,
+  where to go to review related materials, and what technical tools can be employed to get user feedback
+  on your document. However, various approaches can be employed to explore diverse cultural expectations
+  and incorporate them into the document-writing process to enhance localized usability. Here are some
+  suggestions that you might find helpful to implement the ideas discussed in the chapter.</p>
+
+  <h3>Review Materials Created by and for Other Cultures</h3>
+
+  <p>One of the best ways to learn about user expectations in other cultures is to review materials created
+  by and for those cultures. For instance, if you are preparing a document in which you need to include
+  information about foreign exchange rates in Nepal, you might review the website of Nepal Rastra Bank
+  (https://www.nrb.org.np). Similarly, if you are writing an instruction manual for Portuguese (Brazilian)
+  audiences, you might consult the Microsoft Portuguese (Brazilian) Style Guide (https://tinyurl. com/5n8t8z7h).
+  In short, reviewing materials generated by and for other cultures can help you gain a general, initial
+  understanding of the expectations of those cultures.</p>
+
+  <h3>Do Interviews with Users from the Target Culture</h3>
+
+  <p>Interviews are a frequently used method to gain insights into your target audience. To gather valuable
+  feedback from intended users, you can conduct interviews either in person or remotely, using phone or
+  popular video conferencing platforms such as Zoom, GoToMeeting, and Skype. Preparing for an interview
+  involves several key steps, including selecting the appropriate interview type, crafting well-considered
+  questions, creating necessary materials, and recruiting potential participants. You need to design interview
+  questions carefully and focus on how to interact with participants to get high-quality data. The process
+  involves designing questions to recruit test participants, such as:</p>
+
+  <ul><li>How often do you use technical documents? • What types of documents do you use? • What makes
+  you use them? Is there any reason for it? • Would you prefer print or online documents? • How does using
+  print [or online] documents benefit you the most?</li></ul>
+
+  <p>The resulting answers help you determine if the test participant is the appropriate person to collect
+  feedback on your document. Gathering reliable data requires recruiting representative participants;
+  otherwise, your results will not help you prepare the document effectively for your intended audience.</p>
+
+  <h3>Conduct User Tests of Draft Texts with Users from the Target Culture</h3>
+
+  <p>Conducting user tests is one of the best ways to gain insights into what users need and expect from
+  your document in a localized context. By performing user tests, you can identify areas where your document
+  can be improved for localized usability, such as by using more appropriate language, cultural references,
+  and design elements. To better understand how to implement user tests, you can consult some of the online
+  sources listed in the Appendix. If you are conducting the test online, you can share the document by
+  Skype, GoToMeeting, or Zoom’s “share screen” feature, or have them review it in advance. The process
+  involves designing certain questions such as,</p>
+
+  <ul><li>What is your first impression of this document? • Can you describe what this document is about?
+  • What convinces you to use this document? • Do you find the document easy or difficult to use? Why
+  or why not? • Can you explain what [X] means to you in the document? • What parts of the document did
+  you like the most? Why? • What parts of the document did you like the least? Why?</li></ul>
+
+  <p>The answers obtained can guide you in revising and adapting the document to align with the preferences
+  and usability expectations of audiences from different cultural backgrounds.</p>
+
+  <h3>Concluding Thoughts</h3>
+
+  <p>Composing texts for localized usability requires you to better understand how cultural factors influence
+  your readers’ perception of the messages or texts you share with them. Cultures have different expectations
+  and needs associated with the structure of the content, layout, style, mechanics, lexicon, spelling,
+  and other factors. Successfully localized documents should appear as if they originated in the local
+  culture. Miscommunication between cultures can occur due to ineffective localized usability implementation
+  in a document.</p>
+
+  <p>Composing technical documents for localized usability, however, can be challenging—especially if
+  you are uncertain about how to obtain information about your audience’s behaviors, norms, values, and
+  belief systems. The culture of your target audience has a significant impact on how users perceive and
+  accept your message. Adopting the document localization process as a tool and researching audiences’
+  needs and expectations in the target culture can help produce usable, meaningful, and credible documents.
+  In short, with user research and usability testing in international contexts, you can better understand
+  how cultural differences affect the audience’s expectations of your text and compose better texts for
+  better experiences.</p>
+
+  <h3>Works Cited</h3>
+
+  <p>Ball, Donald A. and Wendell H. McCulloch. International Business: The Challenge of Global Competition,
+  7th ed., Mcgraw-Hill, 1999.</p>
+
+  <p>Cohn, Janae. “Understanding Visual Rhetoric.” Writing Spaces: Readings on Writing, vol. 3, edited
+  by Dana Driscoll et al., WrtingSpaces.org, Parlor Press, and The WAC Clearinghouse, 2020, pp. 18-39.
+  https://wac.colostate. edu/docs/books/writingspaces3/cohn.pdf.</p>
+
+  <p>Danielewicz-Betz, Anna. “(Mis) Use of Email in Student-Faculty Interaction: Implications for University
+  Instruction in Germany, Saudi Arabia, and Japan.” JALT CALL Journal, vol. 9, no. 1, 2013, pp. 23-57.</p>
+
+  <p>Dimitrieska, Savica, and Tanja Efremova. “Colors in the International Marketing.” Entrepreneurship,
+  vol. 9, no. 1, 2021, pp. 78-86. https://doi. org/10.37708/ep.swu.v9i1.7.</p>
+
+  <p>Ingre, David, and Robert Basil. Engineering Communication: A Practical Guide to Workplace Communications
+  for Engineers. Cengage, 2016.</p>
+
+  <p>Lebrón, Antonio. “What is Culture?” Merit Research Journal of Education and Review, vol. 1, no. 6,
+  2013, pp. 126-132.</p>
+
+  <p>Li, Qian, et al. “Getting the picture: A Cross-cultural Comparison of Chinese and Western Users’
+  Preferences for Image Types in Manuals for Household Appliances.” Journal of Technical Writing and Communication,
+  vol. 51, no. 2, 2021, pp. 137-158, https://doi.org/10.1177/0047281619898140.</p>
+
+  <p>Li, Qian, et al. “Inductively Versus Deductively Structured Product Descriptions: Effects on Chinese
+  and Western Readers.” Journal of Business and Technical Communication, vol. 34, no. 4, 2020, pp. 335-363,
+  https://doi. org/10.1177/1050651920932192.</p>
+
+  <p>Redish, Janice C. Ginny. “What is Information Design?” Technical Communication, vol. 47, no. 2, 2000,
+  pp. 163-166.</p>
+
+  <p>St.Amant, Kirk. “Writing in Global Contexts: Composing Usable Texts for Audiences from Different
+  Cultures. “Writing Spaces: Readings on Writing, vol. 3, edited by Dana Driscoll et al., WrtingSpaces.org,
+  Parlor Press, and The WAC Clearinghouse, 2020, pp. 147-61. https://wac.colostate.edu/docs/ books/writingspaces3/stamant.pdf.</p>
+
+  <p>Williams, Robin. The Non-designer’s Design Book: Design and Typographic Principles for the Visual
+  Novice, 4th ed., Pearson, 2015.</p>
+
+  <p>Varner, Irish and Linda Beamer. Intercultural Communication in the Global Workplace, 5th ed., McGraw-Hill,
+  2011.</p>
+
+  <p>Teacher Resources</p>
+
+  <p>Overview and Teaching Strategies</p>
+
+  <p>Today, students work in a creative, robust technological environment with a variety of media outlets.
+  By using these outlets, they are expected to compose texts for a diverse range of audiences. Communicating
+  effectively with an audience from another culture requires understanding how cultural expectations and
+  needs can affect the way audiences receive and interpret texts. For instance, Western user documentation
+  can differ significantly from Eastern Asian user documentation in terms of content organization, layout,
+  expectations for colors and visuals, and formatting of dates or numbers. To address these challenges,
+  students can adopt more effective composing strategies to create texts that multicultural audiences
+  can find usable, meaningful, and credible.</p>
+
+  <p>As discussed in the chapter, students can adopt the document localization process as a tool to compose
+  documents for localized usability. Through a number of examples, the essay explores the challenges and
+  opportunities of understanding and adapting to cultural differences while composing technical documents
+  for multicultural audiences in an international context.</p>
+
+  <p>When writing for audiences across cultures, students need to know that different cultures have different
+  needs and preferences. Document types that are popular in one culture may not be popular in another.
+  For example, a message for a Spanish audience might be different from a message for a Nepali audience.
+  This is due to the different cultural norms, values, and belief systems that people have. For these
+  reasons, students should view technical writing tasks as more than just sharing information with an
+  audience; they should also be seen as an opportunity to understand cultural relevance and the rhetorical
+  nature of localization.</p>
+
+  <p>This essay is ideally suited for teaching students how to compose technical documents for audiences
+  from other cultures. It provides a comprehensive list of guidelines and practices for writing effective
+  technical documents in the international context, as well as ideas for conducting research on other
+  cultural expectations. Students can use this chapter and adopt the documentation localization process
+  to gain a deeper understanding of how cultural factors impact their writing practices. Instructors can
+  use this entry to convey these ideas and have students practice composing usable, meaningful, and credible
+  technical documents for international audiences.</p>
+
+  <h3>Discussion Questions</h3>
+
+  <p>To help students explore the ideas discussed in this chapter, consider having them address—as individuals,
+  in small groups, or as an overall class— the following questions:</p>
+
+  <p>1. As demonstrated in the chapter, misinterpretations of text can arise in diverse cultural contexts.
+  Have you ever encountered such situations due to cultural differences?</p>
+
+  <p>2. How can the use of color, visuals, layout, typography, organization, structure, and style be optimized
+  in a technical document to effectively achieve informative and persuasive goals across diverse cultural
+  and contextual settings?</p>
+
+  <p>3. How can information be managed for localized usability? Can you provide some examples of the best
+  practices of audience analysis to create usable, meaningful, and credible documents in the international
+  context?</p>
+
+  <p>4. This entry discusses the document localization process as a tool to create more effective texts
+  for an audience from another culture. What challenges do you anticipate while implementing the document
+  localization process in a text for an international audience?</p>
+
+  <p>5. This essay provides some guidelines and best practices to compose texts with cultural considerations.
+  What additional guidelines and practices can you suggest for composing texts with cultural considerations?
+  Can you prepare your own list?</p>
+
+  <p>6. Briefly explain the significance of the following while composing texts for multicultural audiences:
+  { Cultural expectations { User research { Document localization { Usability testing { Localized usability</p>
+
+  <p>7. Discuss what strategies would you consider for composing usable, meaningful, and credible technical
+  documents to be used by members from other cultures? Can you provide any examples?</p>
+
+  <h3>Appendix</h3>
+
+  <ul><li>Usability Testing Guidelines: https://www.plainlanguage.gov/guidelines/test/usability-testing/</li><li>Usability
+  Evaluation Basics: https://www.usability.gov/what-and-why/usability-evaluation.html</li><li>Usability
+  Resources: https://infodesign.com.au/usabilityresources.html • Usability Testing: https://www.nngroup.com/articles/usability-testing-101/
+  • Remote Testing: https://www.usability.gov/how-to-and-tools/ methods/remote-testing.html • Usability
+  Testing Basics: https://studentlife.mit.edu/sites/default/ files/Documents/Usability_Testing_Workshop_March2020.pdf
+  • How to Test the Usability of Documents: https://www.uxmatters.</li></ul>
+
+  <p>com/mt/archives/2020/05/how-to-test-the-usability-of-documents.php</p>'

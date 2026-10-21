@@ -1,0 +1,410 @@
+id: ws6-not-so-fast-centering-your-users-to
+title: '“Not So Fast”: Centering Your Users to Design the Right Solution'
+author: Candice Lanius and Ryan Weber
+source_title: 'Technical Writing Spaces: Readings on Writing, Volume 6'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-6/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Candice Lanius and Ryan Weber in Technical Writing Spaces: Readings on Writing,
+  Volume 6, for student writers, titled ““Not So Fast”: Centering Your Users to Design the Right Solution.”'
+topics:
+  concern:
+  - assignment:audience-purpose
+  - genre:multimodal
+whole: true
+changes: none
+body: '<p>Users to Design the Right</p>
+
+  <p>Solution</p>
+
+  <p>Candice Lanius and Ryan Weber</p>
+
+  <p>Scenario 1: You have a great idea for a new invention: an umbrella that doubles as a portable coffee
+  maker! But before you start creating prototypes and getting startup funding from investors, it is important
+  to think “not so fast. Does this invention solve a problem for real people?” To succeed, new products
+  must solve people’s problems and give them positive experiences.1</p>
+
+  <p>Scenario 2: Your company has an existing app that allows people to find dog sitters, and they want
+  to add a new feature that lets people get take-out food from local restaurants delivered to their dog.
+  Management may be tempted to assign programmers to start developing this feature right away. However,
+  a better approach would be to say “not so fast. Do people actually want this feature? Will they actually
+  use it?” Ideally, new product features are designed based on user research, input, and needs.</p>
+
+  <p>Scenario 3: Your manager strolls by your desk and says, “We need a 300-page PDF user manual that
+  documents every feature of our website.” You’ll be tempted to jump in and get started. But if you can,
+  think “not so fast. Does the audience really need a 300-page PDF? Maybe they want web help or a quick
+  start guide instead.” In some cases, your manager will have done the legwork to know that users need
+  the long manual. But too often, technical writing projects are based on assumptions, rather than research,
+  about what users want and need.</p>
+
+  <p>User-centered design (often abbreviated as UCD) is a methodology and work process where you do not
+  make assumptions about what your audience or user needs (Lowdermilk; Norman). Instead, you “center”</p>
+
+  <p>1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>the user at the beginning of any design, product development, or writing project to make sure it
+  meets the needs of the person who will ultimately use it: the “end user.” This chapter will introduce
+  you to some examples of strong user-centered design and some guidance on how to center users in your
+  design and writing processes. We clarify how user-centered design differs from usability and end with
+  a case study that will inspire discussion and reflection on how you can use user-centered design principles
+  in the future.</p>
+
+  <p>What is user-centered design?</p>
+
+  <p>People want products, services, and documents that meet their needs and that they can easily use.
+  This sounds obvious. But designers and writers can lose sight of the people who will actually use their
+  products or documents (people we call “users” in this chapter) when the designers/writers are in the
+  middle of their work. There are many ways to create things that don’t help users. Entrepreneurs or tech
+  startups might create a really cool, slick, and technologically sophisticated product, only to discover
+  that few people actually need it. Designers and companies might get attached to a product feature that
+  users don’t want and struggle to give it up because they have put so much time and energy into developing
+  it. Designers might assume that users think like them, when instead users have totally different knowledge
+  and expectations. Writers might create user help documents or topics that follow a company template
+  instead of finding out how people actually use the help. None of these designers and writers are thinking
+  about what their users actually want and need.</p>
+
+  <p>The focus on creating products that users actually need and can actually use is called user-centered
+  design. A more formal and detailed definition of a related concept called “human-centred design” comes
+  from the ISO (International Organization for Standardization), which sets standards for businesses around
+  the world. According to ISO 9241-210: Human-Centred Design for Interactive Systems, “Human-centred design
+  is an approach to interactive systems development that aims to make systems usable and useful by focusing
+  on users, their needs, and requirements” (International Organization for Standardization vi). Notice
+  that this definition emphasizes that things should be usable and useful. That is, products and documents
+  should have good usability so users can easily and intuitively operate them (See Chapter 11 for more
+  information on usability). But products and documents should also be useful, allowing people to complete
+  tasks they actually need to complete. For instance, a website is usable if the menus allow users to
+  easily find information, and it is useful if it contains information users want in the first place.
+  User-centered design processes lead to useful products while usability testing leads to products that
+  lack frustration during use.</p>
+
+  <p>User-centered design applies to the creation of products, services, and documents. In user-centered
+  design, the needs of users take priority over the ideas and wishes of the designers, writers, and organization.
+  People practicing user-centered design often have to set aside their own plans and egos to make sure
+  that users come first. User-centered design starts with questions about users. Who are they? What do
+  they want? What are their goals for using this product or document? What problems do they have that
+  our product can solve? What experiences do they have with our product and similar products? What do
+  they like and not like about our products or documents? Successful user-centered design requires significant
+  knowledge about how users think, feel, and behave. It also takes a long-term perspective on users, considering
+  their needs and behavior before, during, and after their engagement with the product document. User-centered
+  design also considers users’ long-term relationships with products and documents. When you practice
+  user-centered design, you might have to sacrifice a pet project or a really innovative idea if it does
+  not meet the users’ needs.</p>
+
+  <p>User-centered design develops its perspective on users through a process that is iterative (that
+  is, the process repeats and continues in cycles until the product truly meets user needs). This iterative
+  process involves research and user input throughout design or writing (See Figure 13.1). The user-centered
+  design process should begin with research and engagement with users to find out what they want and need.
+  This research should lead to the development of product or business requirements that drive design decisions.
+  These requirements lead designers to create product prototypes, which usually start simple and get more
+  sophisticated as product development continues. As the business develops prototypes, it should test
+  them with users to make sure its designs are useful and usable. If user research and testing reveal
+  potential problems, designers should reevaluate and redesign to improve the product or document. Eventually,
+  the business will release the product, but even then, they should provide ways to get user feedback
+  through feedback forms or live tech support to make continuous upgrades and improvements based on user
+  needs.</p>
+
+  <h3>Figure 13.1: Iterative User-Centered Design Process</h3>
+
+  <p>Often, user-centered design gets referred to by related names, like “design thinking” or “user experience”
+  (UX). User-centered design can involve expertise from a variety of disciplines, including human-computer
+  interaction (HCI), psychology, human factors (the study of how people perform tasks), ergonomics (the
+  study of risk and discomfort during work), cognitive science, marketing, and technical communication.
+  User-centered design will also involve input from many different kinds of professionals, including programmers,
+  project managers, researchers, quality assurance professionals, graphic designers, sales people, and
+  customer support. Because technical writers serve as user advocates who constantly remind organizations
+  to consider and meet user needs, technical writers can be integrally involved in user-centered design.</p>
+
+  <p>Of course, to understand what users want, you have to engage with them in some way. A common acronym
+  in user-centered design is GOOB, which stands for “Get Out Of The Building!” You have to leave your
+  desk or workspace and find current or potential users so you can learn about them and let that knowledge
+  drive your design. You want to design specifically for your users instead of for a generic user or an
+  imagined user. Understanding users requires more than just knowing their demographics. For instance,
+  knowing that your users tend to be 30 to 40-year-old American mothers will not give you specific enough
+  information to design successfully for them, because you still do not know the goals, tasks, and emotions
+  of this group. Because each product is different, you cannot always apply insights from user research
+  about one product to another. For instance, PC and Mac users tend to be very different, even though
+  they both use laptops. Remember too that the user for a product or document is rarely “everyone.” Some
+  products, services, and documents have a very specific, narrow set of users with specialized goals or
+  technical knowledge, so you will need to really get to know them. Even extremely popular products and
+  documents with large user bases (like Facebook or TikTok and their associated user help) usually have
+  several subgroups of users with specific goals and purposes.</p>
+
+  <p>To truly design and write for your users, you need to learn at least the following things about them:</p>
+
+  <p>Goals: User goals matter most. What goal do users fulfill by using your product, service, or document?
+  If your product or document does not help users fulfill their goals, they won’t use it, simple as that.
+  And users rarely see using your product as an end goal. For instance, few users have the goal to use
+  TikTok. Instead, people use TikTok to achieve other goals, such as connecting with friends, building
+  their social status, having fun, or selling products. TikTok provides a tool for them to achieve these
+  goals. Similarly, few users have the goal of reading the white paper you wrote. Instead, that white
+  paper gives them knowledge they can use to achieve their actual goal.</p>
+
+  <p>Context of Use: Find out where and when people are using your product. They may use it in a noisy,
+  chaotic, or dangerous environment very different from the office or lab where it was designed. Products
+  must fit their environment. For instance, if people will use your technical instructions outside, you
+  will need to make them weather-proof. Also consider how often people use your product. Some products,
+  like cars and Instagram, get used every day and become second nature to users. Some products, such as
+  tax software or wedding registries, are used only in specific circumstances. And some products, such
+  as fire extinguishers or inflatable life rafts, are used only in emergencies. To design a product well,
+  you have to know where and when people will use it.</p>
+
+  <p>Emotions: Users come to products and documents with complex emotions, and they have complex emotions
+  about products and documents. Different user goals will likely arouse different emotions. People may
+  already be in a good mood when they get to use an Amazon gift card, and they may already be stressed
+  or worried when they have to complete an incident report at work. People are usually already annoyed
+  by the time they have to crack open a manual to solve their technical problem. A company’s products
+  and services may also elicit various emotions in users, like joy, relief, frustration, and anger. Part
+  of designing for people means designing for their emotions.</p>
+
+  <p>Vocabulary: Designers and users don’t always have the same vocabulary. When designing product interfaces
+  and writing instructions for users, you need to know the words that users prefer so you can speak to
+  them in their language. For instance, software developers may refer to errors by specific numbers or
+  jargon terms that will not make sense to users. A technical writer would need to find a term that will
+  work for the audience of a document.</p>
+
+  <p>Challenges: Users often face unnecessary challenges and frustrations when using products. Many of
+  us have had the experience of a website that requires too many clicks to complete a simple task or an
+  app that does not let you do a task you wish you could do. User-centered design professionals often
+  call these frustrations “pain points,” and by finding out where products cause users challenges, designers
+  can improve products to make them less frustrating. Users may face challenges due to the lack of a product
+  or document, and understanding these challenges can help you innovate new solutions. Users may also
+  experience challenges from their own situations. Some users may experience challenges based on differences
+  in ability, culture, language, or literacy. By knowing where your users struggle, you can create products
+  that best meet their needs and cause them the least amount of frustration.</p>
+
+  <p>Again, these seem like obvious considerations, but it is easy to lose sight of users, especially
+  in big, complex businesses where product development takes months or even years and involves hundreds
+  of people. User-centered design is challenging. Researching users takes time and resources that companies
+  might be reluctant to spend (even though it pays off to say “not so fast” in the long run). Not everyone
+  knows how to do user-centered design well. Further, when a company creates a product for millions or
+  billions of users, like Facebook or TikTok, the company needs to understand not just one user group
+  but many.</p>
+
+  <p>Despite these challenges, user-centered design has many benefits. Designing products and documents
+  that users actually want and like using increases their chances of success. User-centered design research
+  methods also help companies avoid the costly and time-wasting process of designing products and features
+  that people don’t want. Applying user-centered design processes to technical documentation can help
+  users better solve their problems with products and get more out of them, resulting in greater product
+  satisfaction and fewer returns. It’s no wonder that companies such as Microsoft, Apple, Facebook, Netflix,
+  Google, Disney, Sony, and many more emphasize user-centered design. Beyond chances for increased profits
+  and product success, user-centered design provides an ethical approach to product design that considers
+  users as people, enhancing their satisfaction, safety, and well-being. User-centered design can also
+  increase empathy for users within the organization.</p>
+
+  <p>To be truly ethical, however, user-centered design needs to consider the full range of product users.
+  Often, companies treat white, male, cisgender, and/or able-bodied users as representatives for everyone,
+  meaning their products do not actually meet the needs of all users. For instance, cameras are often
+  calibrated to highlight Caucasian skin, resulting in an inferior product for non-white users. Technical
+  instructions often rely on color for meaning without realizing that colorblind users struggle to distinguish
+  between some colors. And many webpages present problems for users with disabilities, such as vision
+  or hearing impairments (See Chapter 14 for more information on accessibility best practices). Accessible
+  design accounts for the range of physical, mental, and emotional abilities of the full spectrum of users
+  for a product, service, or written document (Dhoundiyal). Make sure your user-centered design process
+  is also inclusive enough to meet the needs of BIPOC, LGBTQ+, and intercultural users, among others.</p>
+
+  <p>How do you do user-centered design?</p>
+
+  <p>Now that we have covered what user-centered design is, let’s jump into how you can implement user-centered
+  design in your own projects. There are many opinions on how to successfully do user-centered design.
+  At the end of the day, however, the “right” way to do user-centered design depends on your organization
+  and specific user group. We encourage you to adopt any of the following methods that work within your
+  context. As long as you remember to “center the user” at all times and think “not so fast” when asked
+  to design/write something, you can’t go wrong. Here are some of the questions that you will need to
+  focus on during your initial user research (see Chapter 12 for more information on user experience research).</p>
+
+  <h3>Questions About Users</h3>
+
+  <p>The process begins by identifying central goals of the overall project (i.e., the item you are creating).
+  Determining what these goals are is a matter of answering certain user-centered questions in a particular
+  order.</p>
+
+  <p>Goals: Who is your user? Identify the audience for your document. Try to capture information about
+  them that goes beyond marketing or demographic categories. What are their needs and expectations? Make
+  sure not to overlook the full range of users. We don’t want a homogenous population. Context of Use:
+  Where is your user? Explore the context where your user is going to be using the product or document
+  that you create. Is it a noisy outdoor space with many distractions? Is it a quiet library room? Write
+  out the different tasks your user will need to complete.</p>
+
+  <p>Emotions are also an important aspect. Will the user be stressed or in crunch time while trying to
+  use your product?</p>
+
+  <p>Tasks: How is your user going to use the product or document? Make sure to GOOB (Get Out Of the Building)
+  and shadow your users. You will learn so much more by watching people work and picking up on subtle
+  things they do, both consciously and subconsciously. By watching people, you can learn the tasks they
+  need to accomplish and the specific ways that they get work done. Keep track of the language they are
+  using in the natural environment; this will be the foundation for the vocabulary you use in your document.
+  Monitor the user for any “pain points” or frustrations where they are unable to do a task the way they
+  expected. You may also see that users create workarounds and creative solutions to solve problems caused
+  by your product or document. Answering these questions involves using different approaches—or methods—for
+  collecting information on your users in the context where they would use the item you will create for
+  them.</p>
+
+  <h3>Methods</h3>
+
+  <p>Initial user research is accomplished using three types of methods. The first method, contextual
+  inquiry, involves visiting users where they will be using the product or service to gain first-hand
+  experience. This method involves shadowing your users and even actively participating in their activity
+  or “workflow” to deeply understand the process. For example, if you wanted to build an umbrella with
+  a portable coffee maker described in scenario 1 of the introduction, you need to find your potential
+  users and see how they handle their daily caffeine fix and weather mitigation. Only by going to the
+  field, in this case their workplace or an outdoor park, can you directly see how they enjoy their coffee.
+  By doing direct observation, you will probably find that the need to keep an umbrella directly overhead
+  or held upside down by the handle when not in use makes it a poor candidate for doubling as a coffee
+  maker.</p>
+
+  <p>The second method involves conducting surveys of your target user group. The questionnaire should
+  have a mixture of closed ended questions (for standard comparisons across the group) and open-ended
+  questions (for rich detail about problem areas). Surveys are helpful when you are unable to travel to
+  see your users in person or you want to get input from a larger group of users (more than 20). Let’s
+  look at how this applies to scenario 2 where the dog sitting company wants to add a restaurant delivery
+  service with food catered to dogs. While contextual inquiry may get you a few very passionate dog lovers,
+  surveying your user group will reveal if this service is something that would be valuable for most dog
+  owners of the app. Closed ended questions, like “How often have you wanted food delivery for your dog?
+  Answer: Never, Sometimes, Often, Always,” and open-ended questions, like “Do you have any concerns about
+  your dog’s current nutrition?” will show if implementing this service is a good idea.</p>
+
+  <p>The final user research method involves conducting interviews with individuals or hosting focus groups
+  of users. The participants answer a series of open-ended questions designed to get their attitudes and
+  opinions on a product or service. Interviews are useful for testing assumptions about what the product
+  should even be or engaging users when it is not possible to visit them on site. For scenario 3, where
+  you are asked to write a 300-page user manual, it could be valuable to bring users to your company where
+  managers can directly observe the focus group and hear the truth: web help or a quick start guide work
+  better for the user experience than a 300-page treatise. Interviews and focus groups can be very convincing
+  proof that supports a wiser and more strategic approach to design and writing. One way to understand
+  how all of these different elements come together and are used would be to examine an instance, or a
+  case, involving such practices.</p>
+
+  <p>Case Study: See it! Click it! Fix it!</p>
+
+  <p>The following case study uses a service provider for municipal governments to illustrate the previous
+  aspects of user-centered design principles and methods. “See It! Click It! Fix It!” or “SeeClickFix”
+  was founded in 2009 as a non-emergency communication service between citizens and their local government
+  (See https://seeclickfix.com). There are multiple ways for citizens to submit issues to their local
+  government, including a webpage, smart phone application, or direct phone number. To submit their service
+  request, local citizens chose one of these three options. Once they are connected, they verify their
+  location, then select from a preset list of potential issues. If they are reporting using the website
+  or application, they can also include a photo of the issue, title, and brief description. After the
+  details are provided, the request is submitted to an internal system that routes the request to the
+  appropriate local department (such as the Mayor’s office or Sanitation). The department then “acknowledges,”
+  “opens,” “comments,” and “closes” the request. The multitude of ways that citizens are empowered to
+  communicate with their local government on SeeClickFix showcases user-centered design principles. The
+  company takes a user-centered design approach in several additional ways through localization (the customization
+  of a product or service to a specific location).</p>
+
+  <p>First, SeeClickFix customizes their service for each city that uses the product. Customization includes
+  branding, with things like the city logo, icons, and color schemes (See Figure 13.2). Branding creates
+  a sense of identity and trust between the local citizens and their government, likely leading to more
+  positive emotions about the product.</p>
+
+  <p>A second user-centered design principle exhibited in the customization of the SeeClickFix applications
+  is the inclusion of request categories that match the location. Sioux Falls, for example, has lots of
+  snow fall so their service requests reflect that reality with a “Snow Alert Information” category. St.
+  Petersburg, on the other hand, experiences strong tropical storms, so their categories include “Hurricane
+  Center” and “Evacuation Zones.” The product considers the user’s context of use. Having categories that
+  match each location makes it easier for users to find their specific issue, but beyond that it makes
+  the application useful as a communication tool. If users from Sioux Falls, SD logged onto the application
+  and saw hurricane-related requests, they would think “this tool was not designed for me.” Each town
+  has categories that match their citizen’s needs, wants, and desires.</p>
+
+  <p>Figure 13.2: Customization for St. Petersburg, Florida, Huntsville, Alabama, and Sioux Falls, South
+  Dakota on the SeeClickFix App. Source: Google Play. Accessed June 29, 2021.</p>
+
+  <p>SeeClickFix began as a product designed to meet a user need. Founder Ben Berkowitz created the product
+  after his own frustrating experience getting graffiti removed in his neighborhood (Berkowitz &amp; Gagnon),
+  and the product retains that focus on helping users. Users can review the service and application directly
+  in Google Play or the Apple Store. Based on these reviews, the SeeClickFix blog shares how they have
+  updated their application.2 For instance, in 2017 the product improved its color accessibility for the
+  “7% of men and .4% of women” who “have difficulty distinguishing red from green” (Severson). SeeClickFix
+  has also conducted user testing to “improve the functionality and SeeClickFix experience for all future
+  iOS users” (Artsem). The web version updated its help centers in 2021 to improve usability and allow
+  users to more quickly access information (“Changes to the CivicPlus help centers”). In this way, the
+  product and services are focused on user needs, accessibility, and ease of use, making this an interesting
+  case of user-centered design principles in action.</p>
+
+  <h3>Conclusion</h3>
+
+  <p>User-centered design can help avoid assumptions about what audiences need and help avoid creating
+  products, such as documents, websites, infographics, etc., that individuals cannot use. By placing the
+  user of a product at the center of the design process, user-centered design makes the processes of design,
+  product development, or writing documents more effective and more successful. The ideas presented in
+  this chapter introduced you to the core concepts and practices of user-centered design. By applying
+  these ideas, you can gain a better understanding of your audience and create documents, designs, and
+  even technologies they can more successfully use.</p>
+
+  <h3>Works Cited</h3>
+
+  <p>“Poor Use of SeeClickFix Input.” SeeClickFix Issues, 14 Mar. 2018, https://seeclickfix.com/issues/4236008-poor-use-of-seeclickfix-input.</p>
+
+  <p>Berkowitz, Ben, and Gagnon, Jean-Paul. “SeeClickFix Empowers Citizens by Connecting Them to Their
+  Local Governments.” Democratic Theory, vol. 4, no. 1, Jan. 2017, pp. 121-124.</p>
+
+  <p>“Changes to the CivicPlus Help Centers Coming Soon.” See Click Fix Getting Started and FAQs, 2022.
+  https://www.seeclickfixusers.civicplus.help/hc/en-us/ articles/360061732054-Changes-to-the-CivicPlus-Help-Centers-Coming-Soon-.</p>
+
+  <p>2  Since the time of writing, SeeClickFix has been updated by its parent company CivicPlus, and this
+  blog is no longer available.</p>
+
+  <p>Dhoundiyal, Neha. “Inclusive Design: An Overview of Current Thinking.” UX Matters, 26 Aug. 2019.
+  https://www.uxmatters.com/mt/archives/2019/08/ inclusive-design-an-overview-of-current-thinking.php.</p>
+
+  <p>International Organization for Standardization. Ergonomics of Human-System Interaction—Part 210:
+  Human-Centred Design for Interactive Systems, July 2019. https://www.iso.org/committee/53372.html.</p>
+
+  <p>Lowdermilk, Travis. User Centered Design. O’Reilly Media, 2013. Norman, Donald A. The Design of Everyday
+  Things: Revised and Expanded. Basic</p>
+
+  <p>Books, 2013. Severson, Tucker. “Improving Color Accessibility in SeeClickFix.” Medium Product Blog,
+  17 Nov. 2017. https://blog.seeclickfix.com/ improving-color-accessibility-in-seeclickfix.</p>
+
+  <h3>Figure Sources</h3>
+
+  <p>City of Sioux Falls. https://play.google.com/store/apps/details?id=org.cityofsiouxfalls.seeclickfix.
+  Accessed June 29, 2021.</p>
+
+  <p>Huntsville Connect. https://play.google.com/store/apps/details?id=com.seeclickfix.huntsvilleconnect.app.
+  Accessed June 29, 2021.</p>
+
+  <p>SeeClickFix St. Pete. https://play.google.com/store/apps/details?id=com.seeclickfix.seeclickfixstpete.app
+  . Accessed June 29, 2021.</p>
+
+  <p>Teacher Resources</p>
+
+  <p>Overview and Teaching Strategies</p>
+
+  <p>User-centered design helps people create better products and technical documents. Starting product
+  designs and the writing process with a focus on users helps ensure that you will meet their needs with
+  your finished product. Consider these ideas when implementing user-centered design:</p>
+
+  <ul><li>Prioritize the needs of users over the ideas of the designer or writer. • Learn information
+  about user goals, context of use, emotions, vocabulary, and challenges. • Conduct user research using
+  methods like contextual inquiry, interviews, focus groups, and surveys to learn about your users. •
+  Remember that user-centered design is an iterative process that involves users from the beginning of
+  design and throughout the design process.</li></ul>
+
+  <p>While user-centered design research can be complex and time-consuming, students can take on basic
+  user-centered design projects and processes in the technical writing classroom. For instance, they may
+  conduct interviews or a short survey about why users need a particular document that they are assigned
+  to write. They might observe users complete work using a technical document (or without one, to find
+  out how a document might help users complete their tasks). They might complete iterative document design
+  projects that involve bringing in potential users at several stages of the writing process to help guide
+  revision. Additionally, students might conduct user research and write a report about their findings
+  as a written deliverable in the class.</p>
+
+  <h3>Discussion Questions</h3>
+
+  <p>These discussion questions are designed to accompany the SeeClickFix case study presented earlier.</p>
+
+  <p>1. Using the SeeClickFix website, try and find a version of the application that is close to your
+  hometown. Based on the branding and available categories, do you think the SeeClickFix team has used
+  user-centered design principles while localizing their service for this community?</p>
+
+  <p>2. Thinking about this local community, who are the target user groups of the SeeClickFix system?
+  Make sure not to overlook anyone!</p>
+
+  <p>3. As a group, think of a product or service that you are all familiar with. If you were tasked with
+  creating a list of potential user issues for this product or service, which user-centered design methods
+  would you use?</p>'

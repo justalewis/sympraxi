@@ -1,0 +1,530 @@
+id: ws6-social-media-as-a-space-for-today
+title: Social Media as a Space for Today’s Technical Communication Work
+author: Clinton R. Lanier
+source_title: 'Technical Writing Spaces: Readings on Writing, Volume 6'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-6/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Clinton R. Lanier in Technical Writing Spaces: Readings on Writing, Volume 6, for
+  student writers, titled “Social Media as a Space for Today’s Technical Communication Work.”'
+topics:
+  concern:
+  - genre:multimodal
+whole: true
+changes: none
+body: '<p>for Today’s Technical</p>
+
+  <p>Communication Work</p>
+
+  <p>Clinton R. Lanier</p>
+
+  <p>The way we communicate has dramatically changed over the past two decades.1 Not long ago a college
+  student might have taken a break between classes by reading a magazine or talking to friends. Today,
+  when 99% of college students own smartphones (Seilhamer et al.), they might instead view the latest
+  posts on Instagram or TikTok, and they would not be alone in their browsing. In fact, according to a
+  study by Pew Research, 72% of adults in the U.S. are active social media users. With so many people
+  using Facebook, Snapchat, and other social media networks, it is no wonder that they are also being
+  used for less “social” communication as well (see, for example, Bowden and Charles-Smith et al.). Even
+  the field of technical communication has found a way to use social media, and that is what this chapter
+  is going to focus on.</p>
+
+  <p>Understanding how technical communication and social media relate is an important topic according
+  to past research. In one study, technical writers were asked what the most important trends or technologies
+  were for the field of technical communication. One of the common answers was “social media,” and specifically
+  Facebook, Twitter (the platform now knows as X), Instagram, and YouTube (Lanier). In another study,
+  researchers looked at job postings for technical communicators to understand the types of jobs they
+  were getting and what skills they needed for them. One of the biggest job sectors was in “social media
+  writing,” and one of the skills required for many of the technical writing jobs included an understanding
+  of social media (Brumberger and Lauer).</p>
+
+  <p>This chapter highlights the relationship between social media and technical communication. First,
+  we will define social media so that we have a</p>
+
+  <p>1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>better understanding of what we mean when talk about it. Then we will cover some of the main ways
+  in which social media is used by technical communicators, looking at examples of each used in the real
+  world to help technical writers perform their jobs. By the end of the chapter, you will understand what
+  tasks you may use social media for in the workplace, and how those tasks are performed.</p>
+
+  <p>What is Social Media?</p>
+
+  <p>When people hear the term “social media” they often think of the platforms we use to connect to friends
+  and family, like Facebook, Instagram, and YouTube. But social media means more than that. In this section
+  we want to try to better understand the meaning of the term social media, so that we can better talk
+  about it in relation to technical communication.</p>
+
+  <p>One of the best definitions of social media comes from an article by Carr and Hayes, which states:</p>
+
+  <p>Social media are internet-based channels that allow users to opportunistically interact and selectively
+  self-present, either in real-time or asynchronously, with both broad and narrow audiences who derive
+  value from user-generated content and the perception of interaction with others. (Carr and Hayes)</p>
+
+  <p>The definition does not name any specific platform, but instead focuses on the functions they have
+  in common and what users do on them. First, these platforms allow users to share content of all kinds,
+  like text-based messages, images, and videos. This content is considered “user-generated,” meaning that
+  the social media users are responsible for creating and distributing it. The opposite might be “corporation-generated,”
+  content that is made by a newspaper or publishing company. This is an important distinction because
+  it means that users can create and distribute whatever content they would like without having to ask
+  permission to post it. It also means the content we receive from social media channels can come from
+  almost anywhere and be created by almost anyone—creating concerns on how accurate and credible information
+  might be.</p>
+
+  <p>Social media also allows users to define the audience with whom they share their content, and that
+  audience can be as large or as small as they choose (based on the settings of the user). A typical website,
+  on the contrary, is either public or private, with no in-between. If you were to put something on a
+  webpage, you have little control over who sees it. It might be seen by people who are not your target
+  audience, or people who you would rather not see it.</p>
+
+  <p>People can also interact with each other and the information shared through social media. They can
+  ask questions, argue, give feedback, or provide corrections. And they can do this instantly in real
+  time, as Facebook Messenger demonstrates, or sometime in the future, like days, months, or even years
+  later (e.g., responding to or forwarding a Tweet that went out weeks ago). Conversely, digital media
+  platforms like webpages have little ability to provide interactions, and any they do provide (like comments
+  after an article on a page), are limited to asynchronous (i.e., time delayed) interaction with no ability
+  to have real-time conversations. Still other platforms, like forums, are great at interactivity, but
+  fall well short of social media’s ability to feature multi-media (like images or videos), or to broadcast
+  messages (like questions or information) to networks.</p>
+
+  <p>So social media is more than the platforms we use, it is what they allow us to do that makes them
+  social media, and what they allow us to do is communicate in ways that were not possible even two decades
+  ago. And while certain platforms specialize in certain types of media (for example, YouTube specializes
+  in videos and Instagram specializes in images), they all share the same features in common. It is these
+  features that technical writers can harness to create better information products for end users. The
+  next section discusses how social media is being used in technical communication, and expands on the
+  idea that through these platforms, technical communicators can do their jobs even better.</p>
+
+  <p>How is Social Media Used in TC?</p>
+
+  <p>Now that we have defined social media, we will turn to understanding how it is being used every day
+  in technical communication. While this section cannot cover every major way in which it is used, it
+  will cover some of the more important areas where social media can help technical writers create better
+  information products for users.</p>
+
+  <h3>Documentation Distribution</h3>
+
+  <p>When people think of technical communication, one of the first things that might come to mind is
+  technical documentation. In this case, documentation means information that teaches or explains to readers
+  how to use or do something. Examples of the kinds of documentation you, as a technical writer, might
+  create include instruction manuals, how-to guides, and reference books. Technical writers have been
+  creating such technical documents for decades and, in fact, the technical communication profession itself
+  was formed to better study and create such products. These documents were the stock-in-trade of the
+  technical writer, who worked diligently for years to help people better understand how to use their
+  technology product, be it a small software application or a military jet fighter.</p>
+
+  <p>For half a century this work was carried out first on typewriters and then on computers. The technical
+  documentation—the instruction manuals and guides—were always intended to be printed. Sometimes the instructions
+  were little more than a single sheet of paper, folded up and included with the packaging of a product
+  (which you can still find today with many small or simple products), and other times they were thick
+  books, bound together on pages with color illustrations. The point is, these information products (as
+  items that technical communicators make are often called) were always printed out, always delivered
+  with a specific product, and always meant to be held in the hands of the user.</p>
+
+  <p>But over the past two decades, technology has dramatically changed how these staples of technical
+  communication are made and delivered. Not only have specialized software programs helped technical writers
+  create information products more quickly and easily, but they have also transformed the way people read
+  and use them, and little has transformed them more than social media. While printed documentation will
+  always have a place in technical communication, more and more instructions and “documentation” are being
+  produced via video, which is then distributed through different platforms, most especially through YouTube.</p>
+
+  <p>YouTube is the second most popular social media platform in the United States (behind Facebook) and
+  the most popular video streaming platform in the world. According to the company’s own statistics, over
+  1 billion hours of video are watched every day (YouTube for Press). And while many of those are fun
+  and entertaining, a good number of them are also videos that provide instruction to users. In fact,
+  there really is not a process or procedure you can think of, whether it is building a model airplane
+  or flying a real one, that does not already have at least a handful of videos on YouTube to tell you
+  how to do it.</p>
+
+  <p>And that goes for very complicated, very technical products as well. Tutorials and guides for using
+  complex technology are often uploaded to YouTube by their manufacturers. Adobe, one of the largest technology
+  companies in the world and maker of applications like the Portable</p>
+
+  <p>Document Format (PDF), Flash, and Photoshop, created dedicated YouTube channels to help users better
+  understand their products.</p>
+
+  <p>The Adobe-run channel, Adobe Photoshop, features hundreds of videos explaining the intricacies of
+  their popular graphic editing software. Photoshop is an extremely sophisticated application with a wealth
+  of features and functions. Each feature has multiple settings and can be combined with other features,
+  each with their own sets of modifications and changes. The result is a computer program with thousands
+  of potential ways to be used. Imagine designing a user’s manual for that? Adobe embraced social media
+  because they knew that if their users wanted to understand how to truly use their product, they had
+  to move instruction from books to videos, and YouTube allowed them to share those videos with millions
+  (though they also publish numerous books and online articles to help their users as well).</p>
+
+  <p>It is not just large companies using YouTube to provide technical documentation, small companies
+  use it too. GeoInsight makes a single product used for obtaining water samples for environmental testing.
+  Though the device is relatively simple, it comes in different designs and there are a number of ways
+  to use it. While the company keeps sets of written documentation that can be downloaded from its website,
+  it also created a channel on YouTube called Hydrasleeve to host how-to videos, demonstrations, and studies.
+  It serves a very small population of users, but it provides a different method through which the company
+  can give those users the information they want.</p>
+
+  <p>Past studies have shown that there are right and wrong ways to create technical videos for YouTube.
+  Instructional videos should take the time to introduce topics and tell the users what they will be able
+  to do by watching. They should also demonstrate content and both explain and perform the steps (instead
+  of merely performing them) (Swartz). While performing the process or steps, the videos should have a
+  high production quality and use static images as well as video and include textual messages to reinforce
+  the images. Finally, they should have background music but less background noise, and include a fast
+  speaking rate (Hove and van der Meij).</p>
+
+  <p>The use of videos, through social media platforms like YouTube, will surely increase as internet
+  speeds become even faster and more people carry devices on which to watch them. They are a convenient
+  and effective way of supporting users of technology.</p>
+
+  <h3>Audience Analysis</h3>
+
+  <p>Social media is also really useful for understanding an audience. Though technical communication
+  is best known for the products it creates, like instruction manuals or how-to videos, much of a technical
+  communicator’s time is spent in the planning process. And within that process, one of the most important
+  stages is understanding the people who will actually be reading the instructions or watching the videos.
+  Without this knowledge, technical communicators may have no idea what or how much information their
+  readers actually need. If a product’s documentation does not match a reader’s expectations, there could
+  be some very negative results, like bad product reviews or a loss in sales. To make sure that the information
+  they are providing is actually the information the readers need, and to also make sure they are giving
+  the information in the right way, technical communicators will study their audience through a method
+  often referred to as an “audience analysis.”</p>
+
+  <p>Audience analyses may be carried out in a number of different ways, but they all have the same goal:
+  to understand the document’s readers (Ross). Among the many aspects about the audience that technical
+  communicators want to know include how much the readers already know about the product or technology
+  and what they use that product or technology for and how, where the readers are from and what their
+  primary language is, and what their ages are and how they learn new information. These characteristics
+  and many more are all combined so that technical communicators can build a comprehensive picture of
+  what the reader looks like, which is often called an “audience persona.” This audience persona is an
+  imagined person (or people, as technical communicators may build 5-7 or more of them) that represents
+  the reader of the documents being created (Lam and Hannah). This helps the technical communicator understand
+  exactly what information should be included in the manuals and how it should be presented.</p>
+
+  <p>Conducting audience analyses and creating personas used to be very difficult, time consuming, and
+  expensive (Hovde). Technical communicators had to use methods like surveys, interviews, and focus groups
+  to find out information about their readers. Researchers would send paper-based surveys in the mail
+  or through email, both asking customers about themselves. Unfortunately, this method requires you to
+  already know who your readers are before you conduct the research. Another problem is that rarely do
+  people respond to surveys. In fact, surveys by mail usually only receive about a 50% response rate (Keeter
+  et al.), while email surveys only get about a 24.8% response (Fluidsurveys). Interviews and focus groups
+  present challenges because they require participants to give up their time and provide a lot of information
+  that they might not feel comfortable giving to strangers.</p>
+
+  <p>Social media, though, makes the process of finding out about an audience far more convenient (Humphrey).
+  Platforms like Facebook, Twitter (X), and Instagram help technical writers better understand their product’s
+  customers, and can help writers identify important characteristics about them, like where they live,
+  how old they are, whether they have pets, and even what events or news stories they are following or
+  interested in. Information like this and more helps the writer then draft documentation or make videos
+  that better fit the audience, whether by informing writers to use examples and metaphors better understood
+  by people of a certain age, or to use images and colors that are more culturally appropriate. It is
+  not that this information could not be attained without social media, it is that social media makes
+  the process of information gathering much easier.</p>
+
+  <p>Twitter (X) and Instagram, because they allow people to see what their users post (as long as their
+  profiles are marked ‘public’), can help technical writers build audience personas based on what their
+  readers are talking about (Humphrey). Perhaps the easiest method of using them is by conducting a simple
+  search for certain keywords. For example, if a technical communicator was designing an instruction manual
+  for a SQL database, they might conduct a keyword search for “SQL” or “SQL database.” From the search
+  they might see dozens or even hundreds of users who have posts containing the word, “SQL.” The list
+  of posts derived from this search could then be narrowed down to the most relevant posts (maybe people
+  talking about using SQL databases). Finally, from that list, technical communicators can look at the
+  profiles of the people who posted them and gain important insights about them, like where they live
+  and what they do. From all this information, a full picture of the potential audience for an instruction
+  manual for a SQL database can be formed, and accurate reader personas can be created.</p>
+
+  <p>Facebook provides even more insight about its users, which can also really help technical communicators
+  get to know their own audiences. The first step, as in the case of Twitter (X) and Instagram, is to
+  find the relevant users of the products the technical writer is writing about (Humphrey). Because Facebook
+  includes among its features Pages and Groups for users interested in specific interests, technical writers
+  may need only to find the Pages or Groups related to what they are writing about, and then begin gathering
+  information about the group members and people who like the pages. As in the case of Twitter (X) and
+  Instagram, details like where people live or what they do can be easily found (depending on the users’
+  privacy settings), but Facebook can provide much more than that. An audience analysis using Facebook
+  as a source might also tell us where people work, what education level they have reached, what their
+  primary languages may be, and even whether or not they like dogs (though that may not always be relevant).</p>
+
+  <p>Now, understandably, some might feel a bit creepy looking at all of these users and collecting their
+  information. If that is the case, then these platforms also permit other great ways of conducting reader
+  research. All three of them allow the creating and posting of polls, so technical writers can ask users
+  questions about themselves. These polls can either be included as page posts (or Instagram posts or
+  a tweet on Twitter (X)), or as advertisements to platform-users who have been identified as potential
+  audience members. Whatever method is chosen, all of the information helps technical communicators create
+  better information products that will be more effective and helpful for the readers.</p>
+
+  <h3>Reader Feedback</h3>
+
+  <p>It is sometimes very difficult to understand whether the information products that technical communicators
+  create are actually effective or not. Is the information in them correct? Is it easy to understand?
+  Does it actually help the readers accomplish their tasks? Aside from conducting a thorough analysis
+  of the audience, as explained in the previous section, how can we find out this information? The easiest
+  way is to get feedback from the readers themselves (Kahn). If we know, for example, that certain steps
+  in an instruction manual are confusing, then we can fix them for the next readers. But unfortunately,
+  getting that information is not at all easy.</p>
+
+  <p>Years ago, the only method for getting reader feedback was by phone or email. At the back of most
+  any manual would be found an email address where people could send general inquiries about anything
+  relating to the product, like questions about defects or the product’s use. This email address was also
+  where readers could provide feedback about the documentation itself. Once someone sent an email, that
+  feedback would eventually find its way to the technical writers who created the manual, but it could
+  take some time for this to happen (feedback was rarely, if ever, immediate). And if the technical writers
+  needed to clarify the information received, they would have to email the reader back, hoping that the
+  person would then expand on their previous comments. Ultimately, getting information from readers that
+  provided insight about documentation was difficult to do, and so it was rarely pursued.</p>
+
+  <p>Today, however, getting readers to provide information about products or technical documentation
+  is far easier thanks to social media (Astoria Software). Social media platforms, especially Facebook,
+  Twitter (X), and</p>
+
+  <p>LinkedIn, allow technical writing teams to gather feedback from individual readers or whole audiences.
+  If the company or product has its own social media channels—like a Facebook Page or Twitter (X) profile—then
+  these can easily be used to request this type of feedback. A post could simply ask readers about their
+  impressions about the product’s documentation, interface, or support system, and then note the responses
+  that follow (Kahn). The amount of feedback received will no doubt vary based on how many Twitter (X)
+  followers or Page Likes there are, but even a minimal amount of feedback can alert technical writers
+  to issues or problems with their information products that they had not seen themselves.</p>
+
+  <p>Perhaps just as important is the ability of technical writers to more quickly communicate with the
+  readers that actually provide the feedback. In the past, it could take days or maybe weeks for the comments
+  from readers to reach the desks of the technical writers the comments were meant for. But now, the information,
+  comments, or questions that readers post to social media platforms can be responded to instantly (Carr).
+  Technical communicators can ask follow-up questions to clarify or otherwise get a better sense of the
+  readers’ concerns. They can also, in turn, address the issue the reader communicated about, and then
+  send it to the reader to make sure the problem that was identified was actually fixed. This type of
+  rapid, back and forth feedback can help advance the usability of a product’s documentation immensely,
+  because if a single reader has a problem with the information, then there is a good chance other readers
+  will have that problem too.</p>
+
+  <p>In addition to gathering unsolicited feedback from readers, technical communicators can also use
+  these same social media platforms to test out new information products and request information about
+  them (Gearhart). For example, a technical writing group can create a post that features a new software
+  interface on the product’s Facebook Page, and then ask the product’s users what they think of it. Is
+  the interface better or worse than the old one? Is the information on it easy to find or is it cluttered
+  and confusing? The information they receive can help the writers make changes to the interface (or instruction
+  manual, etc.), and create a better product. This type of usability testing always existed, but it is
+  much easier to carry out now because of the reach of social media platforms.</p>
+
+  <p>In the previously noted case, the social media platforms’ advertising ability would also be very
+  convenient. If a product did not have a large social media following, but the product’s writers still
+  wanted to gather feedback about the documentation, interface or other information product, they can
+  create advertisements that would reach the right people. Using strategies from the second section (conducting
+  an audience analysis), advertisements could be aimed at the right type of social media user, people
+  who might use the product being designed. Though this method costs money, it is still a much easier,
+  and potentially far less expensive, manner of gaining insight into the effectiveness of the documentation
+  being written.</p>
+
+  <h3>Tips for Using Social Media in TC</h3>
+
+  <p>This section provides some tips for actually using social media to carry out technical communication.
+  This is not at all as easy as you might think. As with communicating through any other media, there
+  are a lot of things to consider before you begin creating a Facebook post or YouTube video. Three specific
+  questions to ask are: When should social media be used instead of other media? What platform might be
+  best to use? How should technical information be presented on them? The following discussions will try
+  to answer these questions in turn.</p>
+
+  <p>When should social media be used?</p>
+
+  <p>Where technical writing is concerned, what you use to communicate to an audience will depend on the
+  context of the writing situation. If your audience is working in a circumstance where they will not
+  have access to the internet, then perhaps the information they need is best communicated offline, as
+  in a traditional hard copy manual. But if you are sure they will have access to the internet and the
+  ability to stream multi-media, then making information available through social media becomes an option.</p>
+
+  <p>Another item to consider is the amount of technical information to be communicated. Social media
+  does not lend itself to large amounts of information with multiple sections, reference items or explanations.
+  According to research conducted by the software company, TechSmith Corporation, 52% of YouTube viewers
+  prefer instructional videos no longer than 6 minutes (TechSmith). And while both Facebook and LinkedIn
+  allow users to write longer posts, they have no way to maneuver or navigate within them (like linked
+  tables of contents or ways to jump to different subjects), forcing readers to scroll down and scan for
+  information needed. Finally, does your audience actually use social media? Each social media platform
+  has specific audience demographics that are easy to identify (for example, see Chen), and if the audience
+  you are trying to reach does not fall into a group using the platform you are considering, then you
+  should find another way to reach them, maybe one that does not even include social media.</p>
+
+  <p>What platform would be best to use?</p>
+
+  <p>Again, the platform you use to communicate to audiences or use to research your audience or gain
+  feedback will depend on your goals and audience. If you hope to conduct research about your readers
+  to create better documentation for them, then using a platform that allows you to conduct such research
+  would be ideal. Platforms like Twitter (X) or Instagram let you see details about users if their accounts
+  are public, whereas Facebook and LinkedIn may not provide any details at all. However, if you hope to
+  share detailed information with those readers, then you want to choose a platform that allows you to
+  provide longer forms of information, like Facebook, LinkedIn, and YouTube.</p>
+
+  <p>Likewise, if your goal is to share multi-media, like an instructional video, then choose those platforms
+  that allow you to distribute that type of media, especially YouTube, which was designed to broadcast
+  video. Conversely, while YouTube is perhaps the best at distributing videos, it is far less effective
+  at communicating directly to audiences. It does have a commenting feature, but the near real-time ability
+  to converse with customers or product users that Twitter (X) or Facebook offer is much better. So, before
+  deciding which platform to use, try to understand what you want to achieve and who you are trying to
+  communicate with, and then let that information guide your decision.</p>
+
+  <p>How should information be presented?</p>
+
+  <p>Finally, you need to understand how best to present information on these various platforms. Because
+  each one is so different, there are different methods and best practices for each, and so a full accounting
+  of how to do it is out of the scope of this chapter. But there are some general rules that can be followed
+  which may help, the most important might be to remember that the information should be brief, professional,
+  interactive, and multi-media. First, remember that social media is not the best platform for long form
+  information (like an installation guide with hundreds of steps). Instead, present information that can
+  be shared in small “bites,” like quick tutorials, explanations, or topics. Alternatively, you can use
+  the post to direct readers to longer forms of information if needed.</p>
+
+  <p>Also, ensure that your posts are professionally written. Grammar, spelling, tone, and voice should
+  all reflect the same level expected in other forms of a product’s documentation. The type of casual
+  language (not to mention emoticons or funny memes and gifs) you might use when posting on your personal
+  accounts for friends or family to see would be out of place when presenting the sort of precise information
+  technical writers are expected to relay. An attempt to be entertaining could distract from an important
+  message needed by your readers.</p>
+
+  <p>Next, understand that information on social media platforms is interactive. Readers can ask questions
+  about it, comment on it, rate and review it, share it, and copy and change it. Unlike a PDF instruction
+  manual that might be posted on a company’s website and then forgotten about, the information on social
+  media platforms could continue “living” for ages afterwards. So, be sure to respond to the interactions;
+  to the questions, comments, ratings, reviews, and changes. Finally, take advantage of the abilities
+  of the platform you use. Each of them allows you to share multi-media, which may make it easier for
+  an audience to understand the information presented. Things like animated GIFS, videos, and different
+  types of images can be easily integrated into posts and tweets, so find opportunities to use them for
+  your audience.</p>
+
+  <h3>Conclusion</h3>
+
+  <p>Social media is certainly not a passing fad. Though the specific platforms may come and go, there
+  will most likely always be apps that allow people to connect to each other to share content (a very
+  basic, but still very relevant, definition of social media). Some of the biggest platforms continue
+  to remain popular among all age groups and demographics, especially Facebook and YouTube, two of the
+  oldest. And as they continue to be used by so many people, they will also continue to be an excellent
+  space for technical communicators to carry out their work. Simply put, technical communicators go where
+  their audience is. If their audience prefers printed manuals, then that is what writers will make for
+  them. At the moment, much of the audience is spending their time on Facebook, Instagram, Twitter (X),
+  and YouTube, and so harnessing those technologies for technical communication makes a lot of sense.</p>
+
+  <p>“Documentation” is being redefined as technical writers use social media to distribute content, especially
+  video-based content. Gone are the days when someone who purchased software had to rely on a dusty manual
+  to learn about it. Now, quick video tutorials about products and their processes, uploaded by the organizations
+  that made the products, are becoming increasingly common, giving audiences new modes for learning. Much
+  of this content is being designed and produced by technical communicators.</p>
+
+  <p>The relationship between the audience and the technical writer is also changing thanks to social
+  media. It is easier to find out and understand who their readers are now. With a simple search on Facebook
+  or elsewhere, technical communicators can construct a comprehensive picture about who their audience
+  is, what kind of information they need, and how best to present that information.</p>
+
+  <p>Finally, social media platforms are placing technical writers and their readers into a much more
+  collaborative relationship. While once they were separated by time and space, and the only way for a
+  reader to contact a writer was through a vague email address at the back of a manual, they can now converse
+  with each other through multiple platforms, like Twitter (X) or Facebook. Readers can point out issues
+  or ask questions about the process of using a product, and technical communicators can ask for feedback
+  about everything from new interfaces to a set of instructions. This exchange of information could lead
+  to better information products that benefit all of its users, not just those the technical writer has
+  been talking to.</p>
+
+  <p>The list of ways that social media is changing and helping technical communication is by no means
+  exhaustive, there have been a wealth of studies that show how social media platforms are being used
+  in technical communication in many different ways. And as time passes and more features and functions
+  are added to social media platforms, there is no doubt that they will be found useful in even more ways.
+  And the technical writers of the near future will need to be well versed in using social media, not
+  just for keeping in touch with their friends and family, but for carrying out technical communication
+  as well.</p>
+
+  <h3>Works Cited</h3>
+
+  <p>Bowden, Melody A. “Tweeting an Ethos: Emergency Messaging, Social Media, and Teaching Technical Communication.”
+  Technical Communication Quarterly, vol. 23, no. 1, 2014, pp. 35-54.</p>
+
+  <p>Brumberger, Eva and Claire Lauer. “The Evolution of Technical Communication: An Analysis of Industry
+  Job Postings.” Technical Communication, vol. 62, no. 4, 2015, pp. 224-243.</p>
+
+  <p>Carr, Caleb T. and Rebecca A. Hayes. “Social Media: Defining, Developing, and Divining.” Atlantic
+  Journal of Communication, vol. 23, no. 1, 2015, pp. 46-65.</p>
+
+  <p>Carr, David F. “How Social Media Changes Technical Communication.” InformationWeek, 2012, http://www.informationweek.com/
+  how-social-media-changes-technical-communication/d/d-id/1102043?</p>
+
+  <p>Charles-Smith, Lauren E., et al. “Using Social Media for Actionable Disease Surveillance and Outbreak
+  Management: A Systematic Literature Review.” PloS ONE, vol. 10, no. 10, 2015, https://doi.org/10.1371/journal.pone.0139701.</p>
+
+  <p>Chen, Jenn. “Social media demographics to inform your brand’s strategy in 2020.” Sprout Social, 2020,
+  https://tinyurl.com/449hzves.</p>
+
+  <p>Gearhart, Bill. “Incorporating Social Media into a Technical Content Strategy White Paper.” The Center
+  for Information-Development Management, 2014, https://tinyurl.com/mptxv4p6.</p>
+
+  <p>Hovde, Marjorie R.“Tactics for Building Images of Audience in Organizational Contexts: An Ethnographic
+  Study of Technical Communicators.” Journal of Business and Technical Communication, vol. 14, no. 4,
+  2000, pp. 395-444.</p>
+
+  <p>Humphrey, Aaron. “User Personas and Social Media Profiles.” Persona Studies, vol. 3, no. 2, 2017,
+  pp. 13-20.</p>
+
+  <p>Kahn, Sarah. “Harnessing Social Media for Rapid Usability Testing.” Envato Tuts+, 2012, https://webdesign.tutsplus.com/articles/
+  harnessing-social-media-for-rapid-usability-testing--webdesign-8907.</p>
+
+  <p>Keeter, Scott, et al. “What Low Response Rate Mean for Telephone Surveys.” Pew Research Center, 2017,
+  https://www.pewresearch.org/ methods/2017/05/15/what-low-response-rates-mean-for-telephone-surveys/.</p>
+
+  <p>Lam, Chris, and Mark A. Hannah. “Flipping the Audience Script: An Activity that Integrates Research
+  and Audience Analysis.” Business and Professional Communication Quarterly, vol. 79, no. 1, 2016, pp.
+  28-53.</p>
+
+  <p>“Response rate statistics for online surveys – what numbers should you be aiming for?” Fluid Surveys
+  University, 2014, https://fluidsurveys.com/university/ response-rate-statistics-online-surveys-aiming/.</p>
+
+  <p>Ross, Derek, G. “Deep Audience Analysis: A Proposed Method for Analyzing Audiences for Environment-Related
+  Communication.” Technical Communication, vol. 60, no. 2, 2013, pp. 94-117.</p>
+
+  <p>Seilhamer, Ryan, et al. “Changing Mobile Learning Practices: A Multiyear Study 2012-2016.” Educause
+  Review, 2018, https://er.educause.edu/articles/2018/4/ changing-mobile-learning-practices-a-multiyear-study-2012-2016.</p>
+
+  <p>“Social Media Fact Sheet.” Pew Research Center, 2019, https://www.pewresearch. org/internet/fact-sheet/social-media/.</p>
+
+  <p>“The Role of Technical Documentation.” Astoria Software, https://2ww.astoriasoftware.com/the-role-of-social-media-in-technical-documentation.</p>
+
+  <p>“Video Viewer Habits, Statistics, and Trends You Need to Know.” TechSmith Corporation, 2019, https://assets.techsmith.com/Docs/TechSmith-VideoViewer-Habits-Trends-Stats.pdf.</p>
+
+  <p>YouTube for Press, YouTube, https://about.youtube.</p>
+
+  <p>Teaching Resources</p>
+
+  <p>Overview and Teaching Strategies</p>
+
+  <p>The main point of this chapter is that social media platforms can be used as utilities in technical
+  communication, not just for personal entertainment or marketing. As communication mediums they are uniquely
+  powerful for technical writers because they reach such a wide audience of readers or potential readers.</p>
+
+  <p>This chapter would be especially useful to teach when students are discussing audience, the types
+  of media used for technical communication, and the purposes for a technical communication project. And
+  while this essay focused on only a few of these platforms when providing examples, students should be
+  encouraged to think about other platforms not mentioned, and perhaps those they use much more frequently.</p>
+
+  <p>Above all, the important items to highlight while presenting this chapter are:</p>
+
+  <ul><li>The platform size, • Its audience characteristics, and • The type of media it allows users to
+  share.</li></ul>
+
+  <p>All this should really challenge students to think about audience and purpose. The three items listed
+  earlier will depend on what the communication is and who it is for. Once students understand that, they
+  will be able to view social media platforms as simply another way to communicate to their readers.</p>
+
+  <h3>Discussion Questions</h3>
+
+  <p>To help students explore the ideas discussed in these entries, consider having them address—as individuals,
+  in small groups, or as an overall class— the following questions:</p>
+
+  <p>1. As best you can, identify the audience of the social media platform you use most? What type of
+  media is best shared on that platform? Based on these answers, what technical communication purpose
+  would that platform best be suited for and why?</p>
+
+  <p>2. Are you able to look at the followers of a certain brand on a social media platform – for example,
+  a car company like Tesla, or a technology company like Apple – and find similarities amongst those people?</p>
+
+  <p>3. Is there a form of technical communication, or perhaps a purpose, that social media platforms
+  in general would not be suited for? If so, what type of medium would instead be best and why?</p>
+
+  <p>4. Think about what an audience is. Now, discuss how you think social media use in the technical
+  communication industry might change how we define audience. Does it change the relationship between
+  writer and reader? If so, how?</p>
+
+  <p>5. Can you identify any new skills or knowledge you might need as a technical writer working with
+  social media platforms that technical writers of twenty years ago might not have needed?</p>
+
+  <p>Examining these items can help students better reflect upon and consider how to apply the ideas presented
+  in the essay within the context of their own writing processes.</p>'

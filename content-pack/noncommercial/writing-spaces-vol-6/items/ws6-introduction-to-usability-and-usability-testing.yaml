@@ -1,0 +1,664 @@
+id: ws6-introduction-to-usability-and-usability-testing
+title: Introduction to Usability and Usability Testing
+author: Felicia Chong and Tammy Rice-Bailey
+source_title: 'Technical Writing Spaces: Readings on Writing, Volume 6'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-6/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Felicia Chong and Tammy Rice-Bailey in Technical Writing Spaces: Readings on Writing,
+  Volume 6, for student writers, titled “Introduction to Usability and Usability Testing.”'
+topics:
+  concern:
+  - assignment:audience-purpose
+whole: true
+changes: none
+body: '<p>Usability Testing</p>
+
+  <p>Felicia Chong and Tammy Rice-Bailey</p>
+
+  <p>This chapter describes usability and usability testing.1 Before we jump into the steps involved in
+  such testing, let’s take a look at what we mean by these terms. Usability refers to “the quality of
+  a user’s experience when interacting with products or systems, including websites, software, devices,
+  or applications. Usability is about effectiveness, efficiency and the overall satisfaction of the user”
+  (“Usability Evaluation Basics”). So, a person’s ability to quickly and easily use a texting app to send
+  a text message is a matter of usability—the more easily and quickly they can perform the task, the more
+  usable the app is. For instance, a large, visible button that indicates “Reply,” is quicker and easier
+  for someone to use than a menu of options.</p>
+
+  <p>Usability testing refers to the task of observing users who are performing planned, purposeful tasks
+  with a product for the purpose of collecting data about how the user interacts with and responds to
+  the product. So, asking a person to use a new app to send a text and then observing how easily and effectively
+  they can perform that task is usability testing. For example, if there is no “Reply” button on the screen,
+  and the user has to scroll through a menu of options to reply, your observing that scrolling behavior
+  (and the possible ensuing frustration) is an example of usability testing.</p>
+
+  <p>In usability and usability testing, the term “users” refers to individuals who will be interacting
+  with (or using) the products (e.g., instructions, websites, mobile apps) we design and develop. Think
+  of usability and usability testing as a research method for gathering information from and about users.
+  The goal is to focus, or center, the design of a product around the individuals who will use it to meet
+  their expectations and needs. A user-centered approach is important in product design and</p>
+
+  <p>1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>development because without it, we are only guessing what will work best for the user. And quite
+  often, these guesses are simply incorrect. The solution is to study the users for whom we are designing
+  products so that our products will meet their needs and expectations. When we design products (whether
+  they be doors, or documents, or mobile applications), it is our responsibility to make sure those products
+  do not unnecessarily complicate the user’s life.</p>
+
+  <p>To make a product user-centered, you should consider different dimensions (factors) or metrics for
+  measuring usability. Usability expert, Whitney Quesenbery, has identified five dimensions you can use
+  to evaluate the usability of an item:</p>
+
+  <ul><li>Effective • Efficient • Engaging • Error Tolerant • Easy to learn</li></ul>
+
+  <p>To test for usability, you need to answer more specific questions such as those raised by Quesenbery:</p>
+
+  <ul><li>How completely and accurately is the work or experience completed or goals reached?</li><li>How
+  quickly can this work be completed? • How well does the interface draw the user into the interaction,
+  and how pleasant and satisfying it is to use? • How well does the product prevent errors and help the
+  user recover from mistakes that do occur? • How well does the product support both the initial orientation
+  and continued learning throughout the complete lifetime of use?</li></ul>
+
+  <p>Thinking about the ways you will measure usability and the types of questions you want to answer
+  will help you more effectively and systematically gather data from representative users.</p>
+
+  <p>It is important for technical communicators to understand usability and usability testing. Researchers
+  (Kastman Breuch et al.) have explained that while usability studies and technical communication may
+  use different terminology, the two fields clearly have overlapping emphases, and practitioners in both
+  areas quite often share similar skill sets. Although not all technical communicators will be tasked
+  with conducting usability testing, the principles that this testing employ will help you make decisions
+  that allow you to create positive experiences for the people for whom you create online help, documents,
+  web pages, and other products (your users). Also, any document you write for an audience becomes an
+  item that others will use to perform a particular activity or achieve a given objective. For this reason,
+  an understanding of usability and usability testing can help you think about who the readers of your
+  work might be and how you might review and revise your work to meet the needs and expectations of those
+  readers.</p>
+
+  <p>This chapter provides you with an introduction to core concepts, tools, and processes associated
+  with usability and usability testing. The objective of the chapter is to help familiarize you with such
+  factors so you can better understand what is involved in these activities. You can then better engage
+  in conversations around these topics and learn more about these processes as you collaborate with others
+  during product development and design activities.</p>
+
+  <p>Understanding Users</p>
+
+  <p>Definition of User</p>
+
+  <p>As we mentioned, users are people who will be interacting with the products you design. Developing
+  an accurate sense of the user is impossible without doing some research. Without this research, you
+  will not have a clear idea of the user’s potential inclinations, tendencies, and reactions. Only after
+  you understand your potential users will you have the information necessary to comprehend and respond
+  to questions such as: What confuses them? What frustrates them? What brings them joy? The answers to
+  such questions are key because they allow you to redesign your product accordingly.</p>
+
+  <h3>Learning About the User</h3>
+
+  <p>It is not uncommon for us to assume that our users (and perhaps the entire world!) are exactly like
+  us. Manifestly, we know that this is not true, but our instinct is to communicate and design in a way
+  that makes sense to ourselves. However, this egocentric way of communicating and designing sometimes
+  renders products that are confusing or make life more difficult for our intended users. There are several
+  methods by which we can learn about our potential users. Some methods involve working with data about
+  representative users. Other methods require interacting with actual or representative users.</p>
+
+  <h3>Initial Methods for Understanding Users</h3>
+
+  <p>Initial methods do not necessarily involve interacting with users; rather, they focus on researching
+  the potential types of users of your product. They are generally used early in the product design process.</p>
+
+  <p>User data is gathered to describe the relevant quantitative characteristics (demographic information
+  such as age, gender, location, income, family size) of the type of users you want to target (the individuals
+  for whom you will design something). This data is based on known facts and data about actual users.
+  For example, web analytics (i.e., the collection, reporting, and analysis of website data) may show
+  the main type of user that frequents a website: their age, gender, and location. Alternatively, you
+  might have data about typical users of competitor products.</p>
+
+  <p>User data is important because it allows you to identify probable needs and skill levels of particular
+  group your product or document is targeting. When developing products, this data is used at the beginning
+  of the product design process to assist us in creating personas and journey maps, which are covered
+  later. As a result, you can create more usable products because you are not relying solely on your own
+  preferences and desires. Focusing on user data at this beginning stage helps ensure that you are creating
+  a usable product for its intended audience.</p>
+
+  <p>Personas are fictional characters based on the real user data that you have collected. They represent
+  a “typical” member of a particular group (e.g., the typical college student from Michigan) and are used
+  to understand how such users would perform an activity or use a product. They answer questions about
+  user motivations, habits, and probable preferences for interacting with the product.</p>
+
+  <p>Personas help product developers consider questions such as “What would users from this group do?”
+  when creating products for the members of that group. For example, if you are testing a mobile app to
+  order from a food delivery service, your personas might include a busy stay-at-home mother, a college
+  student living in their dorm, or a wheelchair-bound person who is incapable of driving. You may have
+  questions such as, “What would the typical college student from Michigan do when using an app to order
+  a food delivery to their dorm?”</p>
+
+  <p>Creating personas is important because they keep your decisions focused on the intended users of
+  your product or document. Personas give a face to your actual users’ potential motivations, fears, concerns,
+  and goals as they relate to the product you are testing. Personas allow you to move past your own assumptions
+  and create products that meet the actual needs and preferences of your user. When developing products,
+  personas are used starting at the beginning of the product design process. Using personas continues
+  to ensure the usability of the product.</p>
+
+  <p>Journey maps are graphical representations or visualizations of the process the user follows to accomplish
+  their goals. Essentially, you are charting the path, or sequence of actions, users take as they move
+  through a location in physical space or a series of online screens to perform an activity. For example,
+  a person who is using a mobile app to order from a food delivery service might first select the restaurant
+  from which they want to order food, then select from a menu, and finally complete the transaction with
+  a payment. The journey map for this process would not only establish a timeline of events, but it would
+  also include the potential thoughts and emotions experienced by the user as they go through this process.
+  For instance, this particular user might be excited by the restaurant selection step, overwhelmed by
+  the menu options, and confused by the payment options.</p>
+
+  <p>Journey maps are important because they ensure that you will consider and design for the complete
+  range of steps that individuals take while using your product. They also allow you to identify potential
+  pain points (e.g., areas that are difficult to navigate or confusing) for individuals. When developing
+  products, these maps are used throughout the design process. As a result, you can create a more seamless
+  experience for your users.</p>
+
+  <h3>Advanced Methods for Understanding Users</h3>
+
+  <p>If we fail to consult or involve representatives of actual users in our product or document design,
+  the decisions we make regarding our design will at best be based on our assumptions of how these users
+  will behave. At worst, our decisions will not even consider the user. Take the classic example (discussed
+  by Norman) of the door that opens by being pushed, but has a handle, signifying (erroneously) that it
+  needs to be pulled. This example shows how poor design may not only confuse the user but might also
+  make the product appear inoperable.</p>
+
+  <p>User data, personas, and journey maps are three tools you can use early in the design process of
+  your product or document. These tools encourage you to keep your users front of mind from the start
+  of your project. They assure that you do not simply project your own needs and desires into the design
+  of your product or document. These tools can also be useful when describing your process to others on
+  the development or management team. Additionally, user data, personas, and journey maps can inform how
+  you select your participants and design your later usability tests. In the following sections, we provide
+  examples of how each of these tools can be implemented and set you up for success on the next steps
+  for designing and conducting a usability test.</p>
+
+  <p>Example: Faster Food Mobile User Profile and Personas Let’s say you want to discover how a typical
+  user might interact with the new food delivery application, “Faster Food” that you have developed (see
+  Figure 11.1).</p>
+
+  <p>The first task you perform is to create a user profile. For the “Faster Food” app, you develop a
+  user profile that states our users will fit the following criteria:</p>
+
+  <ul><li>Eat fast food • Have experience using a mobile app • Be an adult age 18 or over</li></ul>
+
+  <p>Figure 11.1: Example of Mobile App</p>
+
+  <p>In your user profile, you also identify two categories of users: 1. Novice users: Teenagers and adults
+  who are familiar with fast food menus but may not have experience ordering from these restaurants online.
+  2. Advanced users: Teenagers and adults who are both familiar with the fast food restaurants in their
+  area and are experienced using mobile apps to order from such places. Using this profile and the user
+  categories, you next create two personas, Sean and Roxanne, which you can see in Figure 11.2. Sean and
+  Roxanne are composites that you created based on data from web analytics that identified demographic
+  information of your average users. Sean and Roxanne’s fictional identities include information such
+  as their photos, occupations, yearly income, experience level, and buying habits. The personas of Sean
+  and Roxanne are important throughout the design and development of your “Faster Food” App to create
+  reliable and realistic representations of your users as you decide what will meet their needs and expectations.
+  For example, in the “Faster Food” app, you might decide to highlight inexpensive restaurants that might
+  be popular with Sean, who has a limited income and lives in the dorms. Alternatively, you might choose
+  to highlight nearby restaurants for Roxanne, who prefers to have her lunch delivered quickly from a
+  restaurant that is near her workplace.</p>
+
+  <p>Figure 11.2: Example of Personas</p>
+
+  <p>Understanding Testing and Test Plans</p>
+
+  <p>Iterative Process of Testing</p>
+
+  <p>Ideally, you should start usability testing at the developmental stages of the production process
+  (formative testing), where user feedback is repeatedly gathered and implemented. In other words, the
+  usability testing process should be iterative, where you conduct small studies to learn about user experience,
+  make changes based on what you learned, and then test again. Summative testing is usually conducted
+  later in the product development cycle, when the product is fully developed, to determine whether it
+  meets user requirements. During each stage of usability testing, you want to focus on the user’s experience
+  with your product. You want to discover how they initially interact with and react to the product. This
+  will allow you to discern potential questions and pain points for the users. To prepare for each test,
+  you need to develop a test plan.</p>
+
+  <h3>Purpose of Test Plan</h3>
+
+  <p>The test plan is a tool that will help you discover how your typical users might interact with your
+  product. A test plan documents your plans for the test, including what you will be testing, who you
+  will be testing, and the tasks you will undertake during the testing.</p>
+
+  <p>The purpose for documenting this information is to provide a single source of information that all
+  stakeholders can reference before, during, and after the usability test. Stakeholders are the people
+  who have something invested in the test. This typically includes people designing the test, those administering
+  the test, the project manager, and those financing the test. The final test may deviate from the initial
+  plan, but the changes should also be documented so that the test plan remains up-to-date. As Barnum
+  notes, “you should think of the test plan as a living document that evolves as the materials get fleshed
+  out” (142).</p>
+
+  <h3>Think-Aloud Protocol</h3>
+
+  <p>There are many types of usability testing methods depending on the stage of the testing you are in
+  as well as the specific types of data (e.g., qualitative or quantitative) that you are collecting. In
+  this chapter, we introduce a very basic usability test that can be easily performed, the think-aloud
+  protocol, where the participants verbalize their thoughts while they are attempting to use a prototype
+  (a product model that may not include full functionality). This “thinking out loud” allows the tester
+  (the person conducting the test) to understand what the participants are thinking as they engage with
+  the product. It not only allows the tester to identify potential areas of confusion or frustration the
+  participants may be experiencing, but also aspects of the product that are especially pleasing or useful
+  to the participants.</p>
+
+  <h3>Sections of a Simple Test Plan</h3>
+
+  <p>Although every test plan is unique, there are several sections that most test plans involve. These
+  include the following:</p>
+
+  <ul><li>Product goal • Test objectives • User profile • Methodology • List of tasks</li></ul>
+
+  <p>Product Goal</p>
+
+  <p>The product goal identifies the purpose of your product or document. It is the purpose for which
+  the users intend to use your product or document.</p>
+
+  <p>Test Objectives Test objectives articulate the purpose for your test. They answer the question: What
+  do I want to discover from this test? Test objectives might include: How easy/difficult is it for the
+  user to navigate this web page? What are the specific pain points (areas of difficulty) for the user?
+  The test objectives will drive the content and organization of your test.</p>
+
+  <p>User Profile A user profile is included in the test plan to effectively articulate who it is that
+  you are looking to test. For instance, this might include demographic information (such as age and gender),
+  job title, level of technical expertise (novice, skilled, or expert), needs and expectations, and steps
+  that are taken to complete a specific task. The earlier work you did analyzing user data and creating
+  personas will be helpful in deciding the types of users that would be appropriate participants in your
+  test. See the previous Understanding Users section for more details.</p>
+
+  <p>When you do a usability test of a product, you want to select participants (the individuals who will
+  test, or try to use, the product) who match this profile: individuals who meet these criteria and are
+  therefore representative of these users. Only individuals who meet these criteria quality for—or can
+  participate in—this study; those who do not meet these criteria cannot. An example of a user profile
+  might be, “Adults, 18 and over, who use social media and are concerned with privacy.” Individuals would
+  then need to meet these criteria to be included in the related study.</p>
+
+  <h3>Methodology</h3>
+
+  <p>Your test methodology describes how you will gather data, more specifically, the number of participants
+  that you need, length of the test, and test procedure. To ensure that you gather the type of data that
+  will be most useful to you, it is important that you provide your participants with specific tasks to
+  perform.</p>
+
+  <h3>List of Tasks</h3>
+
+  <p>These tasks are often embedded within scenarios that provide the context for the user’s goals. For
+  instance, if you are interested in how a user might interact with your e-commerce site, you could develop
+  a scenario in which the participant has to find and place orders in an online shopping cart. One specific
+  task involved in this scenario might be to find a particular item, say, a blanket. As Barnum notes,
+  “without a common set of scenarios, users will go their own way in an interface, which makes it difficult
+  to see patterns of usage and recurrence of problems among and between users” (19).</p>
+
+  <p>Example: Faster Food Usability Test Plan (Simple)</p>
+
+  <p>The first part of the test plan (Figure 11.3) is to articulate the product goal and test objectives.
+  As you can see, your objectives are to verify the navigation within the app is clear and to determine
+  how enjoyable the app is to use. Next, you will create a user profile based on the data that you have
+  previously obtained about actual users. Your methodology is a simple, think-aloud protocol. Next, you
+  will document the list of tasks the participants will complete, which includes:</p>
+
+  <p>1. Navigate from the homepage to the restaurant selection page. 2. Return to the home screen from
+  a restaurant page. 3. Navigate to the pay screen. 4. Navigate to the home address screen.</p>
+
+  <h3>Figure 11.3: Example of Simple Usability Test Plan</h3>
+
+  <p>Additional Sections Included in an Advanced Test Plan An advanced test plan would contain more comprehensive
+  tasks and test details, including different types of qualitative and quantitative data (evaluation method)
+  you are seeking and specifics about the testing environment (description of testing environment), as
+  described later in this chapter. Evaluation Method There are multiple ways to collect both quantitative
+  and qualitative data, depending on whether you are conducting formative or summative testing. There
+  are two types of quantitative data: Performance data is based on measurements of users’ actions, whereas
+  preference data is based on user’s responses to questions on questionnaires. Qualitative data includes
+  observations of user actions and user comments (during the test or on questionnaires). You can collect
+  either type of data using the following methods.</p>
+
+  <p>Audio and/or video recording. For example, if you are testing a website, you can use a screen-recording
+  program to record the user’s on-screen activities (e.g., where they click or how long it takes them
+  to navigate).</p>
+
+  <p>Verbal feedback protocol. There are various ways to solicit qualitative feedback from your users
+  using the think-aloud protocol (e.g., concurrent think aloud, retrospective think aloud, concurrent
+  probing, or retrospective probing, as described in “Running a Usability Test”). You can also use product
+  reaction cards, which were developed by Microsoft (Benedek and Miner) to provide a rich understanding
+  of user experience.</p>
+
+  <p>Questionnaires. The three common types of questionnaires include pre-test (e.g., on user preferences),
+  post-task (e.g., on issues such as ease or difficulty, after each task), and post-test (e.g., on the
+  overall experience at the end of the test).</p>
+
+  <p>Barnum recommends combining “metrics with your observations, comments, from participants, and their
+  responses to open-ended questions” (137) to create a highly effective test.</p>
+
+  <h3>Description of Testing Environment</h3>
+
+  <p>The description of your testing environment details the physical conditions under which the testing
+  will occur. For instance, you might be observing an individual using a new point of sale (POS) app in
+  a fast-food restaurant. Alternatively, you might be observing an individual using the same app in a
+  testing lab. Each of these environments is going to be different. The noise level, lighting, level of
+  activity, and other considerations might have an impact on your test.</p>
+
+  <p>Example: Faster Food Usability Test Plan (Advanced)</p>
+
+  <p>In an advanced test plan of the Faster Food app, you will include the additional sections such as
+  evaluation method and description of testing environment. See Figure 11.4 and Figure 11.5 for an example
+  of an advanced test plan.</p>
+
+  <h3>Pilot Test</h3>
+
+  <p>A pilot test is a small preliminary study used to test a proposed research study before conducting
+  a full-scale study. This preliminary study typically follows the same procedures as its full-scale counterpart.
+  The primary purpose of a pilot study is to evaluate the feasibility of the proposed study. A pilot test
+  is sometimes called a field test or a feasibility study.</p>
+
+  <p>A pilot test will allow you to see if you are testing for the correct questions. Pilot tests also
+  allow you to be sure you have considered logistical implications and established best practices for
+  the full-scale usability test. For example, researchers (Zimmerman et al.) who were investigating rural
+  health and safety issues planned a pilot in which they tested pesticide warning labels at a university’s
+  horticultural research farm. Although they believed they had sufficiently prepared for the usability
+  tests, the researchers encountered a few logistical problems including a thunderstorm. They then knew
+  they had to revise their full-scale study and equip the testing team with adequate clothing to include
+  a better hat and protective boots. Recruiting Participants Often, students wonder how many participants
+  they need for a usability study. Nielsen makes a sound argument for aiming for three to five users (Nielsen).
+  They explain that you will learn the most from the first user. The second and third user will do many
+  of the same things that you already observed with the first user. The third user will generate a small
+  amount of new data, but not as much as the first and second user. As you add users, you will continue
+  to observe the same behaviors and will learn less with each additional user. As Nielsen explains, “After
+  the fifth user, you are wasting your time by observing the same findings repeatedly but not learning
+  much new.”</p>
+
+  <h3>Figure 11.4: Advanced Test Plan Part 1</h3>
+
+  <p>Figure 11.5: Advanced Test Plan Part 2 One of the greatest challenges to conducting a usability test
+  is recruiting participants. Research (Chong, “Implementing Usability Testing”) shows that nearly one
+  quarter of students reported that finding users to participate in a usability test was a challenge.
+  To make this process more manageable, it is important that you define specific criteria for potential
+  participants and think broadly about the recruitment process. Establish Criteria Before you start recruiting
+  participants for your usability test, you want to be sure that you have established criteria that potential
+  participants need to meet. You will then use these criteria to screen potential participants. For instance,
+  if you are testing user instructions for a riding lawn mower, you probably want participants who know
+  how to both mow a lawn and drive some type of vehicle. Selecting a participant who is missing either
+  of these qualifying criteria will not provide you with valid or representative results about how an
+  actual, typical user of your instructions will react. Once you have established criteria that participants
+  need to meet, you are ready to recruit.</p>
+
+  <h3>Identify Sources for Participants</h3>
+
+  <p>There are several sources from which you can recruit participants for your test. One way is to use
+  your personal and professional networks. As Barnum explains, making requests “through friends, family,
+  business associates, and community connections often leads to qualified applicants for screening” (159).
+  Very often, if a connection you make through one of these channels meets your screening criteria, it
+  is possible they have people within their networks that will also meet your criteria. In this sense,
+  you can often find potential participants via other participants. If you have a limited network, or
+  if you do not have many in your network who will likely meet your criteria, you can research organizations
+  that likely have as members people who fit your desired demographic. For instance, if you are looking
+  for people to test lawn mower instructions, but most people in your network live in apartments and don’t
+  have the need to mow a lawn, you might solicit local homeowners’ associations for names and contact
+  information of potential participants. If you are conducting a usability test for an organization, and
+  they have the budget for external resources, you may decide to hire a market research firm to assist
+  you with your recruitment process. Such firms generally have substantial databases of potential participants
+  who can be organized by particular demographics and can be further interviewed (by the firm) for more
+  specific criteria.</p>
+
+  <h3>Screen Potential Participants</h3>
+
+  <p>Just because an individual has met your initial screening criteria, does not mean that person is
+  right for your usability test. Before scheduling someone to participate in your test, you will want
+  to confirm (either by phone or e-mail) that they have, indeed, met your initial criteria. You might
+  also follow-up with additional questions that could disqualify the person. For instance, you probably
+  do not want to select someone who builds lawn mowers—and so would use their own knowledge (instead of
+  your instructions alone)—to evaluate your instructions. You will also want to confirm that your potential
+  participant is available during the time you plan to conduct the usability tests.</p>
+
+  <h3>Preparing Test Materials and Environment</h3>
+
+  <p>Once you have designed and piloted your test, along with recruiting the appropriate number of participants,
+  then you need to prepare test personnel, materials, and the environment for your test. While a simple
+  test using the think-aloud protocol may not have formal roles and responsibilities for the testers,
+  it is still important that you familiarize yourself with the full range of testing roles and tasks.</p>
+
+  <h3>Roles and Responsibilities</h3>
+
+  <p>If you have a team working on the usability test, there should be at least be two roles:</p>
+
+  <p>1. Moderator/facilitator: This person will interact the most with the participants by asking unbiased
+  questions and guiding them through the test. For detailed information about the role of the moderator/facilitator,
+  see the Conducting the Usability Test section (later in this chapter).</p>
+
+  <p>2. Observer/notetaker: If your test is not recorded (e.g., audio or visual), you will need a note-taker
+  who will serve as an observer and recorder of the test.</p>
+
+  <h3>Team Checklists</h3>
+
+  <p>Based on the roles that you have assigned for the test, you will need to create checklists that help
+  remind the team members of their responsibilities and ensure that each test session is consistently
+  conducted. For example, the moderator’s checklist may include tasks for welcoming the participants,
+  reviewing the consent forms, and providing instructions for the test. The notetaker’s checklist may
+  include tasks that need to be completed before, during, and after the test. Loranger provides a nine-step
+  checklist for planning a usability test.</p>
+
+  <h3>Moderator’s Script</h3>
+
+  <p>The goal of having a moderator’s script is to ensure that the moderator explains the process in the
+  same or consistent manner to each participant. The script will cover topics such as welcoming the participant,
+  stating the purpose of the study, providing the consent form, explaining the testing process, and describing
+  the think-aloud protocol. It is especially useful to use phrases such as “we are testing the product,
+  not you” before the test to make the participants feel comfortable and less self-conscious about describing
+  their challenges.</p>
+
+  <h3>Other Materials</h3>
+
+  <p>Depending on your test plan, you may include other materials such as the following:</p>
+
+  <ul><li>Consent forms that indicate the participant’s willingness to participate or be recorded during
+  the test;</li><li>Non-disclosure agreements, if you are testing a product in development;</li><li>Observer/note-taker
+  form on which to record the issues/problems that each participant experiences on each scenario/task;</li><li>Questionnaires
+  to obtain qualitative and quantitative feedback from participants that will enhance your understanding
+  of the user experience;</li><li>118 product reaction cards created by Microsoft (Benedek and Miner),
+  which include adjectives such as “confusing,” “difficult,” “engaging,” and “entertaining” that the participants
+  select to describe their experience with the product being tested.</li></ul>
+
+  <h3>Environment</h3>
+
+  <p>Based on the description of the test environment that you have included in your test plan, you will
+  need to make sure that that space (whether physical or online) is ready for testing. For instance, if
+  the testing will be done in a lab or classroom, you need to be sure the camera is functioning and recording,
+  that there is sufficient seating for participants and observers, and that the noise level is not prohibitive.
+  Similarly, if you are conducting an online test, then you need to be sure that internet connectivity,
+  video cameras, and audio are functioning properly.</p>
+
+  <h3>Conducting the Usability Test</h3>
+
+  <p>The moderator’s role is critical in that they will need to conduct the usability test effectively.
+  In our experience, this is the most challenging and critical role because the moderator needs to create
+  a comfortable environment and listen to the participant’s feedback carefully (e.g., to ask follow-up
+  questions). While a simple test using the think-aloud protocol may not differentiate between tasks for
+  the moderator and notetaker, it is still important that you familiarize yourself with the full range
+  of these tasks.</p>
+
+  <h3>Moderator Tasks</h3>
+
+  <p>Immediately prior to and during the usability test, the moderator has several tasks, which may include
+  the following:</p>
+
+  <ul><li>Meeting, greeting, and briefing the participants. • Preparing the participants for the feedback
+  method or protocol</li></ul>
+
+  <p>(e.g., using concurrent think aloud, retrospective think aloud, concurrent probing, or retrospective
+  probing, as described in “Running a Usability Test”). • Being effective and unbiased by monitoring both
+  your verbal and nonverbal communication and asking “what” or “how” (and not “why”) questions to get
+  the participants to share their thoughts with you. • Knowing how and when to intervene (e.g., when the
+  technology crashes, when the participant struggles to answer the question, or when the participant wanders
+  off tasks). • Distributing test materials (e.g., questionnaires, product reaction cards).</p>
+
+  <h3>Considerations for Moderators</h3>
+
+  <p>The first few times you act as a moderator, you may find yourself experiencing the “stupid user syndrome”
+  (see Chong, “The Pedagogy of Usability”; Johnson). Because you are familiar with (and may have even
+  helped develop) the product, you believe that it is intuitive and easy to use. When a user struggles
+  with the product, your first inclination may be to assume it is the fault of the user. It is important
+  to be aware of the appearance of the “stupid user” syndrome, where the moderator may blame the participant
+  for struggling with their tasks or wandering off of the tasks.</p>
+
+  <p>Likewise, moderators should avoid leading, confrontational, or unbalanced questions because these
+  types of questions will not give you an accurate picture of your user’s experience with the product.
+  For instance, if you ask, “Wouldn’t you agree that this button is misplaced?” you are suggesting that
+  you already know what the user is thinking (and you may be wrong!). You could instead, revise this question
+  to, “Where do you expect to see this button?” Examples of other questions you should avoid include the
+  following:</p>
+
+  <ul><li>How difficult was that task for you? (Revised: “How easy or difficult was that task for you?”)</li><li>Do
+  you like the instructions? (Revised: “How did the instructions help you reach your goal?”)</li><li>Why
+  did you click that button? (Revised: “What made you click that button?”)</li></ul>
+
+  <h3>Considerations for Notetakers</h3>
+
+  <p>The notetaker’s job is to log observations of the participant interacting with the product. Typically,
+  the notetaker does not interact directly with the participant, but occasionally, the notetaker may ask
+  clarifying questions (so that they can accurately record the participant’s reaction or statement). In
+  this sense, the notetaker is largely an observer. Some usability tests use multiple notetakers. This
+  enables the testing team to correlate findings after the test. However, some tests also include other
+  individuals whose sole job is to observe. For example, if you are conducting a usability test for a
+  corporation, members of the management team or product development team may simply observe the testing
+  (but not take notes or perform any other specific task).</p>
+
+  <h3>Analyzing the Findings</h3>
+
+  <p>After conducting the test, there are three main questions that need to ask when analyzing the data
+  (Barnum 239):</p>
+
+  <ul><li>What did you see? • What does it mean? • What should you do about it?</li></ul>
+
+  <p>Similar to analyzing the primary research data in other projects, you will need to begin by gathering
+  the data from everyone (e.g., moderator, notetakers, and observers). After gathering all your data,
+  you will analyze your findings. Having more analysts will capture more problems and yield better findings
+  (Sauro).</p>
+
+  <p>Example: Analyzing the Findings of the Faster Food Mobile App (Simple)</p>
+
+  <p>To analyze the results of the “Faster Food” app simple usability test, you look at the data you collected
+  from the participants’ think-aloud protocol statements. This data is found in the notes or transcript
+  of the participants’ statements. Figure 11.6 shows these comments from three of the five participants
+  who followed the think-aloud protocol while they completed our usability test.</p>
+
+  <p>Figure 11.6: Example of Qualitative Findings By creating a column that identifies the screen the
+  participant was on when they made the comment, you could look for patterns in the data. For instance,
+  Figure 11.6 shows that while on the restaurant selection screen, two of our participants initially questioned
+  how to find a specific restaurant. This also shows that two participants gave favorable feedback on
+  the home screen. Example: Analyzing the Findings of the Faster Food Mobile App (Advanced) For a more
+  advanced usability test, which might include quantitative data, you would review this quantitative data
+  in addition to the qualitative data described in the simple usability test. For example, you look at
+  the specific number of times certain events occurred during the testing. Figure 11.7 indicates the events
+  you are testing and the participants’ scores:</p>
+
+  <p>Figure 11.7 shows some of the quantitative data from the usability tests. Notice that all three participants
+  spent the least amount of time selecting the restaurant and the most amount of time changing the Diet
+  Coke to a Sprite. Also, notice that the task of selecting the Big Mac Meal shows the most occurrences
+  of using the “back” button, which may suggest that this screen is not as intuitive or user-centered
+  as you would have expected.</p>
+
+  <h3>Figure 11.7: Example of Quantitative Data</h3>
+
+  <p>Developing Recommendations Once you gather and analyze the data from the usability testing, you will
+  develop recommendations based on this data. For instance, if your data indicates that participants spent
+  more time on a particular screen of your mobile app than you anticipated, you may recommend that the
+  screen be redesigned. More specifically, if the data suggests a specific issue with that screen (the
+  buttons were difficult to locate), you might recommend increasing the size of the buttons or adding
+  a brighter color.</p>
+
+  <p>Your recommendations may be informally or formally presented depending on your audience (the person
+  or group for whom you are conducting the usability test). If you are conducting a simple, think-aloud
+  usability test, you may summarize your findings and recommendations in a couple of short paragraphs.
+  If you are conducting an advanced usability test, you may be asked to create an executive summary of
+  your recommendations. The executive summary simply documents the issue and your recommended fixes. The
+  test data and your analysis, which support your recommendations, can be attached to the executive summary
+  so that they are available, if needed.</p>
+
+  <p>Example: Developing the Executive Summary for the Faster Food Mobile App Usability Testing Figure
+  11.8 shows the executive summary of the “Faster Food” app advanced usability testing. This summary includes
+  an introduction to the project, a brief summary of our methods and findings, and the recommendations
+  that these findings suggest.</p>
+
+  <h3>Figure 11.8: Example of Executive Summary</h3>
+
+  <p>Conclusion In this chapter, we explain the importance of understanding users and provide basic guidelines
+  for designing and piloting a test plan, recruiting participants, preparing test materials and environment,
+  conducting the test, analyzing the findings, and developing recommendations. We provide examples of
+  both a simple, think-aloud protocol usability test (that includes qualitative data) and a more extensive
+  usability test (that includes both qualitative and quantitative data). In summary, usability testing
+  is a crucial tool to add to your skillset as a technical communicator, and it is important to solicit
+  as much user input and as often as possible during the product development process.</p>
+
+  <h3>Works Cited</h3>
+
+  <p>Barnum, Carol. Usability Testing Essentials: Ready, Set . . . Test! Elsevier, 2011. Benedek, Joey,
+  and Trish Miner. “Measuring desirability: New methods for evaluating desirability in a usability lab
+  setting.” Proceedings of UPA Conference, Orlando FL, 2002. Chong, Felicia. “Implementing Usability Testing
+  in Introductory Technical Communication Service Courses: Results and Lessons from a Local Study.” IEEE
+  Transactions on Professional Communication, vol. 61, no. 2, June 2018, pp. 196–205. https://doi.org/10.1109/TPC.2017.2771698.
+  Chong, Felicia. “The Pedagogy of Usability: An Analysis of Technical Communication Textbooks, Anthologies,
+  and Course Syllabi and Descriptions.” Technical Communication Quarterly, vol. 25, no. 1, 2015, pp. 12-28.
+  http:// doi.org/10.1080/10572252.2016.1113073. Johnson, Robert R. User-Centered Technology: A Rhetorical
+  Theory for Computers and Other Mundane Artifacts. State University of New York Press, 1998. Kastman
+  Breuch, Lee-Ann, Mark Zachary, and Clay Spinuzzi. “Usability instruction in technical communication
+  programs: New directions in curriculum development.” Journal of Business and Technical Communication,
+  vol. 12, no. 2, 2001, pp. 223-240. Loranger, Hoa. “Checklist for Planning Usability Studies.” Nielsen
+  Norman Group, 17 Apr. 2016, http://www.nngroup.com/articles/usability-test-checklist/. Nielsen, Jakob.
+  “Why You Only Need to Test with 5 Users.” Nielsen Norman Group, 18 Mar. 2020, http://www.nngroup.com/articles/
+  why-you-only-need-to-test-with-5-users/. Norman, Donald A. The Psychology of Everyday Things. Basic
+  Books, 1988. Quesenberry, Whitney. “Using the 5Es to Understand Users.” WQusability, http://www.wqusability.com/articles/getting-started.html.
+  “Running a Usability Test.” Usability.gov, http://www.usability.gov/how-to-andtools/methods/running-usability-tests.html.
+  Sauro, Jeff. “How Large is the Evaluator Effect in Usability Testing?” Measuring U, 27 Mar. 2018, http://www.measuringu.com/evaluator-effect/.
+  “Usability Evaluation Basics.” Usability.gov, http://www.usability.gov/what-andwhy/usability-evaluation.html.
+  Zimmerman, Donald E., Michel L. Muraski, and Michael D. Slater. “Taking Usability Testing to the Field.”
+  Technical Communication, vol. 46, no. 4, 1999, pp. 495-500.</p>
+
+  <p>Teacher Resources</p>
+
+  <p>Overview and Teaching Strategies</p>
+
+  <p>There are various models for implementing a usability testing project in the classroom. Ideally,
+  this project should be taught in a dedicated usability course to allow students time to develop the
+  skills involved in usability testing. If, however, you must implement the usability test as one of the
+  major projects as part of another class (such as technical writing), we recommend that you identify
+  one project or a reliable or responsive client for all student teams (instead of trying to manage several
+  projects/clients).</p>
+
+  <p>Just as with other types of primary research, students must learn how to effectively collect user
+  data and analyze it, so it is crucial for you to support them by giving them timely and useful feedback
+  (e.g., on their test plans) prior to the test. Also, be sure to allow ample time for all phases of the
+  project, as many may underestimate the amount of time required for various tasks (such as recruiting
+  and scheduling participants) and the iterative nature of other tasks (such as analyzing data). It is
+  also important to select participants for the usability test who match the user profile, but it is often
+  a step that is easily skipped or underestimated. Therefore, you should allow ample time for students
+  to recruit users.</p>
+
+  <h3>Discussion Questions</h3>
+
+  <p>Following are discussion questions that will allow your students to explore the ideas discussed in
+  this chapter:</p>
+
+  <ul><li>What kind of primary research studies have you participated in in the past?</li><li>What type
+  of experience do you have creating personas? • What do you think are the major challenges involved in
+  conducting a usability study? • Whatmethodsareyoumostlikelygoingtousetorecruitparticipants? • What are
+  some current issues on your campus or in your field that could be investigated with this usability testing
+  method? • How could usability fit into your major field of study?</li></ul>
+
+  <h3>Suggested Websites for Remote Testing</h3>
+
+  <p>With the advent of online education and testing, here is a list of websites for conducting tests
+  online or remotely:</p>
+
+  <ul><li>Usabilityhub.com</li><li>OptimalWorkshop.com • UserTesting.com</li></ul>
+
+  <p>Suggested Readings Here is a list of suggested readings for you to learn more about user-centered
+  design and usability tests:</p>
+
+  <p>Barnum, Carol. Usability Testing Essentials: Ready, Set . . . Test! Elsevier, 2011. Johnson, Robert
+  R. User-Centered Technology: A Rhetorical Theory for Computers and Other Mundane Artifacts. State University
+  of New York Press, 1998. Norman, Donald A. The Psychology of Everyday Things. Basic Books, 1988. Rubin,
+  Jeffrey, and Dana Chisnell. Handbook of Usability Testing: How to Plan,</p>
+
+  <p>Design, and Conduct Effective Tests, 2nd ed., Wiley, 2008.</p>'

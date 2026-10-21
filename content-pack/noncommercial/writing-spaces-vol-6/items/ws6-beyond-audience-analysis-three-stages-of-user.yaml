@@ -1,0 +1,568 @@
+id: ws6-beyond-audience-analysis-three-stages-of-user
+title: 'Beyond Audience Analysis: Three Stages of User Experience Research for Technical Writers'
+author: Joanna Schreiber
+source_title: 'Technical Writing Spaces: Readings on Writing, Volume 6'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-6/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Joanna Schreiber in Technical Writing Spaces: Readings on Writing, Volume 6, for
+  student writers, titled “Beyond Audience Analysis: Three Stages of User Experience Research for Technical
+  Writers.”'
+topics:
+  concern:
+  - argument:analysis
+  - research
+  - assignment:audience-purpose
+whole: true
+changes: none
+body: '<p>Three Stages of User Experience</p>
+
+  <p>Research for Technical</p>
+
+  <p>Writers</p>
+
+  <p>Joanna Schreiber</p>
+
+  <p>Writing for your audience is foundational to all technical writing work.1 Understanding the audience
+  is particularly important for technical writers who must also advocate for audience’s (users’) needs.
+  You have probably been asked to analyze the intended audience before, especially when crafting a message
+  or writing a paper. But what do you really know about the intended audience and how do you know it?
+  A multi-phase and systematic approach to user research, as described in this chapter, can help you understand
+  audiences and develop effective products and services for them.</p>
+
+  <p>Advocating for audiences requires “considering our users’ ways of making meaning and privileging
+  our users’ experiences and worldviews by inviting our users into the design process” (Jones 317). Social
+  justice approaches to technical writing and engineering illustrate ways in which design can disenfranchise
+  users (e.g., see Dorpenyo; Gonzales; “Building Access”; Leydens and Lucena; Jones and Williams; Sanchez).
+  Technical writers must position users’ experiences, physical and cognitive abilities, and cultural backgrounds
+  as integral to effective design practices.</p>
+
+  <p>As advocates for users, technical writers need to know how to effectively learn about and work with
+  audiences, but many audience analysis exercises rely on assumption rather than research (Lam and Hannah).
+  User experience (UX) research practices provides a range of methods and tools for learning about audiences
+  (groups of users) and how they engage with products and services. As Hackos and Redish explain, going
+  beyond</p>
+
+  <p>1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>assumptions about users to actually learning about users is an important skillset for technical writers:</p>
+
+  <p>We need to study users because users decide whether to use a product, not designers or writers. Even
+  if the users’ supervisors can dictate what they must use, the way people use products is self-determined.
+  We also need to study users because the more we know about them, the better we can design for them.
+  They are people with likes and dislikes, habits and skills, education and training that they bring into
+  play whenever they work with a product. (Hackos and Redish 25)</p>
+
+  <p>Users are people who bring their own preferences and needs to each product, service, and communication
+  situation. What Hackos and Redish point out is that technical writers do not know enough about the needs,
+  values, and goals of users from their own experiences and may inadvertently incorporate their own biases
+  by relying on their personal assumptions. Conducting UX research helps technical writers, and other
+  members of design teams, to move from relying on their individual assumptions and toward working with
+  real audience perspectives (Johnson; Smith et al.). Bringing these perspectives into the design process
+  is incredibly important for effective and inclusive design. As Acharya explains, “building an inclusive
+  and just future starts with understanding the needs and expectations of all users, including underserved,
+  underrepresented user groups from different cultures” (17).</p>
+
+  <p>User experience (UX) research is an extension of audience analysis that incorporates a range of research
+  methods, seeks to include user perspectives, and positions users as experts. As part of the process
+  for developing content and designing products for users, UX research situates a range of audience concerns,
+  including audience goals, accessibility, and context of use. Technical writers—who design information
+  to meet audience needs and goals—must think from a UX perspective in order to design content and navigation
+  to support users. Without building knowledge from a user perspective, it is easy to misinterpret user
+  needs or exclude them altogether.</p>
+
+  <p>Don Norman illustrates the importance of resisting assumptions about audiences and learning about
+  audience from the perspective of a user feeling excluded product designs. He wrote about his experience
+  as an “elderly user,” describing products designed for his age group as ugly and difficult to use:</p>
+
+  <p>Despite our increasing numbers the world seems to be designed against the elderly. Everyday household
+  goods require knives and pliers to open. Containers with screw tops require more strength than my wife
+  or I can muster. (We solve this by using a plumber’s wrench to turn the caps.) Companies insist on printing
+  critical instructions in tiny fonts with very low contrast. Labels cannot be read without flashlights
+  and magnifying lenses. And when companies do design things specifically for the elderly, they tend to
+  be ugly devices that shout out to the world “I’m old and can’t function!” We can do better. (Norman)</p>
+
+  <p>Norman is describing products as misunderstanding the needs and values of his age group, in terms
+  of accessibility, functionality, and aesthetic. The range of issues Norman describes affects product
+  design, user support, user orientation, interface design, information design, and typography. Norman’s
+  essay illustrates that design decisions targeting his user group are based on assumptions and not research.
+  Learning about users and listening to users are necessary first steps to avoiding assumptions and being
+  able to advocate for users.</p>
+
+  <p>This chapter presents UX research as a three-stage process to help you build on what you already
+  know about audience analysis and to help you effectively incorporate data collection, research methods,
+  and user documentation into technical writing processes. The three stages of user research presented
+  here are background research, primary research, and usability testing. Background research involves
+  collecting and analyzing existing studies (published research), available market research, datasets,
+  and artifacts. Primary research involves designing a study to collect data that has not been collected
+  in previous studies or to update findings from previous studies. Usability testing involves testing
+  a specific element of a design (content, feature, navigation) with your audience.</p>
+
+  <p>These stages are iterative and flexible. That means that as you progress through the stages, you
+  may continue to conduct background research (Stage One) and perhaps incorporate user tests (Stage Three)
+  as needed throughout the design process. The first two stages help you narrow what to design and test
+  in the third stage. For example, the first two stages might help you design the progression and instructions
+  in an app or the navigation of a website, and the third stage can help you test those features in order
+  to refine them. At the end of each stage, you’ll organize your findings and make recommendations for
+  next steps. This chapter does not cover each deliverable you can develop at each stage—including personas,
+  scenarios, and journey maps—or explain each method you can use at each stage. It gives technical writers
+  a framework for conducting UX research with content development and information design work.</p>
+
+  <h3>From Audience Analysis to UX Research</h3>
+
+  <p>Audience analysis is too often reliant on the writer’s experience and intuition (Lam and Hannah 29).
+  Even when audience analysis begins with identifying demographic characteristics like age, marital status,
+  income, etc., relying solely on these characteristics often positions the technical writer to make too
+  many assumptions about their audience based on limited information. For example, date of birth or income
+  often tells you little about technology skills, cultural background, preferences about adopting technology
+  (e.g., early adopters), or what kinds of features will make a product more accessible. Learning more
+  about these audience values and goals will help a technical writer craft better technical content, provide
+  better task orientation features, and design more effective navigation and visual information.</p>
+
+  <p>To emphasize the limitations of demographic information, consider the once-popular meme about Ozzy
+  Osborne and then Prince Charles. They are very different people but have many demographic characteristics
+  in common. They are both the same age, both from the same country, both have remarried, both have children,
+  and both are wealthy (Ward). But, as marketing analysts have pointed out, this information is helpful,
+  but does not offer a complete in understanding how best to address them as users. In other words, while
+  these two users may belong to the same age group, they are not likely to belong to the same user group.</p>
+
+  <p>This example shows the complexity of audiences that cannot be explained solely through demographic
+  characteristics like age, income, and nationality. Technical writers must be able to go beyond these
+  characteristics to find out more about the values, goals, interests, and cultural backgrounds of users.
+  Through UX research, technical writers can systematically build information and assess their research
+  practices in order to properly support, work with, and advocate for users.</p>
+
+  <p>Advocating for users is an important technical writing responsibility, particularly to ensure products
+  (including content) are inclusive and accessible (Jones; Rose and Schreiber). Accessibility should not
+  be seen as compliance, but as a shared value (“Building Access”; “Universal Design and the Problem of
+  ‘Post Disability’ Ideology”; Huntsman). Accessible design supports a spectrum of cognitive and physical
+  abilities. As the World Wide Web Consortium (W3C) points out, web accessibility supports a range of
+  users including older users, users with disabilities, and users in rural areas. Huntsman explains accessibility
+  from a technical writing perspective:</p>
+
+  <p>Every designed communication is a built environment with methods of access. The words we choose,
+  the format we design, and the technology we use are all elements that develop access to information.
+  (Huntsman 233)</p>
+
+  <p>Huntsman’s definition positions design as a series of choices, and all of those choices affect accessibility.
+  It is problematic when design teams, including technical writers, make assumptions about users and choices
+  about designing for users from those assumptions. Instead, technical writers need to infuse their work
+  with UX research practices so that at all stages of writing and design, they can mitigate inaccessible
+  design choices by learning about and with users.</p>
+
+  <p>As Huntsman shows, accessible design advocacy is about both engaging with design decisions and with
+  audience needs and values. Advocating for users and promoting inclusive design begins with listening
+  to users (Smith et al), valuing their experiences and cultural backgrounds (Jones), and identifying
+  choices in design and opportunities for intervention and inclusion.</p>
+
+  <h3>Three Stages of User Research</h3>
+
+  <p>Technical writers use UX research practices to collect information about audiences and test content,
+  service, and product features. In other classes, you may have learned about primary research (collecting
+  new data) and secondary research (consulting existing studies). Because secondary research tells you
+  what has already been studied relating to your research questions, it helps you decide what new data
+  needs to be collected or what data needs to be updated (primary research). These three phases—background
+  research, primary research, and usability testing—show how secondary research sets up primary research
+  by helping the researcher systematically identify underexplored areas of research or studies that need
+  to be revisited. The primary research stage sets up the more usability testing stage, which is a more
+  focused type of primary research.</p>
+
+  <p>Technical writers often work in collaborative environments, often work on multiple projects, and
+  often work on both short-term and long-term projects. Therefore, it is incredibly important for technical
+  writers to document their research findings and make recommendations at each stage. This will help others
+  understand how they collected their data, help others on the project use the data, help managers and
+  project managers make decisions using the data, and help others collaborate with the data collection.
+  That is why each stage describes the research to be done as well as how to organize the findings and
+  write recommendations. The findings of research at each stage need to be organized in a way that can
+  be used by others as well as help the technical writer track what they’ve learned.</p>
+
+  <p>As you move through these stages, it’s important to regularly pause and consider what perspectives
+  and experiences are being left out and how to best directly include those perspectives. Because technology
+  often has embedded racial, gender, and ability bias (Broussard), regularly trying to incorporate additional
+  perspectives is important. In their argument for direct collaboration among designers and people with
+  disabilities, Oswal and Palmer argue that including users with disabilities:</p>
+
+  <p>. . . employ their distinct know-how about disability which originates from their bodily differences
+  and diverse contexts of purpose and use. In the case of “context of use,” design work with disabled
+  users differs significantly from design work with other users because most participatory studies do
+  not focus on this aspect of design. Disabled people bring viewpoints of their own of being in and with
+  the material and social world which shape, at least in part, their human desires, needs, and expectations.
+  Disabled bodies traverse through these worlds at a different pace, in diverse ways, and for succinct
+  purposes to fulfill these needs, desires, and worldly goals which might appear odd, out of place, or
+  even undesirable to a nondisabled eye and a presumably fit body. (Oswal and Palmer 251)</p>
+
+  <p>The immersed disability perspective Oswal and Palmer describe helps technical writers and designers
+  understand both user goals and context of use (Stage Two).</p>
+
+  <p>These three stages are designed to help technical writers systematically gather information about
+  users, to involve users directly in design, to listen to users, and to treat users with respect and
+  dignity. While every approach will have flaws, focusing on building reciprocal relationships with user
+  groups, particularly marginalized communities, helps minimize issues (Cardinal et al; Smith et al).</p>
+
+  <h3>Research Stage One: Background</h3>
+
+  <p>The first stage of UX research is to gather information from previous studies or existing artifacts:
+  background research. Conducting background research is a focused activity, and technical writers should
+  start with studies that are specific to a group of users and studies specific to the technology or service
+  being developed, including accessibility concerns.</p>
+
+  <p>To begin, technical writers need to identify at least one audience or group of users. You may be
+  studying multiple audiences and should gather information about each separately before synthesizing
+  their findings and recommendations. As technical writers, you need to decide what you want to know about
+  the audience (research questions). The research question(s) becomes important because it helps you identify
+  key words and focus your search. Your research question helps you define your group of users as well
+  as related technology, product or service questions. It’s okay if your research question is general,
+  but you want to make sure you push beyond demographic questions to get at values and needs of users.</p>
+
+  <p>For example, a group of users might be adults 65 and older. This is the user group that Donald Norman
+  discusses as being underserved at the beginning of this chapter. It is a very larger user group, spanning
+  multiple generations, and as you conduct background research, you may wish to divide this large user
+  group in to multiple user groups based on what you learn. Possible research questions to get you started
+  conducting background research about adults aged 65 and older and their technology use include:</p>
+
+  <ul><li>What do adults aged 65 and older value about technology? • Why do adults aged 65 and older adopt
+  technology? • What technologies do adults aged 65 and older adopt? • What accessibility or design features
+  have been developed to serve adults 65 and older? • What accessibility or design features have been
+  tested with adults aged 65 and older?</li></ul>
+
+  <p>These example research questions address accessibility, technology or service adoption, and value
+  separately. By asking them separately, you will be able to find studies related to each of these items,
+  which may or may not overlap and identify a wider range of key phrases. For example, finding studies
+  about what the audience values about technologies or services may or may not give you information about
+  what makes technologies or services accessible to your audience. The phrase “technology adoption” +
+  adults aged 65 and older may yield different results than “technology values” + adults aged 65 and older.
+  These questions can also be refined to explicitly include services or be more focused on a particular
+  product category.</p>
+
+  <p>As a technical writer, you may use a range of methods to conduct background research, depending on
+  your research question and the facilities you have available to you. For example, your organization
+  may have a technical library or you may have access to a relevant archive or database. You will be also
+  able to access a range of scholarly articles, trade publications, and databases through your local or
+  university library. Consider also using available market research and government databases to help you
+  begin to develop an understanding of the users and user groups.</p>
+
+  <p>Developing key search terms can be challenging. Start with the user group itself as well as other
+  names for the user group. For adults aged 65 and over, you may want to use search terms connected to
+  the generations that age group represents, e.g., Baby Boomer Generation or Silent Generation). As you
+  are reading, be mindful of search terms that are emerging. Norman’s article uses the terms “elderly
+  users” and “seniors,” which may also be helpful in developing additional search terms.</p>
+
+  <p>Technical writers also need to be mindful of evolving language practices. It is important to get
+  feedback from audiences about how they want to be identified. Style guides including Chicago Manual
+  of Style, Associated Press Stylebook, and Conscious Style Guide offer specific guidance for talking
+  about groups and using sensitive language for describing the identity for groups. Organizations like
+  the National Association of Black Journalists and National Association of Hispanic Journalists also
+  offer guidance when it is not possible to talk to a group directly. Technical writers should be cognizant
+  of respectful language and possible conflicting opinions about identity from multiple communities, even
+  within the user group.</p>
+
+  <p>Conducting background research will help you, as a technical writer, focus your search terms and
+  questions. If your topic is about a specific technology, like virtual assistant technologies, you should
+  also look for studies that have tested these technologies with a variety of audiences and compare to
+  what you have found that is specific to your audience. As you analyze previous studies, you can start
+  making connections and synthesizing your findings in order to narrow your search terms, identify other
+  key areas of background research, and proceed to the next phase.</p>
+
+  <p>Conducting background research is a complex process. You’ll want to organize the research effectively
+  so you can use it to help you move to the next stage. The deliverables you develop at this stage should
+  be chosen and designed to best support the next stages of research and product development. A literature
+  review matrix is particularly helpful in identifying gaps in the literature and studies that need to
+  be updated. It can provide a better snapshot than an annotated bibliography and may be easier to update.</p>
+
+  <h3>Use a spreadsheet to document the following items:</h3>
+
+  <ul><li>Citation information • Methods used in the study • Sampling – who was included in the study,
+  how were they recruited? • Major findings • Relevance to the project • Relevance to the user group •
+  What can/should be updated about the study?</li></ul>
+
+  <p>You can list other categories, depending on your research questions. For example, the technology
+  or product or service studied alongside the user group might be really important and might require its
+  own column.</p>
+
+  <p>Stage One is an opportunity to explain studies that would be really relevant to this group of users
+  if only they were more recent. Use the matrix to identify what needs to be updated and why. For example,
+  if you were conducting research about readable font choices for older adults, a 20-yearold study (e.g.,
+  Bernard et al.) that addresses both the user group and the product feature may be relevant to the project,
+  but further research would be required to test fonts using current screen technology and mobile devices.
+  This stage is also an opportunity to analyze recent studies to identify gaps that have not been addressed
+  in the research thus far and thus studies that would benefit this user group. These gaps in the research—studies
+  that need to be updated and data that still needs to be collected—should connect to the recommendations
+  you make for the next steps for research.</p>
+
+  <p>When you are finished conducting background research or when you have collected enough background
+  research to identify important gaps for additional study, you can proceed to the next phase. Keep in
+  mind that conducting background research is an ongoing process that you will do throughout a project,
+  but make sure you are critically analyzing your background research regularly so you can identify opportunities
+  to move to other stages of research.</p>
+
+  <p>Document your work in an analytic memo. In your memo, make sure you include a summary of your findings;
+  a description of your background research method, including keywords, research questions, and databases;
+  and recommendations for next steps. You should identify gaps in the research, prioritize the next steps
+  to addressing them, and explain how addressing those gaps will benefit the user group and the overall
+  design process. At this time, you should also start documentation that will be used to define user groups—including
+  journey maps, personas, use cases, and scenarios—as relevant. You will refine these documents throughout
+  the process as you gather additional information.</p>
+
+  <p>Research Stage Two: Primary Research (Feedback, Observation, Gathering Information from Users)</p>
+
+  <p>In the background stage, you’ve identified gaps for additional research as well as research that
+  needs to be updated. These gaps may includde missing information about the users. In Stage Two, you
+  have a variety of primary research methods available so you can observe, evaluate, and gather feedback.</p>
+
+  <p>In Research Stage Two, you want to find out more about user goals and context of use. These are two
+  areas that require primary research or gathering new data. In this stage you will want to design an
+  approach that includes talking with users about their goals, direct analysis of the digital and physical
+  context of use, and observations of how users approach the physical and digital spaces of use.</p>
+
+  <p>User goals and context of use are overlapping areas of inquiry but address them separately before
+  comparing data. By addressing them separately, you can better understand the context of use, instead
+  of relying on the user’s perspective on the context of use.</p>
+
+  <p>Technical writers want to talk to users directly about their goals, usually through interviews or
+  focus groups. To find out about user goals, you’ll get better information from users if you practice
+  effective interview techniques that draw the users to tell stories about using products or their experiences
+  (Portigal). While users might have particular goals in mind, getting this additional detail can often
+  help users think through their goals and provide richer data about their likes, dislikes, values, and
+  interests. Focus groups allow users to riff off each other’s answers, which may be helpful for your
+  study.</p>
+
+  <p>You can also use surveys and questionnaires at this stage, which can be effectively combined with
+  methods that help draw out user stories. For example, surveys and questionnaires can help you gather
+  information at scale, but you’ll want to gather enough data directly from users in order to write effective
+  questions. They can also be used to gather demographic information or easily answered closed-ended questions
+  that do not require a lot of writing.</p>
+
+  <p>St.Amant explains context of use as “the environments in which individuals employ an item” (“Of Scripts
+  and Prototypes” 115). He describes context of use as including physical and digital settings and cultural
+  values and expectations. St.Amant is writing about products created for a global market, which must
+  consider a wide range of localization factors. Beyond localization concerns, context of use is an important
+  consideration. Consider, for example, medical devices designed for lab environments or for assisted
+  use that need to be used at home and sometimes without assistance (“Cultural Context of Care”).</p>
+
+  <p>Context of use involves physical, social, and cultural environments and factors (Hackos and Redish
+  93-97). If you can narrow the environment of use (e.g., a particular space), you can observe users in
+  that space. Early on, you may want to observe without any guidance to best capture how users approach
+  tasks in that environment. More focused testing (Stage 3) should be designed from what you know about
+  how users usually approach tasks in their environment. You also want to observe as much as you can about
+  the context of use and try to make initial observations without disrupting regular activity or directing
+  users in any way.</p>
+
+  <p>User goals do not always align with the use of a single product, service, or system. In fact, they
+  rarely do. Further, context of use is rarely what designers have imagined. To better understand the
+  importance of both user goals and context of use, consider the following example: One goal of college
+  students is to graduate on time. In order for an institution to understand whether they are properly
+  supporting this goal, it would first need to acknowledge the range of systems (e.g., course registration
+  systems), documentation, and processes (course scheduling procedures, advising procedures, course rotations,
+  etc.). These systems are affected by context of use. Do they require students to be on campus? What
+  are the hours of availability? Can they be accessed effectively through mobile technology? Does documentation
+  (e.g., instructions) assume access through a laptop instead of a mobile device? Finally, what is the
+  starting point and how is that communicated? There are several stakeholders in the goal for students
+  to graduate on time, and an institution will need to understand several factors related to context of
+  use to effectively support this student goal.</p>
+
+  <p>Write a summary and recommendation memo or report for each study you conduct at this stage. If you
+  conduct multiple studies, write an additional report that synthesizes the findings across the studies
+  and makes recommendations for next steps. In your recommendation report, you’ll note the findings of
+  your research, your methods, and how the context of use and user goals could affect the overall design.
+  Continue refining user documentation, such as personas and journey maps. You are ready to move on from
+  Phase Two when you have research questions that you can test with audiences (usability testing).</p>
+
+  <h3>Research Stage Three: Testing</h3>
+
+  <p>The first two stages of UX research should take place early in the technical writing process. You
+  are ready to start testing your product or service (e.g., content or a website) when you have gathered
+  enough information about the user group and the context of use to develop something to test. Uusability
+  testing is not the end of the technical writing process; rather, technical writers test their work with
+  audiences when they have enough information to develop an effective prototype to test but are not so
+  far along that they cannot make substantive changes based on user feedback.</p>
+
+  <p>Usability testing assesses how a user interacts with a particular feature of a product. For example,
+  you might test how they interpret content, how they complete an activity, or how they navigate a website.
+  You may go through multiple rounds of testing as well as gathering additional information from users
+  as the prototype (e.g., a draft of content, wireframe, etc.) progresses. Testing after the design is
+  complete makes it difficult to implement changes that can support users.</p>
+
+  <p>Card sorting is an early stage method you can use, though some would not classify it as a true usability
+  test since the user is not interacting directly with a product. This activity focuses on user preferences
+  in relation to the product but should be conducted early in the design process. The iterative nature
+  of the three stages means that you can conduct activities in any stage as needed for the project and
+  return to other stages. You can also combine a card sorting activity with your Stage Two interviews.
+  The stages are flexible and your decisions should be based on using participants’ time efficiently as
+  well as having enough information about them and their context of use to make activities like card sorting
+  effective.</p>
+
+  <p>Card sorting can be conducted in Stage Two or early in Stage Three, but placing it in Stage Three
+  illustrates card sorting and think aloud protocols as complementary methods that can be done at different
+  points in the design process. If you are unfamiliar with usability testing, these two methods are a
+  great place to start.</p>
+
+  <p>Card sorting is incredibly helpful for thinking through possible approaches to information architecture,
+  content categories, and information hierarchies from a user perspective. Card sorting involves using
+  note cards with words and phrases (either physical or using software) and allowing users to organize
+  them as they see fit.</p>
+
+  <p>A think out loud, think aloud, or talk aloud protocol involves prompting a user to share their thoughts
+  while using a product or feature. This product or feature might be navigating a website, completing
+  an activity, or using a set of instructions. It is a very common usability test and requires careful
+  preparation for both the user and the moderator since prompting people while they’re doing something
+  can seem “unnatural” (Barnaum). A think aloud protocol helps you understand the extent that your design
+  addresses audience needs.</p>
+
+  <p>When you’ve completed a round of usability testing, write up your results in a memo or short report.
+  Include enough information about your usability test design for another person to repeat it. Be sure
+  to describe the study’s limitations and recruitment strategy, which can be useful as the project moves
+  forward and as you pursue other tests. Continue honing your user documentation deliverables, such as
+  personas. Make recommendations for further research and any design recommendations based on your results.</p>
+
+  <h3>Conclusion</h3>
+
+  <p>UX research is central to technical writing work. The three phases of user experience (UX) research—background,
+  primary, and usability testing— presented in this chapter are intended to help you see research as both
+  a fundamental and ongoing part of technical writing. This chapter provides a foundation for building
+  your knowledge of research methods and when to use them as a technical writer. It touches on some methods
+  and provides a framework for incorporating others. Methodological approaches are constantly emerging.
+  This three stage UX research process is useful for effectively incorporating and situating traditional
+  research methods as well as testing methods. For example, it can be used to incorporate emerging methods
+  in community-based research, which foreground relationship building and reciprocity with users (e.g.,
+  see Shivers-McNair et al.).</p>
+
+  <p>This chapter also touches on important topics like accessibility, disability studies, identity, inclusive
+  language practices, and inclusive design because they are central to all technical writing work, including
+  UX research. Building your knowledge in these areas is never finished. A central requirement for technical
+  writers’ ability to advocate for users to constantly build and maintain this knowledge and to continue
+  to learn about and from users as people.</p>
+
+  <p>Integrating UX research practices and building reciprocal relationships with communities is essential
+  for technical writers and design teams to effectively serve users and build inclusive and effective
+  designs. User communities are complex and finding out about them and listening to them requires time
+  and commitment and reciprocity (Cardinal et al.; Smith et al.).</p>
+
+  <p>This work does not always easily align with corporate structures. Smith et al describe reciprocity
+  as working with a community, for example helping with technology questions or providing other expert
+  knowledge and engaging the community with your findings. Acharya’s integrative literature review shows
+  usability studies, guidelines and methods are evolving toward addressing social justice concerns and
+  not just corporate concerns. He argues that “usability is not limited to what makes a product expedient
+  to use, but also considers how the product can play a key role in improving peoples’ lives” (Acharya
+  18). Technical writers will need to rethink metrics like speed and argue that the quality of a product
+  or service is best measured in how it enhances the quality of life for users.</p>
+
+  <h3>Works Cited</h3>
+
+  <p>Acharya, Keshab Raj. “Promoting Social Justice Through Usability in Technical Communication: An Integrative
+  Literature Review.” Technical Communication, vol. 69, no. 1, 2022, pp. 6-26.</p>
+
+  <p>Barnum, Carol M. Usability Testing Essentials: Ready, Set . . . Test!. Morgan Kaufmann, 2020.</p>
+
+  <p>Broussard, Meredith. More Than a Glitch: Confronting Race, Gender, and Ability Bias in Tech. MIT
+  Press, 2023.</p>
+
+  <p>Cardinal, Alison, Laura Gonzales, and Emma J. Rose. “Language As Participation: Multilingual User
+  Experience Design.” Proceedings of the 38th ACM International Conference on Design of Communication,
+  2020.</p>
+
+  <p>Dorpenyo, Isidore Kafui. “Risky Election, Vulnerable Technology: Localizing Biometric Use in Elections
+  For The Sake Of Justice.” Technical Communication Quarterly, vol. 28, no. 4, 2019, pp. 361-375.</p>
+
+  <p>Gonzales, Laura. Designing Multilingual Experiences in Technical Communication. Utah State UP, 2022.</p>
+
+  <p>Hackos, JoAnn T., and Janice Redish. User And Task Analysis for Interface Design. Wiley, 1998.</p>
+
+  <p>Hamraie, Aimi. Building Access: Universal Design And The Politics Of Disability. U of Minnesota Press,
+  2017.</p>
+
+  <p>Hamraie, Aimi. “Universal Design and The Problem Of “Post-Disability” Ideology.” Design and Culture,
+  vol. 8, no. 3, 2016, pp. 285-309.</p>
+
+  <p>Huntsman, Sherena. “Addressing Workplace Accessibility Practices Through Technical Communication
+  Research Methods: One Size Does Not Fit All.” IEEE Transactions on Professional Communication, vol.
+  64, no. 3, 2021, pp. 221-234.</p>
+
+  <p>Johnson, Robert R. “Audience Involved: Toward A Participatory Model of Writing.” Computers and Composition,
+  vol. 14, no. 3, 1997, pp. 361-376.</p>
+
+  <p>Jones, Natasha N. “The Technical Communicator as Advocate: Integrating A Social Justice Approach
+  In Technical Communication.” Journal of Technical Writing and Communication, vol. 46, no. 3, 2016, pp.
+  342-361.</p>
+
+  <p>Jones, Natasha N., and Miriam F. Williams. “Technologies Of Disenfranchisement: Literacy Tests and
+  Black Voters In The US From 1890 To 1965.” Technical Communication, vol. 65, no. 4, 2018, pp. 371-386.</p>
+
+  <p>Leydens, Jon A., and Juan C. Lucena. Engineering Justice: Transforming Engineering Education and
+  Practice. John Wiley &amp; Sons, 2017.</p>
+
+  <p>Norman, D. A. “I Wrote the Book On User-Friendly Design: What I See Today Horrifies Me.” Fast Company.
+  08 May 2019. https://www.fastcompany. com/90338379/i-wrote-the-book-on-user-friendly-design-what-i-see-todayhorrifies-me.</p>
+
+  <p>Oswal, S. K. and Palmer, Z. B. “A Critique of Disability and Accessibility Research in Technical
+  Communication Through the Models of Emancipatory Disability Research Paradigm and Participatory Scholarship.”
+  Assembling Critical Components: A Framework for Sustaining Technical And Professional Communication,
+  edited by Joanna Schreiber and Lisa Melonçon, The WAC Clearinghouse and UP of Colorado, 2022, pp. 243-268.
+  https://doi. org/10.37514/TPC-B.2022.1381.2.09.</p>
+
+  <p>Rose, Emma J., and Joanna Schreiber. “User Experience and Technical Communication: Beyond Intertwining.”
+  Journal of Technical Writing and Communication, vol. 51, no. 4, 2021, pp. 343-349.</p>
+
+  <p>Portigal, Steve. Interviewing Users: How to Uncover Compelling Insights. Rosenfeld Media, 2013.</p>
+
+  <p>Sánchez, Fernando. “Racial Gerrymandering and Geographic Information Systems: Subverting The 2011
+  Texas District Map With Election Technologies.” Technical Communication, vol. 65, no. 4, 2018, pp. 354-370.</p>
+
+  <p>Shivers-McNair, Ann, Laura Gonzales, and Tetyana Zhyvotovska. “An Intersectional Technofeminist Framework
+  for Community-Driven Technology Innovation.” Computers and Composition, vol. 51, 2019, pp. 43-54.</p>
+
+  <p>Smith, Allegra, Nupoor Ranade, and Sweta Baniya. “Local Users, Global Takeaways: Methodological Considerations
+  for Audience Advocacy In Communication Design Research.” Proceedings of the 39th ACM International Conference
+  on Design of Communication, 2021.</p>
+
+  <p>St.Amant, Kirk. “Of Scripts and Prototypes: A Two-Part Approach to User Experience Design For International
+  Contexts.” Technical Communication, vol. 64, no. 2, 2017, pp. 113-125.</p>
+
+  <p>St.Amant, Kirk. “The Cultural Context of Care in International Communication Design: A Heuristic
+  For Addressing Usability In International Health And Medical Communication.” Communication Design Quarterly
+  Review, vol. 5, no. 2, 2017, pp. 62-70.</p>
+
+  <p>Ward, Mark. “What do Prince Charles and Ozzy Osbourne have in common?” BBC News. 09 Dec. 2016, https://www.bbc.com/news/technology-37307829.</p>
+
+  <p>World Wide Web Consortium (WC3). “Accessibility.” https://www.w3.org/standards/webdesign/accessibility.
+  Accessed 11 May 2023.</p>
+
+  <p>Teacher Resources</p>
+
+  <p>Overview and Teaching Strategies</p>
+
+  <p>Audience is infused in technical writing practice and pedagogy. UX research is a formal and systemic
+  approach to audience analysis that can be incorporated into your courses where you would normally focus
+  on audience.</p>
+
+  <p>The three stages of UX research are designed to be flexible in practice but are also flexible for
+  classroom pedagogy. For example, as a teacher you may choose to make Phase One a collaborative project
+  where the class completes a literature review matrix together. This project can be set up with classroom
+  activities like reading and analyzing at least one research article together and comparing audience
+  assumptions with actual data.</p>
+
+  <p>UX research and the concepts from this article may be incorporated into the following topics:</p>
+
+  <ul><li>Introducing rhetorical concepts of audience and audience analysis • Writing complex information
+  for audiences • Biases and assumptions about audiences • Case studies about design failures • Introducing
+  concepts of usability, readability, and accessibility • Introducing ethics and social justice approaches
+  to technical writing • User documentation like use cases and journey maps as project management tools</li></ul>
+
+  <p>Discussion Questions</p>
+
+  <p>These discussions and activities can be scaled for class discussion, group activities and projects,
+  or individual assignments.</p>
+
+  <ul><li>Choose a generation (e.g., Baby Boomers, Gen X, Millennials, or Gen Z) and write down what you
+  know or think you know about them. Conduct background research to check your assumptions.</li><li>Create
+  a literature review matrix with at least 6 sources (See Stage One). Write an analytic memo or create
+  a persona based on your findings. For information about creating personas, visit https:// digital.gov/2015/04/06/using-personas-to-better-understand-customers-usa-gov-case-study/.</li><li>Read
+  a usability study as a class. Identify and describe the research question(s), method, and sampling approach.
+  What remains relevant about the study and what can be updated? Consider different user groups, technologies,
+  and contexts of use.</li><li>Choose a campus process to evaluate. Consider processes associated with
+  transportation, registration, financial aid, the library, or advising. Identify design decisions and
+  how they connect to various stakeholders and audiences. What is assumed about the context of use? Design
+  a card sorting exercise or think aloud protocol to test one of these processes.</li></ul>'

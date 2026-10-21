@@ -1,0 +1,760 @@
+id: ws6-who-is-the-user-researching-audiences-for
+title: Who is the User? Researching Audiences for Technical Documents
+author: Emma J. Rose
+source_title: 'Technical Writing Spaces: Readings on Writing, Volume 6'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-6/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Emma J. Rose in Technical Writing Spaces: Readings on Writing, Volume 6, for student
+  writers, titled “Who is the User? Researching Audiences for Technical Documents.”'
+topics:
+  concern:
+  - research
+  - assignment:audience-purpose
+whole: true
+changes: none
+body: '<p>Audiences for Technical Documents</p>
+
+  <p>Emma J. Rose</p>
+
+  <p>When I think about what makes a good technical document, I’m reminded of Janice (Ginny) Redish’s
+  explanation.1 Redish defines a successful document as one that helps the intended audience find what
+  they need, understand what they find, use that information to accomplish a task and do that in the time
+  and effort they are willing to spend. Makes a lot of sense, right? But how do we learn about the needs
+  of our intended audiences and how can we be sure that the information we produce meets their needs?
+  In this chapter, you will learn about how to research your audience and use that information to help
+  create or improve a technical document.</p>
+
+  <h3>Technical Documents and Their Users</h3>
+
+  <p>When you are starting out as a writer, people have lots of advice. If you are a fiction writer, you
+  might get advice like: “Write what you know.” When it comes to writing technical information, that advice
+  is dead wrong. Instead, you’ll hear “Write for your audience.” But you can’t just take this advice to
+  heart and then sit in a room by yourself and write. Instead, crafting technical documents always involves
+  others. To learn about others, technical communicators conduct research. You will need to talk with,
+  learn from, and get feedback from the very people who will be using the information that you are creating.
+  At first, this can feel overwhelming, but it’s one of my very favorite parts of being a technical communicator.</p>
+
+  <p>1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>A technical document has specialized information to communicate across different genres and modes,
+  and is created by individuals, communities, and organizations, to provide instruction or information.
+  Disparate examples of technical documents include documents, websites, and apps, but also election technologies
+  (Dorpenyo and Agboka), voting policies and procedures (Jones and Williams), hip hop playlists (Hierro),
+  YouTube tutorials (Ledbetter; Edenfield and Ledbetter), or Reddit’s Explain it Like I’m Five (Pflugfelder).</p>
+
+  <p>Whether we refer to the people as readers, our audience, or users, one thing they share is that they
+  are often “reading to do,” meaning they engage with a document to accomplish something (Redish). For
+  this chapter, I use the term user to refer to a person who is trying to get something done and has a
+  clear objective in mind. Anytime you approach a new technical writing task, you’ll repeat this to yourself:
+  why, what, who, and how which will inform what kind of product or document you will create.</p>
+
+  <h3>Why: Clarifying Your Purpose</h3>
+
+  <p>Every technical document has a reason to exist. You need to clarify what the purpose is before you
+  start writing. Having a clear purpose helps to identify who the audience is for your document. Imagine
+  you work for a county health department, and you have been asked to design a document to show people
+  how to properly wash their hands. To get to the heart of the purpose, try the 5 Whys technique (Ries).
+  Ask yourself or your team “Why” five times. Each Why leads to a deeper understanding of the purpose.
+  For example,</p>
+
+  <p>1. Why are we designing this document?</p>
+
+  <p>To show people how to properly wash their hands.</p>
+
+  <p>2. Why?</p>
+
+  <p>So, people can wash their hands correctly.</p>
+
+  <p>3. Why?</p>
+
+  <p>So, they don’t get sick or get others sick.</p>
+
+  <p>4. Why?</p>
+
+  <p>To help prevent the spread of disease during a global pandemic.</p>
+
+  <p>5. Why?</p>
+
+  <p>To save lives. This is a simple exercise but focusing on purpose helps you connect to the broader
+  implications of a single document and tie it to the broader purpose and mission of the organization.</p>
+
+  <h3>What: Determining the Kind of Document You Will Create</h3>
+
+  <p>Different technical documents have different purposes. Some are meant to be references, something
+  that people can quickly look at to get started or complete a task. When you buy a new electronic device,
+  you’ll typically see a document called a quick start guide, which is short, includes lots of pictures,
+  and helps you understand the immediate functions of a device, how to power it on, and how to get started.
+  A quick start guide has a focused purpose and is meant to be used early on and then discarded. It doesn’t
+  help you learn how to become an expert with your new device. Let’s look at another example: a car manual
+  that lives in the glove box of your car. What features of it are dictated by its purpose? Well, most
+  of us don’t read it front to back for fun, we also leave it in the car because that is where we will
+  need it. So, it is designed to be small and fit in the glove box. It has an Index, because people reach
+  for it when they have a problem or are stuck, so it needs to help users find different topics quickly
+  and easily.</p>
+
+  <p>Technical documents need to support different people with different needs. Take an Electronic Medical
+  Record, which is a software used in many health care settings. The receptionist at a clinic may need
+  to access the scheduling page. They might be interrupted many times but mostly use one or two screens
+  in the system. The nurse may need to primarily access the summary information of a patient that lists
+  their medical history, vitals, and prescriptions. They move from room to room seeing patients quickly
+  and accessing the same screens for different patients. Then, there is the doctor who needs access to
+  reference materials for diagnosing patients and detailed screens to document and capture the nuances
+  of a patient’s particular medical conditions. Each of these users is accessing the same technical system,
+  but their relationship to it and their job functions impact their use of the system and their needs
+  for it. Thinking about how technical information is accessed by different users helps us think carefully
+  about who it is we are writing and designing for.</p>
+
+  <h3>Who: Identifying Your Audience</h3>
+
+  <p>To gain a deeper understanding of audience, you’ll need to gather preliminary information about who
+  it is that you are trying to serve. If you are working within an organization, they may already have
+  a clear idea of who their audience is, but there are nuances and considerations for every technical
+  document. At this stage, it’s easy to get overwhelmed with details. So, try and focus on the essential
+  aspects of audience.</p>
+
+  <p>We all have assumptions about the people we are writing or designing for. It’s helpful first to clarify
+  what you know, or what you think you know, about the audience. Take some time to write down your reflection:</p>
+
+  <p>1. Who needs this information? 2. What are the questions they might have? 3. What is their existing
+  knowledge about the subject? 4. Where or how might they access this information? 5. What are the cultural,
+  social, or economic factors that might impact how they access or use this information? 6. What patterns
+  of exclusion exist?</p>
+
+  <p>Reflecting on what you know or what you think you know is helpful. However, beginning writers often
+  rely on their intuition or existing experience for understanding audience, which can be risky (Lam and
+  Hannah). When you rely on your own experience, you write from assumptions. One way bias can appear in
+  writing is when you assume other people have similar experiences as you do. There are many examples
+  of forms that ask people to identify their gender and only include choices of men or women, instead
+  of supporting inclusive ideas of gender (Bennett). The people who have designed these forms have a biased
+  view that did not incorporate ideas of non-binary gender expressions. Here is another example: Facebook
+  has a year in review feature designed to celebrate fun memories from the past year. However, user Eric
+  Meyer logged in and was confronted with a picture of his daughter who had died that year (Wachter-Boettcher).
+  The designers of that Facebook feature were biased to think everyone wanted a feature to celebrate their
+  year.</p>
+
+  <p>In technical documents, instances of bias arise all the time. I worked at a company that decided
+  to update an older main frame software system to be web-based. The designers of the new system assumed
+  users would appreciate a more modern web-based tool. What they didn’t anticipate was that this older
+  system supported very fast data entry for repetitive tasks. The new system, while well designed, required
+  users to click through multiple pages to enter data and it slowed down their work considerably. The
+  designers in that case did not consider how people using this system valued efficiency over other considerations
+  like ease of use.</p>
+
+  <p>The best way to prevent bias is to not just think about audience but to meaningfully include users
+  during the design process. Most work in technical communication is collaborative. Ensuring you have
+  a diverse group of people working together is a good start. People who have different lived experiences
+  and perspectives bring valuable expertise to the design process. Further, to ensure your design is meeting
+  the needs of the people who will use it, you need to go further and get to know who the people are who
+  will use your document through research. Through your research, include a range of diverse people in
+  the process and recognize and address exclusion. One approach is to work with and include people who
+  are exclusion experts (Holmes). An exclusion expert is a person who has in-depth, personal knowledge
+  of what it means to be left out. You need include a community of exclusion experts, people who might
+  be disadvantaged by your product or service and ensure your work does not exclude or marginalize them.</p>
+
+  <p>The only way to make sure that something that you have designed will work is by getting input and
+  feedback from users along the way. Audience analysis is an ongoing and iterative process. Users and
+  their needs change over time, so it is important to continuously learn about the people you are designing
+  for. The job of understanding your audience is never done.</p>
+
+  <h3>How: Techniques for Researching and Understanding Audience</h3>
+
+  <p>There are many ways to learn about your audience. We often refer to these ways of understanding audience
+  as user research methods. Redish uses a metaphor of a toolkit when it comes to understanding users (Redish).
+  You have a toolkit that contains lots of different tools, but not every tool is right for the job. As
+  a beginning technical communicator, your job is to learn about the tools you can use to understand your
+  audience and to learn what each tool is good for and how and when to use it. In the following section,
+  I’ll explore a few examples of understanding users but there are many more. To learn more about many
+  of the methods you can use to learn about your audience, check out the Usability Body of Knowledge (https://www.usabilitybok.org/methods)
+  or IDEO’s Design Kit (http:// www.designkit.org/methods.html).</p>
+
+  <h3>Examining Existing Forms of Data</h3>
+
+  <p>If you are working in an organization, they probably already have some information about who the
+  users are. Some of this might be in the form of research and it might be based on people’s assumptions.
+  Also, even if there is an existing understanding of your audience, it is helpful to remember that people
+  and contexts change over time. Start with existing data and go further. Here are a variety of methods
+  to help you work with existing forms of data.</p>
+
+  <ul><li>Interview stakeholders and internal experts conduct interviews with stakeholders, or people
+  who work inside your organization. This could include product managers or owners, marketing professionals,
+  or people in leadership. Interviewing stakeholders who have deep knowledge of the organization and its
+  goals can help you understand some of the whys related to the document. Additionally, consider interviewing
+  people who have direct interactions with the audience. People who work on the frontlines with your audience
+  such as customer service, helpdesk staff, or people who work in the field. These internal experts tend
+  to be the most knowledgeable about the audience and their needs.</li><li>Review internal data: Most
+  organizations have existing data from surveys or market research. There may be reports on customers
+  or people you are designing for. During your stakeholder interviews, ask around and see what additional
+  reports or data might be available that can inform who the audience is. If you are re-designing a website,
+  you can review data analytics which can show you how people currently use the existing site: which pages
+  are the most popular and which search terms people use on the site.</li><li>Social media: There are
+  lots of ways to use social media to learn more about your audience. If you are internal to an organization,
+  you can look at Twitter Audience Insights, LinkedIn, or Facebook Audience Insights to learn more about
+  your users’ interests, geographies, job titles, demographics, and so on.</li></ul>
+
+  <p>These are just a few of the methods you can use to research your audience. They are an effective
+  way to gain an initial understanding of your audience because they leverage information that may already
+  be available. Looking at these existing sources can be a good way to get started familiarizing yourself
+  with your audience’s needs, tasks, and concerns.</p>
+
+  <h3>Gathering New Data Through Research</h3>
+
+  <p>If you’ve learned all you can about your users from internal sources or don’t have access to that
+  information, it’s time to directly interact with users to gather more information about who they are
+  and what they need. There are many different research methods you can choose from. Here I will focus
+  on a few of the most common. These methods are especially helpful early in the process when you are
+  still trying to decide who your users are and what their goals, needs, and motivations are.</p>
+
+  <p>For any process where you are gathering information, it is important to follow strong ethical standards
+  and guidelines. If you are working for an organization, you should first check with an Institutional
+  Review Board, the legal department, or other people conducting research to understand how to conduct
+  the research in an ethical and just way. Regardless, you should follow these three basic principles:</p>
+
+  <ul><li>Research is voluntary. People should not feel pressured to participate, they can choose to participate
+  or not, and they will not be penalized in any way for not participating. They also should be able to
+  change their mind at any point.</li><li>Purpose, transparency, and use of data. Participants in your
+  study should be informed of the purpose of the study. You should also tell them what data will be collected,
+  why it is being collected, and how it will be stored and used. Participants should be given the right
+  to remove their data from the study at any time.</li><li>Consent and clarity. All aspects of the study
+  and data should be explained in a clear and plain way to participants. Participants have to give their
+  permission, also called consent, to take part in the research. Participants can give their consent verbally
+  or they can sign their name as a way to provide consent. Participants can withdraw their consent at
+  any time.</li></ul>
+
+  <p>These factors are particularly important to researching audiences because as a researcher, you have
+  an obligation to conduct the research in an ethical way that protects the rights and privacy of the
+  people who agree to participate. In my own professional practice, I have had several experiences that
+  have required me to take an individual ethical stance. One organization I was working with wanted to
+  use some of the research results, specifically positive quotes from customers, in their marketing materials.
+  This was clearly outside of the bounds of what participants agreed to. I had to deny this request and
+  explain why that wasn’t appropriate and violated trust with participants. While I prevailed in this
+  case, acting ethically requires the actions of individuals, but more importantly policies, guidelines,
+  and a coalition of other people, including leaders, to ensure that we are upholding high ethical standards
+  when it comes to research.</p>
+
+  <p>If you are interested in learning more about research ethics in designing technical documents, there
+  are many helpful resources to read that examine this topic in more detail, including Victor Yocco’s
+  article “Ethical</p>
+
+  <p>Considerations in UX Research” and Alba Villamil’s “The Ethical Researcher’s Checklist.”</p>
+
+  <p>In the following sections, we’ll look at some specific types of research methods you can use to learn
+  more about the people who you are designing for.</p>
+
+  <h3>Surveys</h3>
+
+  <p>Surveys are a good way to gather information from many people in a short amount of time. A survey
+  can help you understand who your users are and what they are trying to do. It can also help identify
+  their attitudes and opinions. When trying to understand your audience, it is helpful to use surveys
+  at different times in the design process. For example, if you are designing something new, or embarking
+  on a redesign, it is helpful to survey users at the very beginning of the project. If you are trying
+  to get a sense of how users are experiencing your product over time or compare results or changes, it
+  is helpful to conduct a survey multiple times, such as before a redesign and after a redesign to compare
+  results.</p>
+
+  <p>In terms of how many people to include in a survey, there are two key factors to consider: representativeness
+  and sample size (Sauro). The first factor is representativeness, which means that the people you are
+  surveying are representative of the people who you are interested in learning from. For example, if
+  we were trying to understand how students experienced a college website, we could feel confident in
+  our survey if we sent it via a student email list and if we added a question asking respondents if they
+  were students at the institution. We would feel less confident if we just posted the survey link to
+  the website because all kinds of people access a college website: staff, faculty, community members,
+  and so on. The second factor is sample size, which looks at how precise your results are compared to
+  the broader population. A sample size of 100%, meaning every person in the population filled out the
+  survey, would be highly unlikely. Working from the previous example, it would be surprising and highly
+  unlikely to have every student at a college fill out a survey about the website. Instead, sample size
+  is really a question of how precise you need to be. The more precise you need to be, the larger sample
+  you will need. Statistician and author Jeff Sauro provides a helpful explanation of sample size by asking
+  yourself what margin of error you are comfortable with and working backwards from there by using confidence
+  intervals. For example, Sauro shows the difference in sample size by showing a table that compares numbers
+  based on what margin of error you are comfortable with (see the full chart at https://measuringu.com/survey-sample-size/).
+  If you are asking a question about a rating scale and want to achieve a 1% margin of error, you would
+  need to survey over 6000 people. But on the other end of the spectrum, you are comfortable with a 20%
+  margin of error, you only need to survey 18 people.</p>
+
+  <p>On a final note about surveys and sample sizes, keep in mind that the kinds of surveys we do in writing
+  and designing are different than those that are used for political polling. The precision is often less
+  important in the work we do and a higher margin of error is acceptable. You should think of surveys
+  as one of the many tools you have in your toolkit that you might use to understand people. Using multiple
+  methods (surveys, interviews, and usability studies) can also help you feel more confident in your knowledge
+  and understanding of the people you are designing for.</p>
+
+  <p>Surveys are typically delivered online via email or on a website and can include both quantitative
+  and qualitative questions. A survey can ask questions about a person’s role, what task they are trying
+  to accomplish, and how they might rate a current product or service. There are lots of helpful tips
+  for designing and writing surveys (Feinstein). For example, you should with general questions and then
+  move to more detailed ones. It’s helpful to write clearly and plainly and provide options that don’t
+  overlap. Also, keep it short to ensure more people will complete it. It’s important to make sure your
+  survey is clear, so have someone try it out before you send it out more broadly.</p>
+
+  <p>Let’s imagine we are helping a transit agency design a new website and we want to understand our
+  users. Some questions you could ask in a survey include:</p>
+
+  <p>1. How often do you use public transportation? { Everyday { Several times a week { Several times
+  a month { Less than once a month { Never</p>
+
+  <p>2. What are your motivations for using public transportation? (Check all that apply) { It’s my only
+  form of transportation { To save money { To avoid traffic { To relax on my commute { Other _______</p>
+
+  <p>3. When you visited our website today, what information were you looking for? (Check all that apply)
+  { Schedules { Fares</p>
+
+  <p>{ Service delays { Careers { News { Other __________ 4. How would you rate our current website? {
+  Excellent { Very good { Good { Fair { Poor 5. What is your biggest frustration or concern with our existing
+  website? (Open-ended)</p>
+
+  <p>Note that, in this example, you are providing individuals with a range of answers to select from
+  (closed questions) vs. allowing them to respond with any response they wish to use (open questions).
+  There are benefits to both. Closed questions give the survey respondents a predefined list which often
+  makes it easy to quickly choose between and provides the data in a form that is easy to compare. Open
+  questions can take a bit longer to complete but allow respondents to use their own words to describe
+  their responses. However, for the researcher, open questions take longer to analyze. It’s a good idea
+  to use a mix and be thoughtful about the range of options you are giving a respondent to choose between.</p>
+
+  <p>There are a variety of tools you can use to design and distribute a survey. You can send a link to
+  a survey through email or post it on a website or promote it through social media. Keep in mind that
+  how you recruit people might influence your results, so try and be mindful of where you are posting
+  it. Most digital survey tools provide analytics to show you how people are accessing the survey. When
+  your results come back, you can analyze the data and look for patterns. It can be helpful to filter
+  the responses to uncover new patterns. For example, if we looked at the prior survey and focused on
+  people who use transit every day, they might have different needs, tasks, and concerns than people who
+  use it less than once a month. That information can help inform who your audience is and what information
+  they might need.</p>
+
+  <h3>Interviews</h3>
+
+  <p>Interviews are a valuable and informative way to learn more about your audience. Interviews can be
+  quick and informal: you can approach people in public spaces and ask a few questions in five minutes.
+  Alternately, they can be more in-depth, where you recruit ahead of time and spend 3060 minutes asking
+  questions. Interviews are conducted one-on-one either in person or remotely. For an interview, you should
+  have a clear list of open-ended questions that helps to start a conversation with a representative member
+  of your audience. Your questions should focus on who they are and what they want to do.</p>
+
+  <p>Take for example, this list of questions, developed by Derek Ross to better understand audiences
+  for environment-related communication (Ross). These interviews were designed to be conducted at public
+  sites that drew a lot of visitors.</p>
+
+  <h3>Questions:</h3>
+
+  <ul><li>Where are you visiting from? • What brought you out here today? • How did you hear about (dam
+  name/park name)? • Now, just to change up a bit, when I say the word “environmental,” what is the first
+  thing that comes to mind? • Where do you stand on environmental issues? • Based on that, where do you
+  feel that you get your values from?</li></ul>
+
+  <p>Do you think of yourself as an “environmentalist,” “environmentally active”? Could you explain why
+  or why not? • Can you think of any environmental arguments that you have heard that are particularly
+  effective? • Based on what you were just saying, what kind of arguments would be most effective, at
+  least for you personally? • Looking out over all of this, how would you describe this to someone else?
+  • And, last but not least, do you mind if I ask how old you are?</p>
+
+  <p>As opposed to the closed survey questions we examined earlier, these interview questions are more
+  open. Individuals can respond to the questions using their own words rather than selecting from an existing
+  set of possible responses. Using open questions in interviews is helpful because it provides participants
+  with the ability to choose their own words and language to respond. It also allows the interview to
+  be more conversational in nature which helps create a good rapport between the researcher and the participant.</p>
+
+  <p>In terms of how many people you should interview when researching audience, there isn’t a clear consensus
+  and it depends on several factors. According to Donna Bonde, you should take into account the following
+  factors: scope of your study, characteristics of the target audience, expertise of the researchers,
+  resources (budget and time) and research audience, and complexity of the project (Bonde). However, a
+  good guideline is to interview between 5-12 users to reach saturation. Saturation is the term researchers
+  use to identify when you are starting to learn the same things from new participants.</p>
+
+  <p>Finally, interviews can be done throughout the writing and design process but are usually conducted
+  early in a project to help you, the researcher, understand the needs of the audience and their existing
+  knowledge. Learning this from users will help you make decisions about what information to include,
+  how to design the information, and what features should be included.</p>
+
+  <p>To develop your own interview questions, first think about what you want to learn or clarify about
+  your audience. Focus specifically on information that would be helpful as you make design decisions.
+  Interviews help gather people’s opinions, preferences, ideas, and opinions in their own words and language.
+  However, they also have drawbacks. Interviews rely on participants’ ability to accurately recall details
+  and they may have a desire to respond to a question in a way that meets the expectations of the person
+  conducting the interview.</p>
+
+  <p>For example, I live near Seattle and recycling is a badge of honor. If I wanted to ask people about
+  their recycling habits, I could interview them and I’m sure I would learn a lot about their opinions,
+  beliefs, and preferences around recycling. But if I wanted to understand their behaviors, actions, or
+  habits, then I would need to engage in observational methods and watch how they recycle and what choices
+  they make. What they tell me about their recycling habits might be different from what I observe. The
+  next method, contextual inquiry, is an example of an observational method.</p>
+
+  <h3>Contextual Inquiry</h3>
+
+  <p>Similar to an interview, a contextual inquiry is a method where a researcher asks a participant questions
+  (Beyer and Holtzblatt). However, there are some important differences. A contextual inquiry is conducted
+  at the site where the technical information is being used. For example, if we wanted to understand how
+  to design a new billing system for a doctor’s office, we would conduct the contextual inquiry at the
+  doctor’s office with the person who does the billing while they were doing it. A contextual inquiry
+  includes questions about a person and their preferences, but it also includes watching a person work
+  with an existing system to understand how they do their work and what challenges they face. When doing
+  a contextual inquiry, the interviewer puts themself in the mindset of an apprentice, trying to learn
+  and understand what a skilled expert does.</p>
+
+  <p>You would use this approach to research your audience when you are trying to learn how people currently
+  approach and accomplish a task. It is especially helpful when you are approaching a topic you know very
+  little about or the topic is highly technical or complex in nature. Contextual inquiry also helps show
+  you how people get things done rather than just their recollection or how they do something. Surveys
+  and interviews are helpful to understanding people opinions and their recollections of a task, but contextual
+  inquiry is beneficial to give you a deeper understanding and helps to highlight practices that people
+  might not remember or take for granted. Similar to interviews, there aren’t strict guidelines of how
+  many people you should include in a contextual inquiry, but a good rule of thumb is to start with five
+  participants from each unique user group. If you are still learning new things after talking to five
+  people, add five more.</p>
+
+  <h3>Synthesizing: Capturing What You Learn about Your Audience</h3>
+
+  <p>When you research your audience, it’s helpful to synthesize that information and capture it in a
+  way that helps you articulate who your audience is for your own design and writing practice. It is also
+  helpful for you to share that knowledge with others on your team or in your organization. All the methods
+  described earlier give you different insights into your audience. So, to get a better picture we often
+  engage in what is called triangulation. Triangulation refers to using different methods to understand
+  a single phenomenon (Denzin). Each method provides some insight, but taken together, they can help fill
+  in gaps or shine light on certain aspects of who your users are. Looking across the data from multiple
+  methods, you can capture key insights about your audience and start to get a picture of who they are
+  and what they need.</p>
+
+  <p>For example, let’s imagine we are redesigning the website for a transit organization, we’ll call
+  it Big Bus Org. We may choose to employ several research methods. For data, we could look at existing
+  data to understand how people use the current site, what are the most popular pages, and what search
+  terms do they use. We could also interview customer service representatives and ask them what are the
+  common questions they get when people email or call. We can also look at the social media accounts for
+  Big Bus Org and see what prompts people to reach out for help and when they are frustrated. We could
+  also conduct new research to better understand Big Bus Org customers. We could post a survey on the
+  home page of their existing website to understand people’s needs, tasks, and how they currently rate
+  the site. We could also interview existing customers and schedule these interviews over the phone or
+  remotely to ask people about their experiences with the website and riding the bus. We could also do
+  contextual inquiry by asking people if we could join them on a bus ride or watch them navigate the existing
+  website looking for information.</p>
+
+  <p>After collecting this data, we could then organize it in several ways. We could first catalog all
+  the complaints, concerns, and frustrations of the current web site experience, which can help us develop
+  requirements for our new design. We can also synthesize the data from the sources and try and group
+  and conceptualize our audience so we can understand who they are and communicate about our users to
+  others on the team.</p>
+
+  <p>Personas are a useful tool for capturing data about your audience’s needs, goals, and motivation.
+  You take what you learn across multiple methods and come up with a composite, abstract, portrayal of
+  an imaginary person. You might have 3-5 different personas that represent different aspects of your
+  audience. If we take the example of a transit rider from earlier, we might have three personas: Daily
+  choice rider (someone who has a car, but chooses to commute daily), Transit dependent rider (someone
+  whose doesn’t own a car and relies on transit), and an Event rider (someone who rides infrequently because
+  of a special event like a concert). Each of the three personas have different motivations, familiarity
+  with the system, and needs. Segmenting your audiences in this way can be helpful for making decisions
+  about how to design your technical information.</p>
+
+  <p>A persona has two functions: empirical, in that they capture data, and rhetorical, in that they communicate
+  that data to others (Rose and Tenenberg). Once you capture and synthesize your data, you are ready to
+  create a compelling and persuasive communication product that can help educate others about the audience.
+  Personas typically contain information about one fictional user who represents many other users. It
+  can contain a photograph of the person, a summary of who they are and what they are trying to accomplish
+  with your product or service. A persona can also include an emblematic quote from that user and demographic
+  or psychographic information. If you want to learn more, there are lots of excellent resources that
+  can help you learn more about creating personas (Adlin and Pruitt; Mulder and Yaar).</p>
+
+  <p>Creating a persona helps you synthesize the information to better understand and articulate the needs
+  of your target audience and communicate who they are to others on the team. They are also helpful when
+  you are drafting, editing, and revising your technical document. Let’s go back to our example of a transportation
+  website. For frequent bus riders, here is Craig, a bus rider who owns a car but prefers to take public
+  transportation due to concerns about the environment and wanting to relax on his commute. The second
+  persona is Louise, she is dependent on public transit to get around as it’s her only form of transportation
+  and she is highly knowledgeable about routes and services. As you start working on your website, you
+  might ask: “What information does Craig need to plan a trip?” or “What does Louise need to know about
+  purchasing a monthly pass?” Imagining the specific people who will use your information will help you
+  keep the focus on their needs and avoid thinking of users generically. Alan Cooper refers to this as
+  “the elastic user” (Cooper) when you have a team sitting around thinking of users as generic abstractions,
+  they can stretch to fit any scenarios or situation the design team can think of. Use your personas to
+  focus on specific needs and attributes and communicate those to others on your team. This helps avoid
+  the problem of the elastic user.</p>
+
+  <p>Personas also often include details about the user’s context or setting that helps make decisions
+  about design. For example, we may have learned through research that Louise’s persona accesses the website
+  on a mobile device and has a limited data plan. This will help remind the design team that there needs
+  to be an optimized mobile version of the website that is lightweight and runs quickly. We might also
+  learn that Louise is busy and in a hurry in the morning and so the schedule page should provide information
+  that is easy to read which can help designers think about how to format that information.</p>
+
+  <h3>Evaluating Your Technical Documents: Usability Testing</h3>
+
+  <p>Up to this point, we have discussed how to research your audience to help inform the writing and
+  design of technical information. However, if you want to ensure what you have designed works for your
+  readers or users, you also need to conduct usability testing. Usability testing is a method that helps
+  you understand if a person can successfully use what you have designed and what problems arise when
+  they try to use it. Usability testing can and should be used throughout the design process. That means,
+  don’t wait until you are done. Gather input by showing early drafts and prototypes to users early in
+  the process. That way it’s easier to make changes, decisions, and adjustments as you go. According to
+  Redish, there are six characteristics that all usability tests share:</p>
+
+  <ul><li>Real issues: Thinking about what you want to learn, plan your test accordingly.</li><li>Real
+  people: People participating in the study who represent the audience you are designing for.</li><li>Real
+  tasks: Different stories or scenarios that are realistic for your audience that they will do when using
+  your product.</li><li>Real data: Information you collect in the study, when you ask questions, watch,
+  listen, and take notes.</li><li>Real insights: Hold off on your assumptions, review the data, and determine
+  what is working and what needs to be improved.</li><li>Real changes: Take what you have learned and
+  make meaningful changes.</li></ul>
+
+  <p>In the next section, we’ll look at an example of an informal usability study you could conduct.</p>
+
+  <h3>Usability Testing Examples</h3>
+
+  <p>Let’s look at a usability testing example that you could use to practice. I have also developed a
+  template for a Usability Testing Plan that you can use when planning and conducting your own study.
+  Visit https://doi.org/10.1145/3548658 and look for the file in the Educational Resources section (Rose,
+  2023). We’ll continue to work on the idea of improving a website about public transportation. For this
+  example, you’ll need three people, a computer or mobile phone with access to the internet, your local
+  transit organization. If you don’t have one locally, try the closest big city or the Amtrak website.
+  It is also helpful if you can record the session, so you can go back and review what happened. If you
+  are meeting remotely, a tool like Zoom can let you share screens and record the session. If you are
+  meeting in person, you can use a video camera or mobile phone to record. In the following section, you
+  will find an example usability test session, from http://www.usability.gov.</p>
+
+  <p>Example Usability Test Session</p>
+
+  <p>Here is an example test session.</p>
+
+  <p>1. The facilitator will welcome the participant and explain the test session, ask the participant
+  to sign the release form, and ask any pre-test or demographic questions.</p>
+
+  <p>2. The facilitator explains thinking aloud and asks if the participant has any additional questions.
+  The facilitator explains where to start.</p>
+
+  <p>3. The participant reads the task scenario aloud and begins working on the scenario while they think
+  aloud.</p>
+
+  <p>4. The note-takers take notes of the participant’s behaviors, comments, errors, and completion (success
+  or failure) on each task.</p>
+
+  <p>5. The session continues until all task scenarios are completed or time allotted has elapsed.</p>
+
+  <p>6. The facilitator either asks the end-of session subjective questions or sends them to an online
+  survey, thanks the participant, gives the participant the agreed-on incentive, and escorts them from
+  the testing environment.</p>
+
+  <h3>Example Scenarios</h3>
+
+  <p>For the study on the transit website, here are five scenarios you can use.</p>
+
+  <p>1. Let’s imagine you are commuting to school or work. You need to find a way to arrive by 8am next
+  Monday morning. Using this website, find out what route will get you to your destination by 8am.</p>
+
+  <p>2. You have a friend visiting from out of town. Find out if there is a route from the airport to
+  your home.</p>
+
+  <p>3. You want to buy a monthly pass to use public transportation. Find out how much a monthly pass
+  costs and where you can purchase one.</p>
+
+  <p>4. You think your bus or train is delayed. Find out if there are any delays in your area.</p>
+
+  <p>5. You have heard the transit agency is thinking about cutting services in your area. Find a way
+  to provide feedback to the agency and voice your concerns about cutting services.</p>
+
+  <h3>Analyzing and Reporting Data</h3>
+
+  <p>After conducting a usability test, the team needs to make sense of the data. Look through the data
+  you have collected, read your notes, and look for patterns or areas where participants struggled. The
+  goal of a usability test is to find problems, so look for examples of problems that people encountered.
+  You may have captured quantitative data such as success rates, task time, error rates, and questionnaire
+  ratings. You have also collected qualitative data about what participants did, what they said, comments,
+  recommendations, or frustrations. For each of the problems you find, make a list of the Finding (what
+  was the problem) and the Evidence (how do you know it was a problem). Evidence can include quantitative
+  and qualitative data, using quotes from participants is a good idea to help demonstrate the problem.
+  For example:</p>
+
+  <p>Finding: Users struggle to find information about service delays. Evidence: Three out of five participants
+  were not able to successfully find the service delay page. The remaining two participants found the
+  page but stated confusion about the information on the page. Participant</p>
+
+  <p>3 said “I think I’m in the right place, but I’m just not sure if this answers my question.”</p>
+
+  <p>After you have identified your top findings on the site, you can communicate this information in
+  a written report or oral presentation to the rest of your team. It is helpful to include screenshots
+  of the document or information and include quotes or video clips that show participants’ experiences.
+  If you have a large number of findings, consider assigning a severity rating to each one, for example:
+  critical, serious, or minor.</p>
+
+  <h3>Making Changes and Improvements</h3>
+
+  <p>Once you have gained a clear understanding of what is working well and what needs to be improved,
+  it is time to make the changes to the original technical document. Take what you’ve learned from the
+  test and make improvements in a new iteration. Prioritize the most critical problems and fix those first.
+  Ideally, you should test your document again to make sure the changes have improved the document overall.</p>
+
+  <p>In this section, we have just touched on the method of usability testing. There is a lot more to
+  learn and many helpful resources to do so, including how to books like Usability Testing Essentials
+  by Carol Barnum and Don’t Make Me Think by Steve Krug. You might also consult access resources available
+  on the website of the User Experience Professionals Association (https://uxpa.org) or Digital.gov (https://digital.gov).</p>
+
+  <h3>Concluding with Some Tips for Research</h3>
+
+  <p>As you have now learned, there are many ways to understand and research your audience for the technical
+  document or design you are creating. It can feel overwhelming when you are starting out, so I’ll conclude
+  with some tips:</p>
+
+  <p>1. Identify and then check your assumptions: You probably are going to over-estimate what you know
+  about your audience. It will be important to separate out what you think you know about your audience,
+  your assumptions, and what you can back up or verify with data.</p>
+
+  <p>2. Recruit for breadth and depth: Find participants to give you feedback on your product who are
+  target users, but also be sure that the people who you talk with make up the diversity of the population.
+  Make sure to seek out people from marginalized or underrepresented audiences. To create inclusive technical
+  information, you should engage exclusion experts.</p>
+
+  <p>3. Start small: As you begin to learn about your audience, start small. Choose one method or one
+  group of users to learn more about. Then build up your knowledge over time by adding additional methods
+  and broader groups.</p>
+
+  <p>4. Follow an iterative process: Involve representative users early on and throughout the process
+  to ensure you are creating technical documents that meet their needs.</p>
+
+  <p>One thing is certain, it’s never too early to start learning about your audience. So, try out these
+  methods and learn about new ones so you can create helpful and successful technical documents.</p>
+
+  <h3>Work Cited</h3>
+
+  <p>Adlin, Tamara, and John Pruitt. The Persona Lifecycle. Morgan Kaufman, 2006. Barnum, Carol M. Usability
+  Testing Essentials: Ready, Set-- Test. Morgan</p>
+
+  <p>Kaufmann, 2011. Bennett, Micah. “Beyond the Binary: 5 Steps to Designing Gender Inclusive</p>
+
+  <p>Fields in Your Product.” UX Collective, 2020, https://uxdesign.cc/beyondthe-binary-5-steps-to-designing-gender-inclusive-fields-in-your-productff9230337b4f.
+  Beyer, Hugh, and Karen Holtzblatt. Contextual Design: Defining Customer-Oriented Systems. Morgan Kaufmann,
+  1997. Cooper, Alan. The Inmates Are Running the Asylum. Sams Publishing, 1999. Denzin, Norman K. “Triangulation.”
+  The Blackwell Encyclopedia of Sociology, Wiley Online Library, 2007. Dorpenyo, Isidore, and Godwin Agboka.
+  “Election Technologies, Technical Communication, and Civic Engagement.” Technical Communication, vol.
+  65, no. 4, 2018, pp. 349–52. Edenfield, Avery C., and Lehua Ledbetter. “Tactical Technical Communication
+  in Communities: Legitimizing Community-Created User-Generated Instructions.” SIGDOC 2019—Proceedings
+  of the 37th ACM International Conference on the Design of Communication, 2019, https://doi. org/10.1145/3328020.3353927.
+  Feinstein, Tanya. “Writing Usable Survey Questions: 10 Things All UX Researchers Should Know.” UXPA
+  Magazine, vol. 17, no. 5, 2017, https://uxpamagazine.org/writing-usable-survey-questions. Hierro, Victor
+  Del. “DJs, Playlists, and Community: Imagining Communication Design through Hip Hop DJs, Playlists,
+  and Community: Imagining Communication Design through Hip Hop.” Communication Design Quarterly, vol.
+  7, no. 2, 2019, pp. 28–39, https://doi. org/10.1145/3358931.3358936</p>
+
+  <p>Holmes, Kat. Mismatch: How inclusion shapes design. MIT Press, 2020. https:// doi.org/10.7551/mitpress/11647.001.0001.</p>
+
+  <p>Jones, Natasha N., and Miriam F. Williams. “Technologies of Disenfranchisement: Literacy Tests and
+  Black Voters in the US from 1890 to 1965.” Technical Communication, vol. 65, no. 4, Nov. 2018, pp. 371-386.</p>
+
+  <p>Krug, Steve. Rocket Surgery Made Easy: The Do-It-Yourself Guide to Finding and Fixing Usability Problems,
+  1st ed., New Riders Publishing, 2009.</p>
+
+  <p>Lam, Chris, and Mark A. Hannah. “Flipping the Audience Script: An Activity That Integrates Research
+  and Audience Analysis.” Business and Professional Communication Quarterly, vol. 79, no. 1, 2016, pp.
+  28–53, https://doi. org/10.1177/2329490615593372.</p>
+
+  <p>Ledbetter, Lehua. “The Rhetorical Work of YouTube’s Beauty Community: Relationshipand Identity-Building
+  in User-Created Procedural Discourse.” Technical Communication Quarterly, vol. 27, no. 4, Routledge,
+  2018, pp. 287–99, https://doi.org/10.1080/10572252.2018.1518950.</p>
+
+  <p>Mulder, Steve, and Ziv Yaar. The User Is Always Right. New Riders, 2006. Pflugfelder, Ehren Helmut.
+  “Reddit’s ‘Explain Like I’m Five’: Technical</p>
+
+  <p>Descriptions in the Wild.” Technical Communication Quarterly, vol. 26, no. 1, Routledge, 2017, pp.
+  25–41, https://doi.org/10.1080/10572252.20 16.1257741 Redish, Janice. “Letting Go of the Words.” Letting
+  Go of the Words, 2nd ed., Morgan Kaufmann, 2012, https://doi.org/10.1016/C2010-0-67091-X. Ries, Eric.
+  “The Lean Startup: How Today’s Entrepreneurs Use Continuous Innovation to Create Radically Successful
+  Businesses.” The Lean Startup, Crown/Archetype, 2011. Rose, Emma J., “Usability Testing Plan Template:
+  A Flexible Tool For Planning and Teaching Usability Evaluation.” EngageCSEdu, vo1 1, no. 2, 2023. https://doi.org/10.1145/3548658.
+  Rose, Emma J., and Josh Tenenberg. “Poor Poor Dumb Mouths, and Bid Them Speak for Me: Theorizing the
+  Use of Personas in Practice.” Technical Communication Quarterly, vol. 27, no. 2, 2018, pp. 161–74, https://doi.org/10.108
+  0/10572252.2017.1386005. Ross, Derek G. “Deep Audience Analysis: A Proposed Method for Analyzing Audiences
+  for Environment-Related Communication.” Technical Communication, vol. 60, no. 2, 2013, pp. 94–117. Sauro,
+  Jeff. “What Is a Represenbtative Sample Size for a Survey?” Measuring U Web Site, 2010, https://measuringu.com/survey-sample-size.
+  Villamil, Alba. The Ethical Researcher’s Checklist. UXR Conference, 27 June 2020. https://joinlearners.com/talk/the-ethical-researchers-checklist.
+  Wachter-Boettcher, S. Technically Wrong: Sexist Apps, Biased Algorithms, and Other Threats of Toxic
+  Tech. E-book ed., W. W. Norton, 2017. Yocco, Victor. “Ethical Considerations In UX Research: The Need
+  For Training And Review.” Smashing Magazine, 2020, https://www.smashingmagazine. com/2020/12/ethical-considerations-ux-research/.</p>
+
+  <p>Teacher Resources</p>
+
+  <p>Overview and Teaching Strategies</p>
+
+  <p>Researching audiences can be addressed at several points in a technical communication course. Any
+  document that is being written or designed for an audience beyond the instructor would benefit from
+  activities related to researching audiences. For most assignments in technical communication, the 5
+  Whys exercise is helpful for students to understand and articulate the exigency for crafting a document.
+  Further, for most assignments, it is helpful to have a research and evaluation phase and to choose methods
+  accordingly.</p>
+
+  <p>In the research phase, students can explore how to understand audience by looking at existing data
+  or collecting new data, as explained in the previous chapter. Some examples of assignments and corresponding
+  activities are:</p>
+
+  <p>1. Resume and cover letters: Interviews with hiring managers within a specific field to understand
+  what they look for and how they read a resume.</p>
+
+  <p>2. Writing for the web: Looking at social media or existing data about current usage to understand
+  issues or gaps.</p>
+
+  <p>3. Proposal writing: Conducting a survey to better understand the existing needs of a community or
+  audience.</p>
+
+  <p>4. Instructions: Conducting a contextual inquiry to learn the steps and technical know-how of how
+  a skilled user does something.</p>
+
+  <p>In the evaluation phase, students can conduct usability testing with a think aloud protocol on most
+  documents and artifacts produced in class. The challenge is to access participants who are representative
+  of the target audience. For educational purposes, you can have students conduct usability tests on each
+  others’ work, but having representative users is beneficial if possible. Here are some ideas on assignments
+  and how to conduct usability tests:</p>
+
+  <p>1. Websites or instructions – create scenarios to identify problems and ask representative users
+  to perform them on a site or page.</p>
+
+  <p>2. Proposal writing – ask a professional or a funder to read through an abstract or proposal to identify
+  strengths and weaknesses.</p>
+
+  <p>A key item of researching audience is to help students connect what they learned through research
+  to the decisions they have made in their design or document. One strategy to help students make these
+  connections is to include a reflective memo as an addendum to each assignment. Ask students to reflect
+  on one re more of the following:</p>
+
+  <p>1. How does the design of the document meet the needs of users? 2. What specific choices did you
+  make in the design or writing of the document to meet users’ needs? 3. How are you ensuring that your
+  document or design is not biased?</p>
+
+  <p>How does it reflect the needs of the diversity of your audience? 4. What aspects of the document
+  or its design are you unsure about?</p>
+
+  <p>What areas do you need to gather feedback on? 5. What changes did you make to the document or design
+  based on usability testing or feedback?</p>
+
+  <p>Finally, being able to have students experience both the research and evaluation phase is beneficial,
+  it is helpful to provide them with an endto-end design experience which may span the entire term. Clients,
+  campus partners, and community-based organizations are helpful to partner with. For example, partnering
+  with local business to redesign a website, writing a grant for a non-profit, or working with iFixit.com
+  where students can design and usability test instructions for repairing electronic devices. When working
+  on a larger project such as the ones described previously, having students work in teams can also help
+  share the work and strengthen human skills like communication and collaboration.</p>
+
+  <h3>Discussion Questions</h3>
+
+  <p>To help students understand the ideas related to researching audience, consider posing the following
+  discussion questions or activities. Some of these can be explored individually, others are better done
+  in small groups or by a full class.</p>
+
+  <p>1. Think of something you have used or read that you felt like wasn’t designed for you and you felt
+  excluded. What was it? How did it make you feel? How could you redesign that item, document, or design
+  to make it feel like it was designed for you?</p>
+
+  <p>2. Let’s imagine we work at a company and we’re going to design a new backpack. First, brainstorm
+  all the possible potential users of a backpack. Second, list out all the unique needs of the potential
+  users. Third, in small groups, each group should select one user to design for and list all the features
+  of the backpack they are designing for that one user. Finally, come back together to share out different
+  design ideas. How did the unique group you chose to design for impact the design and features you chose
+  for the backpack your team designed?</p>
+
+  <p>3. How are technical documents different from other kinds of documents? Why is this difference important
+  and how does it inform the process we use to design technical documents?</p>
+
+  <p>4. In the section that describes the techniques for researching and understanding audience, define
+  each of the techniques and list what are the pros and cons of each method?</p>
+
+  <p>5. In the section on usability testing, there is an activity that asks you to conduct your own test.
+  In teams, conduct the usability test on a local transit website. Share your responses to the following
+  questions: What was it like to be in your role (participant, facilitator, notetaker)? What did you learn
+  about the website? What works well? What ideas do you have for changing the site?</p>'

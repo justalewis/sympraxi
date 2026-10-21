@@ -1,0 +1,584 @@
+id: ws6-designing-multimodal-technical-instructions-for-cross-cultural
+title: Designing Multimodal Technical Instructions for Cross-Cultural Resonance Using a Culturally Inclusive
+  Approach
+author: Audrey G. Bennett
+source_title: 'Technical Writing Spaces: Readings on Writing, Volume 6'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-6/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Audrey G. Bennett in Technical Writing Spaces: Readings on Writing, Volume 6, for
+  student writers, titled “Designing Multimodal Technical Instructions for Cross-Cultural Resonance Using
+  a Culturally Inclusive Approach.”'
+topics:
+  concern:
+  - genre:multimodal
+whole: true
+changes: none
+body: '<p>Technical Instructions for</p>
+
+  <p>Cross-Cultural Resonance</p>
+
+  <p>Using a Culturally Inclusive</p>
+
+  <p>Approach</p>
+
+  <p>Audrey G. Bennett</p>
+
+  <p>“The Increasingly Diverse United States of America” (https://tinyurl. com/5n7rk443) maps the evolving
+  racial and ethnic diversity of regions nationwide (Keating and Karklis).1 It provides compelling visual
+  evidence that the nation is diversifying rapidly and will likely continue to do so moving forward.2
+  What does this mean today for designers of technical instructions? It means that your readers are more
+  diverse in cultural backgrounds and experiences than a decade ago and will likely continue to diversify
+  moving forward. As access to digital media and shipped products continue to increase around the world,
+  readers of technical instructions are becoming more global as well.</p>
+
+  <p>Now, we are amid an age of heightened awareness and cognizance of cross-cultural presence (e.g.,
+  consider the recent emergence of the Black Lives Matter movement) and the related rising advocacy and
+  clarion calls for diversity, equity, access, inclusion, and justice. Within the current age of decolonization
+  (i.e., the dismantling of a culture’s domination over others), readers, the people served through our
+  technical instructions, are culturally diverse human beings who need and want information that speaks
+  their culture-based languages or can be accessed in a tech-mediated way that translates information
+  into their respective languages. An example of</p>
+
+  <p>1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>2  This work was supported in part by a National Science Foundation STEM+C grant #DRL-1640014. Many
+  thanks to Principal Investigator Dr. Ron Eglash who leads the Culturally-Situated Design Tools research
+  project.</p>
+
+  <p>how this cultural phenomenon is manifesting can be found in the pidgin translation of BBC’s news
+  captured as a screenshot in Figure 15.1. As a result of these cross-cultural influences on the reading
+  of information today, technical instructions must enable cross-cultural resonance, that is, an ability
+  to communicate effectively with people of many different cultures.</p>
+
+  <p>Figure 15.1 Pidgin Translation of BBC News’ Most Popular Articles and its Privacy and Cookies Policy
+  Update on Wednesday, June 9, 2021. Image Courtesy Audrey G. Bennett</p>
+
+  <p>When Cultural Dissonance Deters Access to Meaning</p>
+
+  <p>Culture, in this chapter, refers to an interaction between ethnic, racial, cognitive, gender, generational,
+  behavioral, linguistic, political, geographic, and other identities based on heritage, choice, and environmental
+  factors. While multimodality, that is, the integration of visual and verbal language in a sign or communicative
+  expression (Kress) arguably has reigned as the approach to communicating to readers with multisensory
+  and intersensory literacies or ways of knowing, it falls short in responding to cultural influences
+  that inform a reader’s sensory literacies. Clear communication occurs when there is cultural resonance
+  between the technical information and the targeted readers. However, a variety of cultural differences
+  among targeted readers can create dissonance in the communication of technical instructions that ultimately
+  will deter access to or transmittance of meaning.</p>
+
+  <p>As readers become more global—geographically and culturally—language, aesthetic, sensory, technical,
+  geographic, generational, socioeconomic, gender, ethnic, and other individualized social norms are some
+  of the barriers that can emerge in the communication process and compromise the ability of the technical
+  writer to convey information clearly. The consequences of the interference caused by cultural dissonance
+  vary depending on the intended impact of the technical instructions. High-stakes impact may save lives;
+  bring about life-changing cognitive, behavioral, and environmental changes; and yield equity, access,
+  and justice. Whereas lowstakes impact may enable ease of use or functionality or understanding of how
+  to complete a task. Whatever the intended impact, technical writers have relied heavily on multimodality
+  to address the multisensory capabilities of readers in the communication process though with little
+  to no consideration of cultural dissonance and the need for cultural resonance.</p>
+
+  <p>Designing Multimodal Technical Instructions that Resonate Across Cultures</p>
+
+  <p>“An Introduction to and Strategies for Multimodal Composing” (https:// writingspaces.org/node/1712)
+  explains multimodality as five ways of communicating—linguistically, visually, spatially, gesturally,
+  and aurally—in digital and non-digital spaces that corresponds to the senses (Gagich 67). Using the
+  term “text” to mean any communication form, from print to digital texts (e.g., movie, website, etc.),
+  Gagich notes that these are texts that exceed the “alphabetical” and illustrates (using images) how
+  each mode functions. For instance, one of the five images shows former First Lady of the United States
+  Michelle Obama speaking at a secondary school in London. In the photograph, Mrs. Obama clasps her hands
+  together, her left hand over the backside of her right hand, against her heart as she smiles at the
+  audience. The photograph aims to clarify what the gestural mode of communication can look like. By illustrating
+  each mode, Gagich begins to explain the rationale behind the strategic decisions that determine which
+  form is needed when composing technical instructions. For example, Gagich specifically notes that it
+  can aid comprehension with readers who learn differently. However, Gagich also argues more broadly that
+  multimodality has become a standard part of daily life and, thus, must be used to meet the multiliteracy
+  (i.e., the different ways of knowing) of diverse young readers. Gagich’s perspective on multimodality
+  focuses on addressing readers’ sensory differences.</p>
+
+  <p>However, the contexts of communication today include more culturally diverse people, and simply using
+  multiple modes of communicating to the different senses neither guarantees access to information nor
+  transmittance of the intended meaning due to other barriers. One profound barrier to comprehending technical
+  instructions is the diverse, culture-based literacies of the people to whom we are communicating. It
+  is more likely, for all of the aforementioned reasons, that the technical instructions we design today
+  will be read simultaneously by people from different cultures. Thus, cross-cultural resonance with a
+  target community of diverse readers requires a different strategy when designing technical instructions.
+  This chapter extends Gagich’s modes of communicating to readers’ multisensory literacies—linguistic,
+  visual, spatial, gestural, and aural—to include their cultural literacies including language, aesthetic,
+  sensory, technical, geographic, generational, socioeconomic, gender, racial, and ethnic perception.
+  In the next section, I discuss how aesthetics interface with disciplines (e.g., technical communication
+  and composition) that generate designers of technical instructions. Then, I summarize the long, cross-disciplinary,
+  colonizing history of aesthetics and its negative impact on cultural relations in society leading to
+  the need for a more culturally inclusive approach to the design of multimodal aesthetics that resonate
+  cross-culturally.</p>
+
+  <h3>Aesthetics, Technical Communication, and Composition</h3>
+
+  <p>In “The Art of Visual Design: The Rhetoric of Aesthetics in Technical Communication,” technical writer
+  Charles Kostelnick summarizes how visual aesthetics (i.e., artistic beauty) has been a part of technical
+  communication for centuries citing historical, fine art drawings of technologies and even technical
+  instructions visually translated into a comic strip. Kostelnick analyzes each technical art piece’s
+  aesthetics in terms of its rhetorical impact, that is, its ability to arouse emotion and meaningful
+  “audience engagement” (8). Kostelnick argues that visual aesthetics have the ability to engage and persuade
+  the audience by appealing to their emotions and engendering their trust. (7) Visual aesthetics function
+  successfully because of the “cultural knowledge [of beauty] embedded” in them that enables the</p>
+
+  <p>“audience’s” tacit recognition and understanding of the beauty reflected in their design. (6) One
+  may incorrectly glean from this paper that there are universal principles for designing information.
+  Another misleading takeaway from Kostelnick’s paper may be that the sense of sight is the privileged
+  mode in the communication process.</p>
+
+  <p>A broader discussion of aesthetics that shares functional value across more sensory modes can be
+  accessed through “Reclaiming Experience: The Aesthetic and Multimodal Composition” (https://bit.ly/2RJCbl2).
+  In this chapter, communication studies scholar Aimée Knight analyzes aesthetics as it relates to multimodal,
+  media-based contexts of communication that facilitate meaningful ‘experiences’ with text beyond the
+  sense of sight, to also include senses of sound and touch. Aesthetic sensory perception then is not
+  limited to the visual but is embodied in a multisensory manner through the reader’s lived experience
+  in a media-infused world.</p>
+
+  <p>It is important to note that both Kostelnick and Knight acknowledge the importance of aesthetics
+  theory in historical and contemporary knowledge within their related fields of technical communication
+  and composition, respectively.</p>
+
+  <p>However, unlike Kostelnick, Knight, at the very least, also acknowledges that aesthetics’ history
+  and knowledge are colonized or dominated by one cultural perspective. In reference to “Western European
+  views of aesthetics,” Knight writes:</p>
+
+  <p>It is important for teachers and scholars of multimodal composition to understand the story of the
+  aesthetic . . . involves the struggle to establish the source and status of knowledge itself. I see
+  this as a long, painful struggle filled with prized beliefs and cherished values and what gets “to count.”
+  This story has privileged certain ways of knowing over others, the influence of which has extended to
+  how we teach multimodal composition today. Understanding this story helps teachers and scholars to reimagine
+  what the aesthetic is currently in the context of multimodal composition— and what it still can be.
+  (149)</p>
+
+  <p>It is important for students, too, to know the cultural history of aesthetics as students should
+  have agency in their education and the pedagogical process. It is particularly important for designers
+  of technical instructions who are attempting to communicate cross-culturally to understand the trauma
+  of racial oppression that members of their targeted communities of readers who are Black, Indigenous,
+  and People of Color (BIPOC) have endured throughout history and continue to endure in contemporary society.
+  In the next section of this chapter, I shed light on this trauma by briefly summarizing the origin of
+  aesthetics as beauty from the perspective of culture and the impact of this colonized definition of
+  beauty on society leading to the systemic exclusion of BIPOC voices from cross-disciplinary knowledge
+  systems in the West, including technical communication.</p>
+
+  <p>A Brief Look at the History of Aesthetics as Beauty Through a Cultural Lens</p>
+
+  <p>The scholarly debate on aesthetics spans many centuries and disciplines and has had a significant
+  impact on society in ways that have informed various disciplines including design, technical communication,
+  composition, and their evolving pedagogies, histories, and theories. Within design’s canon, aesthetics
+  has Western roots dating as far back as ancient Greek philosophy where the term aesthetics originates
+  from the Greek word ‘aesthesis,’ which means sensory perception. In ancient times, aesthetics meant
+  a kind of ‘absolute’ sensation. Greek philosophers Plato and Plotinus purported that aesthetics as beauty
+  is “an ultimate value” to be pursued for its own sake; it converges with truth and goodness (Scruton
+  1). For instance, in The Six Enneads, Plotinus notes that “truth, beauty, and goodness are attributes
+  of the deity” (2). In 1735 German philosopher Alexander G. Baumgarten defined aesthetics as taste or
+  judgment of beauty in relation specifically to determining what constitutes art and the aesthetic experience
+  of pleasure that it provides. He affirmed the assertions of the ancient Greeks, saying:</p>
+
+  <p>“Beauty is the perfect perceived by the senses. Truth is the perfect perceived by reason. The good
+  is the perfect attained by the moral will.” (Baumgarten as cited in Maude 143)</p>
+
+  <p>Subsequently, in 1790 German philosopher Kant, at first, disagreeing with Baumgarten’s trinity, later
+  conformed to it and introduced “judgment of taste” as an experience of beauty that is based on universal
+  subjective feelings of pleasure or displeasure (Kant).</p>
+
+  <p>Unfortunately, in the hands of racist scientists, Baumgarten’s trinity and Kant’s universal judgment
+  of taste became a horrifying framework for uniting white supremacist aesthetics with white power politics
+  of slavery in the 19th and 20th centuries. For instance, around the early 19th-century, a profoundly
+  disturbing conversation among thought leaders began to coalesce around racial ranking and the inferiority
+  of “darker races.” Within this cross-disciplinary conversation, aesthetics was instrumental in laying
+  the foundation for the rampant oppression of Black people in the 20th-century society and subsequently
+  in the discipline of design. Paleontologist Stephen J. Gould in his book “The Mismeasure of Man” provides
+  compelling evidence of aesthetic racism grounded in an absurd argument based on a monogenetic theory
+  of degeneration that credited climate differences for racial differences among the descendants of Adam
+  and Eve:</p>
+
+  <p>“The most temperate climate lies between the 40th and 50th degree of latitude, and it produces the
+  most handsome and beautiful men. It is from this climate that the ideas of the genuine color of mankind,
+  and of the various degrees of beauty ought to be derived.” The idea was that inferior non-white races
+  could be improved in appropriate environments. Some thought leaders of the 19th-century were of a different
+  opinion, however; they believed that racial differences were the result of the existence of separate
+  biological species—descendants of different Adams and Eves but still with white people being the superior
+  race.” (Gould 73-74)</p>
+
+  <p>Gould goes on to further confront another racist argument from “Account of the Regular Gradation
+  in Man” where surgeon Charles White provides the aesthetic criteria for the rank of the Caucasian (white)
+  race as superior:</p>
+
+  <p>“Where else but among Caucasians, [White] argued, can we find . . . that nobly arched head, containing
+  such a quantity of brain . . . . Where that variety of features, and fullness of expression; those long,
+  flowing, graceful ringlets; that majestic beard, those rosy cheeks and coral lips? Where that . . .
+  noble gait? In what other quarter of the globe shall we find the blush that overspreads the soft features
+  of the beautiful women of Europe, that emblem of modesty, of delicate feelings . . . where, except on
+  the bosom of the European woman, two such plump and snowy white hemispheres, tipt with vermillion.”
+  (Stanton 17; as cited in Gould 73)</p>
+
+  <p>These prejudiced associations of aesthetics as divine beauty defined by and manifested by white Europeans
+  set the stage for the unconscionable proliferation of aesthetic oppression of Black, Indigenous, and
+  People of Color (BIPOC) in North America. For instance, Jim Crow-era aesthetic oppression included commercialized
+  offensive stereotypical and exaggerated caricatures of black features that populated various forms of
+  print media including advertisements designed to sell beauty through personal care products (e.g., soap
+  and skin-lightening creams).</p>
+
+  <p>Today, the problem of aesthetic racial oppression continues systemically, for instance, in the design
+  of urban infrastructure that segregates BIPOC communities that are economically challenged. Consequently,
+  in “Race After Technology,” sociologist Ruha Benjamin delivers an appropriately blistering and pointed
+  critique of design as a player in contemporary aesthetic racial oppression. Specifically, she notes
+  that “if design as a branded methodology is elevated, then other forms of generic human activity are
+  diminished” (Benjamin 179). But is it the design method that oppresses or rather the internal or internalized
+  racism of the designer using the approach that facilitates the creation or replication of standards
+  of beauty grounded in centuries-old racism? Is it the mind of the designer that needs to be decolonized
+  or freed from domination by another? Benjamin goes further to ask: “. . . would Design Thinking have
+  helped Rosa Parks ‘design’ the Montgomery Bus Boycott” (176)? Building on Constanza-Schock’s claim of
+  the “universality of design as a human activity” (Costanza-Schock; cited in Benjamin 178) instead of
+  a specialized one requiring formal training, one could argue that design thinking did help Rosa Parks
+  to design the Montgomery Bus Boycott. However, as Benjamin notes further, “oppressed people and places
+  are rarely cited for their many inventions” (Benjamin 178).</p>
+
+  <p>What does this mean for designers of technical instructions? When the goal is to achieve cultural
+  resonance in the communication of information like technical instructions, the process of designing
+  that information must change to be inclusive of reader input. In the next section, I posit that writers
+  of technical instructions should take a culturally inclusive approach to yield cross-cultural resonance
+  with diverse readers. I then introduce a culturally inclusive approach to design multimodal technical
+  instructions that resonate cross-culturally by 1) representing culture appropriately from knowledge
+  gleaned conducting primary and secondary research, and 2) enabling cross-cultural interpretation through
+  interactive aesthetics.</p>
+
+  <p>The Culturally Inclusive Design of Multimodal Technical Instructions for Cross-Cultural Resonance</p>
+
+  <p>What Benjamin’s critique of design calls for is a radical pivot from pre-conceived methods and principles
+  for designing universal aesthetics that are deficit-based, putting the targeted reader in the position
+  of “audience” or spectator and the designer in the position of expert or person with all of the knowledge.
+  Primary research that is more asset-based entails designing collaboratively virtually or, preferably,
+  in person with a diverse sampling of the targeted reader community so that the findings can be more
+  generalizable to a larger group of readers. Virtual interaction with readers can be used in place of
+  face-to-face engagement when there is a lack of resources or there is a real or measurable threat to
+  one’s life, like that posed during the 2020 COVID pandemic.</p>
+
+  <p>Engagement with the target community of diverse readers can range from conducting a focus group with
+  a diverse sampling of readers to a participatory writing session. A focus group entails facilitating
+  a diverse sampling of readers (typically around 25 total, with 5-8 simultaneously) giving you feedback
+  on an iteration of the instructional text that the author has prepared in advance. Whereas a participatory
+  writing session might entail engaging a diverse sampling of at least 35 readers in co-writing the instructional
+  content from the beginning to end. Other approaches of primary research might include ethnographic observations
+  of people using the technology within their cultural contexts. Ethnography is simply when we go out
+  and observe people in their personal or work environments.</p>
+
+  <p>Depending on the nature or complexity of the technology, primary research efforts may also need to
+  integrate a range of cross-disciplinary and professional and lay expertise in addition to collaboration
+  between you and the readers over time. In inquiry-based or client-driven technical writing projects,
+  one should solicit the input of experts from other disciplines. In inquiry-based technical writing projects,
+  you initiate the writing project; whereas, in client-driven technical writing projects, the client initiates
+  the technical writing project and hires you to carry it out. In inquiry-based technical writing projects,
+  you can connect with stakeholders including experts from other disciplines through academic institutions
+  and professional organizations. You can connect with members of the public through networking with community
+  organizations (e.g., libraries, schools, etc.). Whereas, in client-driven technical writing projects,
+  the client will likely assist in accessing stakeholder communities as they deem necessary.</p>
+
+  <p>Designing technical instructions with a culturally-inclusive approach that involves primary research
+  is too complex to simply get it right the first time. The design process should be iterative because
+  of the many stakeholders that may be involved. Iteration refers to something that repeats itself but
+  improves over each cycle. Over time, the instructions will find the final form after multiple interactions
+  between you and the different stakeholders individually and collectively throughout the writing process.
+  Knowledge, values, and insights are exchanged and—most importantly— integrated into the evolving design.
+  Thus, the designer and stakeholders are collaboratively controlling the decision-making that leads to
+  the final instructional content.</p>
+
+  <p>Conducting secondary research of archives and open data formatively and summatively in the design
+  process can supplement or enhance primary research efforts well though not perfectly. For instance,
+  when used formatively, prior to primary research and to inform the interaction with culturally diverse
+  readers, one cannot rely solely on historical, secondary data as it may be dated. Other qualitative
+  strategies for information gathering (e.g., survey instruments) may need to be included. When used summatively
+  to inform primary research findings on how to communicate across cultures with multimodal aesthetics,
+  one must take precautions when secondary research findings contradict or counter primary research findings
+  as the secondary research findings may be based on culturally-oppressive information like the aesthetics
+  history described earlier in this chapter. To circumvent this problem, one must extend the scope of
+  secondary research into the dark peripheries outside of design’s white Western canon and access the
+  contributions of disenfranchised BIPOC people to design, like “BIPOC Design History” (https://bipocdesignhistory.com/Index),
+  where one will find voices left out of historical conversations on design. Within the dark peripheries,
+  one can also find evidence of misinformation on the origins of select knowledge within the discipline’s
+  canon like that noted in “The African Origins of Swiss Design” (Bennett “The African Roots of Swiss
+  Design”) and “Follow the Golden Ratio from Africa to the Bauhaus for a Cross-Cultural Aesthetic” (Bennett
+  “Follow the Golden Ratio from Africa to the Bauhaus for a Cross-Cultural Aesthetic for Images”).</p>
+
+  <p>Findings from primary and secondary research inform the next phase of the culturally inclusive approach
+  this chapter introduces. During this second phase, the designer of the technical instructions should
+  integrate interactive aesthetics, that is tech-mediated sensory aesthetics that facilitate the reader’s
+  active and multisensory interpretation to yield cross-cultural resonance. The second phase of the culturally
+  inclusive design process begins with the development of a plan for the aesthetic form each mode will
+  take and how to integrate interactive aesthetics so that the instructions will communicate multimodally
+  to the diverse readers’ cultural preferences and offer opportunities for active and multisensory interpretation.</p>
+
+  <p>Interactive aesthetics (Bennett “Interactive Aesthetics”) is a design theory that aims to bring to
+  the forefront two things: 1) the designer’s ethical responsibility in understanding the cultural impact
+  of what they design, and 2) opportunities for remote collaboration that could facilitate stakeholder
+  participation in the design process, including both end-users as well as other stakeholders (e.g., clients,
+  printers, etc.). The initial idea was that with the development of more dynamic design forms (Bennett
+  “Dynamic Interactive Aesthetics”) designers could bring remotely located underserved communities into
+  the process of designing future technologies like socially intelligent robots (Bennett “Creatively Designing
+  Socially Intelligent Robots”) to better serve the needs of underserved communities. Between the time
+  that the interactive aesthetics (IA) paper was published and now, I’ve engaged in a collaborative research
+  project centered around the collaborative and culturally inclusive design of a web-based technology
+  called “Culturally Situated Design Tools” (see csdt.org) that teaches BIPOC youth about algorithms embedded
+  in cultural artifacts from their cultural heritage. The next section of this chapter offers guidelines
+  I’ve derived from this 20-year-plus research endeavor for translating aesthetics into interactive aesthetics
+  starting with a plan.</p>
+
+  <p>Plan for Translating Aesthetics Into Interactive Aesthetics Towards Cross-Cultural Resonance</p>
+
+  <p>An algorithm (AL-go-rith-em) is basically a set of steps for completing a task. For instance, a recipe
+  is an algorithm. Even traveling from the airport to home has many different algorithms ranging from
+  walking and taking public transportation to driving among others. Heritage algorithm refers to an algorithm
+  that is culturally-based. (Bennett “Ethnocomputational Creativity in STEAM Education: A Cultural Framework
+  for Generative Justice”) For instance, cornrow braiding is a heritage algorithm from Africa and its
+  diaspora.</p>
+
+  <p>Table 15.1 shows a plan to communicate the text ‘algorithm’ multimodally, culturally, and cross-culturally
+  using interactive aesthetics. Column one shows the different modes for communicating; whereas column
+  two shows how the text could take tangible or intangible, aesthetic form. Column three shows how the
+  aesthetic form from column two could be extended to address any cultural dissonance that may arise in
+  the communication process. A common feature of the culturally responsive forms listed in column two
+  is their reliance on interactivity (i.e., active, multisensory engagement) between each mode’s form
+  and the reader.</p>
+
+  <p>Table 15.1 Plan for Communicating Instructions Multimodally with Interactive Aesthetics to Yield
+  Cross-Cultural Resonance</p>
+
+  <p>Modes Aesthetic form</p>
+
+  <p>Interactive Aesthetics</p>
+
+  <p>Visual</p>
+
+  <p>Image of code</p>
+
+  <p>Visual treatments and representations gleaned from primary/secondary research that reflects different
+  cultures</p>
+
+  <p>Verbal translations through rollover images</p>
+
+  <p>Linguistic Typeset text providing</p>
+
+  <p>Language translations steps for completing a task</p>
+
+  <p>Spatial</p>
+
+  <p>Positioning of steps in order</p>
+
+  <p>Positioning of steps in multiple orders of culturally-based understanding and heritage</p>
+
+  <p>Gestural</p>
+
+  <p>A computer enacts the steps to produce an action</p>
+
+  <p>Non-verbal communication produces the action; interaction with hyperlinked information gives way
+  to more information (e.g., QR code, hypertext)</p>
+
+  <h3>Aural</h3>
+
+  <p>Sound verbalizes each step Sound verbalizes each step in a culturally appropriate manner</p>
+
+  <p>Sound technology translates a text (e.g., a word in a given language is translated into the reader’s
+  language) or image (e.g., alt-text enables people who cannot see to have access to the stories that
+  images tell.) or aesthetic treatment (e.g., the meaning of colors, icons, symbols, etc. are translated)</p>
+
+  <h3>Cultural</h3>
+
+  <p>Image, sound, text, non-verbal communication, position or place</p>
+
+  <p>Culturally-specific representations of heritage algorithms that resonate with the culture of the
+  reader</p>
+
+  <p>Table 15.2 Sample Implementation of the Plan in Table 15.1 across multiple Modes for Cross-cultural
+  Resonance.</p>
+
+  <p>Aesthetic form realized</p>
+
+  <p>V L S GAC</p>
+
+  <p>X</p>
+
+  <p>X</p>
+
+  <p>Aesthetic form realized</p>
+
+  <p>VL X</p>
+
+  <p>S GAC</p>
+
+  <p>X</p>
+
+  <p>X</p>
+
+  <p>XXXXXX</p>
+
+  <p>X</p>
+
+  <p>XXX</p>
+
+  <p>XX</p>
+
+  <p>XXX</p>
+
+  <p>X</p>
+
+  <p>XX</p>
+
+  <p>Notes: (V=Visual, L=Linguistic, S=Spatial, G=Gestural, A=Aural, C=Cultural). Please access the alt
+  text for each image to view a description of what is being communicated.</p>
+
+  <p>Implementation of the plan is where the designer applies their creative ideas. For instance, Table
+  15.2 shows the ways that my research team decided to implement the plan to teach BIPOC students about
+  algorithms.</p>
+
+  <h3>Conclusion</h3>
+
+  <p>Today, indeed, a cross-cultural challenge presents itself when we sit down to write technical instructions.
+  Even in the ‘melting pot’ state of diversity in the current United States of America and the ‘flat world’
+  afforded by evolving global access to technological innovation, we cannot assume that we possess all
+  of the cultural knowledge necessary to communicate instructions effectively to diverse readers. Thus,
+  this chapter proposed a culturally inclusive approach to designing multimodal technical instructions
+  that can better resonate across cultures through the aesthetic treatment of the modes.</p>
+
+  <h3>Works Cited</h3>
+
+  <p>Benjamin, Ruha. Race After Technology: Abolitionist Tools for the New Jim Code. Polity Press, 2020.</p>
+
+  <p>Bennett, Audrey. “Follow the Golden Ratio from Africa to the Bauhaus for a Cross-Cultural Aesthetic
+  for Images.” Critical Interventions, vol. 6, no. 1, 2012, pp. 11-23.</p>
+
+  <p>-. “The African Roots of Swiss Design.” The Conversation, 22 Mar. 2021, https://theconversation.com/the-african-roots-of-swiss-design-154892.</p>
+
+  <p>-. “Interactive Aesthetics.” Design Issues, vol. 18, no. 3, 2002, pp. 62–69. -. 2002. “Dynamic Interactive
+  Aesthetics.” Journal of Design Research, vol. 2, no. 2, 2002, pp. 91-104. -. “Creatively Designing Socially
+  Intelligent Robots.” International Conference on Systems, Man and Cybernetics. e-Systems and e-Man for
+  Cybernetics in Cyberspace: October 7-10, 2001, IEEE, 2001. -. “Ethnocomputational Creativity in STEAM
+  Education: A Cultural Framework for Generative Justice.” Teknocultura, Journal of Digital Culture and
+  Social Movements vol. 13, no. 2, 2016, pp. 587-612. Gagich, Melanie. “Writing Spaces.” An Introduction
+  to and Strategies for Multimodal Composing | Writing Spaces, 1 Apr. 2020, https://writingspaces.org/
+  node/1712. Gould, Stephen Jay. The Mismeasure of Man. Penguin, 1996. Kant, Immanuel. Critique of Judgement.
+  Oxford UP, 2007. Keating, Dan, and Laris Karklis. “Where the Country Is Becoming More Diverse.” The
+  Washington Post, 26 Nov. 2016, https://wwww.washingtonpost. com/graphics/national/how-diverse-is-america/.
+  Knight, Aimée. “Reclaiming Experience: The Aesthetic and Multimodal Composition.” Computers and Composition,
+  vol. 30, no. 2, 2013, pp. 146-55. Kostelnick, Charles. “The Art of Visual Design: The Rhetoric of Aesthetics
+  in Technical Communication.” Technical Communication, vol. 67, no. 4, 2020, pp. 6-27.</p>
+
+  <p>Kress, Gunther. Multimodality: A Social Semiotic Approach to Contemporary Communication. Routledge,
+  2010.</p>
+
+  <p>Maude, Aylmer. Tolstoy on Art. Small, Maynard &amp; Company, 1972. Scruton, Roger. Beauty: A Very
+  Short Introduction. Oxford UP, 2011.</p>
+
+  <p>Teacher Resources</p>
+
+  <p>Overview and Teaching Strategies</p>
+
+  <p>Thus is revealed the total existence of writing: a text is made of multiple writings, drawn from
+  many cultures and entering into mutual relations of dialogue, parody, contestation, but there is one
+  place where this multiplicity is focused and that place is the reader, not as was hitherto said, the
+  author. We are now beginning to let ourselves be fooled no longer by the arrogant antiphrastical recriminations
+  of good society in favor of the very thing it sets aside, ignores, smothers, or destroys; we know that
+  to give writing its future, it is necessary to overthrow the myth: the birth of the reader must be at
+  the cost of the death of the author.</p>
+
+  <p>--Roland Barthes, The Death of the Author, p. 148</p>
+
+  <p>Access to technologies can extend globally. However, as this chapter noted, locally within the United
+  States of America, ethnic and cultural diversity is increasing. Thus, technical writing students, whether
+  addressing a global or local target community, will grapple with the challenge of communicating to diverse
+  readers. To address this challenge, instructors may supplement students’ writing knowledge with training
+  in visual communication design to acquire applied skills, strategies, and techniques to relay information
+  aesthetically and cross-culturally. They may even integrate graphic designers as guest speakers in the
+  course schedule to consult on how to translate the instructions visually and aesthetically.</p>
+
+  <p>These traditional approaches tend to keep the design of the technical instructions focused on what
+  the author intends contrary to Barthes’ perspective that the reader should be and is the focus of the
+  communication. Since the goal essentially is to achieve cultural resonance in the communication of technical
+  instructions, the process of designing the instructions must change to be more focused on the reader.
+  Instead of communicating to diverse readers and users, technical communicators should pivot towards
+  communicating with them. Teaching the next generation of professional technical communicators entails
+  teaching them a culturally inclusive approach to technical writing that yields cross-cultural resonance
+  with diverse readers.</p>
+
+  <p>The culturally inclusive approach introduced in this chapter can be used to design multimodal technical
+  instructions that resonate cross-culturally by 1) representing culture appropriately from knowledge
+  gleaned conducting primary and secondary research, and 2) enabling cross-cultural interpretation through
+  interactive aesthetics. The approach aligns with a curriculum that teaches technical writing as a process
+  of inquiry in which students engage in primary and secondary research towards developing a prototype
+  of how instructions should be multimodally-designed with interactive aesthetics to yield cross-cultural
+  resonance. Primary research entails engaging with the readers to gather creative insight. This interaction
+  may take the form of surveys, questionnaires, ethnography, and other qualitative and quantitative instruments.
+  Whereas secondary research entails accessing public archives and libraries of text and images that provide
+  credible information that relates to the subject matter or technology or getting to know the culture
+  of the readers.</p>
+
+  <h3>Applied Discussion</h3>
+
+  <p>Using the following table as a guide, independently or in small groups discuss and plan how you would
+  go about communicating instructions for an existing technology multimodally with interactive aesthetics
+  to yield cross-cultural resonance. To inform your development of the plan:</p>
+
+  <ul><li>Conduct secondary research to learn about the target community of readers.</li><li>Conduct primary
+  research to learn about how the target community of readers engage with the chosen technology.</li></ul>
+
+  <p>Implement the plan you created previously by developing technical instructions that use interactive
+  aesthetics to yield cross-cultural resonance (see Table 1). Then, use Table 2 to document the aesthetic
+  forms realized that reflect your choices in Table 1.</p>
+
+  <p>Table 1 Modes Visual</p>
+
+  <p>Aesthetic form</p>
+
+  <p>Images and visual treatments</p>
+
+  <p>Linguistic Typeset text</p>
+
+  <p>Interactive Aesthetics</p>
+
+  <p>Visual treatments and representations gleaned from primary/secondary research that reflects different
+  cultures in their motifs and designs</p>
+
+  <p>Verbal translations through rollover images</p>
+
+  <p>Language translations</p>
+
+  <p>Modes Spatial</p>
+
+  <p>Aesthetic form</p>
+
+  <p>Interactive Aesthetics</p>
+
+  <p>Hierarchical placement Positioning of information according to culof verbal and visuturally-based
+  understanding and heritage al elements</p>
+
+  <p>Gestural A performance</p>
+
+  <p>Aural</p>
+
+  <p>Sound snippets</p>
+
+  <p>Cultural</p>
+
+  <p>Image, sound, text, non-verbal communication, position or place</p>
+
+  <p>Non-verbal communication produces the action; interaction with hyperlinked information gives way
+  to more information (e.g., QR code, hypertext)</p>
+
+  <h3>Sound verbalizes each step in a culturally appropriate manner</h3>
+
+  <p>Sound technology translates a text (e.g., a word in a given language is translated into the reader’s
+  language) or image (e.g., alt-text enables people who cannot see to have access to the stories that
+  images tell.) or aesthetic treatment (e.g., the meaning of colors, icons, symbols, etc. are translated)</p>
+
+  <p>Culturally-specific representations of information that resonate with the culture of the reader</p>
+
+  <p>Table 2 Aesthetic form realized</p>
+
+  <p>V L S GAC</p>
+
+  <p>To evaluate your technical instructions, conduct primary research to learn about how the target community
+  of readers engage with them and use the knowledge gained to iterate the technical instructions.</p>'

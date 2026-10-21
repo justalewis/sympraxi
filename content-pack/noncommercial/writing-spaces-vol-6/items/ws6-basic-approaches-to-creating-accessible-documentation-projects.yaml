@@ -1,0 +1,658 @@
+id: ws6-basic-approaches-to-creating-accessible-documentation-projects
+title: 'Basic Approaches to Creating Accessible Documentation Projects: What is Accessibility, and What
+  Does It Have to do with Documentation Projects?'
+author: Cathryn Molloy
+source_title: 'Technical Writing Spaces: Readings on Writing, Volume 6'
+source_url: https://parlormultimedia.com/writingspaces/writing-spaces-volume-6/
+license: CC-BY-NC-ND-4.0
+license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
+summary: 'An essay by Cathryn Molloy in Technical Writing Spaces: Readings on Writing, Volume 6, for student
+  writers, titled “Basic Approaches to Creating Accessible Documentation Projects: What is Accessibility,
+  and What Does It Have to do with Documentation Projects?.”'
+topics:
+  concern:
+  - assignment:audience-purpose
+whole: true
+changes: none
+body: '<h3>Accessible Documentation</h3>
+
+  <p>Projects: What Is Accessibility, and What Does It Have to do with Documentation Projects?</p>
+
+  <h3>Cathryn Molloy</h3>
+
+  <p>As an aspiring technical communicator, you want to learn how to take complex information and make
+  it meaningful and useful for specific audiences and purposes.1 Technical communicators transform knowledge
+  about complex products so that people can use them effectively. In this way, technical communicators
+  play a vital role in making sure that products, information, and services reach target audiences. One
+  broad term for a range of technical communication genres is “documentation projects,” or projects that
+  provide instructions for how to use a product and/or projects that describe a technical process.</p>
+
+  <p>A key concern for technical communicators working on documentation projects is ensuring that the
+  project is “accessible” or usable by everyone regardless of disability. Since technical communicators
+  help users to comprehend and utilize specialized information and products that would otherwise be unclear,
+  they are in the position to empower those who are too often left behind, such as those with disabilities.
+  In this way, accessibility concerns are central concerns for the field of technical communication.</p>
+
+  <p>For most documentation projects you do, such as composing instructions or documenting processes,
+  you have an “end user” (or person who’d use the product) in mind. Diligent technical communicators are
+  very good at researching potential users in advance. Doing so allows them to make strategic decisions
+  as they write and design a wide variety of documents. However,</p>
+
+  <p>1 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
+  License (CC BY-NC-ND 4.0) and is subject to the Writing Spaces Terms of Use. To view a copy of this
+  license, visit http://creativecommons. org/licenses/by-nc-nd/4.0/, email info@creativecommons.org, or
+  send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. To view the Writing Spaces
+  Terms of Use, visit http://writingspaces.org/terms-of-use.</p>
+
+  <p>what can be known about potential audiences is often incomplete, making it important to consider
+  the widest possible range of end users.</p>
+
+  <p>For example, let’s say you’re in a community-based technical communication course and you’ve been
+  tasked with preparing suitable instructions for local middle school students. The assignment does not
+  specify what process(es) or product(s) you need to document. Instead, you are asked to imagine something
+  useful you could document for this group.</p>
+
+  <p>Thinking of a new skill that could be helpful for online and hybrid learning, you decide you want
+  to assist them to learn to use the web conferencing tool Zoom. You start to imagine the average middle
+  school student. This imagination work helps you to make good decisions as you begin to compose your
+  project.</p>
+
+  <p>You reason, for instance, that most middle school students won’t read above a 5th grade level, so
+  you plan your diction (or word choice) accordingly. You imagine that some middle school students will
+  have limited experiences using computers, so you include instructions on such basic skills as how to
+  start up a computer and how to open a web browser. You figure that some middle school students won’t
+  know how to get their audio going, so you explain the steps involved in testing the microphone and connecting
+  to audio on a Mac or PC.</p>
+
+  <p>Thinking of these preteens also gives you an insight: perhaps many would like to use headphones instead
+  of computer audio. You go ahead and add instructions for how to do that on a Mac or PC. Another insight
+  occurs to you: maybe they’ll be on Chromebooks, tablets, or smart phones. You offer advice for these
+  contingencies in each of your sections. You are careful and specific in your descriptions, noting that
+  Zoom shows up as a blue icon with a camera regardless of the device used for connecting. You choose
+  a fun, splashy color scheme for adolescents and seek out a font that appeals to kids.</p>
+
+  <p>Thinking about how they won’t want to read anything lengthy, you decide to include lots of screenshots
+  with dialogue bubbles to explain important parts. You’re feeling pretty good about your work here. However,
+  even with all this rich, creative thinking and planning, you’ve left out key parts of the middle school
+  population—those with visual and/or hearing impairments, those with colorblindness, and those with learning
+  disabilities. This is where accessibility in documentation projects becomes very important.</p>
+
+  <p>When a documentation project is accessible, it is usable by the widest possible group of people.
+  In many ways, accessibility in technical communication is about basic inclusion. In other ways, thinking
+  about accessibility in documentation projects helps you to make better written products for all users.</p>
+
+  <p>Let’s return to the Zoom documentation project aimed at middle schoolers. When you imagine the widest
+  possible group that could fall into your target audience, you begin to make decisions differently. Your
+  priorities shift, and you look for ways to make sure that you aren’t leaving anyone out.</p>
+
+  <p>Thinking of a wider range of middle school students leads you to include information on closed captioning
+  options. You also shift the reading level down to account for those whose reading levels aren’t quite
+  to the 5th grade level yet. You start to research color decisions that take color blindness into account,
+  and you think through how you might ensure that those with visual impairments will still be able to
+  access the information in screengrabs.</p>
+
+  <p>Since technical communicators are in the business of helping users to grasp and use specialized information
+  and products that would otherwise be too confusing or off limits, they are in the position to empower
+  those who are too often left behind. In this way, accessibility concerns are at the heart of what is
+  best about the field of technical communication.</p>
+
+  <p>What’s more, far from limiting or dampening what can be done in documentation projects, accessibility
+  considerations often lead to more vibrant and useful documents for all users.</p>
+
+  <p>In this chapter, you’ll learn basic considerations for accessible documentation projects. The chapter
+  will allow you to begin to approach documentation projects with fundamental accessibly in mind. In order
+  to do so, we’ll cover topics such as:</p>
+
+  <ul><li>Considering colorblindness, • Considering dyslexia, and other conditions that alter visual abilities,
+  • Creating documents that are compatible with assistive devices, and • Using alternative text for images.</li></ul>
+
+  <p>Predictably, programs and tools exist to help technical communicators to create accessible documentation
+  projects. However, it is always best to have a baseline understanding of how and why to approach accessible
+  design in technical communication before using tools and templates.</p>
+
+  <p>In this chapter, therefore, you’ll hear a bit about common software programs’ built-in features for
+  accessibility as well as how to use free online tools to check accessibility. Even more important than
+  learning to use these tools, though, is learning why they are important. This chapter hopes to prove
+  that thinking through accessibility in documentation projects enhances rather than dampens what is possible.
+  Remember, thinking in terms of accessibility most often makes the documentation projects more usable
+  for all users by virtue of focusing on what might be advantageous to as many users as possible. With
+  that in mind, let’s go over some basic information on disability and accessibility. After that, we’ll
+  explore some specific considerations to get you started on your journey to creating accessible documentation
+  projects.</p>
+
+  <h3>Disability and Accessibility Explained</h3>
+
+  <p>Before going further with this chapter, it is necessary to take a step back and define two key concepts
+  more carefully: disability and accessibility. Disability is often defined in relation to the “Americans
+  with Disabilities Act” or ADA. Signed into law in 1990 by President George H. W. Bush, the ADA made
+  it a law that persons with disabilities be given equal opportunities to participate in mainstream American
+  life. The ADA, in other words, made it a legal obligation to accommodate those with disabilities in
+  the creation of built environments—think of elevators, wheelchair ramps, and talking crosswalk signs,
+  and in the creation of documents and other deliverables—think of sign language interpreters that are
+  provided during important speeches or Braille (the system of raised dots for those with visual impairments)
+  on automatic teller machines (ATMs).</p>
+
+  <p>Accessibility is related to the idea of accommodating difference. When you make moves to alter or
+  arrange a physical space, a written artifact, a multimodal composition, or a real time experience such
+  that those with physical or mental disabilities can participate meaningfully, you are making moves to
+  be accessible.</p>
+
+  <p>Importantly, the ADA does not give a list of conditions that are considered disabilities and, instead,
+  defines disability broadly, as “a physical or mental impairment that substantially limits one or more
+  major life activities, a person who has a history or record of such an impairment, or a person who is
+  perceived by others as having such an impairment” (“What Is the Definition of Disability under the ADA?
+  | ADA National Network”). Notice that the ADA’s definition is extremely broad and open to interpretation
+  and is designed to protect the widest group of human persons possible. It also protects a vast variety
+  of aspects of human life, such as transportation, employment, education, health and wellness, housing,
+  and more.</p>
+
+  <p>The ADA stipulates that official documents be readable via a screen reader—an assistive device that
+  will read a document to a person with a visual impairment or other disability, such as dyslexia, that
+  interferes with reading. Predictably, the wide and inclusive definition of disability offered in the
+  ADA makes it difficult to offer precise statistics on how many Americans are disabled. Nonetheless,
+  according to the National Network on Information, Guidance, and Training for the ADA, the number of
+  disabled individuals make up between 12 and 18 percent of the population (“ADA National Network | Information,
+  Guidance and Training on the Americans with Disabilities Act”). Undoubtedly, then, it makes not only
+  legal sense to follow ADA requirements, but it makes good business sense to make rigorous strides to
+  exceed legal requirements in accommodating the needs of this large group.</p>
+
+  <p>Considering Colorblindness</p>
+
+  <p>Why Consider Colorblindness?</p>
+
+  <p>When color is used to convey important information, people with colorblindness might miss out on
+  that message. For example, if a background color is too close to a font color, a person with colorblindness
+  may not even be able to tell that there is text on the page, let alone be able to read that text.</p>
+
+  <p>For technical communicators, the idea that text would be present, yet not readable by some audiences,
+  is highly problematic. If there is vital information given, it’s entirely lost to many audiences. Some
+  design choices simply make it impossible to read and comprehend the content of a document. Considering
+  colorblindness can help you to make thoughtful color and font design decisions, and such concerns are
+  deeply related to your job as a technical communicator—to convey complicated information in a useful
+  and user-friendly way.</p>
+
+  <p>Here are some things you can do to work with color in appropriate and effective ways while being
+  inclusive of those with colorblindness and creating better documentation projects:</p>
+
+  <ul><li>Use patterns to create contrast; • Keep color palette simple, using a maximum of three colors;
+  • Pay special attention to contrast; and • Do not rely on color alone to communicate important information.</li></ul>
+
+  <p>Using patterns to create contrast is a way to avoid over-relying on color differences to communicate.
+  When color palettes have too many colors and shades, they begin to become more difficult for those with
+  colorblindness to use. A solution is to keep color palettes simple, using no more than three colors.
+  Equally important is making sure that the colors you are using are not so close to each other in shade
+  that they might simply blend together for some viewers.</p>
+
+  <p>An easy way to make sure that your documentation project does not run the risk of having colors blend
+  together in the audience’s view is to pay special attention to contrast such that even a black and white
+  version of what you’ve created will communicate the fact that two different colors are indeed different.
+  In the same way, you want to make sure that color alone is not the means through which important information
+  is conveyed. The following example makes these points clearer. An Example Let’s say you’ve just started
+  a new job at a brand-new coffee shop in your town called Campus Coffee. The shop has created a new menu
+  (see Figure 14.1), and as a student in technical communication, you can’t help but notice right away
+  how inaccessible the menu is for many users.</p>
+
+  <h3>Figure 14.1: Original Coffee Shop Menu</h3>
+
+  <p>The background color and the font color for menu items are close in shade and tone, and nothing offsets
+  important information other than slight color variation. In fact, as you work through your first shifts,
+  some customers ask you to read or to clarify menu items that are difficult to read. After overhearing
+  your new boss lamenting that she has no time to fix the issues with the menu and that she did her best
+  to make it, you volunteer for the job. Why not, you think? It’ll make a nice portfolio piece later on.</p>
+
+  <p>You want to use a consistent font, but you choose a simple pattern of hyphens to offset headings
+  such that readers can easily see where cold drinks begin and hot beverages end. After doing some research,
+  you choose a color palette that fits the overall motif of the coffee shop (warm browns and creams) yet
+  offers you some ways to create more contrast. You go with three colors: cream, medium coffee brown,
+  and deep teal.</p>
+
+  <p>You decide that it will enhance your design to use the teal for the headings, yet you rely on the
+  line of hyphens to do the work of communicating the important information that a new section of the
+  menu has started. Taking these small steps leads to a design you are quite proud of (see Figure 14.2).</p>
+
+  <h3>Figure 14.2: Revised Coffee Shop Menu</h3>
+
+  <p>Not only are colorblind guests better served, but the menu looks better and is more usable.</p>
+
+  <p>How You Can Apply Considering Colorblindness to Your Schoolwork, Internships, Jobs</p>
+
+  <p>When you are creating documentation projects for your schoolwork, internships, and jobs, professors,
+  internship providers, and employers will expect you to create documents that are clean and readable.
+  In fact, today, making sure that those with colorblindness can access your documents is a baseline expectation.
+  Like many practices related to accessibility, the advice given for how to account for colorblindness
+  as noted—using patterns to create contrast; keeping the color palette simple; paying special attention
+  to contrast; and avoiding using color alone to communicate important information —makes more visually
+  pleasing and usable designs for all users. Interestingly, there are many types of colorblindness.</p>
+
+  <p>For an example, see the Colblindor (https://www.color-blindness.com) free color blindness simulator
+  where you can choose from a number of options to see an image the way a person with a specific form
+  of color blindness might. In all variations, the advice offered previously is helpful. When you approach
+  your next documentation project, think: patterns for contrast, no more than three colors, and don’t
+  use color to communicate vital information. Taking these easy bits of advice to heart will go a long
+  way in making your documentation projects more accessible.</p>
+
+  <h3>Considering Dyslexia and Other Conditions that Alter Visual Abilities</h3>
+
+  <p>Why consider dyslexia, and other conditions that alter visual abilities?</p>
+
+  <p>Learning disabilities that make the part of the brain that processes language work differently can
+  lead to issues and problems deciphering documentation. Dyslexia is a condition that makes it difficult
+  to learn to read and write words, letters, and symbols, yet it does not affect overall intelligence.
+  Dyslexia can interfere with language and the ability to read, write, and speak. While a difficult-to-read
+  font may require some additional concentration for many readers, those with certain conditions, such
+  as dyslexia, may find the document impossible to read if the font is too difficult to decipher. For
+  example, those with dyslexia find serif fonts more difficult to read—especially when the letters are
+  close together. A study by researchers</p>
+
+  <p>Luz Rello and Ricardo Baeza-Yates found that Arial italics is especially difficult for those with
+  dyslexia to read while fonts like Verdana are easier for those with dyslexia to read. For technical
+  communicators, having words that are not readable by some audiences is a real concern, and readers with
+  dyslexia may simply not be able to read text due to its font style. Here are some things you can do
+  to:</p>
+
+  <ul><li>Choose fonts that work better for those with dyslexia (such as Verdana)</li><li>Ensure that
+  the text can easily be changed to a more readable font by the user (Zhu et al.).</li><li>Avoid font
+  styles that are known to be difficult for those with dyslexia to read (such as Arial Italics or other
+  italics and serif fonts)</li></ul>
+
+  <p>Choosing fonts that are easier for the user to manipulate (to change the size or look) can be a way
+  to ensure that most users will be able to access the content of your documentation projects. While some
+  fonts, such as Verdana, are known to be highly readable by those with dyslexia, other fonts, such as
+  EasyReading™, have been developed specifically with dyslexic readers in mind. Even if you don’t want
+  to use a font designed for a specific disability, you can choose fonts that are easier for any user
+  to read.</p>
+
+  <h3>An Example</h3>
+
+  <p>As part of a community-based technical communication course focused on the health sciences, you’ve
+  been tasked with creating a brochure for a local free clinic such that a nearby high school that serves
+  socioeconomically disadvantaged teenagers can be made aware of available services. The client has asked
+  for paper flyers such that they can be placed on a bulletin board with other student-focused information
+  just outside the school’s cafeteria. Knowing that you will not be able to offer readers a version of
+  the flyer where they will be able to easily manipulate the font (change it to a font that they find
+  more readable), and thinking about users with dyslexia for whom some fonts work better than others,
+  you create your flyer using Verdana fonts, you avoid italics, and you also include the website URL on
+  the flyer (see Figure 14.3).</p>
+
+  <p>Taking these simple steps has ensured that any students with dyslexia will be able to benefit from
+  learning more about the clinic’s services. Your design is clean and easy to read; a wide variety of
+  students at the high school will be able to get the information they need from reading it on the bulletin
+  board.</p>
+
+  <h3>Figure 14.3: Flyer for Health Clinic</h3>
+
+  <p>How You Can Apply Considerations of Dyslexia to Your Schoolwork, Internships, Jobs All of the documentation
+  projects you work on for your schoolwork, internships, and jobs, will require you to tend to everyday
+  communication considerations, such as audience, purpose, occasion, and exigence (or reason you are creating
+  the document). As we learned in the section on considering colorblindness, many clients now expect you
+  to consider disability and difference as a default when you are creating documentation projects.</p>
+
+  <p>Creating documents that are clean and readable by the widest group of people, including those with
+  dyslexia for whom some fonts and styles are more difficult to read, can also be beneficial to everyone.
+  Showing your professors, internship providers, and employers your sensitivity to difference by including
+  accessibility considerations in your decision-making conveys to them that you are user-centered and
+  serious about the widest group of users. Like many practices related to accessibility, the advice given
+  for how to account for dyslexia as discussed earlier—choosing fonts that are especially readable; making
+  digital documents revisable so that fonts can be changed or enlarged when needed; avoiding serif fonts
+  and italics—makes more usable designs for all users.</p>
+
+  <p>Creating Documents that Are Compatible with Assistive Devices</p>
+
+  <p>What is an Assistive Device?</p>
+
+  <p>Assistive device is a broad term for any device that helps a user to perform a task that would otherwise
+  be inaccessible. Have you ever broken or sprained a leg or ankle and required crutches? If so, you’ve
+  already used an assistive device. According to the World Health Organization, “assistive devices are
+  external devices that are designed, made, or adapted to assist a person to perform a particular task”
+  (Khasnabis et al.).</p>
+
+  <p>Thinking of accessible documentation projects in technical communication, assistive devices become
+  important when considering how visually impaired or blind users will interact with your documents, yet
+  as the previous section makes clear, if a person with dyslexia encounters a text that is in a font that
+  is difficult for them to read, assistive devices may also be useful. Even if a person has no documented
+  disability, cognitive styles differ, and some people simply prefer hearing to reading. There are a wide
+  range of reasons to wish to use an assistive device, and there are also a wide range of text-to-speech
+  assistive technologies ranging from free and simple webbased applications to sophisticated and complex
+  cameras that will pick up and read a wide range of text.</p>
+
+  <p>Fortunately, if you are working on a basic documentation project in Microsoft Word, Google docs,
+  or Adobe Pro, these programs have builtin features to help you to make sure your document will be readable
+  via text-to-speech assistive technologies. For example, Microsoft Word and other products in the Microsoft
+  Office suite of products have a number of built-in accessibility features. In fact, you can use preset
+  “styles” to be reassured that the headings and subheadings you use will be readable via a screen reader.
+  In the same way, Google Docs will automatically format documents with titles, headings, subheadings,
+  and lists to make the work of accessible documentation projects creations easier. WIX and Canva have
+  accessible templates for creators to use as do Adobe products. Rather than overviewing all that is out
+  there—because there is a lot—the hope of mentioning these built-in features is that you will be inspired
+  to seek out (and easily find) useful accessibility features in common programs.</p>
+
+  <p>If you are using a new program, it is worth exploring the accessibility features and templates they
+  make available. Also noteworthy are the accessibility checkers that are now built into many programs.
+  There is a wealth of free online tools at your disposal should you wish to check the accessibility of
+  your documentation project. See, for example, WAVE or “web accessibly evaluation tool” at webaim.org
+  where you can enter any URL and get a report on how accessible or inaccessible a site is.</p>
+
+  <p>Even without thinking about built-in accessibility features, there are some steps you can take to
+  make sure common assistive devices can read your electronically delivered documentation:</p>
+
+  <ul><li>Use backend properties (also called “metadata” or information about a document that identify
+  it) to tag your document with vital information for readers;</li><li>Arrange information in a logical
+  way; • Make strategic arrangement decisions, using headings, lists, and meaningful hyperlinks; and •
+  Don’t get fancy with symbols and punctuation.</li></ul>
+
+  <p>One way to make your documentation project easier for a user with a visual impairment to navigate
+  is to use backend properties or metadata— information about a document that can identify key information
+  about that document—to deliver vital contextual information to the reader.</p>
+
+  <p>While some properties may be automatically generated at the backend of common programs, many also
+  allow a user to add or edit information. For example, while Microsoft Word will automatically add the
+  author and title, you can add a subject and keywords to enhance the usability of your document for those
+  using screen-to-text assistive devices. Such moves give readers more context through which to make sense
+  of your documents. As well, you can make strategic arrangement decisions, using headings, lists, and
+  meaningful hyperlinks to improve the organization and logic of your documentation project.</p>
+
+  <p>Ask yourself: What are the major elements you wish to cover? Consider these worthy of their own headings.
+  Have a big chunk of instructions to get through? Using a list will break up that information into a
+  user-friendly flow. Want to point to a website? Describe and name the website, using a hyperlink in
+  place of the link so that readers won’t have to stumble over what will sound like gibberish to them.
+  Such moves make your writing better organized for the reader. Finally, many text-to-speech assistive
+  devices and programs either stumble through or simply ignore certain punctuation makes and symbols.
+  While most will pause at periods or commas, for example many will not read a plus mark such that if
+  you were to include something like “4 + 4 = 8”, the reader would say “448.” It’s best to spell such
+  things out. Taking these steps are baseline ways that you can make sure that your documentation projects
+  are accessible to those who rely on text-to-speech assistive devices.</p>
+
+  <p>An Example Imagine your internship provider, a local nonprofit focused on downtown revitalization,
+  has asked you to take notes on how they run their annual fundraiser. Recognizing that they’ll soon be
+  hiring new staff and saying goodbye to two senior staffers, they want to document how they’ve done things
+  in the past such that future leadership teams and interns will have a better idea of the steps, stages,
+  timelines, activities, and roles that will most likely lead to a successful event.</p>
+
+  <p>You decide to use Microsoft Word to create a draft of this documentation. You interview the existing
+  team, asking them to work backwards from closing out the event to all the stages and steps that went
+  into getting them there. You go into the document properties to adjust the metadata. The screenshot
+  in Figure 14.4 shows what you see when you go into the property summary in Word, which you can access
+  by selecting “File,” and then “Properties” from the dropdown menu.</p>
+
+  <h3>Figure 14.4: Properties Menu in MS Word</h3>
+
+  <p>Figure 14.5: Filled In Properties Menu in MS Word You change the author’s name to your internship
+  coordinator’s name.</p>
+
+  <p>You add a specific title, such as “Documentation for Annual Fundraiser”; keywords such as: event
+  planning; fundraising; procedures and roles. You fill in the comments with more contextual information
+  for users. You add “training” for the category (see Figure 14.5).</p>
+
+  <p>Such moves make your document easier not only for text-to-speech readers, but also for any user to
+  get important summative information about your document.</p>
+
+  <p>Next, you think about a logical way to arrange all of the information you gathered. You decide that
+  you’ll arrange the information you gathered primarily via the categories: introduction and overview;
+  roles and responsibilities; timelines; contacts; and frequently asked questions. This logical way of
+  organizing the information you gathered allows you to create clear headings for each of these sections.
+  In the roles and responsibilities section, you use a list to delineate each role and to share the responsibilities
+  that go along with those roles. In the timeline section, you spell out key time-related information
+  rather than relying on symbols or punctation. In the contacts section, you create a “frequent donors”
+  list where you use hyperlinks to share local business’s websites where relevant. Your documentation
+  project is now on its way to being more compatible with text-to-speech assistive technology. Again,
+  fortunately, the software and other tools that you’ll likely use for many of your documentation projects
+  will have built in accessibility features such that doing the work of making your projects accessible
+  will be relatively painless.</p>
+
+  <h3>How You Can Apply This to Your Schoolwork, Internships, Jobs</h3>
+
+  <p>When you approach documentation projects in your classes, in your internships or, eventually, in
+  your jobs, knowing the basic logics behind how to create documentation projects that are compatible
+  with assistive devices such as text-to-speech readers will allow you to create projects that are accessible
+  to those with visual impairment—a population that is, according to the National Institute of Health,
+  growing.</p>
+
+  <p>What’s more, with the boom in popularity of audio media in things like podcasts and audio books,
+  it’s likely that even those without auditory disabilities might eventually consider using text-to-speech
+  technologies to consume everyday documents. Either way, those tasked with creating the latest versions
+  of popular composing tools have given a lot of time and energy to helping content creators to ensure
+  that their documents are readable via such devices. When you approach your next documentation project,
+  use backend properties; arrange information in a logical way; use headings, lists, and meaningful hyperlinks;
+  and don’t get fancy with symbols and punctuation. Just as in other areas of consideration for creating
+  accessible documentation projects, taking these basic steps to ensure compatibility between your work
+  and text-tospeech readers arguably improve the logic, look, and feel of your projects for any user.</p>
+
+  <p>Using Alternative Text for Images</p>
+
+  <p>What Is alternative text for images?</p>
+
+  <p>One aspect of making your documentation projects more accessible that falls under making your documents
+  compatible with text-to-speech assistive devices and more usable for visually impaired users can be
+  a bit trickier—using alternative text for images or “alt text.” For that reason, the topic deserves
+  its own section.</p>
+
+  <p>Images make powerful statements. Think about how popular memes are. They are able to communicate
+  visual information in ways that entertain and delight users. Take, for example, the funny cat meme in
+  Figure 14.6.</p>
+
+  <p>The text is an important part of the joke, yet the fact that the cat is hovering over the shoulder
+  of a statue reading a stone book without any pages, and the fact that the cat looks as if he were reading
+  the book, is what makes it funny. Without alt text, though, the entire message is lost to users with
+  visual challenges.</p>
+
+  <h3>Figures 14.6 and 14.7: Cat Memes 1 and 2</h3>
+
+  <p>Have you ever walked into a room of friends just after the punch line to the joke has been delivered?
+  Everyone’s laughing and giving each other knowing looks. How did it make you feel? This same feeling
+  of being left out is exactly what it feels like for those with visual impairments to find that they
+  are missing out on vital information. Technical communicators developed the idea to add text under or
+  attached to an image such that those with visual impairments can be “in on the joke” for things like
+  memes. For documentation projects, the aim is not always laughter, yet the same principles apply—as
+  a producer of content, you want to make sure that all users are in the know.</p>
+
+  <p>Alternative text or alt text is exactly what it sounds like it is: it’s text that is used as an alternative
+  for an image. Alt text, therefore, refers to descriptive text that replaces the image used in a project—usually
+  a web page, and that’s where the term originates—such that those with visual impairments can still benefit
+  from images. In word processing programs such as Microsoft Word, alt text will automatically supply
+  suggested alt text when you add an image to a document, yet these autogenerated alt text descriptions
+  are not always precise or even accurate. Therefore, your job as a technical communicator calls on you
+  to 1) figure out how to insert alt text in a document; and 2) compose compelling alt text such that
+  you are satisfied that those who do not see the image will nonetheless get the message it is meant to
+  convey.</p>
+
+  <p>Here are some things you can do to write vibrant alternative text for images:</p>
+
+  <ul><li>Use the “show, don’t tell” principle. • See if your alt text can pass “the yellow test.” • Gauge
+  the purpose and aim of the image in relation to the project.</li></ul>
+
+  <p>You may already be familiar with the mandate to “show, don’t tell” from other genres of writing,
+  especially creative genres. At its base, this recommendation asks you to avoid bland descriptions that
+  lack vividness and specificity in favor of rich descriptions that allow readers to see what is in the
+  image. It asks you to do the more difficult work of providing a snapshot of a concept or larger significance
+  for readers. The same rule of thumb can be helpful when you are attempting to write great alt text.
+  Show readers what’s in that image by describing its details rather than just telling them in a basic
+  way what the picture contains.</p>
+
+  <p>Thinking of our cat meme, for example, when you insert that image in a program like Microsoft Word,
+  you’ll get an alt text suggestion that says: “A cat sitting on top of a grass covered field.” As you
+  know from seeing the previous image, that is not the information someone would need to understand the
+  intent of the image. That alt text tells the reader what is there, yet it doesn’t use description to
+  show the reader why that matters. I have, therefore, right clicked to add: “A cat looking over the shoulder
+  of a stone statue of a girl with a book with the message: ‘For the love of God, turn the page. You are
+  like the slowest reader ever.’”</p>
+
+  <p>Another way to punch up your alt text descriptions is to see if your alt text could pass what Lee
+  Gutkind calls “the yellow test.” Broad Street Magazine explains that the yellow test involves using
+  a yellow highlighter to indicate parts of a narrative where something is actually happening. The idea
+  is that by making writing dynamic and action-oriented, it is more vivid, and readers are better engaged.
+  Take, for example, the meme of a cat on a bed. If I insert this image, I get the suggested alt text:
+  “A cat lying on a bed.” I’ve used the yellow test to compose this replacement: “A kitten wedges its
+  back against a human, looks into the camera, and raises its paws as if it were about to pounce. Text
+  reads: ‘I big scary monster raaar’” (see Figure 14.7).</p>
+
+  <p>You can see how trying to make the description action-oriented also does the work of making it more
+  accurate.</p>
+
+  <p>Finally, a good rule of thumb when writing alt text is to consider the purpose of the image in relation
+  to the project. Decisions on tone and word choice can often be aligned with your purpose. If your topic
+  is serious, a formal tone is warranted. If your tone is playful or lighthearted, a lighter, fun tone
+  is needed.</p>
+
+  <h3>An Example</h3>
+
+  <p>Imagine a local bridal gown seamstress has asked your technical communication class to partner with
+  her this semester. She wants to sell patterns she’s created of custom gowns she’s designed from clients’
+  mood boards as well as plans for alterations she’s made to heirloom dresses to make them more modern
+  and better fitting. Her target audience is fashion students and aspiring or even amateur seamstresses
+  who’d like to make her gowns or who’d like to do similar work.</p>
+
+  <p>After collecting images from your client’s personal files and scanning samples of the physical patterns
+  she’s created, you work with your classmates and professor to create a website that documents the processes
+  used to create each custom gown. You carefully design alt text to insert under each image such that
+  visually impaired users will have a better idea of what they might expect if they were to follow the
+  patterns for these dresses.</p>
+
+  <p>For one of the gowns, you’ve chosen this image from the client photos the seamstress is allowing
+  your class to use (see Figure 14.8). When you insert the image on WordPress, a plugin generates the
+  alt text: “A person posing for a picture.” However, you want to add something more descriptive. Making
+  use of the “show, don’t tell” principle, you say, “a woman stands with one hand on her hip . . .” Thinking
+  of the yellow test, you add, “she’s staring straight ahead with a lifted chin, confidently.” Thinking
+  back on your purpose—to inspire seamstresses and fashion design students to make these dresses, you
+  add “a woman in an intricate lace, sweetheart neckline, sleeveless bridal gown . . .” Notice how the
+  new alt text in this exercise will do a far better job of conveying the visual information the original
+  photo is meant to communicate to potential audiences.</p>
+
+  <h3>Figure 14.8: Wedding Dress Image</h3>
+
+  <p>How You Can Apply This to Your Schoolwork, Internships, Jobs</p>
+
+  <p>When a documentation project would be truly remiss to leave out images or when an image will communicate
+  powerful information, you will want to use them. You don’t want to make it impossible for those with
+  visual impairment to know what is on the page. Moreover, the very idea of creating alternative text
+  or alt text dovetails beautifully with the work of a technical communicator. The same interpretative
+  and productive skillsets that technical communicators rely on to render complex or specialized information
+  useful and usable to non-expert audiences can come in handy when preparing appropriate and specific
+  alternative text. In both cases, the writer must attempt to do important transformational work.</p>
+
+  <p>Most every documentation project will include some images, whether they are photographs, screengrabs,
+  charts, tables, or diagrams. In all cases, these images must be interpreted for those who cannot see
+  them—even in cases where it is possible that the data in a table will be readable via an assistive device.</p>
+
+  <p>Alt text is not only a matter of courtesy. Big companies, such as Target, have gotten into trouble
+  for not providing sufficient alt text for images (Baker). Using alt text is a baseline consideration
+  for compliance with disability standards that come out of a number of significant deliberative bodies,
+  such as the United Nations (Ma). Thus, in your internships and jobs, you will be expected to be familiar
+  with and to use alt text—particularly in web-based compositions. Increasingly, too, professors are expecting
+  to see alt text used effectively in projects, and alt text is expected in video documentation projects.</p>
+
+  <p>When you approach your next documentation project, think: what images have I used, and do I include
+  alt text? Am I using the “show, don’t tell” principle to make my writing richly descriptive? Am I using
+  the yellow test to make my writing dynamic and lively? And, perhaps most importantly, does my writing
+  fit my purpose and tone?</p>
+
+  <h3>Conclusion</h3>
+
+  <p>As I hope this chapter has demonstrated, knowing a few basic tenets of how to approach accessibility
+  in documentation projects is important as you decide how and when to use templates, styles, and checker
+  tools as well as in determining their strengths and weaknesses. In the end, making documentation accessible
+  is important as it allows all users to be included and gives them access to technical knowledge and
+  skills.</p>
+
+  <h3>Works Cited</h3>
+
+  <p>“ADA National Network | Information, Guidance and Training on the Americans with Disabilities Act.”
+  https://adata.org/.</p>
+
+  <p>Bachmann, Christina, and Lauro Mengheri. “Dyslexia and Fonts: Is a Specific Font Useful?” Brain Sciences,
+  vol. 8, no. 5, May 2018. PubMed Central, https://doi.org/10.3390/brainsci8050089.</p>
+
+  <p>“Coblis Color Blindness Simulator.” Colblindor, https://www.color-blindness. com/coblis-color-blindness-simulator/.</p>
+
+  <p>Collinge, Robyn. “How to Design for Color Blindness.” GetFeedback, 17 Jan. 2017. https://www.getfeedback.com/resources/ux/
+  how-to-design-for-color-blindness/.</p>
+
+  <p>Davlin, Ann. “Color Combinations from Hell – Death Sentence for Your Designs.” DesignWebKit, 2019,
+  https://designwebkit.com/web-and-trends/ color-combinations-hell-death-sentence-designs/.</p>
+
+  <p>Department of Health and Human Services Office of Communications. “What are some types of assistive
+  devices and how are they used?” NIH, 24 Oct. 2018. https://www.nichd.nih.gov/health/topics/rehabtech/conditioninfo/
+  device.</p>
+
+  <p>Khasnabis, Chapal, et al. “Assistive Devices.” Community-Based Rehabilitation: CBR Guidelines. Geneva:
+  World Health Organization, 2010. https://www. ncbi.nlm.nih.gov/books/NBK310951/.</p>
+
+  <p>“Lee Gutkind’s ‘The Yellow Test’ and Other Advice.” BroadStreetMag, 30 Apr. 2014. https://tinyurl.com/mu5m6tpz.</p>
+
+  <p>Ma, Melody. “A Brief History of Alt Text.” Medium. 17 May 2018, https://medium.com/@melodyma/a-brief-history-of-alt-text-12cff05a59ff.</p>
+
+  <p>Rello, Luz and Ricardo Baeza-Yates. “Good Fonts for Dyslexia.” Proceedings of the 15th International
+  ACM SIGACCESS Conference on Computers and Accessibility. Association for Computing Machinery, 21 Oct.
+  2013, pp. 1-8. https://doi/10.1145/2513383.2513447.</p>
+
+  <p>“Visual Impairment, Blindness Cases in U.S. Expected To Double by 2050.” National Institutes of Health
+  (NIH). 19 May 2016, https://www.nih.gov/news-events/news-releases/ visual-impairment-blindness-cases-us-expected-double-2050.</p>
+
+  <p>What Is the Definition of Disability under the ADA? | ADA National Network.” https://adata.org/faq/what-definition-disability-under-ada.</p>
+
+  <p>Zhu, Xinru, et al. “Analysis of Typefaces Designed for Readers with Developmental Dyslexia.” Document
+  Analysis Systems, edited by Xiang Bai et al., Springer International Publishing, 2020, pp. 529–43. Springer
+  Link, https:// doi.org/10.1007/978-3-030-57058-3_37.</p>
+
+  <h3>Teacher Resources</h3>
+
+  <p>Overview and Teaching Strategies Designing documentation projects with accessibility in mind requires
+  a sensitivity to difference and the ability to imagine the widest audience possible, including considerations
+  of visual, cognitive, and aural disabilities. As this chapter shows, there are simple, thoughtful steps
+  you can take to ensure that documentation projects are as accessible as possible. These steps include
+  the following.</p>
+
+  <p>Considering Colorblindness • Use patterns to create contrast. • Keep color palette simple, using
+  a maximum of three colors. • Pay special attention to contrast. • Do not rely on color alone to communicate
+  important information.</p>
+
+  <h3>Considering Dyslexia and Other Conditions that Alter Visual Abilities</h3>
+
+  <ul><li>Choose fonts that work better for those with dyslexia (such as Verdana).</li><li>Ensure that
+  the text can easily be changed to a more readable font by the user (Zhu et al.).</li><li>Avoid font
+  styles that are known to be difficult for those with dyslexia to read (such as Arial Italics or other
+  italics and serif fonts).</li></ul>
+
+  <p>Creating Documents that are Compatible with Assistive Devices Use backend properties (also called
+  “metadata” or information about a document) to tag your document with vital information for readers.</p>
+
+  <ul><li>Arrange information in a logical way. • Make strategic arrangement decisions, using headings,
+  lists, and meaningful hyperlinks. • Don’t get fancy with symbols and punctuation.</li></ul>
+
+  <p>Using Alternative Text for Images • Use the “show, don’t tell” principle. • See if your alt text
+  can pass “the yellow test.” • Gauge the purpose and aim of the image in relation to the project.</p>
+
+  <p>Gaining mastery of the basics requires students to learn the fundamental idea that creating compelling
+  documentation projects means taking steps to accommodate the widest range of end users they can imagine.
+  Such an approach is more inclusive, but it also makes good business sense given the rather large percentage
+  of the population that has disabilities.</p>
+
+  <p>The accessibility framework described here emphasizes that rather than limiting or stifling the work
+  of a technical communicator, though, decision-making with accessibility in mind often opens up creativity
+  and enhances the overall quality of a documentation project. What’s more, focusing on issues of accessibility
+  is important work as the projects a technical communicator creates have the capacity to empower those
+  who are too often left behind.</p>
+
+  <h3>Discussion Questions</h3>
+
+  <p>To help students explore the ideas in this entry, consider having them address—as individuals, in
+  small groups, or as an overall class—the following questions:</p>
+
+  <p>1. Thinking of a recent document you created for a specific audience, purpose, and occasion, list
+  the ways you managed to consider accessibility and the ways you would revise your composing process
+  now that you’ve read this chapter.</p>
+
+  <p>2. How might the recommendations found in this chapter change how you approach your documentation
+  projects?</p>
+
+  <p>3. What do you want to know more about in terms of accessibility? Scan the Web Accesibltiy Initiative
+  “W3C Accessibility Standards Overview” page at https://www.w3.org/WAI/standards-guidelines/. Which topics
+  would you like to learn more about?</p>
+
+  <p>4. Choose any of the main sections of this chapter and find an example of a text that does not adhere
+  to the recommendations. Redesign the document to be more accessible.</p>
+
+  <p>5. This chapter makes a clear claim that considering accessibility leads to more innovative and accomplished
+  documentation projects. To what extent do you agree or disagree with this idea, and why or why not?</p>
+
+  <p>Exploring these topics can help students contemplate and deliberate over how to apply the ideas presented
+  in the chapter within the context of their own documentation projects in school and beyond.</p>'

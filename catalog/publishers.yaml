@@ -111,11 +111,11 @@
   can_vendor: false
   link_check: auto
   notes: >-
-    Links only. On 2026-10-20 volume 4's Holmes essay carried a CC BY-NC-ND 4.0
+    Full text is in content-pack/noncommercial (writing-spaces-vol-1 to 6); no catalog links. On 2026-10-20 volume 4's Holmes essay carried a CC BY-NC-ND 4.0
     notice; the volume pages say only "Creative Commons licensed," and the
     terms-of-use page had not loaded, so each essay's own notice decides what
-    may be done with it. NoDerivatives means an essay could only be copied
-    whole and unchanged, so nothing is copied. The site has no robots.txt
+    may be done with it, and the pack records that notice per essay.
+    NoDerivatives means an essay is copied whole and unchanged. The site has no robots.txt
     (404). Volume 6 is Technical Writing Spaces.
 
 - name: Writing Commons
