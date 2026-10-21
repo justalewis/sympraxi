@@ -53,6 +53,7 @@ PUBLIC = {
     "accounts:local_login",
     "survey:thanks",
     "lti:config",
+    "core:language",  # switches the page language and redirects back; needs a code
 }
 
 # Pages about the signed-in person's own account, outside any center. Anyone
@@ -541,7 +542,7 @@ def test_dead_and_unknown_tokens_look_alike(client, db, name) -> None:
     assert len(set(answers.values())) == 1, sorted(answers)
 
 
-@pytest.mark.parametrize("name", sorted(PUBLIC - {"core:source"}))
+@pytest.mark.parametrize("name", sorted(PUBLIC - {"core:source", "core:language"}))
 def test_public_pages_load_anonymously(client, db, name) -> None:
     assert client.get(reverse(name)).status_code == 200
 

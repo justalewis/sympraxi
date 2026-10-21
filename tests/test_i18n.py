@@ -63,33 +63,38 @@ def test_the_browsers_language_picks_spanish(client) -> None:
 
 @pytest.mark.django_db
 def test_the_switch_remembers_the_choice(client) -> None:
-    response = client.post(
-        reverse("set_language"), {"language": "es", "next": reverse("account_login")}
-    )
-    assert response.status_code == 302 and response["Location"] == reverse("account_login")
-    assert "Obtener el código fuente" in client.get(reverse("account_login")).content.decode()
-    client.post(reverse("set_language"), {"language": "en", "next": "/"})
-    assert "Get the source code" in client.get(reverse("account_login")).content.decode()
+    login = reverse("account_login")
+    response = client.get(reverse("core:language", args=["es"]), headers={"referer": login})
+    assert response.status_code == 302 and response["Location"] == login
+    assert "Obtener el código fuente" in client.get(login).content.decode()
+    client.get(reverse("core:language", args=["en"]))
+    assert "Get the source code" in client.get(login).content.decode()
 
 
 @pytest.mark.django_db
 def test_the_switch_does_not_leave_the_site(client) -> None:
-    response = client.post(
-        reverse("set_language"), {"language": "es", "next": "https://evil.example/"}
+    response = client.get(
+        reverse("core:language", args=["es"]), headers={"referer": "https://evil.example/x"}
     )
     assert response["Location"] == "/"
 
 
 @pytest.mark.django_db
 def test_an_unsupported_language_is_ignored(client) -> None:
-    client.post(reverse("set_language"), {"language": "xx", "next": "/"})
+    client.get(reverse("core:language", args=["xx"]))
     assert "Get the source code" in client.get(reverse("account_login")).content.decode()
+
+
+@pytest.mark.django_db
+def test_pages_carry_no_language_form_or_token(client) -> None:
+    html = client.get("/no-such-page-xyz/").content.decode()
+    assert "csrfmiddlewaretoken" not in html and "no-such-page-xyz" not in html
 
 
 @pytest.mark.django_db
 def test_the_footer_offers_both_languages(client) -> None:
     html = client.get(reverse("account_login")).content.decode()
-    assert 'value="en"' in html and 'value="es"' in html and "Español" in html
+    assert "/language/en/" in html and "/language/es/" in html and "Español" in html
 
 
 @pytest.mark.django_db

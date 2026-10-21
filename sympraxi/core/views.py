@@ -77,3 +77,29 @@ def csrf_failure(request: HttpRequest, reason: str = "") -> HttpResponse:
     Django has already logged the reason; the page doesn't repeat it.
     """
     return render(request, "403_csrf.html", status=403)
+
+
+@require_GET
+def set_language(request: HttpRequest, code: str) -> HttpResponse:
+    """Remember the chosen language in a cookie and go back to the page the link was on.
+
+    A plain link rather than Django's form post, so pages carry no per-response CSRF
+    token (which would make otherwise identical pages differ). Changing the language is
+    harmless to do for someone else.
+    """
+    from django.http import HttpResponseRedirect
+    from django.utils.http import url_has_allowed_host_and_scheme
+
+    back = request.headers.get("referer", "")
+    if not url_has_allowed_host_and_scheme(back, {request.get_host()}, request.is_secure()):
+        back = "/"
+    response = HttpResponseRedirect(back)
+    if code in dict(settings.LANGUAGES):
+        response.set_cookie(
+            settings.LANGUAGE_COOKIE_NAME,
+            code,
+            max_age=settings.LANGUAGE_COOKIE_AGE,
+            samesite="Lax",
+            secure=request.is_secure(),
+        )
+    return response

@@ -544,7 +544,8 @@ def test_posting_the_booking_form_again_shows_the_booking(
     detail = page("scheduling:appointment", world, appointment_id=appointment.pk)
     assert first["Location"] == second["Location"] == detail
     assert shown_messages(second) == [message]
-    assert len(emails) == 1
+    # The audit log's webhook hook also waits for the commit; only emails are counted here.
+    assert len([c for c in emails if "hook" not in c.__qualname__]) == 1
 
 
 def test_a_refusal_caused_by_the_students_own_booking_shows_the_booking(

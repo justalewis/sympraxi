@@ -359,6 +359,8 @@ def test_the_reminder_run_texts_only_for_the_last_reminder(
         is_tentative=False,
     )
     appointment.refresh_from_db()
+    # Booked well before either reminder is due, whatever the time of day the test runs.
+    appointment.participants.update(added_at=afternoon - timedelta(days=5))
 
     def run(minutes: int) -> None:
         due = appointment.starts_at - timedelta(minutes=minutes)

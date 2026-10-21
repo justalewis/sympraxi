@@ -8,4 +8,5 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("healthz", views.healthz, name="healthz"),
     path("source/", views.source_code, name="source"),
+    path("language/<str:code>/", views.set_language, name="language"),
 ]
