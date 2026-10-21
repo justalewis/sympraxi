@@ -116,6 +116,8 @@ def workshop_detail(request: HttpRequest, slug: str, workshop_id: UUID) -> HttpR
 def register(request: HttpRequest, slug: str, workshop_id: UUID) -> HttpResponse:
     workshop = _workshop(request, Action.REGISTER_WORKSHOP, slug, workshop_id)
     here = reverse("workshops:detail", kwargs={"slug": slug, "workshop_id": workshop.pk})
+    if request.method != "POST":
+        return workshop_detail(request, slug, workshop_id)
     if request.method == "POST":
         me = _me(request)
         try:
