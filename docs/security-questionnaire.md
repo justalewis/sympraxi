@@ -321,6 +321,27 @@ What Sympraxi keeps, for the questions below. Accounts: email address, full name
 | DPAI-01 | Uses AI on institutional data | No | No AI features (REQU-04) |
 | DPAI-02* to DPAI-08 | Retention, contracts, subprocessors and opt-out for AI | Not applicable | No AI features |
 
+## Updates for Phases 3 to 5 (October 21, 2026)
+
+The tables above describe the branch as of October 17. Since then the project added the staff time clock and kiosk, workshops, training, a waiting list, an API with webhooks, early alerts and shared visits, text message reminders, more ways to sign in, an LTI launch and Spanish. These answers replace or add to the rows above. Evidence paths are relative to the repository root.
+
+| ID | Asks about | Answer | Evidence and notes |
+|---|---|---|---|
+| AAAI-01* | Single sign-on | Yes | Adds any OpenID Connect provider (Okta, Keycloak and others) from `SYMPRAXI_OIDC_*` settings, with PKCE, an issuer check, a verified-email requirement and a required college email domain list (`sympraxi/accounts/sso_config.py`, `sympraxi/accounts/sso.py`; `tests/test_sso_more.py`). Still tested only against fake providers, never a real tenant |
+| AAAI-12, AAAI-15 | Other authentication systems; SAML2, OIDC or CAS | Partly | OIDC (Entra ID, Google, generic) and CAS 2.0 and 3.0 (`sympraxi/accounts/cas.py`; the CAS answer is read over https from the server, DTDs and entities refused). SAML2 is not built: it needs an XML-signature library that isn't installed and is a separate decision. Shibboleth sites can use its OIDC add-on or CAS |
+| AAAI-13 | Attribute mappings | Partly | A site can name the OIDC claim or CAS attribute that carries the student ID. It fills a blank ID, never overwrites one, and audits a mismatch or clash (`SSO_STUDENT_ID_SET`, `SSO_STUDENT_ID_MISMATCH`). Other attributes aren't mapped |
+| AAAI-16 | Email address vs. user ID | Yes | CAS and LTI sign-ins pin the provider's own identifier to the account at first sign-in (`CasLink`, `LtiLink`), so an address handed to a new person doesn't reach the old person's records |
+| AAAI-17 | Multi-factor | Yes | Unchanged: a CAS or LTI sign-in goes through allauth, so staff still meet two-factor |
+| AAAI-new | LMS launch | Partly | LTI 1.3 launch (`sympraxi/lti/`; `tests/test_lti.py`): RS256 signature against the platform's published keys, issuer, audience, deployment, expiry, message type, and a one-time nonce. Only a site administrator registers a platform. Role claims are ignored, so a launch never grants staff access. Tested against a stand-in platform, not a real Canvas, Moodle or D2L |
+| APPL-new | API and webhooks | Yes | Tokens are scoped, shown once, stored as SHA-256 hashes and act as the director who made them (`sympraxi/integrations/`; `tests/test_integrations.py`). Webhooks are signed (HMAC-SHA256 with a timestamp), carry ids and never names, refuse non-public addresses and retry with backoff. Documented in `docs/api.md`. Each token is limited to 600 calls a minute (`RATE_LIMIT` in `sympraxi/integrations/api.py`) |
+| DATA-new | Phone numbers | Yes | Stored encrypted with the site's secret key and a keyed hash (`sympraxi/sms/`; `tests/test_sms.py`). Consent is stored with its exact wording, version, time and address. STOP and HELP are handled; a number is texted only for appointment reminders and the confirmation code, never between 9 pm and 8 am. Texts leave the campus through the provider the host sets (Campus responsibility to contract with it) |
+| DRPV-new | Faculty view of visits | Yes | A student chooses, per visit, to share a confirmation with a named instructor by a link. It shows the date, center and that the visit happened, no tutor notes or topics, and can be turned off (`sympraxi/alerts/`; `tests/test_alerts.py`) |
+| DRPV-new | Early alerts | Yes | A reason is required, and who may see an alert is limited by role. Alerts are in the student's export and the center export |
+| DRPV-10 | Student access to their data | Yes | The student export is now version 11 and includes consent to texts and shared visits (`sympraxi/records/export.py`) |
+| DRPV-new | Importing history | Yes | Legacy appointment history can be imported with a preview and audit entry (`manage.py import_history`; `docs/install.md`) |
+
+Gaps 1 to 13 above still stand, with these changes. Gap 2 (no penetration test) is unchanged and is now the main item before a 1.0 release: `docs/security-review-brief.md` is the brief to hand a reviewer. Gap 8 grows to include CAS, generic OIDC and LTI, which have only been tested against stand-ins. New: translations were written by Claude and haven't been read by a Spanish speaker.
+
 ## What the campus has to do
 
 Collected from the answers above:
