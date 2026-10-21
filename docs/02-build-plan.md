@@ -358,6 +358,16 @@ Slices 6 and 7 wait on decisions or files from the maintainer.
 - Multi-center polish; a first translation (Spanish).
 - External security review, HECVAT, Accessibility Conformance Report, 1.0 release.
 
+**Slices, planned October 21, 2026.** Each is built, checked and pushed before the next. A slice that needs a package that isn't installed waits for your approval instead of adding it.
+
+1. **API and webhooks.** A read/write API under `/api/v1/` with scoped tokens a director creates for the center, and signed webhooks for a few events that carry ids, not names.
+2. **Early alerts.** A tutor or staff member raises an alert about a student with a required reason; directors and the center's chosen contacts handle it; an optional view for faculty of the visit confirmations a student chose to share.
+3. **SMS.** A provider plug-in interface, a Twilio provider using only the standard library, an unchecked opt-in, stored consent, and STOP and HELP handling.
+4. **More sign-in.** Generic OIDC providers (Okta and others) set up from the environment, CAS, and student-ID mapping and account linking.
+5. **LTI 1.3.** A Canvas launch that signs the person in and fills in course and instructor details, with Moodle and D2L working from the same standard.
+6. **Multi-center polish and Spanish.** A center switcher and per-center settings review, and a first Spanish translation of the student-facing pages and emails.
+7. **Release material.** A draft HECVAT, accessibility conformance report and security-review brief, and the 1.0 notes. SAML needs a package that isn't installed and is decided separately.
+
 **Exit:** a second campus installs and runs it without help from the core team.
 
 ### Rough calendar
