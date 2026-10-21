@@ -127,6 +127,17 @@ class Center(models.Model):
         default=60,
         help_text=_("Used only when the survey goes out a set time after the appointment."),
     )
+    # Early alerts: where the notice that one was raised goes. Empty: to the directors.
+    alert_email = models.EmailField(_("email for early alert notices"), blank=True)
+    # Students may share a confirmation of a visit with an instructor.
+    visit_sharing_enabled = models.BooleanField(
+        _("let students share visit confirmations with instructors"),
+        default=False,
+        help_text=_(
+            "A student can choose to send an instructor a link confirming they came. The "
+            "instructor sees the student's name, the day and how long, and nothing else."
+        ),
+    )
     # Hours of training a new tutor completes, counted from the time clock's training
     # category. Empty: no hours required.
     training_hours_required = models.DecimalField(

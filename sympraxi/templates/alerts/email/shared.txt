@@ -1,0 +1,11 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=student.display_name center=center.name %}{{ name }} chose to send you a confirmation that they visited {{ center }}.{% endblocktranslate %}
+{% if share.course %}
+{% blocktranslate with course=share.course %}They shared it for: {{ course }}.{% endblocktranslate %}
+{% endif %}
+{% translate "You can read it here, without signing in:" %}
+{{ url }}
+
+{% blocktranslate with n=days %}The link works for {{ n }} days, or until the student turns it off. It shows their name, the day and the length of the visit, and nothing about what they worked on. Reply to this email to reach the student.{% endblocktranslate %}
+
+{{ SITE_NAME }}
+{% endautoescape %}

@@ -45,6 +45,10 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_run_kiosk": can(request.user, Action.RUN_KIOSK, center),
         "can_view_workshops": can(request.user, Action.VIEW_WORKSHOPS, center),
         "can_take_training": can(request.user, Action.TAKE_TRAINING, center),
+        "can_handle_alerts": can(request.user, Action.HANDLE_ALERTS, center),
+        "can_raise_alert": can(request.user, Action.RAISE_ALERT, center),
+        "can_share_visits": can(request.user, Action.SHARE_VISIT, center)
+        and center.visit_sharing_enabled,
         "can_view_waiting_room": can(request.user, Action.VIEW_WAITING_ROOM, center),
         "can_manage_announcements": can(request.user, Action.MANAGE_ANNOUNCEMENTS, center),
         "can_send_mass_email": can(request.user, Action.SEND_MASS_EMAIL, center),

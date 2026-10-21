@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Early alerts" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Early alerts" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Early alerts" %}</h1>
+  <h2>{% translate "Needing attention" %}</h2>
+  {% if open %}
+    <ul class="usa-list">
+      {% for a in open %}
+        <li><a href="{% url 'alerts:detail' slug=center.slug alert_id=a.pk %}">{{ a.student.display_name }}</a> · {{ a.get_kind_display }} · {{ a.created_at|date:"M j, Y" }} · <span class="usa-tag">{{ a.get_status_display }}</span>{% if a.raised_by %} · {% blocktranslate with name=a.raised_by.display_name %}raised by {{ name }}{% endblocktranslate %}{% endif %}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "Nothing is open." %}</p>
+  {% endif %}
+  {% if closed %}
+    <h2>{% translate "Closed" %}</h2>
+    <ul class="usa-list">
+      {% for a in closed %}
+        <li><a href="{% url 'alerts:detail' slug=center.slug alert_id=a.pk %}">{{ a.student.display_name }}</a> · {{ a.get_kind_display }} · {% blocktranslate with day=a.closed_at|date:"M j, Y" %}closed {{ day }}{% endblocktranslate %}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

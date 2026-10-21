@@ -1,0 +1,7 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=alert.student.display_name kind=alert.get_kind_display center=center.name %}An early alert was raised at {{ center }} about {{ name }}: {{ kind }}.{% endblocktranslate %}
+
+{% translate "The reason is on the alert's page. Sign in to read it and to acknowledge it:" %}
+{{ url }}
+
+{{ SITE_NAME }}
+{% endautoescape %}

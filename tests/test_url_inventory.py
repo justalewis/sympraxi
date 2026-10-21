@@ -27,6 +27,7 @@ from sympraxi.core.policy import Action
 from sympraxi.forms import surveys
 from sympraxi.forms.models import SurveyInvitation
 from sympraxi.notify import feeds
+from tests.alerts_world import add_alerts
 from tests.attendance_world import add_attendance
 from tests.content_world import make_content_item
 from tests.disclosure_world import add_disclosures
@@ -218,6 +219,13 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "training:mentees": (Action.MENTOR_TUTORS, "center"),
     "training:mentee": (Action.MENTOR_TUTORS, "mentee"),
     "training:observation": (Action.OBSERVE, "observation"),
+    # Early alerts and shared visits
+    "alerts:list": (Action.HANDLE_ALERTS, "center"),
+    "alerts:mine": (Action.RAISE_ALERT, "center"),
+    "alerts:detail": (Action.VIEW_ALERT, "alert"),
+    "alerts:raise": (Action.RAISE_ALERT, "student_membership"),
+    "alerts:share": (Action.SHARE_VISIT, "appointment"),
+    "alerts:shares": (Action.SHARE_VISIT, "center"),
     # API tokens and webhooks
     "integrations:home": (Action.MANAGE_INTEGRATIONS, "center"),
     "staff:entry_add": (Action.MANAGE_TIME, "center"),
@@ -282,7 +290,33 @@ def _feed_of_turned_off_account(world: World) -> str:
     return token
 
 
+def _revoked_share(world: World) -> str:
+    world.share.revoked_at = timezone.now()
+    world.share.save(update_fields=["revoked_at"])
+    return world.share_token
+
+
+def _expired_share(world: World) -> str:
+    world.share.expires_at = timezone.now() - timedelta(minutes=1)
+    world.share.save(update_fields=["expires_at"])
+    return world.share_token
+
+
+def _share_of_turned_off_account(world: World) -> str:
+    world.student.is_active = False
+    world.student.save(update_fields=["is_active"])
+    return world.share_token
+
+
 TOKEN_PAGES: dict[str, TokenPage] = {
+    "visit:confirmation": TokenPage(
+        valid=lambda world: world.share_token,
+        dead={
+            "revoked": _revoked_share,
+            "expired": _expired_share,
+            "account turned off": _share_of_turned_off_account,
+        },
+    ),
     "survey:answer": TokenPage(
         valid=lambda world: world.survey_token,
         dead={
@@ -330,6 +364,7 @@ URL_KWARGS = {
     "training_module": "module_id",
     "training_item": "item_id",
     "cohort": "cohort_id",
+    "alert": "alert_id",
     "checklist": "template_id",
     "mentee": "member_id",
     "observation": "observation_id",
@@ -389,6 +424,7 @@ def world(center) -> World:
         add_workshops,
         add_training,
         add_onboarding,
+        add_alerts,
     ):
         built = add(built)
     return built
@@ -472,7 +508,7 @@ def test_dead_and_unknown_tokens_look_alike(client, db, name) -> None:
         response = client.get(_token_url(name, token))
         answers[kind] = (response.status_code, _same_page(response.content))
     for kind, make in page.dead.items():
-        world = add_forms(add_attendance(add_records(build_world(CenterFactory()))))
+        world = add_alerts(add_forms(add_attendance(add_records(build_world(CenterFactory())))))
         token = make(world)
         for response in (client.get(_token_url(name, token)), client.post(_token_url(name, token))):
             answers[f"{kind} ({response.request['REQUEST_METHOD']})"] = (

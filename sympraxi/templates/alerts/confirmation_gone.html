@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Visit confirmation" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "This link doesn't work" %}</h1>
+  <p>{% translate "It may have expired, or the student may have turned it off. Ask them to send a new one." %}</p>
+{% endblock content %}

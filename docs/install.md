@@ -236,6 +236,10 @@ Optional. To give online appointments their own video rooms, run a Jitsi Meet se
 
 Staff clock in and out on their time clock page. To limit that to the center's own network, a director opens Timesheets, then Time clock settings, and lists the center's public IP address or range, one per line (203.0.113.0/24). Sympraxi reads the visitor's address from the connection, or from the proxy when `SYMPRAXI_TRUST_X_FORWARDED_FOR=true`; turn that on only behind a proxy you control, or anyone can claim an address. Leave the list empty to allow clock-ins from anywhere. The same page holds each person's payroll ID and pay code, which appear on the timesheet download. At the end of a pay period, a director opens Approve hours, picks the days, and approves each person; that locks those entries.
 
+## Early alerts and shared visits
+
+Alerts need nothing set up: tutors and the front desk raise them from a student's history page, and directors handle them under Early alerts on the center page. To send the notice to one address instead of the directors, set the alert email in the center's record settings, where visit sharing is also turned on. Shared visit links and alert notices use `SYMPRAXI_BASE_URL` for their links.
+
 ## API and webhooks
 
 A director opens API and webhooks on the center's page to make tokens and add webhooks. The API is documented in `docs/api.md`. Webhook retries and sending run on the task worker (`manage.py db_worker`) and the scheduler, so both must be running. Webhook addresses must be https and reachable from the internet; for local testing set `SYMPRAXI_WEBHOOKS_ALLOW_PRIVATE=true`.

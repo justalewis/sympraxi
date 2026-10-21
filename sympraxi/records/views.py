@@ -709,6 +709,7 @@ def student_history(request: HttpRequest, slug: str, membership_id: UUID) -> Htt
         "groups": by_project(records, projects),
         "can_export": can(request.user, Action.EXPORT_STUDENT_RECORD, membership),
         "can_record_disclosures": can(request.user, Action.RECORD_DISCLOSURES, membership),
+        "can_raise_alert": can(request.user, Action.RAISE_ALERT, membership),
         "crumbs": _crumbs(center),
     }
     with timezone.override(center.time_zone):

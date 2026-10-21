@@ -311,4 +311,6 @@ class RecordSettingsForm(forms.ModelForm):
             "students_see_staff_notes",
             "summary_email_includes_text",
             "record_reminder_hours",
+            "alert_email",
+            "visit_sharing_enabled",
         ]

@@ -115,6 +115,13 @@ INTEGRATION_ACTIONS = [
     Action.MANAGE_INTEGRATIONS,
 ]
 
+ALERT_ACTIONS = [
+    Action.RAISE_ALERT,
+    Action.VIEW_ALERT,
+    Action.HANDLE_ALERTS,
+    Action.SHARE_VISIT,
+]
+
 NEWS_ACTIONS = [
     Action.MANAGE_ANNOUNCEMENTS,
     Action.SEND_MASS_EMAIL,
@@ -156,6 +163,7 @@ ACTIONS = (
     + WORKSHOP_ACTIONS
     + TRAINING_ACTIONS
     + INTEGRATION_ACTIONS
+    + ALERT_ACTIONS
     + NEWS_ACTIONS
     + DISCLOSURE_ACTIONS
     + FILES_ACTIONS
@@ -312,6 +320,22 @@ EXPECTED_INTEGRATIONS = {
     "site_admin":  (0,),
 }
 
+# Early alerts and shared visits, asked about the center. Tutors raise an alert about
+# students they have tutored and read the ones they raised (ALERT_CASES-style checks
+# are in tests/test_alerts.py); the front desk raises about any student; directors
+# handle them all. Students share their own visits. Site administrators get none: an
+# alert is about a student, and what staff wrote is not theirs to read.
+EXPECTED_ALERTS = {
+    #              raise   view    handle  share
+    #              alert   alert   alerts  visit
+    "none":        (0,     0,      0,      0),
+    "student":     (0,     0,      0,      1),
+    "tutor":       (1,     1,      0,      0),
+    "front_desk":  (1,     1,      0,      0),
+    "director":    (1,     1,      1,      0),
+    "site_admin":  (0,     0,      0,      0),
+}
+
 # News. Directors post announcements and email groups of the center's people.
 # Site administrators get neither: they run the installation, not the center.
 EXPECTED_NEWS = {
@@ -407,6 +431,7 @@ CASES = [
         (EXPECTED_WORKSHOPS, WORKSHOP_ACTIONS),
         (EXPECTED_TRAINING, TRAINING_ACTIONS),
         (EXPECTED_INTEGRATIONS, INTEGRATION_ACTIONS),
+        (EXPECTED_ALERTS, ALERT_ACTIONS),
         (EXPECTED_NEWS, NEWS_ACTIONS),
         (EXPECTED_DISCLOSURES, DISCLOSURE_ACTIONS),
         (EXPECTED_FILES, FILES_ACTIONS),

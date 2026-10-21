@@ -15,7 +15,15 @@ from sympraxi.core import policy
 # the account and 2FA screens themselves, logout, static files and health checks.
 # Survey links and calendar feeds open without signing in and never look at who
 # is signed in.
-EXEMPT_PREFIXES = ("/accounts/", "/static/", "/healthz", "/source/", "/survey/", "/calendar/")
+EXEMPT_PREFIXES = (
+    "/accounts/",
+    "/static/",
+    "/healthz",
+    "/source/",
+    "/survey/",
+    "/calendar/",
+    "/visit/",
+)
 STRONG_FACTORS = (Authenticator.Type.TOTP, Authenticator.Type.WEBAUTHN)
 
 

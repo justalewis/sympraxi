@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Alerts you raised" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Your alerts" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Alerts you raised" %}</h1>
+  {% if alerts %}
+    <ul class="usa-list">
+      {% for a in alerts %}
+        <li><a href="{% url 'alerts:detail' slug=center.slug alert_id=a.pk %}">{{ a.student.display_name }}</a> · {{ a.get_kind_display }} · {{ a.created_at|date:"M j, Y" }} · <span class="usa-tag">{{ a.get_status_display }}</span></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "You haven't raised any." %}</p>
+  {% endif %}
+{% endblock content %}

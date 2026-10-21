@@ -55,6 +55,9 @@
     {% if may_confirm %}
       <li><a href="{% url 'scheduling:appointment_confirm' slug=center.slug appointment_id=appointment.pk %}">{% translate "Confirm this appointment" %}</a></li>
     {% endif %}
+    {% if may_share %}
+      <li><a href="{% url 'alerts:share' slug=center.slug appointment_id=appointment.pk %}">{% translate "Send an instructor a confirmation of this visit" %}</a></li>
+    {% endif %}
     {% if may_change %}
       <li><a href="{% url 'scheduling:appointment_change' slug=center.slug appointment_id=appointment.pk %}">{% translate "Move to another time" %}</a></li>
     {% endif %}

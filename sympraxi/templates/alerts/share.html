@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Share a visit confirmation" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Share a visit" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Share a visit confirmation" %}</h1>
+  {% if enabled %}
+    <p>{% blocktranslate with day=appointment.starts_at|date:"l, F j" %}You can send an instructor a link that confirms your visit on {{ day }}. They see your name, the day, how long the visit was, and whether staff marked you as having come. They don't see what you worked on or any notes. The link works for 120 days and you can turn it off any time.{% endblocktranslate %}</p>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      {% include "includes/form_fields.html" %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{% translate "Send the confirmation" %}</button>
+        <a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=appointment.pk %}">{% translate "Cancel" %}</a>
+      </div>
+    </form>
+  {% else %}
+    <p>{% translate "This center doesn't offer shared visit confirmations." %}</p>
+  {% endif %}
+{% endblock content %}

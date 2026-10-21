@@ -51,6 +51,8 @@ from django.db.models import Prefetch
 from django.utils import timezone
 
 from sympraxi.accounts.models import User
+from sympraxi.alerts.models import Alert as AlertRecord
+from sympraxi.alerts.models import VisitShare
 from sympraxi.centers.models import Center, Membership
 from sympraxi.core.logs import scrub
 from sympraxi.feedback.models import Comment, Submission, SubmissionFile
@@ -763,6 +765,20 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
                 for o in Observation.objects.filter(center=center)
                 .prefetch_related("ratings")
                 .order_by("observed_on", "pk")
+            ),
+        )
+        w.items(
+            "alerts.json",
+            (
+                columns_of(a)
+                for a in AlertRecord.objects.filter(center=center).order_by("created_at", "pk")
+            ),
+        )
+        w.items(
+            "visit_shares.json",
+            (
+                columns_of(v, leave_out=("token_hash",))
+                for v in VisitShare.objects.filter(center=center).order_by("created_at", "pk")
             ),
         )
         w.items("audit_events.json", (_audit_item(e) for e in _audit(center)), scrubbed=True)

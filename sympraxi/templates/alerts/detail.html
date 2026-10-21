@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Early alert" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Early alert" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% blocktranslate with name=alert.student.display_name %}Early alert: {{ name }}{% endblocktranslate %}</h1>
+  <p><span class="usa-tag">{{ alert.get_status_display }}</span> {{ alert.get_kind_display }}</p>
+  <dl class="sympraxi-details">
+    <dt>{% translate "Raised" %}</dt><dd>{{ alert.created_at|date:"F j, Y, g:i A" }}{% if alert.raised_by %} {% blocktranslate with name=alert.raised_by.display_name %}by {{ name }}{% endblocktranslate %}{% endif %}</dd>
+    <dt>{% translate "The student knows" %}</dt><dd>{% if alert.student_informed %}{% translate "Yes" %}{% else %}{% translate "Not recorded as told" %}{% endif %}</dd>
+    <dt>{% translate "Why it was raised" %}</dt><dd>{{ alert.reason|linebreaksbr }}</dd>
+    {% if alert.acknowledged_at %}<dt>{% translate "Looked into" %}</dt><dd>{{ alert.acknowledged_at|date:"F j, Y" }}{% if alert.acknowledged_by %} {% blocktranslate with name=alert.acknowledged_by.display_name %}by {{ name }}{% endblocktranslate %}{% endif %}</dd>{% endif %}
+    {% if alert.is_closed %}<dt>{% translate "What was done" %}</dt><dd>{{ alert.outcome|linebreaksbr }} ({{ alert.closed_at|date:"F j, Y" }}{% if alert.closed_by %}, {{ alert.closed_by.display_name }}{% endif %})</dd>{% endif %}
+  </dl>
+  {% if handling and not alert.is_closed %}
+    {% if alert.status == "open" %}
+      <form method="post">
+        {% csrf_token %}
+        <button class="usa-button usa-button--outline" type="submit" name="action" value="acknowledge">{% translate "I'm looking into this" %}</button>
+      </form>
+    {% endif %}
+    <h2>{% translate "Close it" %}</h2>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="close">
+      {% include "includes/form_fields.html" with form=close_form %}
+      <button class="usa-button" type="submit">{% translate "Close the alert" %}</button>
+    </form>
+  {% endif %}
+{% endblock content %}

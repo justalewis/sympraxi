@@ -7,7 +7,7 @@
   <h1>{% blocktranslate with name=student.display_name %}Session history for {{ name }}{% endblocktranslate %}</h1>
   {% if student.pronouns %}<p>{% blocktranslate with pronouns=student.pronouns %}Pronouns: {{ pronouns }}{% endblocktranslate %}</p>{% endif %}
   <p>{% translate "This page lists every session record about this student at this center, newest first within each project. Your visit is recorded in the audit log." %}</p>
-  <p><a href="{% url 'records:student_timeline' slug=center.slug membership_id=membership.pk %}">{% translate "Across terms" %}</a> · <a href="{% url 'records:student_goals' slug=center.slug membership_id=membership.pk %}">{% translate "Writing goals" %}</a></p>
+  <p><a href="{% url 'records:student_timeline' slug=center.slug membership_id=membership.pk %}">{% translate "Across terms" %}</a> · <a href="{% url 'records:student_goals' slug=center.slug membership_id=membership.pk %}">{% translate "Writing goals" %}</a>{% if can_raise_alert %} · <a href="{% url 'alerts:raise' slug=center.slug membership_id=membership.pk %}">{% translate "Raise an early alert" %}</a>{% endif %}</p>
   {% if can_export %}
     <p><a href="{% url 'records:export' slug=center.slug membership_id=membership.pk %}">{% translate "Export this student's complete record" %}</a></p>
   {% endif %}

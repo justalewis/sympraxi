@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Visit confirmation" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "Visit confirmation" %}</h1>
+  <p>{% blocktranslate with name=visit.student center=visit.center day=visit.day minutes=visit.minutes %}{{ name }} had an appointment at {{ center }} on {{ day }}, scheduled for {{ minutes }} minutes.{% endblocktranslate %}</p>
+  {% if visit.attended %}
+    <div class="usa-alert usa-alert--success" role="status"><div class="usa-alert__body"><p class="usa-alert__text">{% translate "Staff confirmed that they came." %}</p></div></div>
+  {% else %}
+    <div class="usa-alert usa-alert--info" role="status"><div class="usa-alert__body"><p class="usa-alert__text">{% translate "Staff have not marked this visit as attended, so it isn't confirmed yet." %}</p></div></div>
+  {% endif %}
+  {% if visit.course %}<p>{% blocktranslate with course=visit.course %}Shared for: {{ course }}.{% endblocktranslate %}</p>{% endif %}
+  <p class="usa-hint">{% translate "The student chose to send you this. It says nothing about what they worked on." %}</p>
+{% endblock content %}

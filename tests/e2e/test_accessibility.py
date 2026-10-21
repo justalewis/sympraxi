@@ -38,6 +38,7 @@ from sympraxi.reports.models import CenterExport
 from sympraxi.scheduling.models import Attendance, Block, Participant
 from sympraxi.scheduling.timeutils import local_date
 from tests import sso_idp
+from tests.alerts_world import add_alerts
 from tests.attendance_world import add_attendance
 from tests.content_world import make_content_item
 from tests.disclosure_world import add_disclosures
@@ -158,6 +159,7 @@ PAGES = [
     ("student", "/centers/{slug}/my-writing/goals/"),
     ("student", "/centers/{slug}/my-writing/timeline/"),
     ("tutor", "/centers/{slug}/students/{student_membership}/goals/"),
+    ("tutor", "/centers/{slug}/students/{student_membership}/alert/"),
     ("tutor", "/centers/{slug}/students/{student_membership}/timeline/"),
     ("director", "/centers/{slug}/records/settings/"),
     # Attendance, booking blocks and reminders
@@ -242,6 +244,13 @@ PAGES = [
     ("director", "/centers/{slug}/training/onboarding/"),
     ("director", "/centers/{slug}/training/cohorts/"),
     ("director", "/centers/{slug}/integrations/"),
+    ("director", "/centers/{slug}/alerts/"),
+    ("tutor", "/centers/{slug}/alerts/mine/"),
+    ("tutor", "/centers/{slug}/alerts/{alert}/"),
+    ("director", "/centers/{slug}/alerts/{alert}/"),
+    ("student", "/centers/{slug}/shared-visits/"),
+    ("student", "/centers/{slug}/appointments/{appointment}/share/"),
+    (None, "/visit/{share_token}/"),
     ("director", "/centers/{slug}/training/cohorts/{cohort}/"),
     ("director", "/centers/{slug}/training/checklists/"),
     ("director", "/centers/{slug}/training/checklists/{checklist}/"),
@@ -379,7 +388,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
             )
         )
     )
-    world = add_onboarding(add_training(add_workshops(add_queue(world))))
+    world = add_alerts(add_onboarding(add_training(add_workshops(add_queue(world)))))
     if who == "blocked_student":
         Membership.objects.filter(user=world.blocked_student).delete()
         Participant.objects.filter(student=world.blocked_student).update(student=user)
@@ -428,6 +437,8 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         checklist=world.checklist.pk,
         mentee=world.mentee.pk,
         observation=world.observation.pk,
+        alert=world.alert.pk,
+        share_token=world.share_token,
         content_item=make_content_item().pk,
         claimed=world.claimed.pk,
         submission_file=world.submission_file.pk,

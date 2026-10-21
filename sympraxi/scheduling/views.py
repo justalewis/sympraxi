@@ -607,6 +607,10 @@ def appointment_detail(request: HttpRequest, slug: str, appointment_id: UUID) ->
         "location": ics.location(appointment),
         "may_mark": may_mark and taken > 0 and appointment.starts_at <= timezone.now(),
         "may_waive": can(user, Action.WAIVE_ATTENDANCE, appointment),
+        "may_share": in_it
+        and center.visit_sharing_enabled
+        and appointment.starts_at <= timezone.now()
+        and not appointment.is_placeholder,
         **brief.appointment_context(request, appointment),
         **form_answers.own_answers(user, appointment),
         **file_display.appointment_context(request, appointment),

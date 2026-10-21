@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Visits you've shared" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Shared visits" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Visits you've shared" %}</h1>
+  {% if shares %}
+    <ul class="usa-list">
+      {% for s in shares %}
+        <li>
+          {{ s.participant.appointment.starts_at|date:"M j, Y" }} · {{ s.instructor_email }}{% if s.course %} ({{ s.course }}){% endif %}
+          · {% if s.revoked_at %}{% translate "Turned off" %}{% elif not s.is_usable %}{% translate "Expired" %}{% else %}{% blocktranslate count n=s.opened_count %}opened {{ n }} time{% plural %}opened {{ n }} times{% endblocktranslate %}{% endif %}
+          {% if s.is_usable %}
+            <form method="post" class="sympraxi-inline-form">
+              {% csrf_token %}
+              <input type="hidden" name="share" value="{{ s.pk }}">
+              <button class="usa-button usa-button--outline" type="submit">{% blocktranslate with email=s.instructor_email %}Turn off the link to {{ email }}{% endblocktranslate %}</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "You haven't shared any visits." %}{% if enabled %} {% translate "Open an appointment from your list to share it." %}{% endif %}</p>
+  {% endif %}
+{% endblock content %}

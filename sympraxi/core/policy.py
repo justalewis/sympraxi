@@ -92,6 +92,7 @@ from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db.models import Model, QuerySet
 from django.http import Http404
 
+from sympraxi.alerts.models import Alert
 from sympraxi.centers.models import STAFF_ROLES, Center, Membership, Role
 from sympraxi.feedback.models import Submission
 from sympraxi.forms.models import Response
@@ -228,6 +229,12 @@ class Action(StrEnum):
     OBSERVE = "training.observe"
     # Make API tokens and webhooks for the center.
     MANAGE_INTEGRATIONS = "integrations.manage"
+    # Early alerts: raise one about a student, read one you can see, and handle them all.
+    RAISE_ALERT = "alerts.raise"
+    VIEW_ALERT = "alerts.view"
+    HANDLE_ALERTS = "alerts.handle"
+    # A student confirms one of their visits to an instructor.
+    SHARE_VISIT = "alerts.share_visit"
     # Post, change and delete the center's announcements.
     MANAGE_ANNOUNCEMENTS = "notify.manage_announcements"
     # Email a group of the center's people, and see what was sent to whom.
@@ -237,6 +244,7 @@ class Action(StrEnum):
 ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     Role.STUDENT: frozenset(
         {
+            Action.SHARE_VISIT,
             Action.VIEW_WORKSHOPS,
             Action.REGISTER_WORKSHOP,
             Action.VIEW_CENTER,
@@ -258,6 +266,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.TUTOR: frozenset(
         {
+            Action.RAISE_ALERT,
+            Action.VIEW_ALERT,
             Action.MENTOR_TUTORS,
             Action.OBSERVE,
             Action.TAKE_TRAINING,
@@ -286,6 +296,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.FRONT_DESK: frozenset(
         {
+            Action.RAISE_ALERT,
+            Action.VIEW_ALERT,
             Action.MENTOR_TUTORS,
             Action.OBSERVE,
             Action.TAKE_TRAINING,
@@ -312,6 +324,9 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.DIRECTOR: frozenset(
         {
+            Action.RAISE_ALERT,
+            Action.VIEW_ALERT,
+            Action.HANDLE_ALERTS,
             Action.MANAGE_INTEGRATIONS,
             Action.MENTOR_TUTORS,
             Action.OBSERVE,
@@ -520,6 +535,11 @@ def _published_training(user: UserLike, obj: Model) -> bool:
     return False
 
 
+def _raised_alert(user: UserLike, obj: Model) -> bool:
+    """Staff read the alerts they raised themselves."""
+    return isinstance(obj, Alert) and obj.raised_by_id == user.pk
+
+
 def _mentors(user: UserLike, obj: Model) -> bool:
     """A mentor works with the people they mentor, and the observations they wrote."""
     if isinstance(obj, CohortMember):
@@ -575,6 +595,10 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.STUDENT, Action.SUBMIT_WORK): _own_submission,
     (Role.STUDENT, Action.VIEW_SUBMISSION): _own_submission,
     (Role.TUTOR, Action.VIEW_SUBMISSION): _claimed_submission,
+    (Role.TUTOR, Action.RAISE_ALERT): _reads_student,
+    (Role.TUTOR, Action.VIEW_ALERT): _raised_alert,
+    (Role.FRONT_DESK, Action.VIEW_ALERT): _raised_alert,
+    (Role.STUDENT, Action.SHARE_VISIT): _participant,
     (Role.TUTOR, Action.TAKE_TRAINING): _published_training,
     (Role.TUTOR, Action.MENTOR_TUTORS): _mentors,
     (Role.TUTOR, Action.OBSERVE): _mentors,

@@ -27,6 +27,8 @@ from django.db.models import Count, QuerySet
 from django.utils import timezone
 
 from sympraxi.accounts.models import User
+from sympraxi.alerts.models import Alert as AlertRecord
+from sympraxi.alerts.models import VisitShare
 from sympraxi.centers.models import Membership
 from sympraxi.feedback.models import Submission
 from sympraxi.files.models import AppointmentFile
@@ -50,9 +52,12 @@ FORMAT = "sympraxi.student-record"
 # Version 8 added the student's writing goals.
 # Version 7 added the shared documents of the student's appointments. A group's
 # document is included as written, since every student in the group wrote in it.
+# Version 10 added the early alerts raised about the student (when, what kind, whether
+# they were told, and how it stands, but not the staff member's words, which a student
+# can ask a director to read with them) and the visit confirmations they shared.
 # Version 9 added workshops the student registered for, their waiting-list requests,
 # and their check-ins at the front desk.
-VERSION = 9
+VERSION = 10
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
@@ -99,6 +104,8 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
         "workshops": [_workshop(r) for r in workshops_of(membership)],
         "waiting_list": [_waiting(w) for w in waiting_of(membership)],
         "check_ins": [_check_in(a) for a in check_ins_of(membership)],
+        "early_alerts": [_alert(a) for a in alerts_of(membership)],
+        "shared_visits": [_share(v) for v in shares_of(membership)],
     }
 
 
@@ -196,6 +203,38 @@ def _waiting(w: WaitingEntry) -> dict[str, Any]:
         "tutor": w.tutor.display_name if w.tutor else None,
         "status": w.get_status_display(),
         "joined_at": _when(w.joined_at),
+    }
+
+
+def alerts_of(membership: Membership) -> QuerySet[AlertRecord]:
+    return AlertRecord.objects.filter(center=membership.center, student=membership.user)
+
+
+def _alert(a: AlertRecord) -> dict[str, Any]:
+    return {
+        "raised_at": _when(a.created_at),
+        "kind": a.get_kind_display(),
+        "told_the_student": a.student_informed,
+        "status": a.get_status_display(),
+        "closed_at": _when(a.closed_at),
+    }
+
+
+def shares_of(membership: Membership) -> QuerySet[VisitShare]:
+    return VisitShare.objects.filter(
+        center=membership.center, student=membership.user
+    ).select_related("participant__appointment")
+
+
+def _share(v: VisitShare) -> dict[str, Any]:
+    return {
+        "visit_on": _when(v.participant.appointment.starts_at),
+        "instructor_email": v.instructor_email,
+        "course": v.course,
+        "shared_at": _when(v.created_at),
+        "expires_at": _when(v.expires_at),
+        "turned_off_at": _when(v.revoked_at),
+        "times_opened": v.opened_count,
     }
 
 

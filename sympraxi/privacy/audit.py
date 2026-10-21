@@ -127,6 +127,10 @@ class AuditAction(StrEnum):
     TRAINING_CONTENT_CHANGED = "training.content_changed"
     TRAINING_SETTINGS_CHANGED = "training.settings_changed"
     TRAINING_MODULE_COMPLETED = "training.module_completed"
+    ALERT_RAISED = "alerts.raised"
+    ALERT_HANDLED = "alerts.handled"
+    VISIT_SHARED = "alerts.visit_shared"
+    VISIT_SHARE_REVOKED = "alerts.visit_share_revoked"
     API_TOKEN_CREATED = "integrations.token_created"  # noqa: S105 (an event name)
     API_TOKEN_REVOKED = "integrations.token_revoked"  # noqa: S105
     API_WRITE = "integrations.api_write"

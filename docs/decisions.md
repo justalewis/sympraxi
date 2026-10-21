@@ -12,6 +12,18 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 5: early alerts and shared visits (October 2026)
+
+**An alert needs a reason.** A tutor (for students they have tutored), a front desk person (any student) or a director raises an alert by choosing what it is about (stopped coming, disengaged, a well-being concern, or something else) and writing why, in at least 15 characters. The database also refuses an alert with no reason, and refuses to close one with no outcome. The form asks whether the student knows, and records the answer either way; it does not require telling them, since there are cases where staff shouldn't, but it makes the choice visible later.
+
+**Who reads it.** Directors read and handle every alert (acknowledge it, then close it with a note on what was done). The person who raised it reads their own. Nobody else does: not other tutors, not the front desk, not the student's instructors, and not site administrators. The email that tells the directors (or a single center-set address) names the student and the kind of alert and links to the page; the reason is never in an email.
+
+**What the student can see.** Under the data export a student can ask for, an alert appears as its date, its kind, whether they were told, and its status; the staff member's words and the closing note are left out. If a center believes a student has a right to those words, a director can read them with the student. This is a judgment about where a staff member's candid note and a student's right to inspect their record meet, and a campus's records office should confirm it.
+
+**Shared visits.** A center can turn on letting students send an instructor a confirmation of a visit (off by default). After the visit has happened, the student enters the instructor's email, and the instructor gets a link that opens without an account. It shows the student's name, the day, how long the appointment was, and either "staff confirmed that they came" or "not marked as attended, so it isn't confirmed yet." It says nothing about the topic, the tutor, or any note. The link lasts 120 days and the student can turn it off. Only a hash of the link is stored, and a dead link looks the same as one that never existed. Nothing flows the other way: instructors can't ask about students.
+
+**Not done.** No alert categories set per center, no assigning an alert to a particular person, no reminder when one sits open, no alert from a student's own report of a concern, and no way for an instructor to be told when a student has stopped visiting (on purpose).
+
 ## Phase 5: the API and webhooks (October 2026)
 
 **Tokens.** A director makes a token for the center and chooses scopes from five: read schedules, read appointments (with the students in them), write appointments (book and cancel), read students, read workshops. The token is shown once and only its SHA-256 is kept. It acts as the director who made it, so a token can never do more than that director can, and it stops working if they lose the role or the account is turned off. Tokens expire (30, 90 or 365 days, or never), can be revoked, and are limited to 600 calls a minute. The limit is counted in the shared cache, so it is per token across all the web workers.
