@@ -12,6 +12,16 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 5: the API and webhooks (October 2026)
+
+**Tokens.** A director makes a token for the center and chooses scopes from five: read schedules, read appointments (with the students in them), write appointments (book and cancel), read students, read workshops. The token is shown once and only its SHA-256 is kept. It acts as the director who made it, so a token can never do more than that director can, and it stops working if they lose the role or the account is turned off. Tokens expire (30, 90 or 365 days, or never), can be revoked, and are limited to 600 calls a minute. The limit is counted in the shared cache, so it is per token across all the web workers.
+
+**Writes.** Booking and canceling go through the same service functions as the website, so limits, booking blocks, hours and the double-booking rule hold. They are audited as made by the token (`API token sym_...`) on behalf of the director. The API can't touch session records, notes, files or anything written about a student's work: those have no scope.
+
+**Webhooks.** Six events, driven by the audit log so there is one place that decides what counts as something happening. A notice carries ids and times only, never a name, email or note; a receiver asks the API for details with its own token. Notices are signed with HMAC-SHA256 over the timestamp and body (the secret is stored encrypted with the site key and shown once), sent by the task worker, retried on a backoff and then given up on. Addresses must be https and public: the host name is resolved and refused if any address is private, loopback or link-local, which stops a webhook being aimed at the host's own network. `SYMPRAXI_WEBHOOKS_ALLOW_PRIVATE` turns that off for development.
+
+**Not done.** No per-scope rate limits, no IP allow-list on tokens, no write access to people, schedules or workshops, no webhook for record events (on purpose), and no replay button for a failed notice.
+
 ## Phase 4: cohorts, mentors, observations and finishing onboarding (October 2026)
 
 **Cohorts and mentors.** A director starts a cohort (a group of new tutors or front desk staff), adds people to it, and gives each a mentor, who can be any tutor, front desk person or director other than the person themselves. Mentors see the people they mentor on their own page; a director sees everyone's.

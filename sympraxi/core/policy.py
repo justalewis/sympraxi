@@ -226,6 +226,8 @@ class Action(StrEnum):
     # their tutoring with a checklist.
     MENTOR_TUTORS = "training.mentor"
     OBSERVE = "training.observe"
+    # Make API tokens and webhooks for the center.
+    MANAGE_INTEGRATIONS = "integrations.manage"
     # Post, change and delete the center's announcements.
     MANAGE_ANNOUNCEMENTS = "notify.manage_announcements"
     # Email a group of the center's people, and see what was sent to whom.
@@ -310,6 +312,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.DIRECTOR: frozenset(
         {
+            Action.MANAGE_INTEGRATIONS,
             Action.MENTOR_TUTORS,
             Action.OBSERVE,
             Action.TAKE_TRAINING,

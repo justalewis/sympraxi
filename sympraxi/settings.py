@@ -69,6 +69,9 @@ SYMPRAXI_OFFICE_COMMAND = env.str("SYMPRAXI_OFFICE_COMMAND", default="soffice")
 # website whether the page is still there. It makes requests from this server to
 # other people's sites, so it is off until an installation turns it on.
 SYMPRAXI_LINK_CHECK = env.bool("SYMPRAXI_LINK_CHECK", default=False)
+# Webhooks go only to public addresses over https. Turn this on in development, to
+# reach a receiver on your own machine over http.
+SYMPRAXI_WEBHOOKS_ALLOW_PRIVATE = env.bool("SYMPRAXI_WEBHOOKS_ALLOW_PRIVATE", default=False)
 
 # Video rooms (sympraxi/online/): the Jitsi server the installation points at, the
 # app ID it accepts tokens from, and the secret those tokens are signed with.
@@ -116,6 +119,7 @@ INSTALLED_APPS = [
     "sympraxi.online",
     "sympraxi.workshops",
     "sympraxi.training",
+    "sympraxi.integrations",
 ]
 
 MIDDLEWARE = [

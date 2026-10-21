@@ -236,6 +236,10 @@ Optional. To give online appointments their own video rooms, run a Jitsi Meet se
 
 Staff clock in and out on their time clock page. To limit that to the center's own network, a director opens Timesheets, then Time clock settings, and lists the center's public IP address or range, one per line (203.0.113.0/24). Sympraxi reads the visitor's address from the connection, or from the proxy when `SYMPRAXI_TRUST_X_FORWARDED_FOR=true`; turn that on only behind a proxy you control, or anyone can claim an address. Leave the list empty to allow clock-ins from anywhere. The same page holds each person's payroll ID and pay code, which appear on the timesheet download. At the end of a pay period, a director opens Approve hours, picks the days, and approves each person; that locks those entries.
 
+## API and webhooks
+
+A director opens API and webhooks on the center's page to make tokens and add webhooks. The API is documented in `docs/api.md`. Webhook retries and sending run on the task worker (`manage.py db_worker`) and the scheduler, so both must be running. Webhook addresses must be https and reachable from the internet; for local testing set `SYMPRAXI_WEBHOOKS_ALLOW_PRIVATE=true`.
+
 ## Cohorts, mentors and observations
 
 Under Training, a director chooses Cohorts and checklists. Start a cohort, add the new tutors, and give each a mentor. Write an observation checklist (the things to look for). Mentors open "People you mentor" to sign off finished modules and to observe a tutor with a checklist; the tutor reads the observation once it is submitted. When a person has finished their modules (signed off), the observations the cohort asks for, and the training hours, the cohort page offers to mark their onboarding complete.

@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "API and webhooks" %}{% endblock head_title %}
+{% block content %}
+  {% translate "API and webhooks" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "API and webhooks" %}</h1>
+  <p>{% blocktranslate with base=api_base %}Other systems can read the center's data and book appointments through the API at {{ base }}, with a token made here. Webhooks tell another system when something happens. A token acts as you, so if you lose access to the center, your tokens stop working.{% endblocktranslate %}</p>
+
+  {% if shown_token %}
+    <div class="usa-alert usa-alert--success" role="status">
+      <div class="usa-alert__body">
+        <h2 class="usa-alert__heading">{% translate "Copy this token now" %}</h2>
+        <p class="usa-alert__text">{% translate "It is shown once and can't be looked up again. If you lose it, make a new one." %}</p>
+        <p><code>{{ shown_token.1 }}</code></p>
+      </div>
+    </div>
+  {% endif %}
+  {% if shown_secret %}
+    <div class="usa-alert usa-alert--success" role="status">
+      <div class="usa-alert__body">
+        <h2 class="usa-alert__heading">{% translate "Copy this signing secret now" %}</h2>
+        <p class="usa-alert__text">{% translate "The receiver uses it to check that a notice really came from here. It is shown once." %}</p>
+        <p><code>{{ shown_secret.1 }}</code></p>
+      </div>
+    </div>
+  {% endif %}
+
+  <h2>{% translate "API tokens" %}</h2>
+  {% if tokens %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "API tokens for this center" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Name" %}</th>
+          <th scope="col">{% translate "Starts with" %}</th>
+          <th scope="col">{% translate "May" %}</th>
+          <th scope="col">{% translate "Status" %}</th>
+          <th scope="col">{% translate "Action" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in tokens %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Name' %}">{{ t.name }}</th>
+            <td data-label="{% translate 'Starts with' %}"><code>{{ t.prefix }}</code></td>
+            <td data-label="{% translate 'May' %}">{{ t.scopes|join:", " }}</td>
+            <td data-label="{% translate 'Status' %}">{% if t.revoked_at %}{% translate "Revoked" %}{% elif not t.is_usable %}{% translate "Expired" %}{% else %}{% translate "In use" %}{% if t.last_used_at %} · {% blocktranslate with when=t.last_used_at|date:"M j, g:i A" %}last used {{ when }}{% endblocktranslate %}{% endif %}{% if t.expires_at %} · {% blocktranslate with when=t.expires_at|date:"M j, Y" %}expires {{ when }}{% endblocktranslate %}{% endif %}{% endif %}</td>
+            <td data-label="{% translate 'Action' %}">
+              {% if t.is_usable %}
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="revoke">
+                  <input type="hidden" name="token" value="{{ t.pk }}">
+                  <button class="usa-button usa-button--secondary" type="submit">{% blocktranslate with n=t.name %}Revoke {{ n }}{% endblocktranslate %}</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "No tokens yet." %}</p>
+  {% endif %}
+  <h3>{% translate "Make a token" %}</h3>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="token">
+    {% include "includes/form_fields.html" with form=token_form %}
+    <button class="usa-button" type="submit">{% translate "Make the token" %}</button>
+  </form>
+
+  <h2>{% translate "Webhooks" %}</h2>
+  {% if endpoints %}
+    <ul class="usa-list">
+      {% for e in endpoints %}
+        <li>
+          <code>{{ e.url }}</code> {% if e.description %}({{ e.description }}){% endif %}
+          · {% if e.events %}{{ e.events|join:", " }}{% else %}{% translate "everything" %}{% endif %}
+          · {% if e.is_active %}{% translate "On" %}{% else %}{% translate "Off" %}{% endif %}
+          <form method="post" class="sympraxi-inline-form">
+            {% csrf_token %}
+            <input type="hidden" name="endpoint" value="{{ e.pk }}">
+            <button class="usa-button usa-button--outline" type="submit" name="action" value="ping">{% translate "Send a test" %}<span class="usa-sr-only"> {{ e.url }}</span></button>
+            <button class="usa-button usa-button--outline" type="submit" name="action" value="toggle">{% if e.is_active %}{% translate "Turn off" %}{% else %}{% translate "Turn on" %}{% endif %}<span class="usa-sr-only"> {{ e.url }}</span></button>
+            <button class="usa-button usa-button--secondary" type="submit" name="action" value="remove">{% translate "Remove" %}<span class="usa-sr-only"> {{ e.url }}</span></button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "No webhooks yet." %}</p>
+  {% endif %}
+  <h3>{% translate "Add a webhook" %}</h3>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="webhook">
+    {% include "includes/form_fields.html" with form=hook_form %}
+    <button class="usa-button" type="submit">{% translate "Add the webhook" %}</button>
+  </form>
+
+  {% if deliveries %}
+    <h3>{% translate "Recent notices" %}</h3>
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "The last notices sent and what happened to them" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "When" %}</th>
+          <th scope="col">{% translate "Event" %}</th>
+          <th scope="col">{% translate "To" %}</th>
+          <th scope="col">{% translate "Result" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in deliveries %}
+          <tr>
+            <td data-label="{% translate 'When' %}">{{ d.created_at|date:"M j, g:i A" }}</td>
+            <th scope="row" data-label="{% translate 'Event' %}">{{ d.event }}</th>
+            <td data-label="{% translate 'To' %}">{{ d.endpoint.url }}</td>
+            <td data-label="{% translate 'Result' %}">{{ d.get_status_display }}{% if d.attempts %} · {% blocktranslate count n=d.attempts %}{{ n }} try{% plural %}{{ n }} tries{% endblocktranslate %}{% endif %}{% if d.last_error %} · {{ d.last_error }}{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock content %}

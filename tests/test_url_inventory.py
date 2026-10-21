@@ -218,6 +218,8 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "training:mentees": (Action.MENTOR_TUTORS, "center"),
     "training:mentee": (Action.MENTOR_TUTORS, "mentee"),
     "training:observation": (Action.OBSERVE, "observation"),
+    # API tokens and webhooks
+    "integrations:home": (Action.MANAGE_INTEGRATIONS, "center"),
     "staff:entry_add": (Action.MANAGE_TIME, "center"),
     "staff:entry_edit": (Action.MANAGE_TIME, "time_entry"),
     # News
@@ -396,10 +398,40 @@ def world(center) -> World:
 # tests/test_room.py), and answered 404 by Caddy from outside.
 SECRET_ENDPOINTS = {"collab:load", "collab:store"}
 
+# The JSON API. It answers to a bearer token, not a session; tests/test_integrations.py
+# checks what each does. Here: none answers without one.
+API_ENDPOINTS = {
+    "api:schedules",
+    "api:appointments",
+    "api:cancel",
+    "api:students",
+    "api:workshops",
+}
+
 
 def test_every_url_is_classified() -> None:
-    classified = PUBLIC | LOGIN_REQUIRED | set(CENTER_PAGES) | set(TOKEN_PAGES) | SECRET_ENDPOINTS
+    classified = (
+        PUBLIC
+        | LOGIN_REQUIRED
+        | set(CENTER_PAGES)
+        | set(TOKEN_PAGES)
+        | SECRET_ENDPOINTS
+        | API_ENDPOINTS
+    )
     assert sympraxi_url_names() == classified
+
+
+@pytest.mark.parametrize("name", sorted(API_ENDPOINTS))
+def test_api_endpoints_refuse_anyone_without_a_token(client, world, name) -> None:
+    kwargs = {"slug": world.center.slug}
+    if name == "api:cancel":
+        kwargs["appointment_id"] = str(world.appointment.pk)
+    url = reverse(name, kwargs=kwargs)
+    client.force_login(world.student)  # a session is not a token
+    for method in (client.get, client.post):
+        response = method(url)
+        assert response.status_code in (401, 405)
+    assert client.get(url, HTTP_AUTHORIZATION="Bearer sym_nope_nope").status_code in (401, 405)
 
 
 def _token_url(name: str, token: str) -> str:

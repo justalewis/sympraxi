@@ -127,6 +127,11 @@ class AuditAction(StrEnum):
     TRAINING_CONTENT_CHANGED = "training.content_changed"
     TRAINING_SETTINGS_CHANGED = "training.settings_changed"
     TRAINING_MODULE_COMPLETED = "training.module_completed"
+    API_TOKEN_CREATED = "integrations.token_created"  # noqa: S105 (an event name)
+    API_TOKEN_REVOKED = "integrations.token_revoked"  # noqa: S105
+    API_WRITE = "integrations.api_write"
+    WEBHOOK_SAVED = "integrations.webhook_saved"
+    WEBHOOK_REMOVED = "integrations.webhook_removed"
     ONBOARDING_CHANGED = "training.onboarding_changed"
     ONBOARDING_COMPLETED = "training.onboarding_completed"
     OBSERVATION_STARTED = "training.observation_started"
@@ -158,7 +163,7 @@ def record(
             actor = user
     if actor is not None and not actor_label:
         actor_label = actor.email
-    return AuditEvent.objects.create(
+    event = AuditEvent.objects.create(
         action=action,
         actor=actor,
         actor_label=actor_label[:254],
@@ -169,3 +174,7 @@ def record(
         user_agent=request.META.get("HTTP_USER_AGENT", "")[:300] if request is not None else "",
         details=details,
     )
+    from sympraxi.integrations import webhooks
+
+    webhooks.hook(event)
+    return event

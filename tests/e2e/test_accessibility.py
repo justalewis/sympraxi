@@ -241,6 +241,7 @@ PAGES = [
     ("director", "/centers/{slug}/training/manage/items/{training_item}/"),
     ("director", "/centers/{slug}/training/onboarding/"),
     ("director", "/centers/{slug}/training/cohorts/"),
+    ("director", "/centers/{slug}/integrations/"),
     ("director", "/centers/{slug}/training/cohorts/{cohort}/"),
     ("director", "/centers/{slug}/training/checklists/"),
     ("director", "/centers/{slug}/training/checklists/{checklist}/"),

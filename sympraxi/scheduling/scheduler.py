@@ -34,6 +34,7 @@ from sympraxi import healthcheck
 from sympraxi.feedback import services as feedback_services
 from sympraxi.files import services as file_services
 from sympraxi.forms import surveys
+from sympraxi.integrations import webhooks
 from sympraxi.records import linkcheck
 from sympraxi.records import reminders as record_reminders
 from sympraxi.reports import center_export
@@ -56,6 +57,7 @@ class Sweep:
     overdue_alerts: int = 0
     link_checks: int = 0
     waitlist: int = 0
+    webhook_retries: int = 0
 
 
 def _refresh_connections() -> None:
@@ -84,6 +86,7 @@ def sweep(*, base_url: str, now: datetime | None = None) -> Sweep:
             overdue_alerts=feedback_services.overdue_alerts(base_url=base_url, now=now),
             link_checks=linkcheck.enqueue_if_due(now),
             waitlist=waitlist.sweep(now),
+            webhook_retries=webhooks.retry_due(now),
         )
     finally:
         _refresh_connections()
