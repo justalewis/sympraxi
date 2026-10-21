@@ -129,6 +129,7 @@ INSTALLED_APPS = [
     "sympraxi.integrations",
     "sympraxi.alerts",
     "sympraxi.sms",
+    "sympraxi.lti",
 ]
 
 MIDDLEWARE = [

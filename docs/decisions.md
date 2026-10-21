@@ -12,6 +12,14 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 5: launch from a learning management system (October 2026)
+
+**LTI 1.3 launch only.** A student or instructor clicks the writing center in their Canvas, Moodle or D2L course and arrives signed in. Sympraxi answers the platform's third-party login, then checks the signed `id_token` against the platform's published keys (RS256 only), plus the issuer, audience, deployment ID, expiry, message type and a one-time nonce. The nonce is stored and used up on arrival, so a captured launch can't be replayed. The state is signed instead of kept in the session, because the platform's post comes from another site and browsers don't send session cookies with it.
+
+**Who is trusted.** A platform's word about who someone is signs them in, so only a site administrator registers one (in the admin), tied to one center. The email must be at one of `SYMPRAXI_SIGNUP_EMAIL_DOMAINS`; the first launch ties the platform's identifier for the person to the account with that email, and later launches match on the identifier. The platform's role claims are ignored: a launch makes someone a student of the center if they have no role there, and never gives staff access. Staff still meet two-factor.
+
+**Not done.** No deep linking, no grade passback, no names-and-roles service, so the tool needs no keys of its own. Canvas lets a tool open in a new window; the site refuses to be framed, so set the placement to open in a new tab. This has been tested against a stand-in platform, not a real Canvas, Moodle or D2L.
+
 ## Phase 5: more ways to sign in (October 2026)
 
 **A generic OpenID Connect provider.** Besides Microsoft Entra and Google, a college can point Sympraxi at any OpenID Connect provider (Okta, Keycloak, Shibboleth's OIDC add-on and others) with an issuer address, a client ID and a secret. It uses PKCE, and checks the issuer, that the provider says the email is verified, and that the address is at one of `SYMPRAXI_SIGNUP_EMAIL_DOMAINS`. That list is required for this provider, because unlike Entra's tenant or Google's hosted domain, a generic provider doesn't say which people belong to the college.

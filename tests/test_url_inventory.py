@@ -52,6 +52,7 @@ PUBLIC = {
     "core:source",
     "accounts:local_login",
     "survey:thanks",
+    "lti:config",
 }
 
 # Pages about the signed-in person's own account, outside any center. Anyone
@@ -448,6 +449,10 @@ SIGNED_ENDPOINTS = {"sms:inbound"}
 # (tests/test_sso_more.py checks the flow).
 CAS_ENDPOINTS = {"accounts:cas_login", "accounts:cas_callback"}
 
+# The learning system launch. Open to the internet; answers only a signed launch from a
+# registered platform (tests/test_lti.py).
+LTI_ENDPOINTS = {"lti:login", "lti:launch"}
+
 # The JSON API. It answers to a bearer token, not a session; tests/test_integrations.py
 # checks what each does. Here: none answers without one.
 API_ENDPOINTS = {
@@ -469,6 +474,7 @@ def test_every_url_is_classified() -> None:
         | API_ENDPOINTS
         | SIGNED_ENDPOINTS
         | CAS_ENDPOINTS
+        | LTI_ENDPOINTS
     )
     assert sympraxi_url_names() == classified
 

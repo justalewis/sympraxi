@@ -143,6 +143,15 @@ For CAS, set `SYMPRAXI_CAS_SERVER_URL` (for example `https://cas.example.edu/cas
 
 To bring the student ID in from an OpenID Connect sign-in, set `SYMPRAXI_SSO_STUDENT_ID_CLAIM` to the claim's name.
 
+## Launching from Canvas, Moodle or D2L
+
+Sympraxi speaks LTI 1.3. The setup is done by a site administrator.
+
+1. In your learning system, register a tool. In Canvas, make a developer key from JSON and paste in the address `https://<your site>/lti/config.json`'s contents; elsewhere, enter the login address `https://<your site>/lti/login/` and the launch address `https://<your site>/lti/launch/` by hand. Set the tool to open in a new window.
+2. Install the tool in a course or for the whole account. The system shows its client ID, a deployment ID, the issuer address, the authorization address and the public keys address.
+3. In Sympraxi's admin, under LTI platforms, add the platform: the center it belongs to, those five values, and the deployment ID as a list, for example `["1:abc123"]`.
+4. `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` must be set, and the learning system must share people's email addresses with the tool (Canvas: privacy level "public").
+
 ## What's running
 
 | Service | Role |

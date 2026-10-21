@@ -37,6 +37,7 @@ urlpatterns = [
     path("accounts/text/", include("sympraxi.sms.urls")),
     path("accounts/", include("sympraxi.accounts.urls")),
     path("accounts/", include("allauth.urls")),
+    path("lti/", include("sympraxi.lti.urls")),
     path("admin/", admin.site.urls),
 ]
 
