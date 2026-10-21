@@ -1,0 +1,9 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=recipient.display_name %}Hi {{ name }},{% endblocktranslate %}
+
+{% blocktranslate with title=workshop.title when=workshop.starts_at|date:"l, F j" center=center.name %}The workshop "{{ title }}" on {{ when }} at {{ center }} has been canceled.{% endblocktranslate %}
+
+{% translate "Other workshops, if there are any:" %}
+{{ url }}
+
+{{ SITE_NAME }}
+{% endautoescape %}

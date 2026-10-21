@@ -80,9 +80,11 @@ from sympraxi.scheduling.models import (
     Schedule,
     Term,
     TutorAssignment,
+    WaitingEntry,
     WeeklyHours,
 )
-from sympraxi.staff.models import TimeEntry
+from sympraxi.staff.models import Arrival, PayrollDetail, TimeEntry, TimesheetApproval
+from sympraxi.workshops.models import Registration, Workshop
 
 logger = logging.getLogger("sympraxi.reports")
 
@@ -626,6 +628,51 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
             (
                 columns_of(d)
                 for d in Disclosure.objects.filter(center=center).order_by("recorded_at", "pk")
+            ),
+        )
+        w.items(
+            "arrivals.json",
+            (
+                columns_of(a)
+                for a in Arrival.objects.filter(center=center).order_by("arrived_at", "pk")
+            ),
+        )
+        w.items(
+            "timesheet_approvals.json",
+            (
+                columns_of(a)
+                for a in TimesheetApproval.objects.filter(center=center).order_by(
+                    "approved_at", "pk"
+                )
+            ),
+        )
+        w.items(
+            "payroll_details.json",
+            (columns_of(d) for d in PayrollDetail.objects.filter(center=center).order_by("pk")),
+        )
+        w.items(
+            "waiting_list.json",
+            (
+                columns_of(e)
+                for e in WaitingEntry.objects.filter(schedule__center=center).order_by(
+                    "joined_at", "pk"
+                )
+            ),
+        )
+        w.items(
+            "workshops.json",
+            (
+                columns_of(x)
+                for x in Workshop.objects.filter(center=center).order_by("starts_at", "pk")
+            ),
+        )
+        w.items(
+            "workshop_registrations.json",
+            (
+                columns_of(r)
+                for r in Registration.objects.filter(workshop__center=center).order_by(
+                    "registered_at", "pk"
+                )
             ),
         )
         w.items("audit_events.json", (_audit_item(e) for e in _audit(center)), scrubbed=True)

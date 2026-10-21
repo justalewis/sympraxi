@@ -56,6 +56,7 @@ from tests.records_world import add_records
 from tests.reports_world import add_reports
 from tests.scheduling_world import build_world
 from tests.staff_world import add_time_clock
+from tests.workshops_world import add_workshops
 
 pytestmark = [pytest.mark.e2e, pytest.mark.django_db(transaction=True)]
 
@@ -225,6 +226,11 @@ PAGES = [
     ("director", "/centers/{slug}/time-clock/approvals/"),
     ("director", "/centers/{slug}/time-clock/settings/"),
     ("front_desk", "/centers/{slug}/kiosk/"),
+    ("student", "/centers/{slug}/workshops/"),
+    ("director", "/centers/{slug}/workshops/new/"),
+    ("student", "/centers/{slug}/workshops/{workshop}/"),
+    ("director", "/centers/{slug}/workshops/{workshop}/edit/"),
+    ("director", "/centers/{slug}/workshops/{workshop}/roster/"),
     ("front_desk", "/centers/{slug}/waiting-room/"),
     ("tutor", "/centers/{slug}/waiting-room/"),
     ("director", "/centers/{slug}/time-clock/entries/new/"),
@@ -356,7 +362,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
             )
         )
     )
-    world = add_queue(world)
+    world = add_workshops(add_queue(world))
     if who == "blocked_student":
         Membership.objects.filter(user=world.blocked_student).delete()
         Participant.objects.filter(student=world.blocked_student).update(student=user)
@@ -398,6 +404,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         mass_email=world.mass_email.pk,
         appointment_file=world.appointment_file.pk,
         submission=world.submission.pk,
+        workshop=world.workshop.pk,
         content_item=make_content_item().pk,
         claimed=world.claimed.pk,
         submission_file=world.submission_file.pk,

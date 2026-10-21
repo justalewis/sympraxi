@@ -35,7 +35,9 @@ from sympraxi.online import room as shared_room
 from sympraxi.online.models import RoomDocument
 from sympraxi.privacy.models import Disclosure
 from sympraxi.records.models import Goal, SessionRecord, WritingProject
-from sympraxi.scheduling.models import Block, Participant
+from sympraxi.scheduling.models import Block, Participant, WaitingEntry
+from sympraxi.staff.models import Arrival
+from sympraxi.workshops.models import Registration as WorkshopRegistration
 
 FORMAT = "sympraxi.student-record"
 # Version 2 added registration answers and each appointment's intake answers.
@@ -48,7 +50,9 @@ FORMAT = "sympraxi.student-record"
 # Version 8 added the student's writing goals.
 # Version 7 added the shared documents of the student's appointments. A group's
 # document is included as written, since every student in the group wrote in it.
-VERSION = 8
+# Version 9 added workshops the student registered for, their waiting-list requests,
+# and their check-ins at the front desk.
+VERSION = 9
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
@@ -92,6 +96,9 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
         "submissions": [_submission(s) for s in submissions(membership)],
         "shared_documents": [_shared_document(d) for d in shared_documents(membership)],
         "goals": [_goal(g) for g in goals_of(membership)],
+        "workshops": [_workshop(r) for r in workshops_of(membership)],
+        "waiting_list": [_waiting(w) for w in waiting_of(membership)],
+        "check_ins": [_check_in(a) for a in check_ins_of(membership)],
     }
 
 
@@ -152,6 +159,57 @@ def _goal(g: Goal) -> dict[str, Any]:
         "added_at": _when(g.created_at),
         "closed_by": _person(g.closed_by),
         "closed_at": _when(g.closed_at),
+    }
+
+
+def workshops_of(membership: Membership) -> QuerySet[WorkshopRegistration]:
+    return WorkshopRegistration.objects.filter(
+        workshop__center=membership.center, student=membership.user
+    ).select_related("workshop")
+
+
+def _workshop(r: WorkshopRegistration) -> dict[str, Any]:
+    return {
+        "workshop": r.workshop.title,
+        "starts_at": _when(r.workshop.starts_at),
+        "registered_at": _when(r.registered_at),
+        "canceled_at": _when(r.canceled_at),
+        "attendance": r.get_attendance_display(),
+        "workshop_canceled": r.workshop.is_canceled,
+    }
+
+
+def waiting_of(membership: Membership) -> QuerySet[WaitingEntry]:
+    return WaitingEntry.objects.filter(
+        schedule__center=membership.center, student=membership.user
+    ).select_related("schedule", "tutor")
+
+
+def _waiting(w: WaitingEntry) -> dict[str, Any]:
+    return {
+        "schedule": w.schedule.name,
+        "day": w.day.isoformat(),
+        "earliest": w.earliest.strftime("%H:%M"),
+        "latest": w.latest.strftime("%H:%M"),
+        "minutes": w.minutes,
+        "how": w.get_modality_display(),
+        "tutor": w.tutor.display_name if w.tutor else None,
+        "status": w.get_status_display(),
+        "joined_at": _when(w.joined_at),
+    }
+
+
+def check_ins_of(membership: Membership) -> QuerySet[Arrival]:
+    return Arrival.objects.filter(center=membership.center, student=membership.user)
+
+
+def _check_in(a: Arrival) -> dict[str, Any]:
+    return {
+        "arrived_at": _when(a.arrived_at),
+        "how": a.via,
+        "walk_in": a.appointment_id is None,
+        "status": a.get_status_display(),
+        "handled_at": _when(a.handled_at),
     }
 
 

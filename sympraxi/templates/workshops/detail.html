@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ workshop.title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=workshop.title %}
+  <h1>{{ workshop.title }}</h1>
+  {% if workshop.is_canceled %}
+    <div class="usa-alert usa-alert--warning" role="status"><div class="usa-alert__body"><p class="usa-alert__text">{% translate "This workshop was canceled." %}</p></div></div>
+  {% elif workshop.status == "draft" %}
+    <div class="usa-alert usa-alert--info usa-alert--slim" role="status"><div class="usa-alert__body"><p class="usa-alert__text">{% translate "Draft: students can't see this yet." %}</p></div></div>
+  {% endif %}
+  <dl class="sympraxi-details">
+    <dt>{% translate "When" %}</dt>
+    <dd>{{ workshop.starts_at|date:"l, F j, Y" }}, {{ workshop.starts_at|time:"g:i A" }} {% translate "to" %} {{ workshop.ends_at|time:"g:i A" }}</dd>
+    {% if workshop.location %}<dt>{% translate "Where" %}</dt><dd>{{ workshop.location }}</dd>{% endif %}
+    {% if workshop.meeting_url and mine or workshop.meeting_url and can_roster %}<dt>{% translate "Meeting link" %}</dt><dd><a href="{{ workshop.meeting_url }}" rel="noopener noreferrer">{{ workshop.meeting_url }}</a></dd>{% endif %}
+    {% if workshop.leader %}<dt>{% translate "Led by" %}</dt><dd>{{ workshop.leader.display_name }}</dd>{% endif %}
+    {% if workshop.capacity %}<dt>{% translate "Seats" %}</dt><dd>{% blocktranslate with left=seats_left total=workshop.capacity %}{{ left }} of {{ total }} left{% endblocktranslate %}</dd>{% endif %}
+  </dl>
+  {% if workshop.description %}<p>{{ workshop.description|linebreaksbr }}</p>{% endif %}
+
+  {% if can_register and workshop.is_published and not workshop.has_started %}
+    {% if mine %}
+      <p>{% translate "You're registered for this workshop." %}</p>
+      <form method="post" action="{% url 'workshops:register' slug=center.slug workshop_id=workshop.pk %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="cancel">
+        <button class="usa-button usa-button--outline" type="submit">{% translate "Cancel my registration" %}</button>
+      </form>
+    {% elif seats_left == 0 %}
+      <p>{% translate "This workshop is full." %}</p>
+    {% else %}
+      <form method="post" action="{% url 'workshops:register' slug=center.slug workshop_id=workshop.pk %}">
+        {% csrf_token %}
+        <button class="usa-button" type="submit">{% translate "Register" %}</button>
+      </form>
+    {% endif %}
+  {% endif %}
+  <p class="sympraxi-no-print">
+    {% if can_roster %}<a class="usa-button usa-button--outline" href="{% url 'workshops:roster' slug=center.slug workshop_id=workshop.pk %}">{% translate "Roster and attendance" %}</a>{% endif %}
+    {% if can_manage %}<a class="usa-button usa-button--outline" href="{% url 'workshops:edit' slug=center.slug workshop_id=workshop.pk %}">{% translate "Change this workshop" %}</a>{% endif %}
+  </p>
+{% endblock content %}

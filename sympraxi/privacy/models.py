@@ -97,6 +97,12 @@ ACTION_LABELS = {
     "scheduling.waitlist_accepted": _("Took a time offered from a waiting list"),
     "scheduling.waitlist_declined": _("Turned down a time offered from a waiting list"),
     "scheduling.waitlist_expired": _("Did not answer an offer in time, or the day passed"),
+    "workshops.saved": _("Saved a workshop"),
+    "workshops.canceled": _("Canceled a workshop"),
+    "workshops.registered": _("Registered for a workshop"),
+    "workshops.unregistered": _("Canceled a workshop registration"),
+    "workshops.attendance_marked": _("Marked workshop attendance"),
+    "workshops.roster_downloaded": _("Downloaded a workshop roster"),
     "reports.questions_changed": _(
         "Chose which questions the reports read for class standing and course"
     ),

@@ -1,0 +1,13 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=recipient.display_name %}Hi {{ name }},{% endblocktranslate %}
+
+{% blocktranslate with title=workshop.title center=center.name %}You're registered for "{{ title }}" at {{ center }}.{% endblocktranslate %}
+
+{% translate "When:" %} {{ workshop.starts_at|date:"l, F j, Y" }}, {{ workshop.starts_at|time:"g:i A" }} {% translate "to" %} {{ workshop.ends_at|time:"g:i A" }}
+{% if workshop.location %}{% translate "Where:" %} {{ workshop.location }}
+{% endif %}{% if workshop.meeting_url %}{% translate "Meeting link:" %} {{ workshop.meeting_url }}
+{% endif %}
+{% translate "Details, and a way to cancel if you can't come:" %}
+{{ url }}
+
+{{ SITE_NAME }}
+{% endautoescape %}

@@ -109,6 +109,7 @@ from sympraxi.scheduling.models import (
     Schedule,
     Visibility,
 )
+from sympraxi.workshops.models import Workshop, WorkshopStatus
 
 # `request.user`: a signed-in User or an AnonymousUser.
 UserLike = Any
@@ -211,6 +212,11 @@ class Action(StrEnum):
     RUN_KIOSK = "staff.run_kiosk"
     # See who has checked in and is waiting, and mark them seen or gone.
     VIEW_WAITING_ROOM = "staff.view_waiting_room"
+    # Workshops: see the center's, register yourself, set them up, and run a roster.
+    VIEW_WORKSHOPS = "workshops.view"
+    REGISTER_WORKSHOP = "workshops.register"
+    MANAGE_WORKSHOPS = "workshops.manage"
+    TAKE_WORKSHOP_ATTENDANCE = "workshops.take_attendance"
     # Post, change and delete the center's announcements.
     MANAGE_ANNOUNCEMENTS = "notify.manage_announcements"
     # Email a group of the center's people, and see what was sent to whom.
@@ -220,6 +226,8 @@ class Action(StrEnum):
 ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     Role.STUDENT: frozenset(
         {
+            Action.VIEW_WORKSHOPS,
+            Action.REGISTER_WORKSHOP,
             Action.VIEW_CENTER,
             Action.VIEW_SCHEDULES,
             Action.BOOK_OWN,
@@ -239,6 +247,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.TUTOR: frozenset(
         {
+            Action.VIEW_WORKSHOPS,
+            Action.TAKE_WORKSHOP_ATTENDANCE,
             Action.VIEW_CENTER,
             Action.VIEW_SCHEDULES,
             Action.VIEW_APPOINTMENT,
@@ -262,6 +272,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.FRONT_DESK: frozenset(
         {
+            Action.VIEW_WORKSHOPS,
+            Action.TAKE_WORKSHOP_ATTENDANCE,
             Action.VIEW_CENTER,
             Action.VIEW_MEMBERS,
             Action.VIEW_SCHEDULES,
@@ -283,6 +295,9 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.DIRECTOR: frozenset(
         {
+            Action.VIEW_WORKSHOPS,
+            Action.MANAGE_WORKSHOPS,
+            Action.TAKE_WORKSHOP_ATTENDANCE,
             Action.VIEW_CENTER,
             Action.MANAGE_CENTER,
             Action.VIEW_MEMBERS,
@@ -474,6 +489,21 @@ def _registration_of_tutored(user: UserLike, obj: Model) -> bool:
     return False
 
 
+def _workshop_shown(user: UserLike, obj: Model) -> bool:
+    """Students see published workshops; a tutor also sees one they lead."""
+    if isinstance(obj, Workshop):
+        return obj.status == WorkshopStatus.PUBLISHED or obj.leader_id == user.pk
+    return False
+
+
+def _workshop_open(user: UserLike, obj: Model) -> bool:
+    return isinstance(obj, Workshop) and obj.status == WorkshopStatus.PUBLISHED
+
+
+def _leads_workshop(user: UserLike, obj: Model) -> bool:
+    return isinstance(obj, Workshop) and obj.leader_id == user.pk
+
+
 # Limits on a role's grant when the object isn't the center itself. A role with
 # no entry here gets the action on everything in its center.
 OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
@@ -505,6 +535,10 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.STUDENT, Action.SUBMIT_WORK): _own_submission,
     (Role.STUDENT, Action.VIEW_SUBMISSION): _own_submission,
     (Role.TUTOR, Action.VIEW_SUBMISSION): _claimed_submission,
+    (Role.STUDENT, Action.VIEW_WORKSHOPS): _workshop_open,
+    (Role.STUDENT, Action.REGISTER_WORKSHOP): _workshop_open,
+    (Role.TUTOR, Action.VIEW_WORKSHOPS): _workshop_shown,
+    (Role.TUTOR, Action.TAKE_WORKSHOP_ATTENDANCE): _leads_workshop,
     (Role.FRONT_DESK, Action.VIEW_SCHEDULES): _not_hidden,
     (Role.FRONT_DESK, Action.BOOK_FOR_OTHERS): _not_hidden,
     (Role.DIRECTOR, Action.BOOK_FOR_OTHERS): _not_hidden,

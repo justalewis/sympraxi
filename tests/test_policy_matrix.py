@@ -97,6 +97,13 @@ STAFF_ACTIONS = [
     Action.VIEW_WAITING_ROOM,
 ]
 
+WORKSHOP_ACTIONS = [
+    Action.VIEW_WORKSHOPS,
+    Action.REGISTER_WORKSHOP,
+    Action.MANAGE_WORKSHOPS,
+    Action.TAKE_WORKSHOP_ATTENDANCE,
+]
+
 NEWS_ACTIONS = [
     Action.MANAGE_ANNOUNCEMENTS,
     Action.SEND_MASS_EMAIL,
@@ -135,6 +142,7 @@ ACTIONS = (
     + FORMS_ACTIONS
     + REPORTS_ACTIONS
     + STAFF_ACTIONS
+    + WORKSHOP_ACTIONS
     + NEWS_ACTIONS
     + DISCLOSURE_ACTIONS
     + FILES_ACTIONS
@@ -248,6 +256,21 @@ EXPECTED_STAFF = {
     "site_admin":  (0,    0,      0,     0),
 }
 
+# Workshops, asked about the center. Students see and register for published
+# workshops (WORKSHOP_CASES checks that part); tutors see them too and run the
+# roster of one they lead; the front desk runs any roster; directors set them up.
+# Site administrators get nothing: a roster names students.
+EXPECTED_WORKSHOPS = {
+    #              view   register  manage  take
+    #                                       attendance
+    "none":        (0,    0,        0,      0),
+    "student":     (1,    1,        0,      0),
+    "tutor":       (1,    0,        0,      1),
+    "front_desk":  (1,    0,        0,      1),
+    "director":    (1,    0,        1,      1),
+    "site_admin":  (0,    0,        0,      0),
+}
+
 # News. Directors post announcements and email groups of the center's people.
 # Site administrators get neither: they run the installation, not the center.
 EXPECTED_NEWS = {
@@ -340,6 +363,7 @@ CASES = [
         (EXPECTED_FORMS, FORMS_ACTIONS),
         (EXPECTED_REPORTS, REPORTS_ACTIONS),
         (EXPECTED_STAFF, STAFF_ACTIONS),
+        (EXPECTED_WORKSHOPS, WORKSHOP_ACTIONS),
         (EXPECTED_NEWS, NEWS_ACTIONS),
         (EXPECTED_DISCLOSURES, DISCLOSURE_ACTIONS),
         (EXPECTED_FILES, FILES_ACTIONS),

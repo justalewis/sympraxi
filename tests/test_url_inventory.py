@@ -39,6 +39,7 @@ from tests.records_world import add_records
 from tests.reports_world import add_reports
 from tests.scheduling_world import World, build_world
 from tests.staff_world import add_time_clock
+from tests.workshops_world import add_workshops
 
 # accounts:local_login is the break-glass password sign-in. It is public like the
 # regular sign-in page; AccountAdapter.pre_login() decides who may use it.
@@ -193,6 +194,13 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "staff:settings": (Action.MANAGE_TIME, "center"),
     "staff:kiosk": (Action.RUN_KIOSK, "center"),
     "staff:waiting_room": (Action.VIEW_WAITING_ROOM, "center"),
+    # Workshops
+    "workshops:list": (Action.VIEW_WORKSHOPS, "center"),
+    "workshops:create": (Action.MANAGE_WORKSHOPS, "center"),
+    "workshops:detail": (Action.VIEW_WORKSHOPS, "workshop"),
+    "workshops:edit": (Action.MANAGE_WORKSHOPS, "workshop"),
+    "workshops:register": (Action.REGISTER_WORKSHOP, "workshop"),
+    "workshops:roster": (Action.TAKE_WORKSHOP_ATTENDANCE, "workshop"),
     "staff:entry_add": (Action.MANAGE_TIME, "center"),
     "staff:entry_edit": (Action.MANAGE_TIME, "time_entry"),
     # News
@@ -299,6 +307,7 @@ URL_KWARGS = {
     "appointment_file": "file_id",
     "submission": "submission_id",
     "submission_file": "file_id",
+    "workshop": "workshop_id",
 }
 
 # Pages that need a chosen open time in the query string.
@@ -341,12 +350,14 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return add_queue(
-        add_files(
-            add_disclosures(
-                add_news(
-                    add_time_clock(
-                        add_reports(add_forms(add_attendance(add_records(build_world(center)))))
+    return add_workshops(
+        add_queue(
+            add_files(
+                add_disclosures(
+                    add_news(
+                        add_time_clock(
+                            add_reports(add_forms(add_attendance(add_records(build_world(center)))))
+                        )
                     )
                 )
             )

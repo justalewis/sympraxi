@@ -12,6 +12,16 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 4: workshops (October 2026)
+
+**What a workshop is.** A session for a group, separate from the one-to-one schedules: a title, a day and time in the center's zone, where, an optional meeting link, a leader, an optional number of seats, and a status of draft, published or canceled. Nothing about a workshop touches tutors' schedules, booking limits or no-show blocks. A new app, `workshops`, holds it so the scheduling code stays about appointments.
+
+**Who does what.** Directors create, change and cancel workshops. Students see published ones and register until the start; the registration emails them the details, and they can cancel until it starts. A seat is counted with the workshop locked, so the last one can't be taken twice. The leader (a tutor, front desk person or director) and the front desk can run the roster: mark each student came or did not come once it starts, add a student at the door by email or student ID, remove one, and download the roster as CSV, which is logged because it names students. Canceling a published workshop emails everyone registered; canceling a draft tells no one.
+
+**Records.** A student's own export now carries their workshop registrations and attendance (and, in the same change, their waiting-list requests and front desk check-ins: version 9), and the center's export carries workshops, registrations, arrivals, timesheet approvals, payroll details and the waiting list.
+
+**Not done.** No waiting list for a full workshop, no reminder email the day before, no recurring workshops, and no workshop attendance in the statistics reports or on a student's timeline. A student who registered can't be moved to another workshop; they cancel and register again.
+
 ## Phase 4: the waiting list (October 2026)
 
 **What a student asks for.** A student on a schedule that has a waiting list turned on says which day they could come, the window within it, how long, how they would meet, and optionally which tutor. One request per student per day per schedule, and no more than five open at once. This is a wish, not a place in a queue for one particular full time, because a full time is never listed anywhere a student could pick it.

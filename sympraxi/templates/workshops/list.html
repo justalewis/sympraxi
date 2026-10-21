@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Workshops" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Workshops" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Workshops" %}</h1>
+  {% if managing %}<p class="sympraxi-no-print"><a class="usa-button" href="{% url 'workshops:create' slug=center.slug %}">{% translate "Add a workshop" %}</a></p>{% endif %}
+
+  <h2>{% translate "Coming up" %}</h2>
+  {% if upcoming %}
+    <ul class="usa-list">
+      {% for w in upcoming %}
+        <li>
+          <a href="{% url 'workshops:detail' slug=center.slug workshop_id=w.pk %}">{{ w.title }}</a>
+          · {{ w.starts_at|date:"D, M j" }}, {{ w.starts_at|time:"g:i A" }} {% translate "to" %} {{ w.ends_at|time:"g:i A" }}
+          {% if w.location %}· {{ w.location }}{% endif %}
+          {% if w.status == "draft" %}<span class="usa-tag">{% translate "Draft" %}</span>{% endif %}
+          {% if w.pk in mine %}<span class="usa-tag">{% translate "You're registered" %}</span>{% endif %}
+          {% with left=w.seats_left %}{% if left is not None %}· {% blocktranslate count n=left %}{{ n }} seat left{% plural %}{{ n }} seats left{% endblocktranslate %}{% endif %}{% endwith %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "No workshops are scheduled right now." %}</p>
+  {% endif %}
+
+  {% if past %}
+    <h2>{% translate "Recent" %}</h2>
+    <ul class="usa-list">
+      {% for w in past %}
+        <li>
+          <a href="{% url 'workshops:detail' slug=center.slug workshop_id=w.pk %}">{{ w.title }}</a>
+          · {{ w.starts_at|date:"D, M j" }}
+          · <a href="{% url 'workshops:roster' slug=center.slug workshop_id=w.pk %}">{% blocktranslate with title=w.title %}Roster for {{ title }}{% endblocktranslate %}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

@@ -118,6 +118,12 @@ class AuditAction(StrEnum):
     WAITLIST_ACCEPTED = "scheduling.waitlist_accepted"
     WAITLIST_DECLINED = "scheduling.waitlist_declined"
     WAITLIST_EXPIRED = "scheduling.waitlist_expired"
+    WORKSHOP_SAVED = "workshops.saved"
+    WORKSHOP_CANCELED = "workshops.canceled"
+    WORKSHOP_REGISTERED = "workshops.registered"
+    WORKSHOP_UNREGISTERED = "workshops.unregistered"
+    WORKSHOP_ATTENDANCE_MARKED = "workshops.attendance_marked"
+    WORKSHOP_ROSTER_DOWNLOADED = "workshops.roster_downloaded"
 
 
 def client_ip(request: HttpRequest) -> str | None:

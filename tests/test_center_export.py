@@ -61,6 +61,12 @@ FILES = {
     "room_documents.json",
     "room_versions.json",
     "disclosures.json",
+    "arrivals.json",
+    "timesheet_approvals.json",
+    "payroll_details.json",
+    "waiting_list.json",
+    "workshops.json",
+    "workshop_registrations.json",
     "audit_events.json",
     "audit_events.csv",
 }

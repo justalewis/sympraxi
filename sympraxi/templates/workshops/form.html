@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=title %}
+  <h1>{{ title }}</h1>
+  {% if workshop.is_canceled %}
+    <p>{% translate "This workshop was canceled, so it can't be changed." %}</p>
+  {% else %}
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      {% include "includes/form_fields.html" %}
+      <div class="sympraxi-form-actions">
+        <button class="usa-button" type="submit">{{ submit }}</button>
+        <a href="{% url 'workshops:list' slug=center.slug %}">{% translate "Go back" %}</a>
+      </div>
+    </form>
+  {% endif %}
+  {% if cancel_form %}
+    <h2>{% translate "Cancel this workshop" %}</h2>
+    <p>{% translate "Registered students are emailed. This can't be undone." %}</p>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      {% include "includes/form_fields.html" with form=cancel_form %}
+      <button class="usa-button usa-button--secondary" type="submit" name="cancel_workshop" value="1">{% translate "Cancel the workshop" %}</button>
+    </form>
+  {% endif %}
+{% endblock content %}
