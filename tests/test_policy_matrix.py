@@ -104,6 +104,11 @@ WORKSHOP_ACTIONS = [
     Action.TAKE_WORKSHOP_ATTENDANCE,
 ]
 
+TRAINING_ACTIONS = [
+    Action.TAKE_TRAINING,
+    Action.MANAGE_TRAINING,
+]
+
 NEWS_ACTIONS = [
     Action.MANAGE_ANNOUNCEMENTS,
     Action.SEND_MASS_EMAIL,
@@ -143,6 +148,7 @@ ACTIONS = (
     + REPORTS_ACTIONS
     + STAFF_ACTIONS
     + WORKSHOP_ACTIONS
+    + TRAINING_ACTIONS
     + NEWS_ACTIONS
     + DISCLOSURE_ACTIONS
     + FILES_ACTIONS
@@ -271,6 +277,21 @@ EXPECTED_WORKSHOPS = {
     "site_admin":  (0,    0,        0,      0),
 }
 
+# Tutor training. Tutors and front desk staff work through published modules
+# (the published-only rule is checked in tests/test_training.py); directors build
+# modules and see everyone's progress. Students and site administrators get
+# nothing: progress is an employment record.
+EXPECTED_TRAINING = {
+    #              take      manage
+    #              training  training
+    "none":        (0,        0),
+    "student":     (0,        0),
+    "tutor":       (1,        0),
+    "front_desk":  (1,        0),
+    "director":    (1,        1),
+    "site_admin":  (0,        0),
+}
+
 # News. Directors post announcements and email groups of the center's people.
 # Site administrators get neither: they run the installation, not the center.
 EXPECTED_NEWS = {
@@ -364,6 +385,7 @@ CASES = [
         (EXPECTED_REPORTS, REPORTS_ACTIONS),
         (EXPECTED_STAFF, STAFF_ACTIONS),
         (EXPECTED_WORKSHOPS, WORKSHOP_ACTIONS),
+        (EXPECTED_TRAINING, TRAINING_ACTIONS),
         (EXPECTED_NEWS, NEWS_ACTIONS),
         (EXPECTED_DISCLOSURES, DISCLOSURE_ACTIONS),
         (EXPECTED_FILES, FILES_ACTIONS),

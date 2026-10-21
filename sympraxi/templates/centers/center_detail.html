@@ -35,6 +35,10 @@
       {% if can_work_queue and queue_is_open or can_manage_queue %}<li><a href="{% url 'feedback:queue' slug=center.slug %}">{% translate "The written-feedback queue" %}</a></li>{% endif %}
     </ul>
   {% endif %}
+  {% if can_take_training %}
+    <h2>{% translate "Training" %}</h2>
+    <ul class="usa-list"><li><a href="{% url 'training:home' slug=center.slug %}">{% translate "Training modules and your progress" %}</a></li></ul>
+  {% endif %}
   {% if can_view_workshops %}
     <h2>{% translate "Workshops" %}</h2>
     <ul class="usa-list"><li><a href="{% url 'workshops:list' slug=center.slug %}">{% translate "Workshops and registration" %}</a></li></ul>

@@ -12,6 +12,18 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 4: tutor training modules (October 2026)
+
+**What a module is.** A director builds modules out of three kinds of item: a page of text, a reading or video elsewhere (opened in a new tab, with a note), and a short quiz. A module is a draft until it is published, and tutors and front desk staff see only published ones. A page or link counts as done when the person marks it; a quiz counts when they pass it, with the passing score set per quiz, and they may retake it as often as they like. A module is complete when every item is done, which is logged. A new app, `training`, holds all of it.
+
+**Quizzes.** One right answer per question, two to five answers, scored on the server. A failed try says which questions to look at again and never shows the right answers, so retaking is a real check. Every try is kept (the score and what was chosen).
+
+**Hours.** The requirement is one number on the training page (hours of training a new tutor completes), and the hours themselves are the time clock's Training category, not a second timer. Open and removed entries don't count.
+
+**Progress.** Directors see a table of every tutor and front desk person against every published module, their training hours, and whether onboarding is complete (every required module done and the hours met).
+
+**Not done.** Deleting an item deletes its completions, so a director who removes a page erases the record that someone read it; unpublish instead. Items can't be edited into a different kind, and a quiz can't be reordered within a module except by moving the quiz item. No training for students, no certificates, no deadlines or reminders, and no per-cohort view yet (the last slice adds cohorts).
+
 ## Phase 4: workshops (October 2026)
 
 **What a workshop is.** A session for a group, separate from the one-to-one schedules: a title, a day and time in the center's zone, where, an optional meeting link, a leader, an optional number of seats, and a status of draft, published or canceled. Nothing about a workshop touches tutors' schedules, booking limits or no-show blocks. A new app, `workshops`, holds it so the scheduling code stays about appointments.

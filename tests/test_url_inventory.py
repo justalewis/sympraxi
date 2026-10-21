@@ -39,6 +39,7 @@ from tests.records_world import add_records
 from tests.reports_world import add_reports
 from tests.scheduling_world import World, build_world
 from tests.staff_world import add_time_clock
+from tests.training_world import add_training
 from tests.workshops_world import add_workshops
 
 # accounts:local_login is the break-glass password sign-in. It is public like the
@@ -201,6 +202,15 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "workshops:edit": (Action.MANAGE_WORKSHOPS, "workshop"),
     "workshops:register": (Action.REGISTER_WORKSHOP, "workshop"),
     "workshops:roster": (Action.TAKE_WORKSHOP_ATTENDANCE, "workshop"),
+    # Tutor training
+    "training:home": (Action.TAKE_TRAINING, "center"),
+    "training:module": (Action.TAKE_TRAINING, "training_module"),
+    "training:item": (Action.TAKE_TRAINING, "training_item"),
+    "training:manage": (Action.MANAGE_TRAINING, "center"),
+    "training:module_create": (Action.MANAGE_TRAINING, "center"),
+    "training:module_edit": (Action.MANAGE_TRAINING, "training_module"),
+    "training:item_edit": (Action.MANAGE_TRAINING, "training_item"),
+    "training:onboarding": (Action.MANAGE_TRAINING, "center"),
     "staff:entry_add": (Action.MANAGE_TIME, "center"),
     "staff:entry_edit": (Action.MANAGE_TIME, "time_entry"),
     # News
@@ -308,6 +318,8 @@ URL_KWARGS = {
     "submission": "submission_id",
     "submission_file": "file_id",
     "workshop": "workshop_id",
+    "training_module": "module_id",
+    "training_item": "item_id",
 }
 
 # Pages that need a chosen open time in the query string.
@@ -350,19 +362,22 @@ def object_for(name: str, world: World) -> object:
 
 @pytest.fixture
 def world(center) -> World:
-    return add_workshops(
-        add_queue(
-            add_files(
-                add_disclosures(
-                    add_news(
-                        add_time_clock(
-                            add_reports(add_forms(add_attendance(add_records(build_world(center)))))
-                        )
-                    )
-                )
-            )
-        )
-    )
+    built = build_world(center)
+    for add in (
+        add_records,
+        add_attendance,
+        add_forms,
+        add_reports,
+        add_time_clock,
+        add_news,
+        add_disclosures,
+        add_files,
+        add_queue,
+        add_workshops,
+        add_training,
+    ):
+        built = add(built)
+    return built
 
 
 # The editor service's address: no session, only the shared secret (checked in

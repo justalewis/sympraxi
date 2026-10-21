@@ -84,6 +84,11 @@ from sympraxi.scheduling.models import (
     WeeklyHours,
 )
 from sympraxi.staff.models import Arrival, PayrollDetail, TimeEntry, TimesheetApproval
+from sympraxi.training.models import Attempt as TrainingAttempt
+from sympraxi.training.models import Completion as TrainingCompletion
+from sympraxi.training.models import Item as TrainingItem
+from sympraxi.training.models import Module as TrainingModule
+from sympraxi.training.models import Question as TrainingQuestion
 from sympraxi.workshops.models import Registration, Workshop
 
 logger = logging.getLogger("sympraxi.reports")
@@ -672,6 +677,54 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
                 columns_of(r)
                 for r in Registration.objects.filter(workshop__center=center).order_by(
                     "registered_at", "pk"
+                )
+            ),
+        )
+        w.items(
+            "training_modules.json",
+            (
+                columns_of(m)
+                for m in TrainingModule.objects.filter(center=center).order_by("position", "pk")
+            ),
+        )
+        w.items(
+            "training_items.json",
+            (
+                columns_of(i)
+                for i in TrainingItem.objects.filter(module__center=center).order_by(
+                    "module_id", "position", "pk"
+                )
+            ),
+        )
+        w.items(
+            "training_questions.json",
+            (
+                {
+                    **columns_of(q),
+                    "choices": [
+                        {"text": c.text, "is_correct": c.is_correct} for c in q.choices.all()
+                    ],
+                }
+                for q in TrainingQuestion.objects.filter(item__module__center=center)
+                .prefetch_related("choices")
+                .order_by("item_id", "position", "pk")
+            ),
+        )
+        w.items(
+            "training_completions.json",
+            (
+                columns_of(c)
+                for c in TrainingCompletion.objects.filter(item__module__center=center).order_by(
+                    "completed_at", "pk"
+                )
+            ),
+        )
+        w.items(
+            "training_attempts.json",
+            (
+                columns_of(a)
+                for a in TrainingAttempt.objects.filter(item__module__center=center).order_by(
+                    "submitted_at", "pk"
                 )
             ),
         )

@@ -127,6 +127,16 @@ class Center(models.Model):
         default=60,
         help_text=_("Used only when the survey goes out a set time after the appointment."),
     )
+    # Hours of training a new tutor completes, counted from the time clock's training
+    # category. Empty: no hours required.
+    training_hours_required = models.DecimalField(
+        _("hours of training required of a new tutor"),
+        max_digits=6,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0)],
+    )
     # Staff clock in and out only from these networks, one address or range
     # (203.0.113.0/24) per line. Empty: from anywhere. Directors are exempt.
     clock_networks = models.TextField(

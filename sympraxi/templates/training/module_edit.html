@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with title=module.title %}Change {{ title }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% translate "Change module" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{{ module.title }}</h1>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="save">
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Save the module" %}</button>
+      <a href="{% url 'training:manage' slug=center.slug %}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+
+  <h2>{% translate "What's in it" %}</h2>
+  {% if items %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "The module's pages, readings and quizzes, in order" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Title" %}</th>
+          <th scope="col">{% translate "Kind" %}</th>
+          <th scope="col">{% translate "Change" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in items %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Title' %}"><a href="{% url 'training:item_edit' slug=center.slug item_id=i.pk %}">{{ i.title }}</a></th>
+            <td data-label="{% translate 'Kind' %}">{{ i.get_kind_display }}{% if i.kind == "quiz" %} · {% blocktranslate count n=i.questions.all|length %}{{ n }} question{% plural %}{{ n }} questions{% endblocktranslate %}{% endif %}</td>
+            <td data-label="{% translate 'Change' %}">
+              <form method="post" class="sympraxi-inline-form">
+                {% csrf_token %}
+                <input type="hidden" name="item" value="{{ i.pk }}">
+                <button class="usa-button usa-button--outline" type="submit" name="action" value="up">{% blocktranslate with t=i.title %}Move {{ t }} up{% endblocktranslate %}</button>
+                <button class="usa-button usa-button--outline" type="submit" name="action" value="down">{% blocktranslate with t=i.title %}Move {{ t }} down{% endblocktranslate %}</button>
+                <button class="usa-button usa-button--secondary" type="submit" name="action" value="delete_item">{% blocktranslate with t=i.title %}Delete {{ t }}{% endblocktranslate %}</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Nothing yet. Add a page, a reading or a quiz below." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Add to the module" %}</h2>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add_item">
+    {% include "includes/form_fields.html" with form=item_form %}
+    <button class="usa-button" type="submit">{% translate "Add it" %}</button>
+  </form>
+{% endblock content %}

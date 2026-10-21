@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Training" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Training" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Training" %}</h1>
+  {% if can_manage %}
+    <p class="sympraxi-no-print">
+      <a class="usa-button usa-button--outline" href="{% url 'training:manage' slug=center.slug %}">{% translate "Build modules" %}</a>
+      <a class="usa-button usa-button--outline" href="{% url 'training:onboarding' slug=center.slug %}">{% translate "Everyone's progress" %}</a>
+    </p>
+  {% endif %}
+  {% if required_hours %}
+    <p>{% blocktranslate with hours=hours required=required_hours %}Training hours clocked: {{ hours }} of {{ required }}. Clock them under "Training" on your time clock page.{% endblocktranslate %}</p>
+  {% endif %}
+  {% if modules %}
+    {% if required_done %}<div class="usa-alert usa-alert--success usa-alert--slim" role="status"><div class="usa-alert__body"><p class="usa-alert__text">{% translate "You have finished every required module." %}</p></div></div>{% endif %}
+    <ol class="usa-list">
+      {% for row in modules %}
+        <li>
+          <a href="{% url 'training:module' slug=center.slug module_id=row.module.pk %}">{{ row.module.title }}</a>
+          {% if row.complete %}<span class="usa-tag">{% translate "Done" %}</span>
+          {% elif row.started %}<span class="usa-tag">{% blocktranslate with done=row.done total=row.total %}{{ done }} of {{ total }} done{% endblocktranslate %}</span>{% endif %}
+          {% if not row.module.is_required %}<span class="usa-tag">{% translate "Optional" %}</span>{% endif %}
+          {% if row.module.summary %}<br>{{ row.module.summary }}{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p>{% translate "No training modules are published yet." %}</p>
+  {% endif %}
+{% endblock content %}

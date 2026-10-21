@@ -115,6 +115,7 @@ INSTALLED_APPS = [
     "sympraxi.feedback",
     "sympraxi.online",
     "sympraxi.workshops",
+    "sympraxi.training",
 ]
 
 MIDDLEWARE = [

@@ -109,6 +109,7 @@ from sympraxi.scheduling.models import (
     Schedule,
     Visibility,
 )
+from sympraxi.training.models import Item, Module
 from sympraxi.workshops.models import Workshop, WorkshopStatus
 
 # `request.user`: a signed-in User or an AnonymousUser.
@@ -217,6 +218,10 @@ class Action(StrEnum):
     REGISTER_WORKSHOP = "workshops.register"
     MANAGE_WORKSHOPS = "workshops.manage"
     TAKE_WORKSHOP_ATTENDANCE = "workshops.take_attendance"
+    # Work through the center's published training modules, and build them and see
+    # everyone's progress.
+    TAKE_TRAINING = "training.take"
+    MANAGE_TRAINING = "training.manage"
     # Post, change and delete the center's announcements.
     MANAGE_ANNOUNCEMENTS = "notify.manage_announcements"
     # Email a group of the center's people, and see what was sent to whom.
@@ -247,6 +252,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.TUTOR: frozenset(
         {
+            Action.TAKE_TRAINING,
             Action.VIEW_WORKSHOPS,
             Action.TAKE_WORKSHOP_ATTENDANCE,
             Action.VIEW_CENTER,
@@ -272,6 +278,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.FRONT_DESK: frozenset(
         {
+            Action.TAKE_TRAINING,
             Action.VIEW_WORKSHOPS,
             Action.TAKE_WORKSHOP_ATTENDANCE,
             Action.VIEW_CENTER,
@@ -295,6 +302,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.DIRECTOR: frozenset(
         {
+            Action.TAKE_TRAINING,
+            Action.MANAGE_TRAINING,
             Action.VIEW_WORKSHOPS,
             Action.MANAGE_WORKSHOPS,
             Action.TAKE_WORKSHOP_ATTENDANCE,
@@ -489,6 +498,15 @@ def _registration_of_tutored(user: UserLike, obj: Model) -> bool:
     return False
 
 
+def _published_training(user: UserLike, obj: Model) -> bool:
+    """Staff open training modules, and the items in them, once they are published."""
+    if isinstance(obj, Module):
+        return obj.is_published
+    if isinstance(obj, Item):
+        return obj.module.is_published
+    return False
+
+
 def _workshop_shown(user: UserLike, obj: Model) -> bool:
     """Students see published workshops; a tutor also sees one they lead."""
     if isinstance(obj, Workshop):
@@ -535,6 +553,8 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.STUDENT, Action.SUBMIT_WORK): _own_submission,
     (Role.STUDENT, Action.VIEW_SUBMISSION): _own_submission,
     (Role.TUTOR, Action.VIEW_SUBMISSION): _claimed_submission,
+    (Role.TUTOR, Action.TAKE_TRAINING): _published_training,
+    (Role.FRONT_DESK, Action.TAKE_TRAINING): _published_training,
     (Role.STUDENT, Action.VIEW_WORKSHOPS): _workshop_open,
     (Role.STUDENT, Action.REGISTER_WORKSHOP): _workshop_open,
     (Role.TUTOR, Action.VIEW_WORKSHOPS): _workshop_shown,

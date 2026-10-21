@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Everyone's training progress" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Progress" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Everyone's training progress" %}</h1>
+  <p>{% translate "Each tutor and front desk person, module by module. Hours come from the training category on the time clock." %}
+    {% if required_hours %}{% blocktranslate with n=required_hours %}The requirement is {{ n }} hours.{% endblocktranslate %}{% endif %}</p>
+  {% if rows %}
+    <table class="usa-table usa-table--borderless">
+      <caption class="usa-sr-only">{% translate "Training progress by person and module" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Person" %}</th>
+          {% for m in modules %}<th scope="col">{{ m.title }}{% if not m.is_required %} ({% translate "optional" %}){% endif %}</th>{% endfor %}
+          <th scope="col">{% translate "Training hours" %}</th>
+          <th scope="col">{% translate "Onboarding" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+          <tr>
+            <th scope="row">{{ r.person.display_name }}</th>
+            {% for s in r.modules %}<td>{% if s.complete %}{% translate "Done" %}{% else %}{{ s.done }}/{{ s.total }}{% endif %}</td>{% endfor %}
+            <td>{{ r.hours }}{% if required_hours and not r.hours_ok %} <span class="usa-tag">{% translate "Short" %}</span>{% endif %}</td>
+            <td>{% if r.modules_ok and r.hours_ok %}<span class="usa-tag">{% translate "Complete" %}</span>{% else %}{% translate "In progress" %}{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "No tutors or front desk staff yet." %}</p>
+  {% endif %}
+{% endblock content %}

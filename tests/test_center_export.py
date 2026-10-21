@@ -67,6 +67,11 @@ FILES = {
     "waiting_list.json",
     "workshops.json",
     "workshop_registrations.json",
+    "training_modules.json",
+    "training_items.json",
+    "training_questions.json",
+    "training_completions.json",
+    "training_attempts.json",
     "audit_events.json",
     "audit_events.csv",
 }

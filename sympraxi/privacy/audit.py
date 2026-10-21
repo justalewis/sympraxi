@@ -124,6 +124,9 @@ class AuditAction(StrEnum):
     WORKSHOP_UNREGISTERED = "workshops.unregistered"
     WORKSHOP_ATTENDANCE_MARKED = "workshops.attendance_marked"
     WORKSHOP_ROSTER_DOWNLOADED = "workshops.roster_downloaded"
+    TRAINING_CONTENT_CHANGED = "training.content_changed"
+    TRAINING_SETTINGS_CHANGED = "training.settings_changed"
+    TRAINING_MODULE_COMPLETED = "training.module_completed"
 
 
 def client_ip(request: HttpRequest) -> str | None:

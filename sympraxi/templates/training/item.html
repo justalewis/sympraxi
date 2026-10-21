@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ item.title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=item.title %}
+  <h1>{{ item.title }}</h1>
+  {% if done %}<p><span class="usa-tag">{% translate "Done" %}</span></p>{% endif %}
+
+  {% if item.kind == "page" %}
+    <div class="usa-prose">{{ item.body|linebreaks }}</div>
+  {% elif item.kind == "link" %}
+    {% if item.body %}<div class="usa-prose">{{ item.body|linebreaks }}</div>{% endif %}
+    <p><a class="usa-button" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{% translate "Open it in a new tab" %}<span class="usa-sr-only"> {{ item.title }}</span></a></p>
+  {% else %}
+    {% if attempt %}
+      {% if attempt.passed %}
+        <div class="usa-alert usa-alert--success" role="status"><div class="usa-alert__body"><p class="usa-alert__text">{% blocktranslate with score=attempt.correct total=attempt.total %}You passed: {{ score }} of {{ total }} right.{% endblocktranslate %}</p></div></div>
+      {% else %}
+        <div class="usa-alert usa-alert--warning" role="alert"><div class="usa-alert__body"><p class="usa-alert__text">{% blocktranslate with score=attempt.correct total=attempt.total pass=item.pass_percent %}{{ score }} of {{ total }} right. You need {{ pass }} percent to pass. The questions to look at again are marked below. You can try as many times as you like.{% endblocktranslate %}</p></div></div>
+      {% endif %}
+    {% elif tries %}
+      <p>{% blocktranslate count n=tries %}You have tried this quiz {{ n }} time.{% plural %}You have tried this quiz {{ n }} times.{% endblocktranslate %}</p>
+    {% endif %}
+    {% if questions %}
+      <form method="post">
+        {% csrf_token %}
+        {% for q in questions %}
+          <fieldset class="usa-fieldset{% if q.pk|stringformat:'s' in wrong %} usa-form-group--error{% endif %}">
+            <legend class="usa-legend">{{ forloop.counter }}. {{ q.prompt }}{% if q.pk|stringformat:'s' in wrong %} <span class="usa-error-message">{% translate "Look at this one again." %}</span>{% endif %}</legend>
+            {% for c in q.choices.all %}
+              <div class="usa-radio">
+                <input class="usa-radio__input" type="radio" id="c-{{ c.pk }}" name="q_{{ q.pk }}" value="{{ c.pk }}">
+                <label class="usa-radio__label" for="c-{{ c.pk }}">{{ c.text }}</label>
+              </div>
+            {% endfor %}
+          </fieldset>
+        {% endfor %}
+        <button class="usa-button" type="submit">{% translate "Submit the quiz" %}</button>
+      </form>
+    {% else %}
+      <p>{% translate "This quiz has no questions yet." %}</p>
+    {% endif %}
+  {% endif %}
+
+  {% if item.kind != "quiz" and not done %}
+    <form method="post">
+      {% csrf_token %}
+      <button class="usa-button" type="submit" name="action" value="done">{% translate "Mark as done" %}</button>
+    </form>
+  {% endif %}
+  <p>
+    {% if next_item %}<a href="{% url 'training:item' slug=center.slug item_id=next_item.pk %}">{% blocktranslate with title=next_item.title %}Next: {{ title }}{% endblocktranslate %}</a> ·{% endif %}
+    <a href="{% url 'training:module' slug=center.slug module_id=module.pk %}">{% translate "Back to the module" %}</a>
+  </p>
+{% endblock content %}

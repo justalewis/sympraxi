@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% blocktranslate with title=item.title %}Change {{ title }}{% endblocktranslate %}{% endblock head_title %}
+{% block content %}
+  {% translate "Change item" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{{ item.title }}</h1>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="save">
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Save" %}</button>
+      <a href="{{ back }}">{% translate "Back to the module" %}</a>
+    </div>
+  </form>
+
+  {% if question_form %}
+    <h2>{% translate "Questions" %}</h2>
+    {% if questions %}
+      <ol class="usa-list">
+        {% for q in questions %}
+          <li>
+            {{ q.prompt }}
+            <ul class="usa-list">
+              {% for c in q.choices.all %}<li>{{ c.text }}{% if c.is_correct %} <span class="usa-tag">{% translate "Right answer" %}</span>{% endif %}</li>{% endfor %}
+            </ul>
+            <form method="post" class="sympraxi-inline-form">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="delete_question">
+              <input type="hidden" name="question" value="{{ q.pk }}">
+              <button class="usa-button usa-button--secondary" type="submit">{% blocktranslate with n=forloop.counter %}Delete question {{ n }}{% endblocktranslate %}</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <p>{% translate "No questions yet." %}</p>
+    {% endif %}
+    <h3>{% translate "Add a question" %}</h3>
+    <p>{% translate "Fill in at least two answers and choose the right one." %}</p>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add_question">
+      {% include "includes/form_fields.html" with form=question_form %}
+      <button class="usa-button" type="submit">{% translate "Add the question" %}</button>
+    </form>
+  {% endif %}
+{% endblock content %}

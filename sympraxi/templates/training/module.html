@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ module.title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=module.title %}
+  <h1>{{ module.title }}</h1>
+  {% if module.summary %}<p>{{ module.summary }}</p>{% endif %}
+  {% if items %}
+    <ol class="usa-list">
+      {% for item, done in items %}
+        <li>
+          <a href="{% url 'training:item' slug=center.slug item_id=item.pk %}">{{ item.title }}</a>
+          <span class="usa-tag">{{ item.get_kind_display }}</span>
+          {% if item.minutes %}<span class="usa-hint">{% blocktranslate with n=item.minutes %}about {{ n }} minutes{% endblocktranslate %}</span>{% endif %}
+          {% if done %}<span class="usa-tag">{% translate "Done" %}</span>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p>{% translate "This module has nothing in it yet." %}</p>
+  {% endif %}
+{% endblock content %}

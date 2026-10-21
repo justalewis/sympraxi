@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Build training modules" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Build modules" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Build training modules" %}</h1>
+  <p class="sympraxi-no-print">
+    <a class="usa-button" href="{% url 'training:module_create' slug=center.slug %}">{% translate "Add a module" %}</a>
+    <a class="usa-button usa-button--outline" href="{% url 'training:onboarding' slug=center.slug %}">{% translate "Everyone's progress" %}</a>
+  </p>
+  {% if modules %}
+    <ul class="usa-list">
+      {% for m in modules %}
+        <li>
+          <a href="{% url 'training:module_edit' slug=center.slug module_id=m.pk %}">{{ m.title }}</a>
+          {% if m.is_published %}<span class="usa-tag">{% translate "Published" %}</span>{% else %}<span class="usa-tag">{% translate "Draft" %}</span>{% endif %}
+          {% if not m.is_required %}<span class="usa-tag">{% translate "Optional" %}</span>{% endif %}
+          · {% blocktranslate count n=m.items.all|length %}{{ n }} item{% plural %}{{ n }} items{% endblocktranslate %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "No modules yet." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Hours of training" %}</h2>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" with form=hours_form %}
+    <button class="usa-button" type="submit">{% translate "Save" %}</button>
+  </form>
+{% endblock content %}

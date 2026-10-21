@@ -103,6 +103,9 @@ ACTION_LABELS = {
     "workshops.unregistered": _("Canceled a workshop registration"),
     "workshops.attendance_marked": _("Marked workshop attendance"),
     "workshops.roster_downloaded": _("Downloaded a workshop roster"),
+    "training.content_changed": _("Changed tutor training content"),
+    "training.settings_changed": _("Changed the training hours requirement"),
+    "training.module_completed": _("Finished a training module"),
     "reports.questions_changed": _(
         "Chose which questions the reports read for class standing and course"
     ),
