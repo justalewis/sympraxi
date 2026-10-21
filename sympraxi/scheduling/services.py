@@ -97,8 +97,13 @@ def book(
     now: datetime | None = None,
     request: HttpRequest | None = None,
     notify: bool = True,
+    from_waiting_list: bool = False,
 ) -> Appointment:
-    """Book a new appointment, or a seat in a group appointment at the same time."""
+    """Book a new appointment, or a seat in a group appointment at the same time.
+
+    `from_waiting_list` is for a time held for a student who asked for it: the minimum
+    notice and how far ahead one may book don't apply, every other rule does.
+    """
     now = now or timezone.now()
     schedule = assignment.schedule
     _check_booking_permission(actor, schedule, students, as_staff, is_placeholder)
@@ -111,7 +116,15 @@ def book(
             memberships = _lock_students(schedule.center, students)
             assignment = _lock_tutors([assignment.pk])[assignment.pk]
             schedule = assignment.schedule
-            _check_slot(assignment, starts_at, minutes, modality, as_staff=as_staff, now=now)
+            _check_slot(
+                assignment,
+                starts_at,
+                minutes,
+                modality,
+                as_staff=as_staff,
+                now=now,
+                skip_notice=from_waiting_list,
+            )
 
             group = None if is_placeholder else _lock_group(assignment, starts_at, ends_at)
             if group is not None:
@@ -297,6 +310,7 @@ def reschedule(
                 if not override_limits:
                     _check_limits(schedule, membership.user, starts_at, minutes, exclude=current)
 
+            freed = (current.assignment_id, current.starts_at, current.ends_at)
             current.assignment = target
             current.tutor = target.tutor
             current.starts_at = starts_at
@@ -320,6 +334,8 @@ def reschedule(
     except (IntegrityError, OperationalError) as exc:
         _raise_if_taken(exc)
         raise
+    if not current.is_placeholder:
+        _offer_freed_time(*freed)
     if notify and not current.is_placeholder:
         _notify_on_commit(notifications.CHANGED, current, request)
     return current
@@ -440,6 +456,8 @@ def cancel(
                     request=request,
                     now=now,
                 )
+    if whole and not current.is_placeholder:
+        _offer_freed_time(current.assignment_id, current.starts_at, current.ends_at)
     if notify and not current.is_placeholder:
         if late:
             _notify_on_commit(notifications.LATE_CANCELED, current, request, only=told, tutor=False)
@@ -507,6 +525,7 @@ def _check_slot(
     *,
     as_staff: bool,
     now: datetime,
+    skip_notice: bool = False,
 ) -> None:
     schedule = assignment.schedule
     if not schedule.accepts_bookings:
@@ -520,7 +539,7 @@ def _check_slot(
     ends_at = starts_at + timedelta(minutes=minutes)
     if not fits_availability(assignment, starts_at, ends_at):
         raise BookingError("outside_hours", _("The tutor isn't available at that time."))
-    if as_staff:
+    if as_staff or skip_notice:
         return
     if starts_at < now + timedelta(minutes=schedule.min_notice_minutes):
         raise BookingError("notice", _("That time is too soon to book online."))
@@ -825,6 +844,13 @@ def _audit(
         starts_at=appointment.starts_at.isoformat(),
         **details,
     )
+
+
+def _offer_freed_time(assignment_id: uuid.UUID, starts_at: datetime, ends_at: datetime) -> None:
+    """After the change commits, offer the time that just opened to the waiting list."""
+    from sympraxi.scheduling import waitlist
+
+    transaction.on_commit(lambda: waitlist.slot_opened(assignment_id, starts_at, ends_at))
 
 
 def _notify_on_commit(

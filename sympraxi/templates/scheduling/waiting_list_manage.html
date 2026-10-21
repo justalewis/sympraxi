@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Waiting list" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Waiting list" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Waiting list" %}</h1>
+  <p>{% translate "Students waiting for a time to open, oldest request first within each day. When an appointment is canceled, the first student it suits is offered the time and it is held for them." %}</p>
+  {% if entries %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Students on the waiting list" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Student" %}</th>
+          <th scope="col">{% translate "Schedule" %}</th>
+          <th scope="col">{% translate "Day" %}</th>
+          <th scope="col">{% translate "Window" %}</th>
+          <th scope="col">{% translate "Length" %}</th>
+          <th scope="col">{% translate "Tutor" %}</th>
+          <th scope="col">{% translate "Status" %}</th>
+          <th scope="col">{% translate "Action" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in entries %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Student' %}">{{ e.student.display_name }}</th>
+            <td data-label="{% translate 'Schedule' %}">{{ e.schedule.name }}</td>
+            <td data-label="{% translate 'Day' %}">{{ e.day|date:"D, M j" }}</td>
+            <td data-label="{% translate 'Window' %}">{{ e.earliest|time:"g:i A" }} {% translate "to" %} {{ e.latest|time:"g:i A" }}</td>
+            <td data-label="{% translate 'Length' %}">{{ e.minutes }} {% translate "min" %} · {{ e.get_modality_display }}</td>
+            <td data-label="{% translate 'Tutor' %}">{% if e.tutor %}{{ e.tutor.display_name }}{% else %}{% translate "Any" %}{% endif %}</td>
+            <td data-label="{% translate 'Status' %}">{{ e.get_status_display }}{% if e.status == "offered" %}, {% translate "until" %} {{ e.offer_expires_at|time:"g:i A" }}{% endif %}</td>
+            <td data-label="{% translate 'Action' %}">
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="entry" value="{{ e.pk }}">
+                <button class="usa-button usa-button--outline" type="submit">{% blocktranslate with name=e.student.display_name %}Remove {{ name }}{% endblocktranslate %}</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Nobody is on a waiting list." %}</p>
+  {% endif %}
+{% endblock content %}

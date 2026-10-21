@@ -236,6 +236,10 @@ Optional. To give online appointments their own video rooms, run a Jitsi Meet se
 
 Staff clock in and out on their time clock page. To limit that to the center's own network, a director opens Timesheets, then Time clock settings, and lists the center's public IP address or range, one per line (203.0.113.0/24). Sympraxi reads the visitor's address from the connection, or from the proxy when `SYMPRAXI_TRUST_X_FORWARDED_FOR=true`; turn that on only behind a proxy you control, or anyone can claim an address. Leave the list empty to allow clock-ins from anywhere. The same page holds each person's payroll ID and pay code, which appear on the timesheet download. At the end of a pay period, a director opens Approve hours, picks the days, and approves each person; that locks those entries.
 
+## Waiting list
+
+A director turns the waiting list on for a schedule in its settings, and chooses how many minutes an offered time is held. Students then see a link to it on their appointments page. It needs the scheduler (`manage.py scheduler`) running, because that is what ends a hold nobody answered and offers the time to the next student. Offer emails use `SYMPRAXI_BASE_URL` for their links.
+
 ## Check-in kiosk
 
 For a shared front desk screen, a front desk person or director signs in on the device, opens the center's page, and chooses Check-in kiosk. Students type their ID or swipe their card; most USB card readers act as a keyboard and need no setup. The waiting room page, in the same Front desk list, shows who has checked in. Student IDs must be on the students' accounts (the people import takes them from a student ID column). If the center has listed its networks under Time clock settings, the kiosk works only from them.

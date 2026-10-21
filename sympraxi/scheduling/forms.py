@@ -254,6 +254,8 @@ class ScheduleForm(forms.ModelForm):
             "reminder_1_minutes",
             "reminder_2_minutes",
             "reminder_3_minutes",
+            "waitlist_enabled",
+            "waitlist_hold_minutes",
             "late_cancel_minutes",
             "no_show_grace_minutes",
             "no_show_block_limit",
@@ -278,12 +280,16 @@ class ScheduleForm(forms.ModelForm):
                 *REMINDER_CHOICES,
             ]
         # Left empty, these take their defaults: no late window, 15 minutes' grace.
-        for name in ("late_cancel_minutes", "no_show_grace_minutes"):
+        for name in ("late_cancel_minutes", "no_show_grace_minutes", "waitlist_hold_minutes"):
             self.fields[name].required = False
 
     def clean_late_cancel_minutes(self) -> int:
         value = self.cleaned_data.get("late_cancel_minutes")
         return 0 if value is None else int(value)
+
+    def clean_waitlist_hold_minutes(self) -> int:
+        value = self.cleaned_data.get("waitlist_hold_minutes")
+        return 15 if value is None else int(value)
 
     def clean_no_show_grace_minutes(self) -> int:
         value = self.cleaned_data.get("no_show_grace_minutes")

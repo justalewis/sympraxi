@@ -91,6 +91,12 @@ ACTION_LABELS = {
     "staff.settings_changed": _("Changed time clock networks or payroll details"),
     "staff.arrival_recorded": _("A student checked in"),
     "staff.arrival_handled": _("Marked a waiting student as seen or gone"),
+    "scheduling.waitlist_joined": _("Joined a waiting list"),
+    "scheduling.waitlist_left": _("Left or was removed from a waiting list"),
+    "scheduling.waitlist_offered": _("Was offered a time from a waiting list"),
+    "scheduling.waitlist_accepted": _("Took a time offered from a waiting list"),
+    "scheduling.waitlist_declined": _("Turned down a time offered from a waiting list"),
+    "scheduling.waitlist_expired": _("Did not answer an offer in time, or the day passed"),
     "reports.questions_changed": _(
         "Chose which questions the reports read for class standing and course"
     ),

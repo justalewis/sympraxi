@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Waiting list" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Waiting list" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Waiting list" %}</h1>
+  <p>{% translate "Can't find a time? Say when you could come. If someone cancels a time that suits you, we email you and hold the time for a few minutes so you can take it." %}</p>
+
+  {% if entries %}
+    <h2>{% translate "Your requests" %}</h2>
+    <ul class="usa-list">
+      {% for e in entries %}
+        <li>
+          <strong>{{ e.day|date:"l, F j" }}</strong>, {{ e.earliest|time:"g:i A" }} {% translate "to" %} {{ e.latest|time:"g:i A" }} ·
+          {% blocktranslate with n=e.minutes name=e.schedule.name %}{{ n }} minutes on {{ name }}{% endblocktranslate %} ·
+          {{ e.get_modality_display }}{% if e.tutor %} · {{ e.tutor.display_name }}{% endif %} ·
+          <span class="usa-tag">{{ e.get_status_display }}</span>
+          {% if e.status == "offered" %}
+            <div class="usa-alert usa-alert--info usa-alert--slim" role="status">
+              <div class="usa-alert__body">
+                <p class="usa-alert__text">{% blocktranslate with when=e.hold.starts_at|date:"l, F j" time=e.hold.starts_at|time:"g:i A" tutor=e.hold.tutor.display_name until=e.offer_expires_at|time:"g:i A" %}A time opened: {{ when }} at {{ time }} with {{ tutor }}. It is held for you until {{ until }}.{% endblocktranslate %}</p>
+              </div>
+            </div>
+            <form method="post" class="sympraxi-inline-form">
+              {% csrf_token %}
+              <input type="hidden" name="entry" value="{{ e.pk }}">
+              <button class="usa-button" type="submit" name="action" value="accept">{% translate "Take this time" %}</button>
+              <button class="usa-button usa-button--outline" type="submit" name="action" value="decline">{% translate "No thanks" %}</button>
+            </form>
+          {% elif e.status == "waiting" %}
+            <form method="post" class="sympraxi-inline-form">
+              {% csrf_token %}
+              <input type="hidden" name="entry" value="{{ e.pk }}">
+              <button class="usa-button usa-button--outline" type="submit" name="action" value="leave">{% blocktranslate with day=e.day|date:"F j" %}Remove my request for {{ day }}{% endblocktranslate %}</button>
+            </form>
+          {% elif e.status == "booked" and e.appointment %}
+            <a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=e.appointment.pk %}">{% translate "See the appointment" %}</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if has_lists %}
+    <h2>{% translate "Ask for a time" %}</h2>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="join">
+      {% include "includes/form_fields.html" %}
+      <button class="usa-button" type="submit">{% translate "Join the waiting list" %}</button>
+    </form>
+  {% else %}
+    <p>{% translate "None of the center's schedules has a waiting list right now." %}</p>
+  {% endif %}
+{% endblock content %}

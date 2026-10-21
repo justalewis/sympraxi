@@ -37,7 +37,7 @@ from sympraxi.forms import surveys
 from sympraxi.records import linkcheck
 from sympraxi.records import reminders as record_reminders
 from sympraxi.reports import center_export
-from sympraxi.scheduling import attendance, reminders
+from sympraxi.scheduling import attendance, reminders, waitlist
 from sympraxi.staff import timeclock
 
 logger = logging.getLogger("sympraxi.scheduler")
@@ -55,6 +55,7 @@ class Sweep:
     assigned: int = 0
     overdue_alerts: int = 0
     link_checks: int = 0
+    waitlist: int = 0
 
 
 def _refresh_connections() -> None:
@@ -82,6 +83,7 @@ def sweep(*, base_url: str, now: datetime | None = None) -> Sweep:
             assigned=feedback_services.auto_assign(base_url=base_url, now=now),
             overdue_alerts=feedback_services.overdue_alerts(base_url=base_url, now=now),
             link_checks=linkcheck.enqueue_if_due(now),
+            waitlist=waitlist.sweep(now),
         )
     finally:
         _refresh_connections()
@@ -113,13 +115,14 @@ def run(*, base_url: str, stop: threading.Event, once: bool = False) -> None:
                     result.assigned,
                     result.overdue_alerts,
                     result.link_checks,
+                    result.waitlist,
                 )
             ):
                 logger.info(
                     "Queued %s reminder emails and %s surveys; flagged %s possible no-shows; "
                     "deleted %s expired exports; clocked out %s people at midnight; "
                     "sent %s record reminders; assigned %s submissions and sent %s overdue emails; "
-                    "started %s link checks",
+                    "started %s link checks; closed %s waiting-list offers or requests",
                     result.reminders,
                     result.surveys,
                     result.flagged,
@@ -129,6 +132,7 @@ def run(*, base_url: str, stop: threading.Event, once: bool = False) -> None:
                     result.assigned,
                     result.overdue_alerts,
                     result.link_checks,
+                    result.waitlist,
                 )
         if once:
             break

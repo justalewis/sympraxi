@@ -20,6 +20,8 @@
     </ul>
   {% endif %}
 
+  <p><a href="{% url 'scheduling:waiting_list' slug=center.slug %}">{% translate "Can't find a time? Join the waiting list" %}</a></p>
+
   <h2>{% translate "Coming up" %}</h2>
   {% if upcoming %}
     <ul class="usa-list">

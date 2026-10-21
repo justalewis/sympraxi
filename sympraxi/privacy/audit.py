@@ -112,6 +112,12 @@ class AuditAction(StrEnum):
     TIME_SETTINGS_CHANGED = "staff.settings_changed"
     ARRIVAL_RECORDED = "staff.arrival_recorded"
     ARRIVAL_HANDLED = "staff.arrival_handled"
+    WAITLIST_JOINED = "scheduling.waitlist_joined"
+    WAITLIST_LEFT = "scheduling.waitlist_left"
+    WAITLIST_OFFERED = "scheduling.waitlist_offered"
+    WAITLIST_ACCEPTED = "scheduling.waitlist_accepted"
+    WAITLIST_DECLINED = "scheduling.waitlist_declined"
+    WAITLIST_EXPIRED = "scheduling.waitlist_expired"
 
 
 def client_ip(request: HttpRequest) -> str | None:

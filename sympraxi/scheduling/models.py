@@ -267,6 +267,21 @@ class Schedule(models.Model):
     reminder_3_minutes = models.PositiveIntegerField(
         _("third reminder"), choices=REMINDER_CHOICES, null=True, blank=True
     )
+    # A waiting list for times that are full. When an appointment is canceled, the first
+    # student whose wishes fit is offered the time and it is held for them.
+    waitlist_enabled = models.BooleanField(
+        _("let students join a waiting list"),
+        default=False,
+        help_text=_(
+            "A student who can't find a time says when they could come. If a time opens up, "
+            "the first student on the list is offered it, one at a time."
+        ),
+    )
+    waitlist_hold_minutes = models.PositiveSmallIntegerField(
+        _("how long an offered time is held, in minutes"),
+        default=15,
+        validators=[MinValueValidator(5), MaxValueValidator(240)],
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -858,3 +873,80 @@ class Reminder(models.Model):
 
     def __str__(self) -> str:
         return f"{self.minutes_before} min before {self.appointment_id} to {self.recipient_id}"
+
+
+class WaitingStatus(models.TextChoices):
+    WAITING = "waiting", _("Waiting")
+    OFFERED = "offered", _("A time is held for you")
+    BOOKED = "booked", _("Booked")
+    DECLINED = "declined", _("Declined")
+    EXPIRED = "expired", _("Expired")
+    REMOVED = "removed", _("Removed")
+
+
+ACTIVE_WAITING = (WaitingStatus.WAITING, WaitingStatus.OFFERED)
+
+
+class WaitingEntry(models.Model):
+    """A student's wish for a time on a full schedule: a day, a window, a length.
+
+    When an appointment that fits the wish is canceled, the oldest entry that fits
+    is offered the time. The time is held as a placeholder appointment for the
+    schedule's hold length, so nobody else can book it; accepting turns the hold
+    into a real booking, and letting it lapse offers the time to the next student.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, related_name="waiting")
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="waiting_entries"
+    )
+    # Empty: any tutor on the schedule.
+    tutor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+    day = models.DateField(_("day"))
+    earliest = models.TimeField(_("no earlier than"))
+    latest = models.TimeField(_("finishing by"))
+    minutes = models.PositiveSmallIntegerField(_("length, in minutes"))
+    modality = models.CharField(_("how"), max_length=10, choices=Modality.choices)
+    joined_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=10, choices=WaitingStatus.choices, default=WaitingStatus.WAITING
+    )
+    offered_at = models.DateTimeField(null=True, blank=True)
+    offer_expires_at = models.DateTimeField(null=True, blank=True)
+    hold = models.ForeignKey(
+        Appointment, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+    appointment = models.ForeignKey(
+        Appointment, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+    closed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["joined_at"]
+        indexes = [
+            models.Index(fields=["schedule", "day", "status"], name="scheduling_wait_lookup"),
+            models.Index(fields=["status", "offer_expires_at"], name="scheduling_wait_expiry"),
+        ]
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(latest__gt=F("earliest")), name="scheduling_wait_window_in_order"
+            ),
+            models.CheckConstraint(
+                condition=Q(minutes__gte=5), name="scheduling_wait_length_positive"
+            ),
+            models.UniqueConstraint(
+                fields=["student", "schedule", "day"],
+                condition=Q(status__in=["waiting", "offered"]),
+                name="scheduling_wait_one_per_day",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.student} · {self.day} {self.earliest:%H:%M}-{self.latest:%H:%M}"
+
+    @property
+    def is_active(self) -> bool:
+        return self.status in ACTIVE_WAITING

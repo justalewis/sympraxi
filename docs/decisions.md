@@ -12,6 +12,16 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 4: the waiting list (October 2026)
+
+**What a student asks for.** A student on a schedule that has a waiting list turned on says which day they could come, the window within it, how long, how they would meet, and optionally which tutor. One request per student per day per schedule, and no more than five open at once. This is a wish, not a place in a queue for one particular full time, because a full time is never listed anywhere a student could pick it.
+
+**What happens when a time opens.** When an appointment is canceled or moved away, the oldest waiting student whose wish fits is considered first. Before offering, Sympraxi tries the student's booking and rolls it back, so a student who has hit a limit or a booking block is skipped without losing a hold on them. The time is then held as a placeholder appointment for the schedule's hold length (15 minutes unless the director changes it); the overlap rule in the database keeps everyone else out of it, and the student gets an email with a link. Accepting cancels the hold and books the student in one transaction under the usual rules, except that minimum notice and how far ahead one may book are waived, since the time just opened. Declining, leaving the list, or letting the hold run out offers the time to the next student. If the freed time was longer than the student needed, the rest goes to the next person on the list.
+
+**What the front desk sees.** A list of everyone waiting across the center's schedules, with each person's status and a Remove button.
+
+**Not done.** The list takes no account of a student's priority (a student with few visits does not go ahead of one with many). A student is not told how many are ahead of them. A hold lapses on the scheduler's once-a-minute sweep, so it can run a minute past its stated end, and if the scheduler is stopped nothing expires until it is back. Group appointments with a free seat do not trigger offers; only a whole appointment freed does.
+
 ## Phase 4: the check-in kiosk and waiting room (October 2026)
 
 **The kiosk.** A page for a shared screen, kept signed in by a front desk person or a director. A student types their ID, or swipes a card through a reader that types the number and presses Enter (a magnetic stripe's track data like `;123456789?` is read too), and the page says only their first name and whether they are checked in, then returns to the start after eight seconds. An unknown ID gets the same wording whether the ID doesn't exist, belongs to staff, or belongs to another center, so the kiosk can't be used to find out who is who. If a center has listed its networks for the time clock, the kiosk uses the same list and refuses check-ins from outside it.

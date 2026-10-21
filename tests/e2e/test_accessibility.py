@@ -87,6 +87,8 @@ PAGES = [
     ("student", "/centers/{slug}/schedules/{schedule}/?date={tomorrow}"),
     ("student", "/centers/{slug}/schedules/{schedule}/book/?{slot}"),
     ("student", "/centers/{slug}/appointments/"),
+    ("student", "/centers/{slug}/waiting-list/"),
+    ("front_desk", "/centers/{slug}/waiting-list/manage/"),
     ("student", "/centers/{slug}/appointments/{appointment}/"),
     ("student", "/centers/{slug}/appointments/{appointment}/cancel/"),
     ("student", "/centers/{slug}/appointments/{appointment}/change/?date={tomorrow}"),

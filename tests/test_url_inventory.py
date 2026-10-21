@@ -99,6 +99,8 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "scheduling:day_sheet": (Action.VIEW_ALL_APPOINTMENTS, "schedule"),
     "scheduling:my_appointments": (Action.BOOK_OWN, "center"),
     "scheduling:my_tutoring": (Action.VIEW_OWN_TUTORING, "center"),
+    "scheduling:waiting_list": (Action.BOOK_OWN, "center"),
+    "scheduling:waiting_list_manage": (Action.BOOK_FOR_OTHERS, "center"),
     "scheduling:appointment": (Action.VIEW_APPOINTMENT, "appointment"),
     "scheduling:appointment_ics": (Action.VIEW_APPOINTMENT, "appointment"),
     "scheduling:appointment_cancel": (Action.CANCEL_APPOINTMENT, "appointment"),

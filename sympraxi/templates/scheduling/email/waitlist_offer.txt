@@ -1,0 +1,12 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with name=recipient.display_name %}Hi {{ name }},{% endblocktranslate %}
+
+{% blocktranslate with day=hold.starts_at|date:"l, F j" time=hold.starts_at|time:"g:i A" tutor=hold.tutor.display_name center=center.name %}A time opened up at {{ center }}: {{ day }} at {{ time }} with {{ tutor }}.{% endblocktranslate %}
+
+{% blocktranslate with n=minutes %}We are holding it for you for {{ n }} minutes. To take it, open the link below and choose "Take this time". If you don't, we offer it to the next person.{% endblocktranslate %}
+
+{{ url }}
+
+{% translate "You asked for this on the waiting list. You can remove your request on the same page." %}
+
+{{ SITE_NAME }}
+{% endautoescape %}
