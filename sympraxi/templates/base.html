@@ -95,6 +95,14 @@
           {% endif %}
           <a href="{% url 'core:source' %}">{% translate "Get the source code" %}</a>
         </p>
+        <form class="sympraxi-language" action="{% url 'set_language' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          {% get_available_languages as LANGUAGES %}
+          {% for code, name in LANGUAGES %}
+            <button class="usa-button usa-button--unstyled" type="submit" name="language" value="{{ code }}" lang="{{ code }}"{% if code == LANGUAGE_CODE %} aria-current="true"{% endif %}>{{ name }}</button>
+          {% endfor %}
+        </form>
       </div>
     </div>
   </footer>

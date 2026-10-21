@@ -37,6 +37,8 @@ COPY manage.py LICENSE ./
 COPY sympraxi ./sympraxi
 # The topic vocabulary and resource catalog, loaded by `manage.py load_catalog`.
 COPY catalog ./catalog
+# Translations (compiled .mo files are committed; scripts/compile_messages.py makes them).
+COPY locale ./locale
 # The open-content pack (content-pack/cc-by; its noncommercial folder is in .dockerignore).
 COPY content-pack ./content-pack
 COPY --from=assets /build/sympraxi/static/vendor ./sympraxi/static/vendor

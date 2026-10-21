@@ -137,6 +137,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.csp.ContentSecurityPolicyMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -158,6 +159,7 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.request",
+                "django.template.context_processors.i18n",
                 "django.template.context_processors.csp",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
@@ -374,7 +376,12 @@ SECURE_CSP = {
 
 # --- Localization -----------------------------------------------------------
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
+# English and Spanish. A person picks one in the page footer (kept in a cookie); until
+# then the browser's language decides. Spanish covers sign-in, errors, booking,
+# appointments and account pages so far (locale/es, compiled with scripts/compile_messages.py).
+LANGUAGES = [("en", "English"), ("es", "Español")]
+LOCALE_PATHS = [BASE_DIR / "locale"]
 TIME_ZONE = env.str("SYMPRAXI_TIME_ZONE", default="UTC")
 USE_I18N = True
 USE_TZ = True

@@ -1,0 +1,283 @@
+# Spanish translation of Sympraxi: sign-in, errors, booking, appointments and account pages.
+# Compile with: python scripts/compile_messages.py
+msgid ""
+msgstr ""
+"Project-Id-Version: Sympraxi\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Skip to main content"
+msgstr "Saltar al contenido principal"
+
+msgid "Menu"
+msgstr "Menú"
+
+msgid "Close menu"
+msgstr "Cerrar el menú"
+
+msgid "My centers"
+msgstr "Mis centros"
+
+msgid "Account"
+msgstr "Cuenta"
+
+msgid "Site administration"
+msgstr "Administración del sitio"
+
+msgid "Sign out"
+msgstr "Cerrar sesión"
+
+msgid "Sign in"
+msgstr "Iniciar sesión"
+
+msgid "Create an account"
+msgstr "Crear una cuenta"
+
+msgid "Sympraxi is free software licensed under the GNU Affero General Public License."
+msgstr "Sympraxi es software libre con licencia GNU Affero General Public License."
+
+msgid "Get the source code"
+msgstr "Obtener el código fuente"
+
+msgid "Administrator sign-in"
+msgstr "Inicio de sesión de administradores"
+
+msgid "This page is for site administrators when single sign-on isn't working."
+msgstr "Esta página es para administradores del sitio cuando el inicio de sesión único no funciona."
+
+msgid "Use your college account."
+msgstr "Use su cuenta de la universidad."
+
+msgid "Sign in with your college account"
+msgstr "Iniciar sesión con su cuenta de la universidad"
+
+msgid "Or use your email and password"
+msgstr "O use su correo electrónico y su contraseña"
+
+msgid "Sign in with a passkey"
+msgstr "Iniciar sesión con una clave de acceso"
+
+msgid "Not part of your role"
+msgstr "No forma parte de su función"
+
+msgid "This page isn't part of your role"
+msgstr "Esta página no forma parte de su función"
+
+msgid "If you need it for your work, ask your center's director."
+msgstr "Si la necesita para su trabajo, pídasela a la dirección de su centro."
+
+msgid "Go to My centers"
+msgstr "Ir a Mis centros"
+
+msgid "Page not found"
+msgstr "Página no encontrada"
+
+msgid "There's no page here that you can open. The link may be out of date or mistyped."
+msgstr "Aquí no hay ninguna página que pueda abrir. Puede que el enlace esté desactualizado o mal escrito."
+
+msgid "Go to the home page"
+msgstr "Ir a la página de inicio"
+
+msgid "Too many tries"
+msgstr "Demasiados intentos"
+
+msgid "Too many tries in the last minute"
+msgstr "Demasiados intentos en el último minuto"
+
+msgid "Nothing you entered was saved. Wait a minute, then try again."
+msgstr "No se guardó nada de lo que escribió. Espere un minuto y vuelva a intentarlo."
+
+msgid "Try again"
+msgstr "Volver a intentarlo"
+
+msgid "Something went wrong"
+msgstr "Algo salió mal"
+
+msgid "Home"
+msgstr "Inicio"
+
+msgid "The site couldn't finish what you asked. If you were saving something, check whether it was saved before you try again."
+msgstr "El sitio no pudo terminar lo que pidió. Si estaba guardando algo, compruebe si se guardó antes de volver a intentarlo."
+
+msgid "If it keeps happening, tell your center's staff what you were doing and when."
+msgstr "Si sigue ocurriendo, cuéntele al personal de su centro qué estaba haciendo y cuándo."
+
+msgid "Book an appointment"
+msgstr "Reservar una cita"
+
+msgid "Book"
+msgstr "Reservar"
+
+msgid "Book this appointment?"
+msgstr "¿Reservar esta cita?"
+
+msgid "When"
+msgstr "Cuándo"
+
+msgid "to"
+msgstr "a"
+
+msgid "Tutor"
+msgstr "Tutor"
+
+msgid "Length"
+msgstr "Duración"
+
+msgid "Group"
+msgstr "Grupo"
+
+msgid "The center confirms bookings with this tutor. You'll get an email when it's confirmed."
+msgstr "El centro confirma las reservas con este tutor. Recibirá un correo cuando se confirme."
+
+msgid "Book it"
+msgstr "Reservarla"
+
+msgid "Choose another time"
+msgstr "Elegir otro horario"
+
+msgid "Your appointments"
+msgstr "Sus citas"
+
+msgid "See these in your own calendar app"
+msgstr "Ver estas citas en su propia aplicación de calendario"
+
+msgid "You get email reminders before your appointments."
+msgstr "Recibe recordatorios por correo antes de sus citas."
+
+msgid "Email reminders are off."
+msgstr "Los recordatorios por correo están desactivados."
+
+msgid "Change email reminders"
+msgstr "Cambiar los recordatorios por correo"
+
+msgid "Can't find a time? Join the waiting list"
+msgstr "¿No encuentra un horario? Únase a la lista de espera"
+
+msgid "Coming up"
+msgstr "Próximas"
+
+msgid "waiting for confirmation"
+msgstr "esperando confirmación"
+
+msgid "Nothing booked."
+msgstr "No hay nada reservado."
+
+msgid "Earlier and canceled"
+msgstr "Anteriores y canceladas"
+
+msgid "canceled late"
+msgstr "cancelada tarde"
+
+msgid "waived"
+msgstr "exenta"
+
+msgid "canceled"
+msgstr "cancelada"
+
+msgid "missed"
+msgstr "perdida"
+
+msgid "Confirm an appointment"
+msgstr "Confirmar una cita"
+
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgid "Confirm this appointment?"
+msgstr "¿Confirmar esta cita?"
+
+msgid "The student gets an email saying it's confirmed."
+msgstr "El estudiante recibe un correo que dice que está confirmada."
+
+msgid "Not now"
+msgstr "Ahora no"
+
+msgid "This appointment doesn't need confirming."
+msgstr "Esta cita no necesita confirmación."
+
+msgid "Cancel an appointment"
+msgstr "Cancelar una cita"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Cancel this appointment?"
+msgstr "¿Cancelar esta cita?"
+
+msgid "Leave this group appointment?"
+msgstr "¿Salir de esta cita de grupo?"
+
+msgid "Cancel your appointment?"
+msgstr "¿Cancelar su cita?"
+
+msgid "Everyone in it, and the tutor, will get an email."
+msgstr "Todas las personas de la cita, y el tutor, recibirán un correo."
+
+msgid "this term"
+msgstr "este periodo"
+
+msgid "Cancel the appointment"
+msgstr "Cancelar la cita"
+
+msgid "Leave the group"
+msgstr "Salir del grupo"
+
+msgid "Cancel my appointment"
+msgstr "Cancelar mi cita"
+
+msgid "Keep it"
+msgstr "Conservarla"
+
+msgid "This appointment is already canceled."
+msgstr "Esta cita ya está cancelada."
+
+msgid "Waiting list"
+msgstr "Lista de espera"
+
+msgid "Can't find a time? Say when you could come. If someone cancels a time that suits you, we email you and hold the time for a few minutes so you can take it."
+msgstr "¿No encuentra un horario? Díganos cuándo podría venir. Si alguien cancela un horario que le convenga, le enviamos un correo y se lo reservamos unos minutos para que pueda tomarlo."
+
+msgid "Your requests"
+msgstr "Sus solicitudes"
+
+msgid "Take this time"
+msgstr "Tomar este horario"
+
+msgid "No thanks"
+msgstr "No, gracias"
+
+msgid "See the appointment"
+msgstr "Ver la cita"
+
+msgid "Ask for a time"
+msgstr "Pedir un horario"
+
+msgid "Join the waiting list"
+msgstr "Unirse a la lista de espera"
+
+msgid "None of the center's schedules has a waiting list right now."
+msgstr "Ningún horario del centro tiene lista de espera por ahora."
+
+msgid "Name and pronouns"
+msgstr "Nombre y pronombres"
+
+msgid "Staff at your centers see these with your appointments and session notes."
+msgstr "El personal de sus centros los ve junto con sus citas y notas de sesión."
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Email reminders"
+msgstr "Recordatorios por correo"
+
+msgid "Each schedule decides when reminders go out, for example a day before and an hour before. Reminders never go out for a canceled appointment."
+msgstr "Cada horario decide cuándo se envían los recordatorios, por ejemplo un día antes y una hora antes. Nunca se envían recordatorios de una cita cancelada."
+
+msgid "A center may also send a short survey after a session you came to. Your answers are anonymous."
+msgstr "Un centro también puede enviar una breve encuesta después de una sesión a la que usted asistió. Sus respuestas son anónimas."
+
+msgid "Centers sometimes email all their students with news, such as new hours or a workshop. You can turn that off below."
+msgstr "A veces los centros envían a todos sus estudiantes noticias por correo, como nuevos horarios o un taller. Puede desactivarlo abajo."

@@ -24,6 +24,7 @@ EXEMPT_PREFIXES = (
     "/calendar/",
     "/visit/",
     "/lti/",
+    "/i18n/",
 )
 STRONG_FACTORS = (Authenticator.Type.TOTP, Authenticator.Type.WEBAUTHN)
 

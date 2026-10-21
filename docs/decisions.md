@@ -12,6 +12,12 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 5: Spanish (October 2026)
+
+**First translation, a subset.** Spanish covers the pages a student meets first: sign-in, error pages, booking, appointments, waiting list, account and email reminder settings (about ninety strings, in `locale/es`). The rest stays in English until it is translated; Django falls back string by string, so nothing breaks. A person chooses a language in the page footer (kept in a cookie), and until then the browser's language decides. Sentences with variables (`blocktranslate`) aren't translated yet.
+
+**No GNU gettext needed.** The files use only plain message pairs, so `scripts/compile_messages.py` writes the `.mo` files in pure Python, and a test fails if a committed `.mo` is out of date, if a translated message is no longer in any template, or if a translation drops a placeholder. The translations were written by Claude and have not been reviewed by a Spanish-speaking person; a fluent reviewer should read them before a college relies on them.
+
 ## Phase 5: launch from a learning management system (October 2026)
 
 **LTI 1.3 launch only.** A student or instructor clicks the writing center in their Canvas, Moodle or D2L course and arrives signed in. Sympraxi answers the platform's third-party login, then checks the signed `id_token` against the platform's published keys (RS256 only), plus the issuer, audience, deployment ID, expiry, message type and a one-time nonce. The nonce is stored and used up on arrival, so a captured launch can't be replayed. The state is signed instead of kept in the session, because the platform's post comes from another site and browsers don't send session cookies with it.
