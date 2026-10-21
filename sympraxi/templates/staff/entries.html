@@ -6,7 +6,11 @@
   {% include "scheduling/_breadcrumbs.html" with current=current %}
   <h1>{% translate "Timesheets" %}</h1>
   <p class="sympraxi-no-print">{% translate "Hours staff clocked, by person and by what they worked on. Each entry counts on the day it started." %}</p>
-  <p class="sympraxi-no-print"><a class="usa-button usa-button--outline" href="{% url 'staff:entry_add' slug=center.slug %}">{% translate "Add time for someone" %}</a></p>
+  <p class="sympraxi-no-print">
+    <a class="usa-button usa-button--outline" href="{% url 'staff:entry_add' slug=center.slug %}">{% translate "Add time for someone" %}</a>
+    <a class="usa-button usa-button--outline" href="{% url 'staff:approvals' slug=center.slug %}">{% translate "Approve hours" %}</a>
+    <a class="usa-button usa-button--outline" href="{% url 'staff:settings' slug=center.slug %}">{% translate "Time clock settings" %}</a>
+  </p>
 
   <h2>{% translate "Clocked in now" %}</h2>
   {% if clocked_in %}
@@ -28,6 +32,10 @@
     <form class="sympraxi-filters" method="get">
       {% include "includes/field.html" with field=form.first %}
       {% include "includes/field.html" with field=form.last %}
+      <div class="usa-checkbox">
+        <input class="usa-checkbox__input" id="approved-only" type="checkbox" name="approved" value="1"{% if approved_only %} checked{% endif %}>
+        <label class="usa-checkbox__label" for="approved-only">{% translate "Approved hours only" %}</label>
+      </div>
       <button class="usa-button" type="submit">{% translate "Show" %}</button>
     </form>
   </div>
@@ -65,7 +73,7 @@
             <tr>
               <th scope="row" data-label="{% translate 'Person' %}">{{ entry.person.display_name }}</th>
               <td data-label="{% translate 'Day' %}">{{ entry.started_at|date:"D, M j" }}</td>
-              <td data-label="{% translate 'Time' %}">{{ entry.started_at|time:"g:i A" }} {% translate "to" %} {% if entry.ended_at %}{{ entry.ended_at|time:"g:i A" }}{% else %}{% translate "still clocked in" %}{% endif %}{% if entry.closed_automatically %} <span class="usa-tag">{% translate "Clocked out at midnight" %}</span>{% elif entry.changed_by_id %} <span class="usa-tag">{% translate "Changed" %}</span>{% elif entry.added_by_id %} <span class="usa-tag">{% translate "Added" %}</span>{% endif %}</td>
+              <td data-label="{% translate 'Time' %}">{{ entry.started_at|time:"g:i A" }} {% translate "to" %} {% if entry.ended_at %}{{ entry.ended_at|time:"g:i A" }}{% else %}{% translate "still clocked in" %}{% endif %}{% if entry.closed_automatically %} <span class="usa-tag">{% translate "Clocked out at midnight" %}</span>{% elif entry.changed_by_id %} <span class="usa-tag">{% translate "Changed" %}</span>{% elif entry.added_by_id %} <span class="usa-tag">{% translate "Added" %}</span>{% endif %}{% if entry.is_approved %} <span class="usa-tag">{% translate "Approved" %}</span>{% endif %}</td>
               <td data-label="{% translate 'Hours' %}">{{ entry.hours|default_if_none:"" }}</td>
               <td data-label="{% translate 'What for' %}">{{ entry.get_category_display }}</td>
               <td data-label="{% translate 'Note' %}">{{ entry.note }}</td>

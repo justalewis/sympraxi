@@ -220,6 +220,8 @@ PAGES = [
     ("tutor", "/centers/{slug}/time-clock/"),
     ("front_desk", "/centers/{slug}/time-clock/"),
     ("director", "/centers/{slug}/time-clock/entries/"),
+    ("director", "/centers/{slug}/time-clock/approvals/"),
+    ("director", "/centers/{slug}/time-clock/settings/"),
     ("director", "/centers/{slug}/time-clock/entries/new/"),
     ("director", "/centers/{slug}/time-clock/entries/{time_entry}/"),
     # News. Every world has a current announcement, so the student's center and

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Time clock settings" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Time clock settings" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Time clock settings" %}</h1>
+
+  <h2>{% translate "Where staff may clock in" %}</h2>
+  <p>{% blocktranslate with address=your_address %}You are connecting from {{ address }}. Add the center's network below, then staff can clock in and out only from it. Directors can clock in from anywhere, and can still add time for anyone.{% endblocktranslate %}</p>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" with form=networks %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit" name="save" value="networks">{% translate "Save the networks" %}</button>
+    </div>
+  </form>
+
+  <h2>{% translate "Payroll details" %}</h2>
+  <p>{% translate "The payroll office can match hours to pay with a payroll ID and a pay code. Both appear on the timesheet download." %}</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Payroll ID and pay code for each person on staff" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Person" %}</th>
+          <th scope="col">{% translate "Payroll ID" %}</th>
+          <th scope="col">{% translate "Pay code" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for person, id_field, code_field in payroll.rows %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Person' %}">{{ person.display_name }}</th>
+            <td data-label="{% translate 'Payroll ID' %}"><label class="usa-sr-only" for="{{ id_field.id_for_label }}">{{ id_field.label }}</label>{{ id_field }}</td>
+            <td data-label="{% translate 'Pay code' %}"><label class="usa-sr-only" for="{{ code_field.id_for_label }}">{{ code_field.label }}</label>{{ code_field }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button class="usa-button" type="submit" name="save" value="payroll">{% translate "Save the payroll details" %}</button>
+  </form>
+{% endblock content %}

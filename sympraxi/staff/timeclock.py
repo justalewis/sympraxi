@@ -13,6 +13,7 @@ their time clock page and asks a director to fix the time.
 Timesheets count each entry on the day it started.
 """
 
+import ipaddress
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta
@@ -27,10 +28,10 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from sympraxi.accounts.models import User
-from sympraxi.centers.models import Center
-from sympraxi.privacy.audit import AuditAction, record
+from sympraxi.centers.models import Center, Membership, Role
+from sympraxi.privacy.audit import AuditAction, client_ip, record
 from sympraxi.scheduling.timeutils import date_range_bounds, first_instant, local_date
-from sympraxi.staff.models import Category, TimeEntry, to_hours
+from sympraxi.staff.models import Category, TimeEntry, TimesheetApproval, to_hours
 
 
 class TimeClockError(Exception):
@@ -51,6 +52,157 @@ def _overlap_message() -> str:
     return _("That overlaps another entry for the same person. Check their times and try again.")
 
 
+# --- Where staff may clock in ---------------------------------------------------------
+
+
+def parse_networks(text: str) -> list[ipaddress.IPv4Network | ipaddress.IPv6Network]:
+    """The networks in a center's list, one per line. Raises ValueError naming a bad line."""
+    found: list[ipaddress.IPv4Network | ipaddress.IPv6Network] = []
+    for line in text.splitlines():
+        line = line.split("#", 1)[0].strip()
+        if not line:
+            continue
+        try:
+            found.append(ipaddress.ip_network(line, strict=False))
+        except ValueError as error:
+            raise ValueError(line) from error
+    return found
+
+
+def _may_clock_from_anywhere(center: Center, person: User) -> bool:
+    return (
+        person.is_superuser
+        or Membership.objects.filter(
+            user=person, center=center, role=Role.DIRECTOR, is_active=True
+        ).exists()
+    )
+
+
+def require_network(center: Center, person: User, request: HttpRequest) -> None:
+    """Refuse a clock-in or clock-out from outside the center's networks, if it sets any."""
+    if not center.clock_networks.strip() or _may_clock_from_anywhere(center, person):
+        return
+    address = client_ip(request)
+    try:
+        networks = parse_networks(center.clock_networks)
+        inside = address is not None and any(
+            ipaddress.ip_address(address) in network for network in networks
+        )
+    except ValueError:
+        inside = False
+    if not inside:
+        record(AuditAction.TIME_CLOCK_REFUSED, request=request, center=center)
+        raise TimeClockError(
+            _(
+                "You can only clock in or out from the center's network. If you are at the "
+                "center, ask a director to add your time."
+            )
+        )
+
+
+# --- Approved hours -----------------------------------------------------------------------
+
+
+def _day_of(center: Center, instant: datetime) -> date:
+    return local_date(instant, ZoneInfo(center.time_zone))
+
+
+def approval_covering(center: Center, person: Any, day: date) -> TimesheetApproval | None:
+    return TimesheetApproval.objects.filter(
+        center=center,
+        person=person,
+        withdrawn_at__isnull=True,
+        first_day__lte=day,
+        last_day__gte=day,
+    ).first()
+
+
+def require_unlocked(center: Center, person: Any, *instants: datetime | None) -> None:
+    """Refuse a change to hours that a director has already approved."""
+    for instant in instants:
+        if instant is None:
+            continue
+        approval = approval_covering(center, person, _day_of(center, instant))
+        if approval is not None:
+            raise TimeClockError(
+                _(
+                    "Hours from %(first)s to %(last)s are approved, so this can't change. "
+                    "Withdraw the approval first."
+                )
+                % {"first": approval.first_day.isoformat(), "last": approval.last_day.isoformat()}
+            )
+
+
+def approve_period(
+    center: Center, person: User, first: date, last: date, *, request: HttpRequest
+) -> TimesheetApproval:
+    """Sign off on a person's hours for these local days."""
+    if last < first:
+        raise TimeClockError(_("The last day can't be before the first day."))
+    if last >= _day_of(center, timezone.now()):
+        raise TimeClockError(_("Hours can be approved once the last day has passed."))
+    entries = list(entries_started_between(center, first, last).filter(person=person))
+    name = person.display_name
+    if any(e.ended_at is None for e in entries):
+        raise TimeClockError(
+            _("%(name)s is still clocked in. Close that entry first.") % {"name": name}
+        )
+    if any(e.closed_automatically for e in entries):
+        raise TimeClockError(
+            _("%(name)s has an entry that was clocked out at midnight. Check its time first.")
+            % {"name": name}
+        )
+    hours = sum(
+        (to_hours(e.ended_at - e.started_at) for e in entries if e.ended_at), Decimal("0.00")
+    )
+    try:
+        with transaction.atomic():
+            approval = TimesheetApproval.objects.create(
+                center=center,
+                person=person,
+                first_day=first,
+                last_day=last,
+                hours=hours,
+                approved_by=cast(User, request.user),
+            )
+            record(
+                AuditAction.TIME_APPROVED,
+                request=request,
+                center=center,
+                target=approval,
+                person=str(person.pk),
+                first=first.isoformat(),
+                last=last.isoformat(),
+                hours=str(hours),
+            )
+    except IntegrityError as error:
+        raise TimeClockError(
+            _("%(name)s already has approved hours that overlap these days.") % {"name": name}
+        ) from error
+    return approval
+
+
+def withdraw_approval(approval: TimesheetApproval, *, reason: str, request: HttpRequest) -> None:
+    with transaction.atomic():
+        locked = TimesheetApproval.objects.select_for_update().get(pk=approval.pk)
+        if locked.withdrawn_at is not None:
+            return
+        locked.withdrawn_at = timezone.now()
+        locked.withdrawn_by = cast(User, request.user)
+        locked.withdrawn_reason = reason
+        locked.save(update_fields=["withdrawn_at", "withdrawn_by", "withdrawn_reason"])
+        record(
+            AuditAction.TIME_APPROVAL_WITHDRAWN,
+            request=request,
+            center=locked.center,
+            target=locked,
+            person=str(locked.person_id),
+            first=locked.first_day.isoformat(),
+            last=locked.last_day.isoformat(),
+            reason=reason,
+        )
+
+
 def open_entry(center: Center, person: Any) -> TimeEntry | None:
     return TimeEntry.objects.filter(
         center=center, person=person, ended_at__isnull=True, removed_at__isnull=True
@@ -67,6 +219,8 @@ def clock_in(
     now: datetime | None = None,
 ) -> TimeEntry:
     now = (now or timezone.now()).replace(microsecond=0)
+    require_network(center, person, request)
+    require_unlocked(center, person, now)
     try:
         with transaction.atomic():
             entry = TimeEntry.objects.create(
@@ -96,6 +250,7 @@ def clock_out(
     center: Center, person: User, *, request: HttpRequest, now: datetime | None = None
 ) -> TimeEntry:
     now = (now or timezone.now()).replace(microsecond=0)
+    require_network(center, person, request)
     with transaction.atomic():
         entry = (
             TimeEntry.objects.select_for_update()
@@ -128,6 +283,7 @@ def add_entry(
     reason: str,
     request: HttpRequest,
 ) -> TimeEntry:
+    require_unlocked(center, person, started_at, ended_at)
     try:
         with transaction.atomic():
             entry = TimeEntry.objects.create(
@@ -163,6 +319,7 @@ def change_entry(
     reason: str,
     request: HttpRequest,
 ) -> TimeEntry:
+    require_unlocked(entry.center, entry.person_id, entry.started_at, started_at, ended_at)
     try:
         with transaction.atomic():
             locked = TimeEntry.objects.select_for_update().get(pk=entry.pk)
@@ -192,6 +349,7 @@ def change_entry(
 
 
 def remove_entry(entry: TimeEntry, *, reason: str, request: HttpRequest) -> None:
+    require_unlocked(entry.center, entry.person_id, entry.started_at)
     with transaction.atomic():
         locked = TimeEntry.objects.select_for_update().get(pk=entry.pk)
         if locked.removed_at is not None:

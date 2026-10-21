@@ -17,9 +17,9 @@ from decimal import ROUND_HALF_UP, Decimal
 
 from django.conf import settings
 from django.contrib.postgres.constraints import ExclusionConstraint
-from django.contrib.postgres.fields import RangeBoundary, RangeOperators
+from django.contrib.postgres.fields import DateRangeField, RangeBoundary, RangeOperators
 from django.db import models
-from django.db.models import F, Q
+from django.db.models import F, Func, Q
 from django.utils.translation import gettext_lazy as _
 
 from sympraxi.centers.models import Center
@@ -105,3 +105,91 @@ class TimeEntry(models.Model):
         if self.ended_at is None:
             return None
         return to_hours(self.ended_at - self.started_at)
+
+
+class DateRange(Func):
+    """The inclusive range of days an approval covers, for the database to compare."""
+
+    function = "DATERANGE"
+    output_field = DateRangeField()
+
+
+class PayrollDetail(models.Model):
+    """What the payroll office needs to match a person's hours to their pay."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    center = models.ForeignKey(Center, on_delete=models.CASCADE, related_name="payroll_details")
+    person = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="payroll_details"
+    )
+    payroll_id = models.CharField(_("payroll ID"), max_length=40, blank=True)
+    pay_code = models.CharField(_("pay code"), max_length=40, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["center", "person"], name="staff_payrolldetail_one_per_person"
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.person} · {self.payroll_id}"
+
+
+class TimesheetApproval(models.Model):
+    """A director's sign-off on one person's hours for a stretch of days.
+
+    While it stands, the person's entries that started in those days can't be
+    added, changed or removed. Withdrawing it, with a reason, unlocks them; the
+    row stays so the history is whole.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    center = models.ForeignKey(Center, on_delete=models.PROTECT, related_name="approvals")
+    person = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="timesheet_approvals"
+    )
+    first_day = models.DateField(_("first day"))
+    last_day = models.DateField(_("last day"))
+    hours = models.DecimalField(_("hours approved"), max_digits=7, decimal_places=2)
+    approved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="+"
+    )
+    approved_at = models.DateTimeField(auto_now_add=True)
+    withdrawn_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+    withdrawn_at = models.DateTimeField(null=True, blank=True)
+    withdrawn_reason = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        ordering = ["-first_day", "person__full_name"]
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(last_day__gte=F("first_day")), name="staff_approval_days_in_order"
+            ),
+            models.CheckConstraint(
+                condition=Q(withdrawn_at__isnull=True) | ~Q(withdrawn_reason=""),
+                name="staff_approval_withdrawal_has_reason",
+            ),
+            # Needs btree_gist (scheduling migration 0001) for "=".
+            ExclusionConstraint(
+                name="staff_approval_no_overlap",
+                expressions=[
+                    ("center", RangeOperators.EQUAL),
+                    ("person", RangeOperators.EQUAL),
+                    (
+                        DateRange("first_day", "last_day", RangeBoundary(inclusive_upper=True)),
+                        RangeOperators.OVERLAPS,
+                    ),
+                ],
+                condition=Q(withdrawn_at__isnull=True),
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.person} · {self.first_day} to {self.last_day}"
+
+    @property
+    def is_active(self) -> bool:
+        return self.withdrawn_at is None

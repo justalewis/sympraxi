@@ -11,7 +11,8 @@ from sympraxi.accounts.models import User
 from sympraxi.centers.models import STAFF_ROLES, Center
 from sympraxi.scheduling.forms import DateInput, TimeInput
 from sympraxi.scheduling.timeutils import first_instant
-from sympraxi.staff.models import Category, TimeEntry
+from sympraxi.staff import timeclock
+from sympraxi.staff.models import Category, PayrollDetail, TimeEntry
 
 # The longest a single entry may be, so a typo in a time can't add a day of pay.
 LONGEST = timedelta(hours=16)
@@ -155,3 +156,71 @@ class TimesheetForm(forms.Form):
         if data.get("first") and data.get("last"):
             return data["first"], data["last"]
         return self.today - timedelta(days=DEFAULT_DAYS - 1), self.today
+
+
+class NetworksForm(forms.Form):
+    clock_networks = forms.CharField(
+        label=gettext_lazy("Networks staff may clock in from"),
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 4}),
+        help_text=gettext_lazy(
+            "One IP address or range per line, like 203.0.113.0/24. Leave empty to let staff "
+            "clock in from anywhere. Directors can always clock in."
+        ),
+    )
+
+    def clean_clock_networks(self) -> str:
+        text = self.cleaned_data["clock_networks"]
+        try:
+            timeclock.parse_networks(text)
+        except ValueError as bad:
+            raise forms.ValidationError(
+                _("%(line)s isn't an IP address or a range like 203.0.113.0/24.")
+                % {"line": bad.args[0]}
+            ) from bad
+        return "\n".join(line.strip() for line in text.splitlines() if line.strip())
+
+
+class PayrollForm(forms.Form):
+    """A payroll ID and pay code for each person on staff, as paired fields."""
+
+    def __init__(self, *args: Any, center: Center, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.people = staff_of(center)
+        details = {d.person_id: d for d in PayrollDetail.objects.filter(center=center)}
+        for person in self.people:
+            detail = details.get(person.pk)
+            self.fields[f"id_{person.pk}"] = forms.CharField(
+                label=_("Payroll ID for %(name)s") % {"name": person.display_name},
+                max_length=40,
+                required=False,
+                initial=detail.payroll_id if detail else "",
+            )
+            self.fields[f"code_{person.pk}"] = forms.CharField(
+                label=_("Pay code for %(name)s") % {"name": person.display_name},
+                max_length=40,
+                required=False,
+                initial=detail.pay_code if detail else "",
+            )
+
+    def rows(self) -> list[tuple[User, Any, Any]]:
+        return [(p, self[f"id_{p.pk}"], self[f"code_{p.pk}"]) for p in self.people]
+
+
+class ApprovalForm(forms.Form):
+    """Which person's hours, for the days on the page."""
+
+    person = forms.UUIDField()
+    first = forms.DateField()
+    last = forms.DateField()
+
+
+class WithdrawForm(forms.Form):
+    approval = forms.UUIDField()
+    first = forms.DateField(required=False)
+    last = forms.DateField(required=False)
+    reason = forms.CharField(
+        label=gettext_lazy("Why you're withdrawing it"),
+        max_length=300,
+        help_text=gettext_lazy("Kept in the audit log."),
+    )

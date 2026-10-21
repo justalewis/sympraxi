@@ -2,6 +2,16 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 4: the finished time clock (October 2026)
+
+**Networks.** A center can list the networks staff may clock in and out from (one address or range per line, IPv4 or IPv6). Staff outside them are refused with a message that points them to a director, and the refusal is logged. Directors and site administrators are exempt, and a director can still add time for anyone from anywhere, so the rule stops a tutor clocking in from home, not a director fixing a missed shift. It trusts the address Sympraxi sees, which is the proxy's last forwarded address when the host has said it trusts one (`SYMPRAXI_TRUST_X_FORWARDED_FOR`); a host that gets that wrong will see everyone as outside or inside together.
+
+**Approval and locking.** A director approves one person's hours for a run of past days. Approval needs the last day to have passed, no open entry, and no entry that was closed at midnight and not yet checked. While it stands, entries that started on those days can't be added, changed or removed, by anyone, until the approval is withdrawn with a reason. Approvals can't overlap (the database enforces it), and a withdrawn approval stays in the table, so a payroll question months later can be answered.
+
+**What payroll gets.** The timesheet download now has a payroll ID and pay code per person (entered on the time clock settings page) and an Approved column (Yes, Partly, No) on both tables, and it can be limited to approved hours. Nothing is sent to a payroll system; the file is the handoff.
+
+**Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
+
 ## Phase 3: history import (October 2026)
 
 **What it is for.** A center moving from WCONLINE keeps its past: how often each student came, who no-showed, how many sessions a tutor ran. Without an import the new system starts empty and the no-show rules and visit counts start from zero. It is not required to run Sympraxi; a new center, or one willing to start fresh, never needs it.

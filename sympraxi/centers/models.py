@@ -127,6 +127,16 @@ class Center(models.Model):
         default=60,
         help_text=_("Used only when the survey goes out a set time after the appointment."),
     )
+    # Staff clock in and out only from these networks, one address or range
+    # (203.0.113.0/24) per line. Empty: from anywhere. Directors are exempt.
+    clock_networks = models.TextField(
+        _("networks staff may clock in from"),
+        blank=True,
+        help_text=_(
+            "One IP address or range per line, like 203.0.113.0/24. Leave empty to let staff "
+            "clock in from anywhere. Directors can always clock in."
+        ),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Approve hours" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Approve hours" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Approve hours" %}</h1>
+  <p>{% translate "Approving a person's hours for a pay period locks their entries for those days, so what payroll receives can't change underneath it. Withdraw an approval, with a reason, to change the hours." %}</p>
+
+  <form class="sympraxi-filters" method="get">
+    {% include "includes/field.html" with field=form.first %}
+    {% include "includes/field.html" with field=form.last %}
+    <button class="usa-button" type="submit">{% translate "Show" %}</button>
+  </form>
+  <p class="sympraxi-report-period"><strong>{% blocktranslate with first=first|date:"F j, Y" last=last|date:"F j, Y" %}{{ first }} to {{ last }}{% endblocktranslate %}</strong></p>
+
+  {% if people %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Hours by person and whether they are approved" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Person" %}</th>
+          <th scope="col">{% translate "Hours" %}</th>
+          <th scope="col">{% translate "Entries" %}</th>
+          <th scope="col">{% translate "Status" %}</th>
+          <th scope="col">{% translate "Action" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in people %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Person' %}">{{ row.person.display_name }}</th>
+            <td data-label="{% translate 'Hours' %}">{{ row.hours }}</td>
+            <td data-label="{% translate 'Entries' %}">{{ row.entries }}</td>
+            <td data-label="{% translate 'Status' %}">
+              {% if row.approval %}
+                <span class="usa-tag">{% translate "Approved" %}</span>
+                {% blocktranslate with name=row.approval.approved_by.display_name|default:"a director" day=row.approval.approved_at|date:"M j, Y" first=row.approval.first_day|date:"M j" last=row.approval.last_day|date:"M j" %}{{ first }} to {{ last }}, by {{ name }} on {{ day }}{% endblocktranslate %}
+              {% elif row.open %}
+                {% translate "Still clocked in" %}
+              {% else %}
+                {% translate "Not approved" %}
+              {% endif %}
+            </td>
+            <td data-label="{% translate 'Action' %}">
+              {% if row.approval %}
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="withdraw">
+                  <input type="hidden" name="w-approval" value="{{ row.approval.pk }}">
+                  <input type="hidden" name="w-first" value="{{ first|date:'Y-m-d' }}">
+                  <input type="hidden" name="w-last" value="{{ last|date:'Y-m-d' }}">
+                  <label class="usa-label" for="reason-{{ row.approval.pk }}">{% blocktranslate with name=row.person.display_name %}Why you're withdrawing {{ name }}'s approval{% endblocktranslate %}</label>
+                  <input class="usa-input" id="reason-{{ row.approval.pk }}" name="w-reason" maxlength="300" required>
+                  <button class="usa-button usa-button--outline" type="submit">{% translate "Withdraw approval" %}</button>
+                </form>
+              {% elif not row.open %}
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="approve">
+                  <input type="hidden" name="person" value="{{ row.person.pk }}">
+                  <input type="hidden" name="first" value="{{ first|date:'Y-m-d' }}">
+                  <input type="hidden" name="last" value="{{ last|date:'Y-m-d' }}">
+                  <button class="usa-button" type="submit">{% blocktranslate with name=row.person.display_name %}Approve {{ name }}'s hours{% endblocktranslate %}</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "No time was clocked in this period." %}</p>
+  {% endif %}
+  <p><a href="{% url 'staff:entries' slug=center.slug %}?first={{ first|date:'Y-m-d' }}&amp;last={{ last|date:'Y-m-d' }}&amp;approved=1">{% translate "See the timesheet with approved hours only" %}</a></p>
+{% endblock content %}

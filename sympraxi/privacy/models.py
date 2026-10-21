@@ -85,6 +85,10 @@ ACTION_LABELS = {
     "reports.research_settings_changed": _("Recorded the IRB protocol for research exports"),
     "reports.research_exported": _("Downloaded a de-identified research export"),
     "scheduling.history_imported": _("Imported past appointments from a file"),
+    "staff.clock_refused": _("Was refused a clock-in from outside the center's network"),
+    "staff.hours_approved": _("Approved a person's hours for a pay period"),
+    "staff.approval_withdrawn": _("Withdrew approved hours"),
+    "staff.settings_changed": _("Changed time clock networks or payroll details"),
     "reports.questions_changed": _(
         "Chose which questions the reports read for class standing and course"
     ),

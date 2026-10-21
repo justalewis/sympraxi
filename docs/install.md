@@ -232,6 +232,10 @@ Nothing to set up on the server except that the `scheduler` service must be runn
 
 Optional. To give online appointments their own video rooms, run a Jitsi Meet server and put its address and shared secret in `deploy/.env` (`SYMPRAXI_JITSI_DOMAIN`, `SYMPRAXI_JITSI_APP_ID`, `SYMPRAXI_JITSI_APP_SECRET`). Then each center's director turns video on under **Video rooms for online appointments**. Setting Jitsi up, including getting video through a campus firewall, is in [Video rooms with Jitsi](jitsi.md).
 
+## Time clock
+
+Staff clock in and out on their time clock page. To limit that to the center's own network, a director opens Timesheets, then Time clock settings, and lists the center's public IP address or range, one per line (203.0.113.0/24). Sympraxi reads the visitor's address from the connection, or from the proxy when `SYMPRAXI_TRUST_X_FORWARDED_FOR=true`; turn that on only behind a proxy you control, or anyone can claim an address. Leave the list empty to allow clock-ins from anywhere. The same page holds each person's payroll ID and pay code, which appear on the timesheet download. At the end of a pay period, a director opens Approve hours, picks the days, and approves each person; that locks those entries.
+
 ## Importing history
 
 A center switching from another system (WCONLINE or any other) can bring its past appointments in from a CSV so visit totals and no-show counts carry over. Add the center's tutors and students first (the people import), then save the old system's appointment list with these columns, one past appointment per row:

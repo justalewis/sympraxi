@@ -316,14 +316,14 @@ def test_the_timesheet_totals_hours_by_person_and_category(client, center, tutor
     )
     report, _entries = timesheet(center, day, today(center))
     totals = {row[0]: row for row in report.tables[0].rows}
-    tutoring, training, *_others, total, count = totals["Toni Tutor"][2:]
+    tutoring, training, *_others, total, count, _approved = totals["Toni Tutor"][4:]
     assert (tutoring, training, total, count) == (
         Decimal("2.00"),
         Decimal("0.75"),
         Decimal("2.75"),
         2,
     )
-    assert totals["Dana Director"][-2:] == [Decimal("1.00"), 2]  # the open entry adds no hours
+    assert totals["Dana Director"][-3:-1] == [Decimal("1.00"), 2]  # the open entry adds no hours
     client.force_login(director)
     page = client.get(entries_url(center)).content.decode()
     assert "Clocked in now" in page and "Dana Director" in page

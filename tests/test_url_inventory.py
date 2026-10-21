@@ -187,6 +187,8 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     # Time clock
     "staff:clock": (Action.CLOCK_OWN, "center"),
     "staff:entries": (Action.MANAGE_TIME, "center"),
+    "staff:approvals": (Action.MANAGE_TIME, "center"),
+    "staff:settings": (Action.MANAGE_TIME, "center"),
     "staff:entry_add": (Action.MANAGE_TIME, "center"),
     "staff:entry_edit": (Action.MANAGE_TIME, "time_entry"),
     # News
