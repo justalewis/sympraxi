@@ -1,0 +1,60 @@
+id: osx26-h10-mechanics
+title: 'Handbook H10: Mechanics'
+source_url: https://openstax.org/details/books/writing-guide
+summary: Handbook guidance on capitalization, abbreviations, numbers and italics.
+topics:
+  concern:
+  - grammar
+changes: Taken from pages 730–731 of the book's 2026 PDF and converted to plain HTML by machine. Figures,
+  images and page headers are left out, and headings, tables, examples and lists may be flattened or run
+  together; wording is otherwise unchanged. The book at openstax.org is the authoritative form.
+body: '<p><em>Access for free at openstax.org.</em></p>
+
+  <p>Mechanics</p>
+
+  <h3>Capital Letters</h3>
+
+  <p>Use capital letters in the following situations. • Capitalize the first word of a sentence: The weather
+  is rainy today. • Capitalize proper nouns and proper adjectives: Monday, New Orleans, Mexico, Florida,
+  Halloween, United States Constitution, Department of Education, University of Texas, Native American,
+  Islam, Italian, Freudian. • Capitalize titles that precede a person’s name: Dr. Atul Gawande, Senator
+  Tammy Baldwin. [But: Atul Gawande, a doctor; Tammy Baldwin, a senator]</p>
+
+  <p>Many online resources, such as this one (https://openstax.org/r/this-one), list words that should
+  be capitalized. You can also consult a dictionary, such as Merriam-Webster (https://openstax.org/r/Merriam-Webster),
+  to determine whether to capitalize a word.</p>
+
+  <h3>Titles of Works</h3>
+
+  <p>Titles of books, articles, stories, plays, poems, films, and other works are handled differently
+  depending on the documentation style you are using. The guidelines here follow MLA style.</p>
+
+  <h3>Capitalization in Titles and Subtitles</h3>
+
+  <p>Capitalize the first and last words in a title and subtitle and other important words. Do not capitalize
+  articles (a, an, the), coordinating conjunctions (for, and, nor, but, or, yet, or so), or prepositions
+  (above, with, of, in, through, beyond, under) unless they are the first or last words in the title or
+  subtitle.</p>
+
+  <p>Forcing the Spring: Inside the Fight for Marriage Equality (book) Judas and the Black Messiah (film)
+  “American Military Performance in Vietnam: Background and Analysis” (article)</p>
+
+  <h3>Italics for Titles of Long Works</h3>
+
+  <p>Use italics for long works that are published, produced, or released separately from other works.
+  These include books, long poems, plays, movies, videos, published speeches, periodicals (newspapers,
+  magazines, and academic and professional journals), websites, long musical works, works of visual art,
+  computer software, TV or radio programs and series, and pamphlets.</p>
+
+  <p>Four Fish: The Future of the Last Wild Food (book) The New Yorker (periodical) The Los Angeles Times
+  (newspaper) American Idiot (album) Parasite (film) Saturday Night Live (TV program)</p>
+
+  <h3>Quotation Marks for Titles of Shorter Works</h3>
+
+  <p>Put quotation marks around the titles and subtitles of individual shorter works or those that are
+  published or released within larger works. These include articles in periodicals (newspapers, magazines,
+  and academic and professional journals), pages or works on a website, short stories, short poems, essays,
+  songs, episodes of TV or radio programs and series, book chapters, and unpublished speeches.</p>
+
+  <p>“Living with a Visionary” (article in a magazine) “A World of Fields and Fences” (work on a website)
+  “New York Day Women” (short story) “Corson’s Inlet” (short poem) “Return from ISIS” (TV episode)</p>'

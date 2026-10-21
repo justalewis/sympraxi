@@ -231,12 +231,15 @@ def test_a_missing_pack_folder_loads_nothing(tmp_path) -> None:
 def test_the_repositorys_own_pack_loads_cleanly() -> None:
     """Whatever is checked in under content-pack/ must pass the loader's rules."""
     call_command("load_catalog", stdout=StringIO())
-    report = contentpack.load()
+    report = contentpack.load(include_noncommercial=True)
     assert report.created >= 1
     for content in ContentItem.objects.all():
-        assert content.tier == ContentTier.CC_BY
-        assert content.license in contentpack.CC_BY
+        allowed = (
+            contentpack.CC_BY if content.tier == ContentTier.CC_BY else contentpack.NONCOMMERCIAL
+        )
+        assert content.license in allowed
         assert content.resource.topics.exists()
+    assert ContentItem.objects.filter(tier=ContentTier.CC_BY).exists()
 
 
 def test_the_command_reports_and_refuses(tmp_path, vocab) -> None:
