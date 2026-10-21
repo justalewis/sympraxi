@@ -236,6 +236,10 @@ Optional. To give online appointments their own video rooms, run a Jitsi Meet se
 
 Staff clock in and out on their time clock page. To limit that to the center's own network, a director opens Timesheets, then Time clock settings, and lists the center's public IP address or range, one per line (203.0.113.0/24). Sympraxi reads the visitor's address from the connection, or from the proxy when `SYMPRAXI_TRUST_X_FORWARDED_FOR=true`; turn that on only behind a proxy you control, or anyone can claim an address. Leave the list empty to allow clock-ins from anywhere. The same page holds each person's payroll ID and pay code, which appear on the timesheet download. At the end of a pay period, a director opens Approve hours, picks the days, and approves each person; that locks those entries.
 
+## Check-in kiosk
+
+For a shared front desk screen, a front desk person or director signs in on the device, opens the center's page, and chooses Check-in kiosk. Students type their ID or swipe their card; most USB card readers act as a keyboard and need no setup. The waiting room page, in the same Front desk list, shows who has checked in. Student IDs must be on the students' accounts (the people import takes them from a student ID column). If the center has listed its networks under Time clock settings, the kiosk works only from them.
+
 ## Importing history
 
 A center switching from another system (WCONLINE or any other) can bring its past appointments in from a CSV so visit totals and no-show counts carry over. Add the center's tutors and students first (the people import), then save the old system's appointment list with these columns, one past appointment per row:

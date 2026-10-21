@@ -20,6 +20,7 @@ from django.contrib.postgres.constraints import ExclusionConstraint
 from django.contrib.postgres.fields import DateRangeField, RangeBoundary, RangeOperators
 from django.db import models
 from django.db.models import F, Func, Q
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from sympraxi.centers.models import Center
@@ -105,6 +106,55 @@ class TimeEntry(models.Model):
         if self.ended_at is None:
             return None
         return to_hours(self.ended_at - self.started_at)
+
+
+class ArrivalStatus(models.TextChoices):
+    WAITING = "waiting", _("Waiting")
+    SEEN = "seen", _("Seen")
+    LEFT = "left", _("Left before being seen")
+
+
+class Arrival(models.Model):
+    """A student who has checked in, at the kiosk or with staff, and is waiting to be seen."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    center = models.ForeignKey(Center, on_delete=models.CASCADE, related_name="arrivals")
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="arrivals"
+    )
+    # The appointment they came for; empty for a walk-in.
+    appointment = models.ForeignKey(
+        "scheduling.Appointment",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="arrivals",
+    )
+    arrived_at = models.DateTimeField(default=timezone.now)
+    via = models.CharField(max_length=10, default="kiosk")
+    reason = models.CharField(max_length=200, blank=True)
+    status = models.CharField(
+        max_length=10, choices=ArrivalStatus.choices, default=ArrivalStatus.WAITING
+    )
+    handled_at = models.DateTimeField(null=True, blank=True)
+    handled_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+
+    class Meta:
+        ordering = ["arrived_at"]
+        indexes = [models.Index(fields=["center", "arrived_at"], name="staff_arrival_center_time")]
+        constraints = [
+            # Checking in twice while waiting does nothing.
+            models.UniqueConstraint(
+                fields=["center", "student"],
+                condition=Q(status="waiting"),
+                name="staff_arrival_one_waiting",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.student} · {self.arrived_at:%Y-%m-%d %H:%M}"
 
 
 class DateRange(Func):

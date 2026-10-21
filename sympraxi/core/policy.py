@@ -207,6 +207,10 @@ class Action(StrEnum):
     CLOCK_OWN = "staff.clock_own"
     # Everyone's timesheets, and adding, changing and removing their entries.
     MANAGE_TIME = "staff.manage_time"
+    # The check-in kiosk, and checking a student in from the waiting room.
+    RUN_KIOSK = "staff.run_kiosk"
+    # See who has checked in and is waiting, and mark them seen or gone.
+    VIEW_WAITING_ROOM = "staff.view_waiting_room"
     # Post, change and delete the center's announcements.
     MANAGE_ANNOUNCEMENTS = "notify.manage_announcements"
     # Email a group of the center's people, and see what was sent to whom.
@@ -246,6 +250,7 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_INTAKE,
             Action.VIEW_REGISTRATION,
             Action.CLOCK_OWN,
+            Action.VIEW_WAITING_ROOM,
             Action.ATTACH_FILES,
             Action.VIEW_FILES,
             Action.WORK_QUEUE,
@@ -272,6 +277,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.VIEW_REGISTRATION,
             Action.VIEW_MASTER_LISTS,
             Action.CLOCK_OWN,
+            Action.RUN_KIOSK,
+            Action.VIEW_WAITING_ROOM,
         }
     ),
     Role.DIRECTOR: frozenset(
@@ -307,6 +314,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
             Action.EXPORT_CENTER,
             Action.EXPORT_RESEARCH,
             Action.CLOCK_OWN,
+            Action.RUN_KIOSK,
+            Action.VIEW_WAITING_ROOM,
             Action.MANAGE_TIME,
             Action.MANAGE_ANNOUNCEMENTS,
             Action.SEND_MASS_EMAIL,

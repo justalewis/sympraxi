@@ -46,6 +46,7 @@ from sympraxi.scheduling.models import (
     BlockReason,
     Participant,
 )
+from sympraxi.staff.models import Arrival
 
 # The no-show sweep looks back this far, so an upgrade doesn't flag a term of
 # unmarked history and a long outage doesn't flag last week. Staff can still
@@ -277,6 +278,10 @@ def flag_possible_no_shows(now: datetime | None = None) -> int:
     has_record = SessionRecord.objects.filter(
         appointment=OuterRef("appointment"), student=OuterRef("student")
     )
+    # A student who checked in at the front desk came, whatever else is recorded.
+    arrived = Arrival.objects.filter(
+        appointment=OuterRef("appointment"), student=OuterRef("student")
+    )
     candidates = (
         Participant.objects.filter(
             canceled_at__isnull=True,
@@ -289,6 +294,7 @@ def flag_possible_no_shows(now: datetime | None = None) -> int:
             appointment__starts_at__gte=now - FLAG_LOOKBACK,
         )
         .filter(~Exists(has_record))
+        .filter(~Exists(arrived))
         .values_list("pk", "appointment__starts_at", "appointment__schedule__no_show_grace_minutes")
     )
     due = [pk for pk, start, grace in candidates if start + timedelta(minutes=grace) <= now]

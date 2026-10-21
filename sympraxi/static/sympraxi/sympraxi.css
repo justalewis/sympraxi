@@ -708,3 +708,23 @@ img.ProseMirror-separator {
   width: 100%;
 }
 
+
+/* The check-in kiosk: large, centered, readable from a few feet away. */
+.sympraxi-kiosk {
+  max-width: 40rem;
+  margin: 2rem auto;
+  text-align: center;
+}
+.sympraxi-kiosk-lead {
+  font-size: 1.5rem;
+}
+.sympraxi-kiosk .usa-input {
+  font-size: 1.5rem;
+  text-align: center;
+  max-width: 100%;
+}
+.sympraxi-inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

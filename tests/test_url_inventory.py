@@ -189,6 +189,8 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "staff:entries": (Action.MANAGE_TIME, "center"),
     "staff:approvals": (Action.MANAGE_TIME, "center"),
     "staff:settings": (Action.MANAGE_TIME, "center"),
+    "staff:kiosk": (Action.RUN_KIOSK, "center"),
+    "staff:waiting_room": (Action.VIEW_WAITING_ROOM, "center"),
     "staff:entry_add": (Action.MANAGE_TIME, "center"),
     "staff:entry_edit": (Action.MANAGE_TIME, "time_entry"),
     # News

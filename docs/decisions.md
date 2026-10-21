@@ -12,6 +12,16 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 4: the check-in kiosk and waiting room (October 2026)
+
+**The kiosk.** A page for a shared screen, kept signed in by a front desk person or a director. A student types their ID, or swipes a card through a reader that types the number and presses Enter (a magnetic stripe's track data like `;123456789?` is read too), and the page says only their first name and whether they are checked in, then returns to the start after eight seconds. An unknown ID gets the same wording whether the ID doesn't exist, belongs to staff, or belongs to another center, so the kiosk can't be used to find out who is who. If a center has listed its networks for the time clock, the kiosk uses the same list and refuses check-ins from outside it.
+
+**What check-in does.** A student with an appointment under way or starting within 30 minutes is checked in for it; otherwise they are a walk-in and can say what they're working on. Checking in twice changes nothing, and the database allows one waiting arrival per student. A student who checked in is never flagged as a possible no-show for that appointment, because someone saw them walk in. Attendance itself is still marked by staff.
+
+**The waiting room.** Front desk, tutors and directors see who is waiting, longest wait first, with the appointment or the walk-in note, and mark each student seen or gone. Front desk and directors can also check a student in by ID from the same page. The page lists today's seen and gone students with how long each waited.
+
+**Not done.** The kiosk has no lock against someone trying many IDs in a row; it relies on the device being at the front desk and the audit log. There is no sound or screen notice to tutors when a student arrives, and arrivals aren't yet in the reports (average wait, walk-ins per day). A card reader that sends something other than an ID in the track data needs a format added to `parse_card`.
+
 ## Phase 3: history import (October 2026)
 
 **What it is for.** A center moving from WCONLINE keeps its past: how often each student came, who no-showed, how many sessions a tutor ran. Without an import the new system starts empty and the no-show rules and visit counts start from zero. It is not required to run Sympraxi; a new center, or one willing to start fresh, never needs it.

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Check in" %}{% endblock head_title %}
+{% block extra_head %}
+  {% if checked_in or problem %}<meta http-equiv="refresh" content="{{ seconds }};url={% url 'staff:kiosk' slug=center.slug %}">{% endif %}
+{% endblock extra_head %}
+{% block content %}
+  <div class="sympraxi-kiosk">
+    <h1>{{ center.name }}</h1>
+    {% if checked_in %}
+      <div class="usa-alert usa-alert--success" role="status">
+        <div class="usa-alert__body">
+          <h2 class="usa-alert__heading">{% blocktranslate with name=name %}Hi, {{ name }}.{% endblocktranslate %}</h2>
+          <p class="usa-alert__text">
+            {% if checked_in.already %}
+              {% translate "You're already checked in. Please have a seat." %}
+            {% elif checked_in.appointment %}
+              {% blocktranslate with time=checked_in.appointment.starts_at|time:"g:i A" tutor=checked_in.appointment.tutor.display_name %}You're checked in for your {{ time }} appointment with {{ tutor }}. Please have a seat.{% endblocktranslate %}
+            {% else %}
+              {% translate "You're checked in. Please have a seat and someone will be with you soon." %}
+            {% endif %}
+          </p>
+        </div>
+      </div>
+      <p><a class="usa-button" href="{% url 'staff:kiosk' slug=center.slug %}">{% translate "Next person" %}</a></p>
+    {% else %}
+      {% if problem %}
+        <div class="usa-alert usa-alert--warning" role="alert">
+          <div class="usa-alert__body"><p class="usa-alert__text">{{ problem }}</p></div>
+        </div>
+      {% endif %}
+      <p class="sympraxi-kiosk-lead">{% translate "Type your student ID, or swipe your card, then press Enter." %}</p>
+      <form class="usa-form usa-form--large" method="post" novalidate>
+        {% csrf_token %}
+        {% include "includes/form_fields.html" %}
+        <button class="usa-button usa-button--big" type="submit">{% translate "Check in" %}</button>
+      </form>
+    {% endif %}
+  </div>
+{% endblock content %}

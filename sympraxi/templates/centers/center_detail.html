@@ -35,6 +35,13 @@
       {% if can_work_queue and queue_is_open or can_manage_queue %}<li><a href="{% url 'feedback:queue' slug=center.slug %}">{% translate "The written-feedback queue" %}</a></li>{% endif %}
     </ul>
   {% endif %}
+  {% if can_run_kiosk or can_view_waiting_room %}
+    <h2>{% translate "Front desk" %}</h2>
+    <ul class="usa-list">
+      {% if can_view_waiting_room %}<li><a href="{% url 'staff:waiting_room' slug=center.slug %}">{% translate "Waiting room" %}</a></li>{% endif %}
+      {% if can_run_kiosk %}<li><a href="{% url 'staff:kiosk' slug=center.slug %}">{% translate "Check-in kiosk" %}</a></li>{% endif %}
+    </ul>
+  {% endif %}
   {% if can_clock or can_manage_time %}
     <h2>{% translate "Time clock" %}</h2>
     <ul class="usa-list">

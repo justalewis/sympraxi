@@ -93,6 +93,8 @@ REPORTS_ACTIONS = [
 STAFF_ACTIONS = [
     Action.CLOCK_OWN,
     Action.MANAGE_TIME,
+    Action.RUN_KIOSK,
+    Action.VIEW_WAITING_ROOM,
 ]
 
 NEWS_ACTIONS = [
@@ -231,18 +233,19 @@ EXPECTED_REPORTS = {
     "site_admin":  (0,         0,      0,       0),
 }
 
-# Time clock. Staff clock themselves in and out; directors see and correct
-# everyone's hours. Students have no time clock, and site administrators get
+# Time clock and front desk. Staff clock themselves in and out; directors see and
+# correct everyone's hours. The front desk runs the check-in kiosk; tutors can see
+# the waiting room too. Students have no time clock, and site administrators get
 # nothing: the hours are the center's employment records.
 EXPECTED_STAFF = {
-    #              clock  manage
-    #              own    time
-    "none":        (0,    0),
-    "student":     (0,    0),
-    "tutor":       (1,    0),
-    "front_desk":  (1,    0),
-    "director":    (1,    1),
-    "site_admin":  (0,    0),
+    #              clock  manage  run    waiting
+    #              own    time    kiosk  room
+    "none":        (0,    0,      0,     0),
+    "student":     (0,    0,      0,     0),
+    "tutor":       (1,    0,      0,     1),
+    "front_desk":  (1,    0,      1,     1),
+    "director":    (1,    1,      1,     1),
+    "site_admin":  (0,    0,      0,     0),
 }
 
 # News. Directors post announcements and email groups of the center's people.

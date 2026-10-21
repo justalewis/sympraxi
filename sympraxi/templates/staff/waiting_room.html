@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Waiting room" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Waiting room" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Waiting room" %}</h1>
+  <p>{% translate "Students who have checked in and are waiting to be seen, longest wait first." %}
+    {% if can_check_in %}<a href="{% url 'staff:kiosk' slug=center.slug %}">{% translate "Open the check-in kiosk" %}</a>{% endif %}</p>
+
+  <h2>{% translate "Waiting now" %}</h2>
+  {% if waiting %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Students waiting to be seen" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Student" %}</th>
+          <th scope="col">{% translate "Arrived" %}</th>
+          <th scope="col">{% translate "For" %}</th>
+          <th scope="col">{% translate "Appointment time" %}</th>
+          <th scope="col">{% translate "Action" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in waiting %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Student' %}">{{ a.student.display_name }}</th>
+            <td data-label="{% translate 'Arrived' %}">{{ a.arrived_at|time:"g:i A" }}{% if a.via == "staff" %} <span class="usa-tag">{% translate "Checked in by staff" %}</span>{% endif %}</td>
+            <td data-label="{% translate 'For' %}">{% if a.appointment %}{% blocktranslate with tutor=a.appointment.tutor.display_name %}Appointment with {{ tutor }}{% endblocktranslate %}{% else %}{{ a.reason|default:_("Walk-in") }}{% endif %}</td>
+            <td data-label="{% translate 'Appointment time' %}">{% if a.appointment %}{{ a.appointment.starts_at|time:"g:i A" }}{% else %}{% translate "None" %}{% endif %}</td>
+            <td data-label="{% translate 'Action' %}">
+              <form method="post" class="sympraxi-inline-form">
+                {% csrf_token %}
+                <input type="hidden" name="arrival" value="{{ a.pk }}">
+                <button class="usa-button" type="submit" name="action" value="seen">{% blocktranslate with name=a.student.display_name %}Mark {{ name }} as seen{% endblocktranslate %}</button>
+                <button class="usa-button usa-button--outline" type="submit" name="action" value="left">{% blocktranslate with name=a.student.display_name %}{{ name }} left{% endblocktranslate %}</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Nobody is waiting." %}</p>
+  {% endif %}
+
+  {% if can_check_in %}
+    <h2>{% translate "Check a student in" %}</h2>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="check_in">
+      {% include "includes/form_fields.html" with form=form %}
+      <button class="usa-button" type="submit">{% translate "Check in" %}</button>
+    </form>
+  {% endif %}
+
+  <h2>{% translate "Seen or gone today" %}</h2>
+  {% if handled %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Students who checked in today and have been seen or left" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Student" %}</th>
+          <th scope="col">{% translate "Arrived" %}</th>
+          <th scope="col">{% translate "Outcome" %}</th>
+          <th scope="col">{% translate "Waited" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in handled %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Student' %}">{{ a.student.display_name }}</th>
+            <td data-label="{% translate 'Arrived' %}">{{ a.arrived_at|time:"g:i A" }}</td>
+            <td data-label="{% translate 'Outcome' %}">{% if a.status == "seen" %}{% translate "Seen" %}{% else %}{% translate "Left before being seen" %}{% endif %}</td>
+            <td data-label="{% translate 'Waited' %}">{{ a.arrived_at|timesince:a.handled_at }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Nobody has been seen yet today." %}</p>
+  {% endif %}
+{% endblock content %}

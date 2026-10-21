@@ -110,6 +110,8 @@ class AuditAction(StrEnum):
     TIME_APPROVED = "staff.hours_approved"
     TIME_APPROVAL_WITHDRAWN = "staff.approval_withdrawn"
     TIME_SETTINGS_CHANGED = "staff.settings_changed"
+    ARRIVAL_RECORDED = "staff.arrival_recorded"
+    ARRIVAL_HANDLED = "staff.arrival_handled"
 
 
 def client_ip(request: HttpRequest) -> str | None:

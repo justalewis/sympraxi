@@ -89,6 +89,8 @@ ACTION_LABELS = {
     "staff.hours_approved": _("Approved a person's hours for a pay period"),
     "staff.approval_withdrawn": _("Withdrew approved hours"),
     "staff.settings_changed": _("Changed time clock networks or payroll details"),
+    "staff.arrival_recorded": _("A student checked in"),
+    "staff.arrival_handled": _("Marked a waiting student as seen or gone"),
     "reports.questions_changed": _(
         "Chose which questions the reports read for class standing and course"
     ),

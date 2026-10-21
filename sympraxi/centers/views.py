@@ -42,6 +42,8 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_export_center": can(request.user, Action.EXPORT_CENTER, center),
         "can_clock": can(request.user, Action.CLOCK_OWN, center),
         "can_manage_time": can(request.user, Action.MANAGE_TIME, center),
+        "can_run_kiosk": can(request.user, Action.RUN_KIOSK, center),
+        "can_view_waiting_room": can(request.user, Action.VIEW_WAITING_ROOM, center),
         "can_manage_announcements": can(request.user, Action.MANAGE_ANNOUNCEMENTS, center),
         "can_send_mass_email": can(request.user, Action.SEND_MASS_EMAIL, center),
         "announcements": news.showing(center, request.user),
