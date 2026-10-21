@@ -349,6 +349,6 @@ def test_a_students_export_lists_their_workshops(center, student) -> None:
     services.register(workshop, student, by=student)
     membership = Membership.objects.get(user=student, center=center, role=Role.STUDENT)
     data = export.build(membership, exported_by=student)
-    assert data["version"] == 10
+    assert data["version"] == 11
     assert [w["workshop"] for w in data["workshops"]] == ["Thesis statements"]
     assert data["waiting_list"] == [] and data["check_ins"] == []

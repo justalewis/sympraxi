@@ -85,6 +85,8 @@ from sympraxi.scheduling.models import (
     WaitingEntry,
     WeeklyHours,
 )
+from sympraxi.sms import service as sms_service
+from sympraxi.sms.models import SmsConsent
 from sympraxi.staff.models import Arrival, PayrollDetail, TimeEntry, TimesheetApproval
 from sympraxi.training.models import Attempt as TrainingAttempt
 from sympraxi.training.models import Cohort, Observation, Template
@@ -779,6 +781,18 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
             (
                 columns_of(v, leave_out=("token_hash",))
                 for v in VisitShare.objects.filter(center=center).order_by("created_at", "pk")
+            ),
+        )
+        w.items(
+            "text_message_consents.json",
+            (
+                {
+                    **columns_of(c, leave_out=("phone_encrypted", "phone_hash", "code_hash")),
+                    "number_ends_in": sms_service.phone_of(c)[-4:],
+                }
+                for c in SmsConsent.objects.filter(user__memberships__center=center)
+                .distinct()
+                .order_by("consented_at", "pk")
             ),
         )
         w.items("audit_events.json", (_audit_item(e) for e in _audit(center)), scrubbed=True)

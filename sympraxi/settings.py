@@ -69,6 +69,13 @@ SYMPRAXI_OFFICE_COMMAND = env.str("SYMPRAXI_OFFICE_COMMAND", default="soffice")
 # website whether the page is still there. It makes requests from this server to
 # other people's sites, so it is off until an installation turns it on.
 SYMPRAXI_LINK_CHECK = env.bool("SYMPRAXI_LINK_CHECK", default=False)
+# Text messages. Empty: off. "twilio" sends through Twilio; "console" only writes each
+# message to the log, for trying it out. A center must also turn it on for itself.
+SYMPRAXI_SMS_PROVIDER = env.str("SYMPRAXI_SMS_PROVIDER", default="")
+SYMPRAXI_TWILIO_ACCOUNT_SID = env.str("SYMPRAXI_TWILIO_ACCOUNT_SID", default="")
+SYMPRAXI_TWILIO_AUTH_TOKEN = env.str("SYMPRAXI_TWILIO_AUTH_TOKEN", default="")
+# The number messages come from, or a Twilio messaging service ID (starts with MG).
+SYMPRAXI_TWILIO_FROM = env.str("SYMPRAXI_TWILIO_FROM", default="")
 # Webhooks go only to public addresses over https. Turn this on in development, to
 # reach a receiver on your own machine over http.
 SYMPRAXI_WEBHOOKS_ALLOW_PRIVATE = env.bool("SYMPRAXI_WEBHOOKS_ALLOW_PRIVATE", default=False)
@@ -121,6 +128,7 @@ INSTALLED_APPS = [
     "sympraxi.training",
     "sympraxi.integrations",
     "sympraxi.alerts",
+    "sympraxi.sms",
 ]
 
 MIDDLEWARE = [

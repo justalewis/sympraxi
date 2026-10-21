@@ -38,6 +38,8 @@ from sympraxi.online.models import RoomDocument
 from sympraxi.privacy.models import Disclosure
 from sympraxi.records.models import Goal, SessionRecord, WritingProject
 from sympraxi.scheduling.models import Block, Participant, WaitingEntry
+from sympraxi.sms import service as sms_service
+from sympraxi.sms.models import SmsConsent
 from sympraxi.staff.models import Arrival
 from sympraxi.workshops.models import Registration as WorkshopRegistration
 
@@ -52,12 +54,14 @@ FORMAT = "sympraxi.student-record"
 # Version 8 added the student's writing goals.
 # Version 7 added the shared documents of the student's appointments. A group's
 # document is included as written, since every student in the group wrote in it.
+# Version 11 added the student's text message consent: when they agreed, to which
+# wording, the last four digits of the number, and when and how it ended.
 # Version 10 added the early alerts raised about the student (when, what kind, whether
 # they were told, and how it stands, but not the staff member's words, which a student
 # can ask a director to read with them) and the visit confirmations they shared.
 # Version 9 added workshops the student registered for, their waiting-list requests,
 # and their check-ins at the front desk.
-VERSION = 10
+VERSION = 11
 
 
 def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
@@ -106,6 +110,7 @@ def build(membership: Membership, *, exported_by: User) -> dict[str, Any]:
         "check_ins": [_check_in(a) for a in check_ins_of(membership)],
         "early_alerts": [_alert(a) for a in alerts_of(membership)],
         "shared_visits": [_share(v) for v in shares_of(membership)],
+        "text_message_consents": [_consent(c) for c in student.sms_consents.all()],
     }
 
 
@@ -235,6 +240,17 @@ def _share(v: VisitShare) -> dict[str, Any]:
         "expires_at": _when(v.expires_at),
         "turned_off_at": _when(v.revoked_at),
         "times_opened": v.opened_count,
+    }
+
+
+def _consent(c: SmsConsent) -> dict[str, Any]:
+    return {
+        "agreed_at": _when(c.consented_at),
+        "wording_version": c.consent_version,
+        "number_ends_in": sms_service.phone_of(c)[-4:],
+        "confirmed_at": _when(c.verified_at),
+        "turned_off_at": _when(c.revoked_at),
+        "turned_off_how": c.revoked_via,
     }
 
 

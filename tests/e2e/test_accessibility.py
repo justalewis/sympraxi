@@ -245,6 +245,7 @@ PAGES = [
     ("director", "/centers/{slug}/training/cohorts/"),
     ("director", "/centers/{slug}/integrations/"),
     ("director", "/centers/{slug}/alerts/"),
+    ("student", "/accounts/text/settings/"),
     ("tutor", "/centers/{slug}/alerts/mine/"),
     ("tutor", "/centers/{slug}/alerts/{alert}/"),
     ("director", "/centers/{slug}/alerts/{alert}/"),

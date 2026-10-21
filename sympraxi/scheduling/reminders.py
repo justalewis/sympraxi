@@ -39,6 +39,7 @@ from django.utils import timezone
 from sympraxi.accounts.models import User
 from sympraxi.scheduling import notifications
 from sympraxi.scheduling.models import REMINDER_CHOICES, Appointment, AppointmentStatus, Reminder
+from sympraxi.sms import service as sms
 
 logger = logging.getLogger("sympraxi.scheduler")
 
@@ -134,4 +135,9 @@ def remind(appointment_id: UUID, minutes: int, *, base_url: str, now: datetime) 
         # transaction, so a reminder is recorded as sent exactly when it's queued.
         if messages:
             mailers.default.send_messages(messages)
+        # A text goes out only for the last reminder of the day, so a person who chose
+        # texts isn't sent one for every email.
+        if minutes == min(appointment.schedule.reminder_offsets()):
+            for user, _for_tutor in recipients:
+                sms.queue_reminder(user, appointment, now=now)
     return len(messages)

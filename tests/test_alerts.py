@@ -377,7 +377,7 @@ def test_a_students_export_lists_alerts_without_the_staff_members_words(world, v
     make_alert(world)
     services.share_visit(visit, instructor_email="p@example.edu", course="ENG 101")
     data = export.build(membership(world), exported_by=world.student)
-    assert data["version"] == 10
+    assert data["version"] == 11
     [alert] = data["early_alerts"]
     assert alert["kind"] == "Stopped coming or missed sessions" and "reason" not in alert
     assert REASON not in str(data)

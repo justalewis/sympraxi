@@ -34,6 +34,7 @@ urlpatterns = [
     path("visit/", include("sympraxi.alerts.public_urls")),
     path("internal/collab/", include("sympraxi.online.internal_urls")),
     path("library/", include("sympraxi.records.library_urls")),
+    path("accounts/text/", include("sympraxi.sms.urls")),
     path("accounts/", include("sympraxi.accounts.urls")),
     path("accounts/", include("allauth.urls")),
     path("admin/", admin.site.urls),

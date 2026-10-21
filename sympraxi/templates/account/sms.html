@@ -1,0 +1,43 @@
+{% extends "allauth/layouts/manage.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Text reminders" %}{% endblock head_title %}
+{% block content %}
+  <h1>{% translate "Text reminders" %}</h1>
+  {% if not available %}
+    <p>{% translate "Text reminders aren't set up on this site. Email reminders still work." %}</p>
+  {% elif consent and consent.is_active %}
+    <div class="usa-alert usa-alert--success usa-alert--slim" role="status"><div class="usa-alert__body"><p class="usa-alert__text">{% blocktranslate with number=masked %}Text reminders are on for {{ number }}.{% endblocktranslate %}</p></div></div>
+    <p>{% translate "You can also turn them off by replying STOP to any text." %}</p>
+    <form method="post">
+      {% csrf_token %}
+      <button class="usa-button usa-button--secondary" type="submit" name="action" value="stop">{% translate "Turn off text reminders" %}</button>
+    </form>
+  {% elif consent %}
+    <p>{% blocktranslate with number=masked %}We texted a code to {{ number }}. Enter it to finish.{% endblocktranslate %}</p>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="confirm">
+      {% include "includes/form_fields.html" with form=code_form %}
+      <button class="usa-button" type="submit">{% translate "Confirm" %}</button>
+    </form>
+    <form method="post" class="sympraxi-inline-form">
+      {% csrf_token %}
+      <button class="usa-button usa-button--outline" type="submit" name="action" value="resend">{% translate "Text me a new code" %}</button>
+      <button class="usa-button usa-button--unstyled" type="submit" name="action" value="stop">{% translate "Cancel and use a different number" %}</button>
+    </form>
+  {% else %}
+    <p>{% translate "Get a text before your appointments. We use your number only for this." %}</p>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="start">
+      {% if opt_form.non_field_errors %}<div class="usa-alert usa-alert--error usa-alert--slim" role="alert"><div class="usa-alert__body"><p class="usa-alert__text">{{ opt_form.non_field_errors|join:" " }}</p></div></div>{% endif %}
+      {% include "includes/field.html" with field=opt_form.phone %}
+      <div class="usa-checkbox">
+        <input class="usa-checkbox__input" id="agree" type="checkbox" name="agree" aria-describedby="agree-text">
+        <label class="usa-checkbox__label" for="agree">{% translate "I agree" %}</label>
+        <div class="usa-hint sympraxi-checkbox-hint" id="agree-text">{{ consent_text }}</div>
+      </div>
+      <button class="usa-button" type="submit">{% translate "Text me a code" %}</button>
+    </form>
+  {% endif %}
+{% endblock content %}

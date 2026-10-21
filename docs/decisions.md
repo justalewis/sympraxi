@@ -12,6 +12,18 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 5: text message reminders (October 2026)
+
+**Consent comes first.** A person gives a mobile number and ticks a box that is never pre-ticked. Beside it is the exact wording they agree to (who texts, why, how often, that message and data rates may apply, and how to stop). That wording, its version, the time and the address they agreed from are stored. They then prove the number is theirs with a six-digit code texted to it (good for 15 minutes, five tries, one new code a minute). Only after that can they be texted a reminder. Agreeing is not a condition of using the center, and the wording says so.
+
+**Stopping.** A person turns texts off on their account page, or replies STOP (also UNSUBSCRIBE, CANCEL, END, QUIT, STOPALL) to any text, which turns off every consent on that number. HELP gets a short reply. START and YES do not turn texts back on: a person who stopped has to turn them on again on the site, where they see the wording. If the carrier says a number can't be texted, the consent ends and the reason is recorded.
+
+**What is sent.** Only appointment reminders and the confirmation code. A reminder carries the site's name, the center's name and the time, and no person's name, tutor or topic. It goes only for the last reminder a schedule sends before an appointment, so a person who chose texts isn't sent one for each email, and never between 9 pm and 8 am in the center's time zone (a reminder that falls then is recorded as not sent, not delayed). A director turns it on for the center, and the host must have set a provider.
+
+**Providers.** A small interface with two providers, both using only the standard library: `console` (writes each text to the log, for trying the flow) and `twilio` (Twilio's messages API, with replies checked against Twilio's signature). Email-to-SMS gateways are not used. The phone number is encrypted with the site's secret key and kept with a keyed hash, so an incoming STOP can find it. A message's words are deleted once it has been sent; the record of what was sent, when and whether it worked stays.
+
+**Not done.** Numbers outside North America must be typed with a + and a country code, and numbers aren't checked for being mobile before the first send (the carrier's answer is). No other providers, no texts from the center to a group, no two-way conversations, and no per-center sender number.
+
 ## Phase 5: early alerts and shared visits (October 2026)
 
 **An alert needs a reason.** A tutor (for students they have tutored), a front desk person (any student) or a director raises an alert by choosing what it is about (stopped coming, disengaged, a well-being concern, or something else) and writing why, in at least 15 characters. The database also refuses an alert with no reason, and refuses to close one with no outcome. The form asks whether the student knows, and records the answer either way; it does not require telling them, since there are cases where staff shouldn't, but it makes the choice visible later.

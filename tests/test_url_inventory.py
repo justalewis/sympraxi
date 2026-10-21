@@ -57,7 +57,13 @@ PUBLIC = {
 # Pages about the signed-in person's own account, outside any center. Anyone
 # signed in may use them; they show and change only that person's settings.
 # library:item is an open-content page any signed-in person may read; it needs an item id.
-LOGIN_REQUIRED = {"accounts:profile", "accounts:reminders", "notify:calendar", "library:item"}
+LOGIN_REQUIRED = {
+    "accounts:profile",
+    "accounts:reminders",
+    "notify:calendar",
+    "library:item",
+    "sms:settings",
+}
 
 # Center-scoped pages, the action each one requires, and the object the action is
 # checked against ("center", or an attribute of the test World).
@@ -434,6 +440,10 @@ def world(center) -> World:
 # tests/test_room.py), and answered 404 by Caddy from outside.
 SECRET_ENDPOINTS = {"collab:load", "collab:store"}
 
+# The text message provider's webhook for replies. Open to the internet, answers only a
+# request signed by the provider (tests/test_sms.py).
+SIGNED_ENDPOINTS = {"sms:inbound"}
+
 # The JSON API. It answers to a bearer token, not a session; tests/test_integrations.py
 # checks what each does. Here: none answers without one.
 API_ENDPOINTS = {
@@ -453,6 +463,7 @@ def test_every_url_is_classified() -> None:
         | set(TOKEN_PAGES)
         | SECRET_ENDPOINTS
         | API_ENDPOINTS
+        | SIGNED_ENDPOINTS
     )
     assert sympraxi_url_names() == classified
 

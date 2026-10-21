@@ -129,6 +129,12 @@ class Center(models.Model):
     )
     # Early alerts: where the notice that one was raised goes. Empty: to the directors.
     alert_email = models.EmailField(_("email for early alert notices"), blank=True)
+    # Text message reminders for people who opted in, if the installation has a provider.
+    sms_enabled = models.BooleanField(
+        _("send text message reminders to people who opted in"),
+        default=False,
+        help_text=_("Needs a text message provider set up by whoever hosts this site."),
+    )
     # Students may share a confirmation of a visit with an instructor.
     visit_sharing_enabled = models.BooleanField(
         _("let students share visit confirmations with instructors"),

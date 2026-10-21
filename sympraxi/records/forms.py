@@ -313,4 +313,5 @@ class RecordSettingsForm(forms.ModelForm):
             "record_reminder_hours",
             "alert_email",
             "visit_sharing_enabled",
+            "sms_enabled",
         ]

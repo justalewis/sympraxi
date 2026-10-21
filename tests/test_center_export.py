@@ -77,6 +77,7 @@ FILES = {
     "observations.json",
     "alerts.json",
     "visit_shares.json",
+    "text_message_consents.json",
     "audit_events.json",
     "audit_events.csv",
 }
