@@ -39,7 +39,7 @@ from tests.records_world import add_records
 from tests.reports_world import add_reports
 from tests.scheduling_world import World, build_world
 from tests.staff_world import add_time_clock
-from tests.training_world import add_training
+from tests.training_world import add_onboarding, add_training
 from tests.workshops_world import add_workshops
 
 # accounts:local_login is the break-glass password sign-in. It is public like the
@@ -211,6 +211,13 @@ CENTER_PAGES: dict[str, tuple[Action, str]] = {
     "training:module_edit": (Action.MANAGE_TRAINING, "training_module"),
     "training:item_edit": (Action.MANAGE_TRAINING, "training_item"),
     "training:onboarding": (Action.MANAGE_TRAINING, "center"),
+    "training:cohorts": (Action.MANAGE_TRAINING, "center"),
+    "training:cohort": (Action.MANAGE_TRAINING, "cohort"),
+    "training:templates": (Action.MANAGE_TRAINING, "center"),
+    "training:template": (Action.MANAGE_TRAINING, "checklist"),
+    "training:mentees": (Action.MENTOR_TUTORS, "center"),
+    "training:mentee": (Action.MENTOR_TUTORS, "mentee"),
+    "training:observation": (Action.OBSERVE, "observation"),
     "staff:entry_add": (Action.MANAGE_TIME, "center"),
     "staff:entry_edit": (Action.MANAGE_TIME, "time_entry"),
     # News
@@ -320,6 +327,10 @@ URL_KWARGS = {
     "workshop": "workshop_id",
     "training_module": "module_id",
     "training_item": "item_id",
+    "cohort": "cohort_id",
+    "checklist": "template_id",
+    "mentee": "member_id",
+    "observation": "observation_id",
 }
 
 # Pages that need a chosen open time in the query string.
@@ -375,6 +386,7 @@ def world(center) -> World:
         add_queue,
         add_workshops,
         add_training,
+        add_onboarding,
     ):
         built = add(built)
     return built

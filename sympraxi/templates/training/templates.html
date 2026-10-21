@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Observation checklists" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Checklists" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Observation checklists" %}</h1>
+  <p>{% translate "A checklist lists what to look for when you watch a tutor. The observer rates each item from needs work to strong and adds comments." %}</p>
+  {% if templates %}
+    <ul class="usa-list">
+      {% for t in templates %}
+        <li><a href="{% url 'training:template' slug=center.slug template_id=t.pk %}">{{ t.title }}</a> · {% blocktranslate count n=t.criteria.all|length %}{{ n }} item{% plural %}{{ n }} items{% endblocktranslate %}{% if not t.is_active %} <span class="usa-tag">{% translate "Not in use" %}</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "No checklists yet." %}</p>
+  {% endif %}
+  <h2>{% translate "Add a checklist" %}</h2>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <button class="usa-button" type="submit">{% translate "Add the checklist" %}</button>
+  </form>
+{% endblock content %}

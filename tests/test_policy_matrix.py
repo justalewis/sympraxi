@@ -107,6 +107,8 @@ WORKSHOP_ACTIONS = [
 TRAINING_ACTIONS = [
     Action.TAKE_TRAINING,
     Action.MANAGE_TRAINING,
+    Action.MENTOR_TUTORS,
+    Action.OBSERVE,
 ]
 
 NEWS_ACTIONS = [
@@ -282,14 +284,14 @@ EXPECTED_WORKSHOPS = {
 # modules and see everyone's progress. Students and site administrators get
 # nothing: progress is an employment record.
 EXPECTED_TRAINING = {
-    #              take      manage
-    #              training  training
-    "none":        (0,        0),
-    "student":     (0,        0),
-    "tutor":       (1,        0),
-    "front_desk":  (1,        0),
-    "director":    (1,        1),
-    "site_admin":  (0,        0),
+    #              take      manage    mentor   observe
+    #              training  training  tutors
+    "none":        (0,        0,        0,       0),
+    "student":     (0,        0,        0,       0),
+    "tutor":       (1,        0,        1,       1),
+    "front_desk":  (1,        0,        1,       1),
+    "director":    (1,        1,        1,       1),
+    "site_admin":  (0,        0,        0,       0),
 }
 
 # News. Directors post announcements and email groups of the center's people.

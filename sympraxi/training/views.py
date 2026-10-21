@@ -17,7 +17,16 @@ from sympraxi.core.policy import Action, can, get_for_action
 from sympraxi.privacy.audit import AuditAction, record
 from sympraxi.training import progress
 from sympraxi.training.forms import HoursForm, ItemForm, ModuleForm, QuestionForm
-from sympraxi.training.models import Attempt, Choice, Item, ItemKind, Module, Question
+from sympraxi.training.models import (
+    Attempt,
+    Choice,
+    Item,
+    ItemKind,
+    Module,
+    Observation,
+    ObservationStatus,
+    Question,
+)
 
 
 def _me(request: HttpRequest) -> User:
@@ -56,6 +65,11 @@ def home(request: HttpRequest, slug: str) -> HttpResponse:
         "required_hours": required,
         "required_done": all(r.complete for r in rows if r.module.is_required),
         "can_manage": can(me, Action.MANAGE_TRAINING, center),
+        "observations": list(
+            Observation.objects.filter(tutor=me, center=center, status=ObservationStatus.SUBMITTED)
+            .select_related("template")
+            .order_by("-observed_on")
+        ),
         "crumbs": [(center.name, center.get_absolute_url())],
     }
     return render(request, "training/home.html", context)

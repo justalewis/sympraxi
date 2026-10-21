@@ -109,7 +109,7 @@ from sympraxi.scheduling.models import (
     Schedule,
     Visibility,
 )
-from sympraxi.training.models import Item, Module
+from sympraxi.training.models import CohortMember, Item, Module, Observation
 from sympraxi.workshops.models import Workshop, WorkshopStatus
 
 # `request.user`: a signed-in User or an AnonymousUser.
@@ -222,6 +222,10 @@ class Action(StrEnum):
     # everyone's progress.
     TAKE_TRAINING = "training.take"
     MANAGE_TRAINING = "training.manage"
+    # Mentor new staff: sign off their modules and see their progress; and observe
+    # their tutoring with a checklist.
+    MENTOR_TUTORS = "training.mentor"
+    OBSERVE = "training.observe"
     # Post, change and delete the center's announcements.
     MANAGE_ANNOUNCEMENTS = "notify.manage_announcements"
     # Email a group of the center's people, and see what was sent to whom.
@@ -252,6 +256,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.TUTOR: frozenset(
         {
+            Action.MENTOR_TUTORS,
+            Action.OBSERVE,
             Action.TAKE_TRAINING,
             Action.VIEW_WORKSHOPS,
             Action.TAKE_WORKSHOP_ATTENDANCE,
@@ -278,6 +284,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.FRONT_DESK: frozenset(
         {
+            Action.MENTOR_TUTORS,
+            Action.OBSERVE,
             Action.TAKE_TRAINING,
             Action.VIEW_WORKSHOPS,
             Action.TAKE_WORKSHOP_ATTENDANCE,
@@ -302,6 +310,8 @@ ROLE_GRANTS: dict[Role, frozenset[Action]] = {
     ),
     Role.DIRECTOR: frozenset(
         {
+            Action.MENTOR_TUTORS,
+            Action.OBSERVE,
             Action.TAKE_TRAINING,
             Action.MANAGE_TRAINING,
             Action.VIEW_WORKSHOPS,
@@ -507,6 +517,15 @@ def _published_training(user: UserLike, obj: Model) -> bool:
     return False
 
 
+def _mentors(user: UserLike, obj: Model) -> bool:
+    """A mentor works with the people they mentor, and the observations they wrote."""
+    if isinstance(obj, CohortMember):
+        return obj.mentor_id == user.pk
+    if isinstance(obj, Observation):
+        return obj.observer_id == user.pk
+    return False
+
+
 def _workshop_shown(user: UserLike, obj: Model) -> bool:
     """Students see published workshops; a tutor also sees one they lead."""
     if isinstance(obj, Workshop):
@@ -554,6 +573,10 @@ OBJECT_RULES: dict[tuple[Role, Action], Callable[[UserLike, Model], bool]] = {
     (Role.STUDENT, Action.VIEW_SUBMISSION): _own_submission,
     (Role.TUTOR, Action.VIEW_SUBMISSION): _claimed_submission,
     (Role.TUTOR, Action.TAKE_TRAINING): _published_training,
+    (Role.TUTOR, Action.MENTOR_TUTORS): _mentors,
+    (Role.TUTOR, Action.OBSERVE): _mentors,
+    (Role.FRONT_DESK, Action.MENTOR_TUTORS): _mentors,
+    (Role.FRONT_DESK, Action.OBSERVE): _mentors,
     (Role.FRONT_DESK, Action.TAKE_TRAINING): _published_training,
     (Role.STUDENT, Action.VIEW_WORKSHOPS): _workshop_open,
     (Role.STUDENT, Action.REGISTER_WORKSHOP): _workshop_open,

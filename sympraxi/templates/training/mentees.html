@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "People you mentor" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Mentoring" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "People you mentor" %}</h1>
+  {% if statuses %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "People in active cohorts and how far along they are" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Person" %}</th>
+          <th scope="col">{% translate "Cohort" %}</th>
+          <th scope="col">{% translate "Signed off" %}</th>
+          <th scope="col">{% translate "Observations" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in statuses %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Person' %}"><a href="{% url 'training:mentee' slug=center.slug member_id=s.member.pk %}">{{ s.member.person.display_name }}</a></th>
+            <td data-label="{% translate 'Cohort' %}">{{ s.member.cohort.name }}</td>
+            <td data-label="{% translate 'Signed off' %}">{{ s.signed_off_count }} / {{ s.lines|length }} {% translate "modules" %}</td>
+            <td data-label="{% translate 'Observations' %}">{{ s.observations }} / {{ s.required_observations }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Nobody is assigned to you right now." %}</p>
+  {% endif %}
+{% endblock content %}

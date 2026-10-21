@@ -127,6 +127,10 @@ class AuditAction(StrEnum):
     TRAINING_CONTENT_CHANGED = "training.content_changed"
     TRAINING_SETTINGS_CHANGED = "training.settings_changed"
     TRAINING_MODULE_COMPLETED = "training.module_completed"
+    ONBOARDING_CHANGED = "training.onboarding_changed"
+    ONBOARDING_COMPLETED = "training.onboarding_completed"
+    OBSERVATION_STARTED = "training.observation_started"
+    OBSERVATION_SUBMITTED = "training.observation_submitted"
 
 
 def client_ip(request: HttpRequest) -> str | None:

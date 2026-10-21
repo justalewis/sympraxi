@@ -9,7 +9,15 @@
     <p class="sympraxi-no-print">
       <a class="usa-button usa-button--outline" href="{% url 'training:manage' slug=center.slug %}">{% translate "Build modules" %}</a>
       <a class="usa-button usa-button--outline" href="{% url 'training:onboarding' slug=center.slug %}">{% translate "Everyone's progress" %}</a>
+      <a class="usa-button usa-button--outline" href="{% url 'training:cohorts' slug=center.slug %}">{% translate "Cohorts and checklists" %}</a>
     </p>
+  {% endif %}
+  <p class="sympraxi-no-print"><a href="{% url 'training:mentees' slug=center.slug %}">{% translate "People you mentor" %}</a></p>
+  {% if observations %}
+    <h2>{% translate "Observations of your work" %}</h2>
+    <ul class="usa-list">
+      {% for o in observations %}<li><a href="{% url 'training:observation' slug=center.slug observation_id=o.pk %}">{{ o.template.title }}, {{ o.observed_on|date:"F j, Y" }}</a></li>{% endfor %}
+    </ul>
   {% endif %}
   {% if required_hours %}
     <p>{% blocktranslate with hours=hours required=required_hours %}Training hours clocked: {{ hours }} of {{ required }}. Clock them under "Training" on your time clock page.{% endblocktranslate %}</p>

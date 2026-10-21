@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ member.person.display_name }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=member.person.display_name %}
+  <h1>{{ member.person.display_name }}</h1>
+  <p>{% blocktranslate with cohort=member.cohort.name %}In {{ cohort }}.{% endblocktranslate %}
+    {% if member.mentor %}{% blocktranslate with name=member.mentor.display_name %}Mentor: {{ name }}.{% endblocktranslate %}{% else %}{% translate "No mentor yet." %}{% endif %}
+    {% if status.complete %}<span class="usa-tag">{% translate "Onboarding complete" %}</span>{% endif %}</p>
+  <p>{% blocktranslate with hours=status.hours %}Training hours clocked: {{ hours }}.{% endblocktranslate %}
+    {% blocktranslate with n=status.observations need=status.required_observations %}Observations submitted: {{ n }} of {{ need }}.{% endblocktranslate %}</p>
+
+  <h2>{% translate "Modules" %}</h2>
+  {% if status.lines %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Each published module, whether it is finished and whether it is signed off" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Module" %}</th>
+          <th scope="col">{% translate "Finished" %}</th>
+          <th scope="col">{% translate "Sign-off" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for line in status.lines %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Module' %}">{{ line.module.title }}{% if not line.module.is_required %} <span class="usa-hint">({% translate "optional" %})</span>{% endif %}</th>
+            <td data-label="{% translate 'Finished' %}">{% if line.done %}{% translate "Yes" %}{% else %}{% translate "Not yet" %}{% endif %}</td>
+            <td data-label="{% translate 'Sign-off' %}">
+              {% if line.signed_off %}
+                {% blocktranslate with name=line.signed_off.signed_by.display_name|default:"someone" day=line.signed_off.signed_at|date:"M j, Y" %}Signed off by {{ name }} on {{ day }}{% endblocktranslate %}
+              {% elif line.done %}
+                <form method="post" class="sympraxi-inline-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="sign_off">
+                  <input type="hidden" name="module" value="{{ line.module.pk }}">
+                  <label class="usa-sr-only" for="note-{{ line.module.pk }}">{% blocktranslate with t=line.module.title %}Note for the {{ t }} sign-off{% endblocktranslate %}</label>
+                  <input class="usa-input" id="note-{{ line.module.pk }}" name="note" maxlength="300" placeholder="{% translate 'A note (optional)' %}">
+                  <button class="usa-button" type="submit">{% blocktranslate with t=line.module.title %}Sign off {{ t }}{% endblocktranslate %}</button>
+                </form>
+              {% else %}
+                {% translate "Waiting for them to finish" %}
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "No modules are published yet." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Observations" %}</h2>
+  {% if observations %}
+    <ul class="usa-list">
+      {% for o in observations %}
+        <li><a href="{% url 'training:observation' slug=center.slug observation_id=o.pk %}">{{ o.template.title }}, {{ o.observed_on|date:"M j, Y" }}</a> · {% if o.is_submitted %}{% translate "Submitted" %}{% else %}{% translate "Being filled in" %}{% endif %}{% if o.observer %} · {{ o.observer.display_name }}{% endif %}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "None yet." %}</p>
+  {% endif %}
+  {% if start_form.templates %}
+    <h3>{% translate "Start an observation" %}</h3>
+    <form class="usa-form usa-form--large" method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="observe">
+      {% include "includes/form_fields.html" with form=start_form %}
+      <button class="usa-button" type="submit">{% translate "Start" %}</button>
+    </form>
+  {% else %}
+    <p>{% translate "A director needs to add an observation checklist before you can observe." %}</p>
+  {% endif %}
+{% endblock content %}

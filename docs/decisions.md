@@ -12,6 +12,20 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Phase 4: cohorts, mentors, observations and finishing onboarding (October 2026)
+
+**Cohorts and mentors.** A director starts a cohort (a group of new tutors or front desk staff), adds people to it, and gives each a mentor, who can be any tutor, front desk person or director other than the person themselves. Mentors see the people they mentor on their own page; a director sees everyone's.
+
+**Sign-off.** A mentor or director signs off a module only after the person has finished every item in it. The sign-off names who signed and when, and may carry a short note.
+
+**Observations.** A director writes checklists: a list of things to look for. An observer (the mentor, or a director) starts an observation of a tutor from a checklist, rates each item from needs work to strong, adds comments, and submits it. Until then it is a draft only the observer sees. A submitted observation is locked, including by the database (a trigger refuses any change or deletion of it or its ratings), and the observed tutor can read it. A checklist item that has been used in an observation can't be deleted.
+
+**Why not the form builder.** The build plan said observation forms would use the form builder. The form builder's responses belong to a student and an appointment, and its reports, exports and retention rules assume that, so an observation of a tutor would have had to be forced into a student's record or the builder reworked. A small checklist of rated items does the job and keeps tutors' observations out of every student export. If you want free-text observation forms with different question types later, that is a separate piece of work.
+
+**Finishing.** A person has finished onboarding when every required published module is done and signed off, they have at least the cohort's number of submitted observations, and they have the center's training hours. Then a director marks it complete, which records who and when. Nothing completes itself. The cohort page shows each person's position on all four.
+
+**Not done.** No reminders to mentors or tutors who are behind, no email when an observation is submitted, a person can't be moved between cohorts (remove and add), and observations are not yet part of a tutor's own data export, only the center's.
+
 ## Phase 4: tutor training modules (October 2026)
 
 **What a module is.** A director builds modules out of three kinds of item: a page of text, a reading or video elsewhere (opened in a new tab, with a note), and a short quiz. A module is a draft until it is published, and tutors and front desk staff see only published ones. A page or link counts as done when the person marks it; a quiz counts when they pass it, with the passing score set per quiz, and they may retake it as often as they like. A module is complete when every item is done, which is logged. A new app, `training`, holds all of it.

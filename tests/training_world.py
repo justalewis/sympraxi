@@ -44,3 +44,32 @@ def add_training(world: World) -> World:
     world.training_module = module  # type: ignore[attr-defined]
     world.training_item = module.items.get(kind=ItemKind.PAGE)  # type: ignore[attr-defined]
     return world
+
+
+def add_onboarding(world: World) -> World:
+    """Give a world a cohort (`cohort`) with the world's tutor mentoring a new tutor (`mentee`),
+    a checklist (`checklist`), and a draft observation (`observation`) by the mentor."""
+    from datetime import date
+
+    from sympraxi.centers.models import Role
+    from sympraxi.training.models import Cohort, CohortMember, Criterion, Observation, Template
+    from tests.scheduling_world import make_member
+
+    newbie = make_member(world.center, Role.TUTOR, full_name="New Tutor")
+    cohort = Cohort.objects.create(center=world.center, name="Fall tutors", starts_on=date.today())
+    world.cohort = cohort  # type: ignore[attr-defined]
+    world.mentee = CohortMember.objects.create(  # type: ignore[attr-defined]
+        cohort=cohort, person=newbie, mentor=world.tutor
+    )
+    template = Template.objects.create(center=world.center, title="Session observation")
+    for n, text in enumerate(["Opens warmly", "Asks before telling"]):
+        Criterion.objects.create(template=template, text=text, position=n)
+    world.checklist = template  # type: ignore[attr-defined]
+    world.observation = Observation.objects.create(  # type: ignore[attr-defined]
+        center=world.center,
+        template=template,
+        tutor=newbie,
+        observer=world.tutor,
+        observed_on=date.today(),
+    )
+    return world

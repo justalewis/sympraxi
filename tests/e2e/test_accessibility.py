@@ -56,7 +56,7 @@ from tests.records_world import add_records
 from tests.reports_world import add_reports
 from tests.scheduling_world import build_world
 from tests.staff_world import add_time_clock
-from tests.training_world import add_training
+from tests.training_world import add_onboarding, add_training
 from tests.workshops_world import add_workshops
 
 pytestmark = [pytest.mark.e2e, pytest.mark.django_db(transaction=True)]
@@ -240,6 +240,13 @@ PAGES = [
     ("director", "/centers/{slug}/training/manage/modules/{training_module}/"),
     ("director", "/centers/{slug}/training/manage/items/{training_item}/"),
     ("director", "/centers/{slug}/training/onboarding/"),
+    ("director", "/centers/{slug}/training/cohorts/"),
+    ("director", "/centers/{slug}/training/cohorts/{cohort}/"),
+    ("director", "/centers/{slug}/training/checklists/"),
+    ("director", "/centers/{slug}/training/checklists/{checklist}/"),
+    ("tutor", "/centers/{slug}/training/mentees/"),
+    ("tutor", "/centers/{slug}/training/mentees/{mentee}/"),
+    ("tutor", "/centers/{slug}/training/observations/{observation}/"),
     ("front_desk", "/centers/{slug}/waiting-room/"),
     ("tutor", "/centers/{slug}/waiting-room/"),
     ("director", "/centers/{slug}/time-clock/entries/new/"),
@@ -371,7 +378,7 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
             )
         )
     )
-    world = add_training(add_workshops(add_queue(world)))
+    world = add_onboarding(add_training(add_workshops(add_queue(world))))
     if who == "blocked_student":
         Membership.objects.filter(user=world.blocked_student).delete()
         Participant.objects.filter(student=world.blocked_student).update(student=user)
@@ -416,6 +423,10 @@ def open_page(browser, live_server, sign_in, who, path, variant=None, **context_
         workshop=world.workshop.pk,
         training_module=world.training_module.pk,
         training_item=world.training_item.pk,
+        cohort=world.cohort.pk,
+        checklist=world.checklist.pk,
+        mentee=world.mentee.pk,
+        observation=world.observation.pk,
         content_item=make_content_item().pk,
         claimed=world.claimed.pk,
         submission_file=world.submission_file.pk,

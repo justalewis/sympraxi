@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ cohort.name }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=cohort.name %}
+  <h1>{{ cohort.name }}</h1>
+  <p>{% blocktranslate with day=cohort.starts_on|date:"F j, Y" n=cohort.required_observations %}Started {{ day }}. Each person needs {{ n }} submitted observation(s), every required module signed off, and the center's training hours.{% endblocktranslate %}</p>
+
+  {% if statuses %}
+    <table class="usa-table usa-table--borderless usa-table--stacked">
+      <caption class="usa-sr-only">{% translate "Each person's progress through onboarding" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Person" %}</th>
+          <th scope="col">{% translate "Mentor" %}</th>
+          <th scope="col">{% translate "Modules signed off" %}</th>
+          <th scope="col">{% translate "Observations" %}</th>
+          <th scope="col">{% translate "Training hours" %}</th>
+          <th scope="col">{% translate "Onboarding" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in statuses %}
+          <tr>
+            <th scope="row" data-label="{% translate 'Person' %}">{{ s.member.person.display_name }}</th>
+            <td data-label="{% translate 'Mentor' %}">
+              <form method="post" class="sympraxi-inline-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="mentor">
+                <input type="hidden" name="member" value="{{ s.member.pk }}">
+                <label class="usa-sr-only" for="mentor-{{ s.member.pk }}">{% blocktranslate with name=s.member.person.display_name %}Mentor for {{ name }}{% endblocktranslate %}</label>
+                <select class="usa-select" id="mentor-{{ s.member.pk }}" name="mentor">
+                  <option value="">{% translate "No mentor" %}</option>
+                  {% for m in mentors %}{% if m.pk != s.member.person_id %}<option value="{{ m.pk }}"{% if m.pk == s.member.mentor_id %} selected{% endif %}>{{ m.display_name }}</option>{% endif %}{% endfor %}
+                </select>
+                <button class="usa-button usa-button--outline" type="submit">{% translate "Save mentor" %}</button>
+              </form>
+            </td>
+            <td data-label="{% translate 'Modules signed off' %}">{% for line in s.lines %}{% if line.module.is_required %}{{ line.module.title }}: {% if line.signed_off %}{% translate "signed off" %}{% elif line.done %}{% translate "done, not signed off" %}{% else %}{% translate "not finished" %}{% endif %}{% if not forloop.last %}<br>{% endif %}{% endif %}{% empty %}{% translate "No modules published" %}{% endfor %}</td>
+            <td data-label="{% translate 'Observations' %}">{{ s.observations }} / {{ s.required_observations }}</td>
+            <td data-label="{% translate 'Training hours' %}">{{ s.hours }}{% if not s.hours_ok %} <span class="usa-tag">{% translate "Short" %}</span>{% endif %}</td>
+            <td data-label="{% translate 'Onboarding' %}">
+              {% if s.complete %}
+                <span class="usa-tag">{% blocktranslate with day=s.member.completed_at|date:"M j, Y" %}Complete {{ day }}{% endblocktranslate %}</span>
+              {% elif s.ready %}
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="complete">
+                  <input type="hidden" name="member" value="{{ s.member.pk }}">
+                  <button class="usa-button" type="submit">{% blocktranslate with name=s.member.person.display_name %}Mark {{ name }}'s onboarding complete{% endblocktranslate %}</button>
+                </form>
+              {% else %}
+                {% translate "In progress" %}
+              {% endif %}
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="remove">
+                <input type="hidden" name="member" value="{{ s.member.pk }}">
+                <button class="usa-button usa-button--unstyled" type="submit">{% blocktranslate with name=s.member.person.display_name %}Take {{ name }} out of the cohort{% endblocktranslate %}</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% translate "Nobody is in this cohort yet." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Add someone" %}</h2>
+  {% if people %}
+    <form class="usa-form usa-form--large" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add">
+      <div class="usa-form-group">
+        <label class="usa-label" for="add-person">{% translate "Person" %}</label>
+        <select class="usa-select" id="add-person" name="person">{% for p in people %}<option value="{{ p.pk }}">{{ p.display_name }}</option>{% endfor %}</select>
+      </div>
+      <div class="usa-form-group">
+        <label class="usa-label" for="add-mentor">{% translate "Mentor" %} <span class="usa-hint">({% translate "optional" %})</span></label>
+        <select class="usa-select" id="add-mentor" name="mentor"><option value="">{% translate "No mentor yet" %}</option>{% for m in mentors %}<option value="{{ m.pk }}">{{ m.display_name }}</option>{% endfor %}</select>
+      </div>
+      <button class="usa-button" type="submit">{% translate "Add to the cohort" %}</button>
+    </form>
+  {% else %}
+    <p>{% translate "Every tutor and front desk person is already in this cohort." %}</p>
+  {% endif %}
+
+  <h2>{% translate "Cohort status" %}</h2>
+  <form class="usa-form usa-form--large" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="settings">
+    <div class="usa-checkbox">
+      <input class="usa-checkbox__input" id="is-active" type="checkbox" name="is_active"{% if cohort.is_active %} checked{% endif %}>
+      <label class="usa-checkbox__label" for="is-active">{% translate "Still onboarding" %}</label>
+    </div>
+    <button class="usa-button usa-button--outline" type="submit">{% translate "Save" %}</button>
+  </form>
+{% endblock content %}

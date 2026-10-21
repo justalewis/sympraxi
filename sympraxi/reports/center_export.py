@@ -85,6 +85,7 @@ from sympraxi.scheduling.models import (
 )
 from sympraxi.staff.models import Arrival, PayrollDetail, TimeEntry, TimesheetApproval
 from sympraxi.training.models import Attempt as TrainingAttempt
+from sympraxi.training.models import Cohort, Observation, Template
 from sympraxi.training.models import Completion as TrainingCompletion
 from sympraxi.training.models import Item as TrainingItem
 from sympraxi.training.models import Module as TrainingModule
@@ -726,6 +727,42 @@ def write(export: CenterExport, out: IO[bytes], *, now: datetime) -> dict[str, i
                 for a in TrainingAttempt.objects.filter(item__module__center=center).order_by(
                     "submitted_at", "pk"
                 )
+            ),
+        )
+        w.items(
+            "training_cohorts.json",
+            (
+                {
+                    **columns_of(c),
+                    "members": [
+                        {
+                            **columns_of(m),
+                            "sign_offs": [columns_of(s) for s in m.sign_offs.all()],
+                        }
+                        for m in c.members.all()
+                    ],
+                }
+                for c in Cohort.objects.filter(center=center)
+                .prefetch_related("members__sign_offs")
+                .order_by("starts_on", "pk")
+            ),
+        )
+        w.items(
+            "observation_checklists.json",
+            (
+                {**columns_of(t), "criteria": [columns_of(c) for c in t.criteria.all()]}
+                for t in Template.objects.filter(center=center)
+                .prefetch_related("criteria")
+                .order_by("title", "pk")
+            ),
+        )
+        w.items(
+            "observations.json",
+            (
+                {**columns_of(o), "ratings": [columns_of(r) for r in o.ratings.all()]}
+                for o in Observation.objects.filter(center=center)
+                .prefetch_related("ratings")
+                .order_by("observed_on", "pk")
             ),
         )
         w.items("audit_events.json", (_audit_item(e) for e in _audit(center)), scrubbed=True)

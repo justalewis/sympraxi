@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ observation.template.title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=observation.template.title %}
+  <h1>{{ observation.template.title }}</h1>
+  <p>{% blocktranslate with name=observation.tutor.display_name day=observation.observed_on|date:"F j, Y" %}Observation of {{ name }}, {{ day }}.{% endblocktranslate %}
+    {% if observation.observer %}{% blocktranslate with name=observation.observer.display_name %}Observer: {{ name }}.{% endblocktranslate %}{% endif %}
+    {% if observation.is_submitted %}<span class="usa-tag">{% translate "Submitted" %}</span>{% endif %}</p>
+
+  {% if editing %}
+    <form method="post">
+      {% csrf_token %}
+      {% for row in rows %}
+        <fieldset class="usa-fieldset">
+          <legend class="usa-legend">{{ forloop.counter }}. {{ row.criterion.text }}</legend>
+          {% for value, label in scores %}
+            <div class="usa-radio">
+              <input class="usa-radio__input" type="radio" id="s-{{ row.criterion.pk }}-{{ value }}" name="s_{{ row.criterion.pk }}" value="{{ value }}"{% if row.rating.score == value %} checked{% endif %}>
+              <label class="usa-radio__label" for="s-{{ row.criterion.pk }}-{{ value }}">{{ label }}</label>
+            </div>
+          {% endfor %}
+          <label class="usa-label" for="c-{{ row.criterion.pk }}">{% translate "Comment" %} <span class="usa-hint">({% translate "optional" %})</span></label>
+          <input class="usa-input" id="c-{{ row.criterion.pk }}" name="c_{{ row.criterion.pk }}" maxlength="300" value="{{ row.rating.comment }}">
+        </fieldset>
+      {% endfor %}
+      <div class="usa-form-group">
+        <label class="usa-label" for="notes">{% translate "Overall notes" %} <span class="usa-hint">({% translate "optional" %})</span></label>
+        <textarea class="usa-textarea" id="notes" name="notes" rows="5">{{ observation.notes }}</textarea>
+      </div>
+      <p>{% translate "Submitting locks the observation and lets the tutor read it. Save keeps your work so far." %}</p>
+      <button class="usa-button usa-button--outline" type="submit" name="action" value="save">{% translate "Save for now" %}</button>
+      <button class="usa-button" type="submit" name="action" value="submit">{% translate "Submit the observation" %}</button>
+    </form>
+  {% else %}
+    <ol class="usa-list">
+      {% for row in rows %}
+        <li>
+          {{ row.criterion.text }}:
+          <strong>{% if row.rating %}{{ row.rating.get_score_display }}{% else %}{% translate "Not rated" %}{% endif %}</strong>
+          {% if row.rating.comment %}<br>{{ row.rating.comment }}{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+    {% if observation.notes %}<h2>{% translate "Overall notes" %}</h2><p>{{ observation.notes|linebreaksbr }}</p>{% endif %}
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{% translate "Cohorts" %}{% endblock head_title %}
+{% block content %}
+  {% translate "Cohorts" as current %}
+  {% include "scheduling/_breadcrumbs.html" with current=current %}
+  <h1>{% translate "Cohorts" %}</h1>
+  <p>{% translate "A cohort is a group of new tutors or front desk staff onboarded together. Each has a mentor who signs off their modules." %}
+    <a href="{% url 'training:templates' slug=center.slug %}">{% translate "Observation checklists" %}</a></p>
+  {% if cohorts %}
+    <ul class="usa-list">
+      {% for c in cohorts %}
+        <li><a href="{% url 'training:cohort' slug=center.slug cohort_id=c.pk %}">{{ c.name }}</a> · {{ c.starts_on|date:"F j, Y" }} · {% blocktranslate count n=c.members.all|length %}{{ n }} person{% plural %}{{ n }} people{% endblocktranslate %}{% if not c.is_active %} <span class="usa-tag">{% translate "Finished" %}</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% translate "No cohorts yet." %}</p>
+  {% endif %}
+  <h2>{% translate "Start a cohort" %}</h2>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" %}
+    <button class="usa-button" type="submit">{% translate "Start the cohort" %}</button>
+  </form>
+{% endblock content %}

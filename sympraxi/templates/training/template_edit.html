@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block head_title %}{{ template.title }}{% endblock head_title %}
+{% block content %}
+  {% include "scheduling/_breadcrumbs.html" with current=template.title %}
+  <h1>{{ template.title }}</h1>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="save">
+    {% include "includes/form_fields.html" %}
+    <div class="sympraxi-form-actions">
+      <button class="usa-button" type="submit">{% translate "Save" %}</button>
+      <a href="{% url 'training:templates' slug=center.slug %}">{% translate "Go back" %}</a>
+    </div>
+  </form>
+
+  <h2>{% translate "What to look for" %}</h2>
+  {% if criteria %}
+    <ol class="usa-list">
+      {% for c in criteria %}
+        <li>
+          {{ c.text }}
+          <form method="post" class="sympraxi-inline-form">
+            {% csrf_token %}
+            <input type="hidden" name="criterion" value="{{ c.pk }}">
+            <button class="usa-button usa-button--outline" type="submit" name="action" value="up">{% blocktranslate with n=forloop.counter %}Move item {{ n }} up{% endblocktranslate %}</button>
+            <button class="usa-button usa-button--outline" type="submit" name="action" value="down">{% blocktranslate with n=forloop.counter %}Move item {{ n }} down{% endblocktranslate %}</button>
+            <button class="usa-button usa-button--secondary" type="submit" name="action" value="delete">{% blocktranslate with n=forloop.counter %}Delete item {{ n }}{% endblocktranslate %}</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <p>{% translate "Nothing on it yet." %}</p>
+  {% endif %}
+  <h3>{% translate "Add an item" %}</h3>
+  <form class="usa-form usa-form--large" method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add">
+    {% include "includes/form_fields.html" with form=criterion_form %}
+    <button class="usa-button" type="submit">{% translate "Add it" %}</button>
+  </form>
+{% endblock content %}

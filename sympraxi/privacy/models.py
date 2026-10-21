@@ -106,6 +106,10 @@ ACTION_LABELS = {
     "training.content_changed": _("Changed tutor training content"),
     "training.settings_changed": _("Changed the training hours requirement"),
     "training.module_completed": _("Finished a training module"),
+    "training.onboarding_changed": _("Changed a cohort, a mentor or a sign-off"),
+    "training.onboarding_completed": _("Marked a person's onboarding complete"),
+    "training.observation_started": _("Started an observation of a tutor"),
+    "training.observation_submitted": _("Submitted an observation of a tutor"),
     "reports.questions_changed": _(
         "Chose which questions the reports read for class standing and course"
     ),
