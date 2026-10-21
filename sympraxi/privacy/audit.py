@@ -105,6 +105,7 @@ class AuditAction(StrEnum):
     ROOM_OPENED = "online.room_opened"
     ROOM_VERSION_SAVED = "online.room_version_saved"
     VIDEO_SETTINGS_CHANGED = "online.settings_changed"
+    HISTORY_IMPORTED = "scheduling.history_imported"
 
 
 def client_ip(request: HttpRequest) -> str | None:

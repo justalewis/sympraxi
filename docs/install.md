@@ -232,6 +232,27 @@ Nothing to set up on the server except that the `scheduler` service must be runn
 
 Optional. To give online appointments their own video rooms, run a Jitsi Meet server and put its address and shared secret in `deploy/.env` (`SYMPRAXI_JITSI_DOMAIN`, `SYMPRAXI_JITSI_APP_ID`, `SYMPRAXI_JITSI_APP_SECRET`). Then each center's director turns video on under **Video rooms for online appointments**. Setting Jitsi up, including getting video through a campus firewall, is in [Video rooms with Jitsi](jitsi.md).
 
+## Importing history
+
+A center switching from another system (WCONLINE or any other) can bring its past appointments in from a CSV so visit totals and no-show counts carry over. Add the center's tutors and students first (the people import), then save the old system's appointment list with these columns, one past appointment per row:
+
+```
+date,start,end,tutor_email,student_email,status,modality
+2025-10-14,14:00,14:45,tutor@example.edu,student@example.edu,attended,in person
+```
+
+`status` is attended, no show, late cancel, canceled, or blank; `modality` is in person or online (blank means in person). Dates can be YYYY-MM-DD or MM/DD/YYYY and times 14:00 or 2:00 PM. Check the file first, then load it:
+
+```bash
+docker compose run --rm web python manage.py import_history my-center history.csv --dry-run
+```
+
+```bash
+docker compose run --rm web python manage.py import_history my-center history.csv
+```
+
+A row that can't be placed (an email that isn't in the center, a tutor double-booked, a bad date) is listed and skipped, and the rest go in. Running the same file again adds nothing. The rows sit on a hidden "Imported history" schedule, nobody is emailed, and no session records are made, because the file has no session notes. No real WCONLINE export has been seen, so the mapping from its Excel files to this layout is a spreadsheet job for now.
+
 ## Content pack
 
 Optional, and empty until items are added. `content-pack/` holds openly licensed text that tutors attach and students read inside Sympraxi. `deploy/upgrade.sh` loads it after each upgrade; to load it by hand, run `docker compose run --rm web python manage.py load_content_pack`. Each item shows its author, source and license above its text. Material with a NonCommercial term lives in `content-pack/noncommercial/`, which the Docker image leaves out; a college running its own copy can add `--include-noncommercial` after copying the folder in, and a host that sells Sympraxi should not.

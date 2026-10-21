@@ -325,7 +325,7 @@ Slices 2, 5 and 6 add packages or containers, and each waits for the maintainer'
 4. **Course and class standing in the reports.** A director marks which registration or intake questions say the student's course and class standing (first-year and so on), and the reports then answer "what did first-year students come in for this term, by course?", with topics across terms. Counts small enough to identify someone are held back, as the survey results are.
 5. **The de-identified research export.** A director records the center's IRB protocol number and its approval dates, and downloads session data with no names, no IDs, no free text and no small groups, with a pseudonym per student that changes with each export. It is audited, needs the protocol number first, and its limits are written down.
 6. **The open-content pack.** An optional pack of openly licensed material with its attribution shown on every item, in `content-pack/` in this repository with a CC BY folder and an opt-in noncommercial folder. The mechanism is built; the items wait on downloading the sources (the OpenStax CC BY snapshot, then *About Writing* chapters).
-7. **The WCONLINE importer.** Reads WCONLINE's Excel exports (appointments, reports, registrations, time clock) so a center keeps its history. Waits for sample exports from a real center; there is nothing to build it against until then.
+7. **History import.** A generic CSV importer for past appointments (`manage.py import_history`), built October 2026 because no real WCONLINE export was available. It is optional: only a center switching from another system needs it. A reader for WCONLINE's own Excel files would still need sample exports.
 
 Slices 6 and 7 wait on decisions or files from the maintainer.
 

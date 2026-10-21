@@ -2,6 +2,14 @@
 
 Short records of choices made while building, with the reason, so later contributors don't have to guess. Newest first.
 
+## Phase 3: history import (October 2026)
+
+**What it is for.** A center moving from WCONLINE keeps its past: how often each student came, who no-showed, how many sessions a tutor ran. Without an import the new system starts empty and the no-show rules and visit counts start from zero. It is not required to run Sympraxi; a new center, or one willing to start fresh, never needs it.
+
+**What was built, because you can't get WCONLINE exports.** A generic CSV importer, `manage.py import_history <center> <file>`, with a `--dry-run`. One row is one past appointment (date, start, end, tutor email, student email, status, modality). People must already be in the center. Rows land on a hidden "Imported history" schedule and term, so they count toward totals and limits but never appear for booking; no email or reminder is sent, and the import is logged. A bad row is listed and skipped, and a second run of the same file adds nothing. Any system's export can be shaped into this layout in a spreadsheet.
+
+**Not done.** It does not read WCONLINE's own Excel files, since none has been seen and guessing at their columns would produce an importer that looks finished and isn't. It makes no session records (the file has no notes), imports no registrations or time-clock entries, and has no web page; a director uses the command line or asks the host to run it.
+
 ## Phase 3: the open-content pack (October 2026)
 
 **The mechanism, with no content yet.** `content-pack/` in this repository holds openly licensed text; `manage.py load_content_pack` loads it, `upgrade.sh` runs it with `load_catalog`, and a signed-in person reads an item at `/library/<id>/`. It started as a separate repository in the plan and is in this one on your instruction. What keeps the separation the library document asked for is two folders: `cc-by/` loads everywhere, and `noncommercial/` loads only with `--include-noncommercial` and is in `.dockerignore`, so the image doesn't carry it unless a build copies it in. The code is AGPL and the text keeps its own licenses, which the pack's README says in its first section.
