@@ -25,9 +25,9 @@ package="$(mktemp -d)/sympraxi.tgz"
 git archive --format=tar.gz -o "$package" HEAD -- . ':(exclude)content-pack/noncommercial'
 (cd "$(dirname "$package")" && scp "${ssh_opts[@]}" "$(basename "$package")" "$SERVER:/tmp/sympraxi-update.tgz")
 
-ssh "${ssh_opts[@]}" "$SERVER" bash -s -- "$DIR" "${RESET_DEMO:-}" <<'REMOTE'
+ssh "${ssh_opts[@]}" "$SERVER" "DIR='$DIR' RESET='${RESET_DEMO:-}' bash -s" <<'REMOTE'
 set -euo pipefail
-dir="$1"; reset="$2"
+dir="$DIR"; reset="$RESET"
 cd "$dir"
 tar -xzf /tmp/sympraxi-update.tgz -C "$dir"
 rm -f /tmp/sympraxi-update.tgz
