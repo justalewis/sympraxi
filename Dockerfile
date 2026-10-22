@@ -14,7 +14,7 @@ FROM python:3.12-slim-trixie AS python-deps
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
     UV_PROJECT_ENVIRONMENT=/opt/venv
-RUN pip install --no-cache-dir uv==0.13.1
+RUN pip install --no-cache-dir uv==0.13.5
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
