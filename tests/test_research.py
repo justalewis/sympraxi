@@ -262,7 +262,8 @@ def test_a_director_records_the_protocol_and_downloads(client, world) -> None:
 
 def test_an_expired_protocol_blocks_the_download(client, world) -> None:
     approve(world, days=30)
-    ResearchSettings.objects.update(expires_on=timezone.now().date() - timedelta(days=1))
+    today = timezone.localtime(timezone.now(), world.schedule.tz).date()
+    ResearchSettings.objects.update(expires_on=today - timedelta(days=1))
     client.force_login(make_member(world.center, Role.DIRECTOR))
     assert "has ended" in client.get(page(world)).content.decode()
     client.get(page(world), {"format": "csv"})
