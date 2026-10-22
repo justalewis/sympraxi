@@ -112,6 +112,26 @@ def set_language(request: HttpRequest, code: str) -> HttpResponse:
     return response
 
 
+def _faq_groups() -> list[tuple[str, list[dict[str, object]]]]:
+    """The FAQ by group. An entry with videos shows the first video's steps as its answer."""
+    from sympraxi.core.demo_world import faq, manifest
+
+    groups = []
+    for key, label in faq.GROUPS:
+        entries = []
+        for entry in (f for f in faq.FAQS if f.group == key):
+            clips = [v for v in (manifest.by_slug(s) for s in entry.videos) if v]
+            entries.append(
+                {
+                    "entry": entry,
+                    "videos": clips,
+                    "steps": clips[0]["steps"] if clips else [],
+                }
+            )
+        groups.append((label, entries))
+    return groups
+
+
 def _demo_context() -> dict[str, object]:
     """Everything the demo's front page shows: the case for adopting, a tour by role,
     the cast, and live counts from the sample center."""
@@ -119,7 +139,7 @@ def _demo_context() -> dict[str, object]:
 
     from sympraxi.accounts.middleware import DEMO_DOMAIN
     from sympraxi.centers.models import Role
-    from sympraxi.core.demo_world import cast, tour
+    from sympraxi.core.demo_world import cast, manifest, tour
     from sympraxi.records.models import RecordStatus, SessionRecord
     from sympraxi.workshops.models import Workshop
 
@@ -180,6 +200,8 @@ def _demo_context() -> dict[str, object]:
         "arguments": tour.ARGUMENTS,
         "limits": tour.LIMITS,
         "steps": tour.STEPS,
+        "video_groups": manifest.by_audience(),
+        "faq_groups": _faq_groups(),
         "sam": people.get("student@demo.test"),
         "tomas": people.get("tutor@demo.test"),
         "dana": people.get("director@demo.test"),
@@ -194,6 +216,28 @@ def demo_page(request: HttpRequest) -> HttpResponse:
     if not settings.SYMPRAXI_DEMO:
         raise Http404
     return render(request, "core/demo.html", _demo_context())
+
+
+@require_GET
+def demo_video(request: HttpRequest, slug: str) -> HttpResponse:
+    """One how-to video, with its captions, a transcript, and a way to try the task."""
+    from sympraxi.accounts.middleware import DEMO_DOMAIN
+    from sympraxi.core.demo_world import manifest
+
+    if not settings.SYMPRAXI_DEMO:
+        raise Http404
+    video = manifest.by_slug(slug)
+    if video is None:
+        raise Http404
+    person = User.objects.filter(email=video["persona"], email__endswith=DEMO_DOMAIN).first()
+    others = [
+        v for v in manifest.load() if v["audience"] == video["audience"] and v["slug"] != slug
+    ]
+    return render(
+        request,
+        "core/demo_video.html",
+        {"video": video, "person": person, "others": others},
+    )
 
 
 def demo_sign_in(request: HttpRequest) -> HttpResponse:

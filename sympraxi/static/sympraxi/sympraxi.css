@@ -2,34 +2,7 @@
    prefer USWDS utility classes in templates. No inline styles anywhere: the
    Content Security Policy blocks them. */
 
-/* The page is a warm stone color and the center column is a lighter paper, so the content
-   has an edge. Both pass WCAG AA for the text and links used on them. */
-body {
-  background: #e7e4dc;
-}
-
-.sympraxi-main {
-  background: #fbf9f4;
-  border: 1px solid #d3cdbf;
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
-  padding-top: 2rem;
-  padding-bottom: 4rem;
-}
-
-/* USWDS's hint gray is 4.36:1 on this paper color, just under AA. A step darker passes. */
-.sympraxi-main .usa-hint,
-.sympraxi-main .text-base {
-  color: #565c65;
-}
-
-@media (max-width: 40em) {
-  .sympraxi-main {
-    border-left: 0;
-    border-right: 0;
-    margin-top: 0;
-  }
-}
+/* The page, paper column, fonts and colors are in quiet-paper.css, loaded after this file. */
 
 /* usa-prose limits line length for reading; forms and tables use the full column. */
 .sympraxi-content.usa-prose > table,
@@ -61,12 +34,7 @@ body {
 .sympraxi-nav-button.usa-button--unstyled {
   padding: 0.5rem 1rem;
   font-weight: 400;
-  color: #565c65;
   text-decoration: none;
-}
-
-.sympraxi-nav-button.usa-button--unstyled:hover {
-  color: #005ea2;
 }
 
 @media (min-width: 64em) {
@@ -206,6 +174,80 @@ summary:focus {
 
 .sympraxi-cast .sympraxi-panel {
   padding-top: 0.75rem;
+}
+
+/* The demo's jump menu, video cards, FAQ and transcript. */
+.sympraxi-jump ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 0;
+  border-top: 1px solid #d3cdbf;
+  border-bottom: 1px solid #d3cdbf;
+}
+
+.sympraxi-jump a {
+  display: inline-block;
+  min-height: 1.5rem;
+  padding: 0.25rem 0;
+  font-weight: bold;
+}
+
+.sympraxi-videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1rem;
+  list-style: none;
+  margin: 0.5rem 0 1.5rem;
+  padding: 0;
+}
+
+.sympraxi-videos li {
+  margin-bottom: 0;
+  padding: 0 0 0.5rem;
+}
+
+.sympraxi-videos h4 {
+  margin: 0.5rem 1rem 0.25rem;
+}
+
+.sympraxi-videos p {
+  margin: 0 1rem;
+}
+
+.sympraxi-videos__poster {
+  display: block;
+}
+
+.sympraxi-videos__poster img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #d3cdbf;
+}
+
+.sympraxi-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #14181f;
+}
+
+.sympraxi-faq {
+  border-bottom: 1px solid #d3cdbf;
+  padding: 0.25rem 0;
+}
+
+.sympraxi-faq summary {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0.5rem 0;
+}
+
+.sympraxi-transcript li {
+  margin-bottom: 0.5rem;
 }
 
 /* The language links are separate tap targets: at least 24 by 24 CSS pixels with room around. */

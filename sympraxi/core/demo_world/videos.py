@@ -84,7 +84,7 @@ def note(caption: str, hold: float = 1.0) -> Step:
     return Step("caption", caption=caption, hold=hold)
 
 
-# {next_weekday} in a path or a typed value becomes the date of the next weekday, so a
+# {next_weekday} in a path or a typed value becomes the date of the next Monday to Thursday, so a
 # recording made on a Friday evening still books a time that exists.
 SAM, TOMAS, FELIX, DANA = (
     "student@demo.test",

@@ -64,6 +64,24 @@ The booking engine's property tests (`tests/test_booking_properties.py`) run a s
 HYPOTHESIS_PROFILE=thorough uv run pytest tests/test_booking_properties.py
 ```
 
+## The demo site and its videos
+
+A demo site is a normal install with `SYMPRAXI_DEMO=true` (see "A demo site" in [install.md](install.md)). Its sample center is built by `manage.py seed_demo` from `sympraxi/core/demo_world/`: `cast.py` (the people), `library.py` (what happens in a session), `history.py` and `extras.py` (ten weeks of activity), `tour.py` (the role-by-role links on the front page) and `faq.py` (the questions). Dates are relative to today, and a nightly reset rebuilds everything.
+
+The how-to videos are scripts, not screen recordings someone made by hand. `sympraxi/core/demo_world/videos.py` lists each task as steps with captions; `scripts/record_demo_videos.py` plays them in a browser and writes, to `sympraxi/static/demo/videos/`, a video (VP9, about 200 to 700 KB), a WebVTT captions file and a poster for each, plus `sympraxi/core/demo_world/video_manifest.json`, which the demo pages read. The captions are also the transcript on each video's page and the numbered answers in the FAQ. When a screen changes, record again.
+
+```bash
+# A throwaway database, rebuilt to a known state (its name must contain "demo"):
+DATABASE_URL=postgresql://postgres@127.0.0.1:5432/sympraxi_demo_rec python scripts/rebuild_local_demo.py
+# Serve it (the "sympraxi-demo" entry in .claude/launch.json does this on port 8010), then:
+python scripts/record_demo_videos.py --check      # run every step without recording
+python scripts/record_demo_videos.py              # record all of them, about 15 minutes
+python scripts/record_demo_videos.py --only book-an-appointment
+python scripts/explore_demo_page.py student@demo.test /centers/demo/schedules/   # what a page offers
+```
+
+Recording books, cancels and writes, so it needs the throwaway database, and the scripts share it: rebuild before a full run. In Git Bash on Windows, set `MSYS_NO_PATHCONV=1` so paths aren't rewritten. A recording needs Playwright's Chromium (`playwright install chromium`); it recompresses with the ffmpeg Playwright ships, or one on the PATH. After recording, check a few videos by eye, then commit the files in `static/demo/`.
+
 ## Load test
 
 The Phase 1 exit needs a first-Monday rush, about 500 students booking within ten minutes, with no double bookings and acceptable response times. `tests/load/` runs one against a real server and PostgreSQL:

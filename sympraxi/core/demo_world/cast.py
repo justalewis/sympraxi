@@ -415,14 +415,11 @@ STUDENTS = [
 # schedule: "dropin" (30 to 60 minutes), "consult" (60 minutes, confirmed by the center),
 # or "online" (evenings, video).
 TUTOR_HOURS = {
-    "tutor@demo.test": (
-        "dropin",
-        {0: (10, 16), 1: (10, 16), 2: (10, 16), 3: (10, 16), 4: (10, 14)},
-    ),
-    "aisha.bello@demo.test": ("consult", {0: (12, 18), 2: (12, 18), 3: (12, 18)}),
-    "marcus.chen@demo.test": ("dropin", {1: (10, 15), 3: (10, 15)}),
-    "lena.fischer@demo.test": ("dropin", {0: (13, 17), 1: (13, 17), 2: (13, 17)}),
-    "jordan.reyes@demo.test": ("online", {0: (18, 21), 2: (18, 21), 3: (18, 21)}),
+    "tutor@demo.test": ("dropin", {0: (11, 15), 1: (11, 15), 2: (11, 15), 3: (11, 15)}),
+    "aisha.bello@demo.test": ("consult", {0: (12, 16), 2: (12, 16), 3: (12, 16)}),
+    "marcus.chen@demo.test": ("dropin", {1: (11, 14), 3: (11, 14)}),
+    "lena.fischer@demo.test": ("dropin", {0: (13, 16), 1: (13, 16), 2: (13, 16)}),
+    "jordan.reyes@demo.test": ("online", {0: (18, 20), 2: (18, 20), 3: (18, 20)}),
 }
 
 STUDENT_BY_EMAIL = {s.email: s for s in STUDENTS}

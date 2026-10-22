@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block head_title %}{{ video.title }}{% endblock head_title %}
+
+{% block content %}
+  <nav class="usa-breadcrumb" aria-label="{% translate 'Breadcrumbs' %}">
+    <ol class="usa-breadcrumb__list">
+      <li class="usa-breadcrumb__list-item"><a class="usa-breadcrumb__link" href="{% url 'core:demo' %}"><span>{% translate "Demo" %}</span></a></li>
+      <li class="usa-breadcrumb__list-item"><a class="usa-breadcrumb__link" href="{% url 'core:demo' %}#demo-watch"><span>{% translate "Videos" %}</span></a></li>
+      <li class="usa-breadcrumb__list-item usa-current" aria-current="page"><span>{{ video.title }}</span></li>
+    </ol>
+  </nav>
+
+  <h1>{{ video.title }}</h1>
+  <p class="sympraxi-lead">{{ video.summary }}</p>
+
+  <video class="sympraxi-video" controls preload="metadata" width="1280" height="720" poster="{% static 'demo/videos/'|add:video.slug|add:'.png' %}">
+    <source src="{% static 'demo/videos/'|add:video.slug|add:'.webm' %}" type="video/webm">
+    <track kind="captions" src="{% static 'demo/videos/'|add:video.slug|add:'.vtt' %}" srclang="en" label="English" default>
+    <p>{% translate "Your browser can't play this video. The steps are listed below." %}</p>
+  </video>
+  <p class="text-base-dark">{{ video.audience_label }} · {{ video.length }}</p>
+
+  {% if person %}
+    <div class="sympraxi-hero__actions">
+      <form method="post" action="{% url 'core:demo_sign_in' %}">
+        {% csrf_token %}
+        <input type="hidden" name="person" value="{{ person.pk }}">
+        <button type="submit" class="usa-button">{% blocktranslate with name=person.full_name %}Try it yourself as {{ name }}{% endblocktranslate %}</button>
+      </form>
+      {% if video.try_url %}
+        <a class="usa-button usa-button--outline" href="{{ video.try_url }}">{% translate "Go to the page (after signing in)" %}</a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <h2>{% translate "What happens, step by step" %}</h2>
+  <ol class="sympraxi-transcript">
+    {% for step in video.steps %}
+      <li><span class="text-base-dark">{{ step.at }}</span> {{ step.text }}</li>
+    {% endfor %}
+  </ol>
+
+  {% if video.faq_entries %}
+    <h2>{% translate "Related questions" %}</h2>
+    <ul class="usa-list">
+      {% for entry in video.faq_entries %}
+        <li><a href="{% url 'core:demo' %}#faq-{{ entry.id }}">{{ entry.question }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if others %}
+    <h2>{% translate "More like this" %}</h2>
+    <ul class="usa-list">
+      {% for other in others %}
+        <li><a href="{% url 'core:demo_video' slug=other.slug %}">{{ other.title }}</a> ({{ other.length }})</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

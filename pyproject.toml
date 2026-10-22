@@ -71,6 +71,7 @@ ignore = [
 "sympraxi/core/demo_world/extras.py" = ["E501"]
 "sympraxi/core/demo_world/tour.py" = ["E501"]
 "sympraxi/core/demo_world/videos.py" = ["E501"]
+"sympraxi/core/demo_world/faq.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.12"

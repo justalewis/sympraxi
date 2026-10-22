@@ -296,7 +296,7 @@ STEPS = (
 )
 
 FEATURED_STUDENTS = {
-    "student@demo.test": "Start here. Sam is in ENG 101 working on an essay, has ten sessions behind and a next one booked.",
+    "student@demo.test": "Start here. Sam is in ENG 101 working on an essay, has more than a dozen sessions behind and the next ones booked.",
     "diego.martinez@demo.test": "A first-year engineer writing in his second language, with a tutor who focuses on patterns, not corrections.",
     "sofia.rossi@demo.test": "A doctoral student on a dissertation timeline, with a standing exemption from the weekly limit.",
     "tyler.brooks@demo.test": "Anxious about writing, and a tutor has raised an early alert with a reason.",

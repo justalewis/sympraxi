@@ -1041,6 +1041,53 @@ def test_a_dead_survey_link_passes_axe(browser, live_server) -> None:
     assert results.violations_count == 0, results.generate_report()
 
 
+@pytest.mark.parametrize("path", ["/demo/", "/demo/videos/book-an-appointment/"])
+def test_the_demo_pages_pass_axe_and_the_csp(
+    browser, live_server, settings, tmp_path, monkeypatch, path
+):
+    """The demo's front page (with its FAQ and video list) and a video page, in demo mode."""
+    import json
+
+    from sympraxi.centers.models import Center, Membership, Role
+    from sympraxi.core.demo_world import manifest
+    from tests.factories import UserFactory
+
+    settings.SYMPRAXI_DEMO = True
+    center = Center.objects.create(name="Demo Writing Center", slug="demo")
+    for email, name, role in (
+        ("student@demo.test", "Sam Student", Role.STUDENT),
+        ("tutor@demo.test", "Tomás Tutor", Role.TUTOR),
+        ("frontdesk@demo.test", "Felix Frontdesk", Role.FRONT_DESK),
+        ("director@demo.test", "Dana Director", Role.DIRECTOR),
+    ):
+        Membership.objects.create(
+            user=UserFactory(email=email, full_name=name), center=center, role=role
+        )
+    row = {
+        "slug": "book-an-appointment",
+        "title": "Book an appointment",
+        "audience": "student",
+        "persona": "student@demo.test",
+        "summary": "Choose a schedule, a day and a tutor.",
+        "duration": 47.2,
+        "try_url": "/centers/demo/schedules/",
+        "faq": ["how-do-i-book"],
+        "steps": [{"text": "Sam wants a tutor.", "start": 1.0}],
+    }
+    file = tmp_path / "video_manifest.json"
+    file.write_text(json.dumps([row]), encoding="utf-8")
+    monkeypatch.setattr(manifest, "MANIFEST", file)
+    context = browser.new_context(bypass_csp=False)
+    page = context.new_page()
+    problems = watch_for_csp_problems(page)
+    page.goto(live_server.url + path)
+    page.wait_for_load_state("networkidle")
+    results = Axe().run(page, options=AXE_OPTIONS)
+    context.close()
+    assert problems == []
+    assert results.violations_count == 0, results.generate_report()
+
+
 # Pages on a phone: (who, path). axe checks each as it loads and again with the
 # USWDS menu open. Key student pages, then the tutor's record form and the front
 # desk's pages, which staff use on phones and tablets too.

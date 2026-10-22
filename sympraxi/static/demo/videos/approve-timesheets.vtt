@@ -1,0 +1,17 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:07.656
+Tutors and the front desk clock in and out in the app. The director approves their hours here.
+
+2
+00:00:07.656 --> 00:00:11.531
+Each person's hours for the period are one line.
+
+3
+00:00:11.531 --> 00:00:16.078
+Approving locks the period, so nobody changes hours afterward by accident.
+
+4
+00:00:16.078 --> 00:00:24.094
+Changes to approved hours need a director's reason, and every change is in the audit log. Payroll IDs and pay codes export for HR.

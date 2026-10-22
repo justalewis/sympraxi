@@ -22,6 +22,16 @@ const copies = [
   ["@uswds/uswds/dist/fonts", "uswds/fonts"],
   ["@uswds/uswds/dist/img", "uswds/img"],
   ["@uswds/uswds/LICENSE.md", "uswds/LICENSE.md"],
+  // The site's two typefaces, as variable fonts under the SIL Open Font License. Only the
+  // Latin and Latin Extended pieces, which cover English, Spanish and the names of students
+  // from most of the world, come along; the page asks no one else for a font.
+  ["@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2", "fonts/source-serif-4-latin-wght-normal.woff2"],
+  ["@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-italic.woff2", "fonts/source-serif-4-latin-wght-italic.woff2"],
+  ["@fontsource-variable/source-serif-4/files/source-serif-4-latin-ext-wght-normal.woff2", "fonts/source-serif-4-latin-ext-wght-normal.woff2"],
+  ["@fontsource-variable/source-serif-4/LICENSE", "fonts/LICENSE-source-serif-4.txt"],
+  ["@fontsource-variable/inter/files/inter-latin-wght-normal.woff2", "fonts/inter-latin-wght-normal.woff2"],
+  ["@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2", "fonts/inter-latin-ext-wght-normal.woff2"],
+  ["@fontsource-variable/inter/LICENSE", "fonts/LICENSE-inter.txt"],
   ["htmx.org/dist/htmx.min.js", "htmx/htmx.min.js"],
   ["htmx.org/LICENSE", "htmx/LICENSE"],
   // PDF.js draws PDFs for the comment viewer. The worker, the character maps, the

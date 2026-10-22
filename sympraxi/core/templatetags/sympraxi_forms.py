@@ -22,6 +22,10 @@ def widget_kind(field: BoundField) -> str:
         return "hidden"
     if isinstance(widget, forms.CheckboxInput):
         return "checkbox"
+    if isinstance(widget, forms.CheckboxSelectMultiple):
+        return "checkboxes"
+    if isinstance(widget, forms.RadioSelect):
+        return "radios"
     if isinstance(widget, forms.FileInput):
         return "file"
     if isinstance(widget, forms.Select):

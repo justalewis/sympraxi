@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block head_title %}{% translate "Try Sympraxi" %}{% endblock head_title %}
 
@@ -42,6 +42,17 @@
     </ul>
   </section>
 
+  <nav class="sympraxi-jump" aria-label="{% translate 'On this page' %}">
+    <ul>
+      <li><a href="#demo-why">{% translate "Why Sympraxi" %}</a></li>
+      <li><a href="#demo-tour">{% translate "Explore by role" %}</a></li>
+      {% if video_groups %}<li><a href="#demo-watch">{% translate "Watch" %}</a></li>{% endif %}
+      <li><a href="#demo-cast">{% translate "The people" %}</a></li>
+      <li><a href="#demo-faq">{% translate "Questions" %}</a></li>
+      <li><a href="#adopt">{% translate "Adopting it" %}</a></li>
+    </ul>
+  </nav>
+
   <section class="sympraxi-section" aria-labelledby="demo-why">
     <h2 id="demo-why">{% translate "Why writing centers choose Sympraxi" %}</h2>
     <div class="sympraxi-panels sympraxi-panels--cards">
@@ -79,6 +90,27 @@
     </div>
   </section>
 
+  {% if video_groups %}
+    <section class="sympraxi-section" id="demo-watch" aria-labelledby="demo-watch-title">
+      <h2 id="demo-watch-title">{% translate "Watch it first" %}</h2>
+      <p>{% translate "Short videos of the main tasks, with captions. Each one has a transcript and a way to try the same thing yourself." %}</p>
+      {% for label, clips in video_groups %}
+        <h3>{{ label }}</h3>
+        <ul class="sympraxi-videos">
+          {% for clip in clips %}
+            <li class="sympraxi-panel">
+              <a class="sympraxi-videos__poster" href="{% url 'core:demo_video' slug=clip.slug %}" tabindex="-1" aria-hidden="true">
+                <img src="{% static 'demo/videos/'|add:clip.slug|add:'.png' %}" alt="" width="320" height="180" loading="lazy">
+              </a>
+              <h4><a href="{% url 'core:demo_video' slug=clip.slug %}">{{ clip.title }}</a> <span class="text-base-dark">({{ clip.length }})</span></h4>
+              <p>{{ clip.summary }}</p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    </section>
+  {% endif %}
+
   <section class="sympraxi-section" aria-labelledby="demo-cast">
     <h2 id="demo-cast">{% translate "Meet the people" %}</h2>
     <p>{% translate "Choose anyone. Each one sees the center the way their role would. There are 24 students in all; these show the range." %}</p>
@@ -102,7 +134,29 @@
     {% endfor %}
   </section>
 
-  <section class="sympraxi-section" aria-labelledby="demo-adopt">
+  <section class="sympraxi-section" id="demo-faq" aria-labelledby="demo-faq-title">
+    <h2 id="demo-faq-title">{% translate "Questions people ask" %}</h2>
+    {% for label, entries in faq_groups %}
+      <h3>{{ label }}</h3>
+      {% for item in entries %}
+        <details class="sympraxi-faq" id="faq-{{ item.entry.id }}">
+          <summary>{{ item.entry.question }}</summary>
+          {% for paragraph in item.entry.answer %}<p>{{ paragraph }}</p>{% endfor %}
+          {% if item.steps %}
+            <p><strong>{% translate "The steps:" %}</strong></p>
+            <ol>
+              {% for step in item.steps %}<li>{{ step.text }}</li>{% endfor %}
+            </ol>
+          {% endif %}
+          {% for clip in item.videos %}
+            <p><a href="{% url 'core:demo_video' slug=clip.slug %}">{% blocktranslate with title=clip.title length=clip.length %}Watch: {{ title }} ({{ length }}){% endblocktranslate %}</a></p>
+          {% endfor %}
+        </details>
+      {% endfor %}
+    {% endfor %}
+  </section>
+
+  <section class="sympraxi-section" id="adopt" aria-labelledby="demo-adopt">
     <h2 id="demo-adopt">{% translate "From here to your center" %}</h2>
     <ol class="usa-process-list">
       {% for title, body in steps %}

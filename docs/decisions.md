@@ -12,6 +12,16 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## The look: Quiet paper (October 2026)
+
+**A warm, literary layer over USWDS.** The page is a stone color (`#e7e2d8`) and the content sits on a paper column (`#faf7f2`) with a thin border, so the content has an edge. Text is a near-black with a brown cast (`#23201c`), secondary text `#5a5348`, and everything that can be acted on (links, buttons, focus-adjacent accents) is one deep green (`#1f5c4d`, hover `#164539`). Page titles are set in Source Serif 4, everything else in Inter. Cards and tiles are `#fffdf9` with a `#d3caba` line and a 6-pixel radius, tints are `#efe6d3`, and the one warning color is `#8a3b1e`. All of it is in `sympraxi/static/sympraxi/quiet-paper.css`, loaded after `sympraxi.css`, with the colors as variables at the top, so changing the look is a matter of changing those.
+
+**Contrast, measured.** Ink on paper 15.2:1, secondary text on paper 7.1:1, green on paper 7.3:1, white on green 7.8:1, tint text on tint 7.5:1, form-field borders (`#6f665a`) well above the 3:1 non-text minimum. USWDS's own hint gray was 4.36:1 on paper, so hints and `text-base` use the darker secondary color. The browser accessibility tests are the check that this holds on every page.
+
+**Fonts are served from this site.** `@fontsource-variable/source-serif-4` 5.3.1 and `@fontsource-variable/inter` 5.3.0 (both SIL Open Font License 1.1, added with approval on October 22) are copied into `static/vendor/fonts/` by `npm run build`, like USWDS and htmx. Only the Latin and Latin Extended pieces come along (about 280 KB), which cover English, Spanish and the names of students from most of the world. The two main files are preloaded, and the others load only for characters that need them. No page asks another host for a font, and the licenses ship next to the files.
+
+**Not done.** No dark mode, and no per-college branding yet (a college can't change the green or the fonts without editing the file).
+
 ## Demo mode (October 2026)
 
 **A public demo that can't touch real people.** `SYMPRAXI_DEMO=true` turns a site into a demo: `/demo/` lists made-up people by role with a "sign in as" button for each, so a visitor (or someone demoing for others) needs no password. Every page carries a banner saying it is a demo, and asks search engines not to index it. The settings refuse to start a demo that could reach real people: a real text provider, the link checker, or any single sign-on provider stops the site with an error naming the setting. Whatever `EMAIL_URL` says, a demo writes mail to the log only; webhooks aren't called; sign-up is closed. The sample staff skip two-factor setup, matched by the `@demo.test` address, so a real administrator account on the same server still needs it.

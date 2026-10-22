@@ -21,9 +21,12 @@ so record against a throwaway copy and reset the demo afterward.
 
 import argparse
 import datetime as dt
+import glob
 import json
+import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -60,6 +63,7 @@ OVERLAY = r"""
       "Source Sans Pro",system-ui,sans-serif;padding:12px 20px;border-radius:6px;text-align:center;
       opacity:0;transition:opacity .25s;pointer-events:none}
     .__hl{outline:4px solid #e8a317 !important;outline-offset:3px !important}
+    body{padding-bottom:150px !important}
   `;
   const build = () => {
     if (document.getElementById('__cursor')) return;
@@ -124,7 +128,7 @@ class Recorder:
         self.cues: list[dict[str, Any]] = []
         self.caption = ""
         day = dt.date.today() + dt.timedelta(days=1)
-        while day.weekday() > 4:
+        while day.weekday() > 3:  # Monday to Thursday: every tutor in the demo works those days
             day += dt.timedelta(days=1)
         self.next_weekday = day.isoformat()
 
@@ -227,6 +231,62 @@ class Recorder:
             )
 
 
+def find_ffmpeg() -> str | None:
+    """Playwright's own ffmpeg (it ships one for its recordings), or one on the PATH."""
+    roots = [
+        os.environ.get("PLAYWRIGHT_BROWSERS_PATH", ""),
+        os.path.expandvars(r"%LOCALAPPDATA%\ms-playwright"),
+        os.path.expanduser("~/.cache/ms-playwright"),
+        os.path.expanduser("~/Library/Caches/ms-playwright"),
+    ]
+    for root in filter(None, roots):
+        found = sorted(glob.glob(os.path.join(root, "ffmpeg-*", "ffmpeg*")))
+        found = [f for f in found if os.path.isfile(f) and not f.endswith((".txt", ".md"))]
+        if found:
+            return found[-1]
+    return shutil.which("ffmpeg")
+
+
+def compress(path: Path) -> None:
+    """Re-encode a recording as VP9 at a quality a screen recording doesn't need more than:
+    about a fifth of the size, so the videos stay small enough to keep in the repository."""
+    ffmpeg = find_ffmpeg()
+    if ffmpeg is None:
+        print(f"  (no ffmpeg found; keeping {path.name} as recorded)", file=sys.stderr)
+        return
+    small = path.with_suffix(".small.webm")
+    command = [
+        ffmpeg,
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-y",
+        "-i",
+        str(path),
+        "-c:v",
+        "libvpx-vp9",
+        "-crf",
+        "38",
+        "-b:v",
+        "0",
+        "-deadline",
+        "good",
+        "-cpu-used",
+        "4",
+        "-row-mt",
+        "1",
+        "-pix_fmt",
+        "yuv420p",
+        "-an",
+        str(small),
+    ]
+    done = subprocess.run(command, check=False)  # noqa: S603
+    if done.returncode == 0 and small.exists() and small.stat().st_size < path.stat().st_size:
+        small.replace(path)
+    else:
+        small.unlink(missing_ok=True)
+
+
 def vtt_time(seconds: float) -> str:
     ms = round(seconds * 1000)
     h, rest = divmod(ms, 3_600_000)
@@ -252,7 +312,9 @@ def sign_in(browser: Any, base: str, name: str, state_file: Path) -> None:
     context.close()
 
 
-def record(browser: Any, scenario: Scenario, base: str, out: Path, *, fast: bool) -> dict[str, Any]:
+def record(
+    browser: Any, scenario: Scenario, base: str, out: Path, *, fast: bool, compressing: bool = True
+) -> dict[str, Any]:
     tmp = Path(tempfile.mkdtemp(prefix="demo-video-"))
     state = tmp / "state.json"
     sign_in(browser, base, PERSONA_NAMES[scenario.persona], state)
@@ -300,6 +362,8 @@ def record(browser: Any, scenario: Scenario, base: str, out: Path, *, fast: bool
     }
     if not fast and video is not None:
         shutil.move(video.path(), out / f"{scenario.slug}.webm")
+        if compressing:
+            compress(out / f"{scenario.slug}.webm")
         write_vtt(out / f"{scenario.slug}.vtt", rec.cues)
         result["bytes"] = (out / f"{scenario.slug}.webm").stat().st_size
     shutil.rmtree(tmp, ignore_errors=True)
@@ -315,6 +379,7 @@ def main() -> int:
     parser.add_argument("--only", action="append", default=[], help="a scenario slug; repeatable")
     parser.add_argument("--check", action="store_true", help="run the steps without recording")
     parser.add_argument("--headed", action="store_true")
+    parser.add_argument("--no-compress", action="store_true", help="keep recordings as captured")
     args = parser.parse_args()
     chosen = [s for s in SCENARIOS if not args.only or s.slug in args.only]
     if not chosen:
@@ -330,7 +395,12 @@ def main() -> int:
         for scenario in chosen:
             try:
                 results[scenario.slug] = record(
-                    browser, scenario, args.base, args.out, fast=args.check
+                    browser,
+                    scenario,
+                    args.base,
+                    args.out,
+                    fast=args.check,
+                    compressing=not args.no_compress,
                 )
                 print(f"ok  {scenario.slug}  {results[scenario.slug]['duration']}s")
             except Exception as error:

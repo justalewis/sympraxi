@@ -37,6 +37,8 @@ from sympraxi.scheduling.models import (
 from sympraxi.scheduling.timeutils import first_instant
 
 HISTORY_DAYS = 70
+# Visits per student are scaled so the center reads as busy, as a real one is.
+VISIT_FACTOR = 1.8
 SPECIALTY = {  # which tutor a kind of session tends to go to (emails)
     "lab_report": ["marcus.chen@demo.test"],
     "personal_statement": ["lena.fischer@demo.test"],
@@ -162,7 +164,7 @@ def _schedules(world: World) -> None:
     if term is None:
         raise RuntimeError("seed the scheduling data first")
     term.name = "Fall term"
-    term.starts_on = today - timedelta(days=HISTORY_DAYS + 7)
+    term.starts_on = today - timedelta(days=HISTORY_DAYS)
     term.ends_on = today + timedelta(days=60)
     term.save()
     Closure.objects.get_or_create(
@@ -214,6 +216,9 @@ def _schedules(world: World) -> None:
             "description": "Video sessions in the evening, for students who can't come in.",
         },
     )
+    for schedule, opens, closes in ((dropin, 9, 17), (consult, 9, 18), (online, 17, 22)):
+        schedule.opens_at, schedule.closes_at = time(opens), time(closes)
+        schedule.save(update_fields=["opens_at", "closes_at"])
     by_name = {"dropin": dropin, "consult": consult, "online": online}
     for email, (kind, hours) in cast.TUTOR_HOURS.items():
         tutor = world.user(email)
@@ -232,7 +237,10 @@ def _schedules(world: World) -> None:
             },
         )
         world.assignments[email] = assignment
-        if created:
+        if email == "tutor@demo.test":
+            # The first seed gave this tutor hours of its own; the cast's hours replace them.
+            WeeklyHours.objects.filter(assignment=assignment).delete()
+        if created or email == "tutor@demo.test":
             for weekday, (start, end) in hours.items():
                 WeeklyHours.objects.create(
                     assignment=assignment, weekday=weekday, starts_at=time(start), ends_at=time(end)
@@ -422,7 +430,8 @@ def _past_sessions(world: World) -> None:
         student = world.user(profile.email)
         project = world.projects[profile.email]
         # Spread this student's visits over the term, regulars weekly, others sparsely.
-        picks = sorted(rng.sample(days, min(profile.visits, len(days))))
+        wanted = round(profile.visits * VISIT_FACTOR)
+        picks = sorted(rng.sample(days, min(wanted, len(days))))
         for n, day in enumerate(picks):
             key = profile.wants[n % len(profile.wants)]
             for _attempt in range(6):

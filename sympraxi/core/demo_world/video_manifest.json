@@ -1,0 +1,579 @@
+[
+ {
+  "slug": "book-an-appointment",
+  "title": "Book an appointment",
+  "audience": "student",
+  "persona": "student@demo.test",
+  "summary": "Choose a schedule, a day and a tutor, tell the center what you need, and you are booked.",
+  "duration": 59.3,
+  "try_url": "/centers/demo/schedules/",
+  "faq": [
+   "how-do-i-book"
+  ],
+  "steps": [
+   {
+    "text": "Sam is a student. This is his page for the center: what is coming up, and what he worked on last.",
+    "start": 0.0
+   },
+   {
+    "text": "He wants a tutor this week, so he chooses Book an appointment.",
+    "start": 8.8
+   },
+   {
+    "text": "Each schedule is a kind of help. Drop-in tutoring takes half hours and hours with peer tutors.",
+    "start": 13.7
+   },
+   {
+    "text": "He picks a day.",
+    "start": 20.3
+   },
+   {
+    "text": "Open times list every tutor's free slots. He can also narrow by length, tutor, or in person versus online.",
+    "start": 22.6
+   },
+   {
+    "text": "He takes a time with Tom\u00e1s, who helped him before.",
+    "start": 29.7
+   },
+   {
+    "text": "The center's intake form asks what he needs, so his tutor can prepare.",
+    "start": 33.9
+   },
+   {
+    "text": "One click books it.",
+    "start": 46.7
+   },
+   {
+    "text": "He gets an email with the details and a calendar file, and a reminder before the visit. He can move or cancel from this page.",
+    "start": 51.0
+   }
+  ],
+  "bytes": 1060124
+ },
+ {
+  "slug": "read-your-session-summary",
+  "title": "Read your session summaries and next steps",
+  "audience": "student",
+  "persona": "student@demo.test",
+  "summary": "After every visit, your tutor writes you a summary, next steps and resources. They are all in one place.",
+  "duration": 25.8,
+  "try_url": "/centers/demo/my-writing/",
+  "faq": [
+   "what-do-students-see"
+  ],
+  "steps": [
+   {
+    "text": "After each visit, Sam's tutor writes him a short summary. This card shows the latest.",
+    "start": 0.0
+   },
+   {
+    "text": "My writing keeps every summary, grouped by project, newest first.",
+    "start": 6.6
+   },
+   {
+    "text": "Sessions are grouped by writing project, so he can see one paper's whole story.",
+    "start": 11.5
+   },
+   {
+    "text": "The timeline shows his writing across terms.",
+    "start": 16.9
+   },
+   {
+    "text": "Sam can also set writing goals, and see who outside the center has looked at his records.",
+    "start": 20.2
+   }
+  ],
+  "bytes": 563073
+ },
+ {
+  "slug": "join-the-waiting-list",
+  "title": "Join the waiting list",
+  "audience": "student",
+  "persona": "student@demo.test",
+  "summary": "No time that suits you? Say when you could come, and the center holds a canceled time for you.",
+  "duration": 37.3,
+  "try_url": "/centers/demo/waiting-list/",
+  "faq": [
+   "waiting-list"
+  ],
+  "steps": [
+   {
+    "text": "Sam looked at the open times and none of them suit his schedule.",
+    "start": 0.0
+   },
+   {
+    "text": "Instead of checking back all week, he asks for a time.",
+    "start": 6.2
+   },
+   {
+    "text": "He says which day he could come.",
+    "start": 12.7
+   },
+   {
+    "text": "And the window that works for him.",
+    "start": 17.4
+   },
+   {
+    "text": "He says how long a visit he needs.",
+    "start": 20.6
+   },
+   {
+    "text": "If anyone cancels a time that fits, he is emailed and the time is held for him for a few minutes.",
+    "start": 24.0
+   },
+   {
+    "text": "He can leave the list at any time, and the center can see who is waiting.",
+    "start": 31.9
+   }
+  ],
+  "bytes": 727962
+ },
+ {
+  "slug": "register-for-a-workshop",
+  "title": "Register for a workshop",
+  "audience": "student",
+  "persona": "student@demo.test",
+  "summary": "Workshops are short group sessions with seats. Register in a click.",
+  "duration": 20.8,
+  "try_url": "/centers/demo/workshops/",
+  "faq": [
+   "workshops"
+  ],
+  "steps": [
+   {
+    "text": "The center runs short group workshops, on thesis statements, citations and more.",
+    "start": 0.0
+   },
+   {
+    "text": "Sam opens one to see when and where it meets, who leads it, and how many seats are left.",
+    "start": 5.7
+   },
+   {
+    "text": "One click registers him.",
+    "start": 13.2
+   },
+   {
+    "text": "He gets a confirmation email. If he cannot come, he can cancel and free the seat.",
+    "start": 15.5
+   }
+  ],
+  "bytes": 340241
+ },
+ {
+  "slug": "prepare-for-a-session",
+  "title": "Prepare for a session",
+  "audience": "tutor",
+  "persona": "tutor@demo.test",
+  "summary": "Before the student arrives, see what they told the center, their goals, and what happened last time.",
+  "duration": 31.7,
+  "try_url": "/centers/demo/tutoring/",
+  "faq": [
+   "who-sees-what"
+  ],
+  "steps": [
+   {
+    "text": "Tom\u00e1s is a peer tutor. This is his schedule: every appointment, by day.",
+    "start": 0.0
+   },
+   {
+    "text": "He opens his next appointment.",
+    "start": 6.1
+   },
+   {
+    "text": "Before the student arrives, he can see everything they told the center.",
+    "start": 9.2
+   },
+   {
+    "text": "What course the work is for, and what they want to focus on.",
+    "start": 13.3
+   },
+   {
+    "text": "The goals the student set with the center.",
+    "start": 17.7
+   },
+   {
+    "text": "And what happened in their last sessions, so he does not start from zero.",
+    "start": 20.4
+   },
+   {
+    "text": "All of it is limited to what a tutor may see, and each look is written to the audit log.",
+    "start": 25.1
+   }
+  ],
+  "bytes": 773996
+ },
+ {
+  "slug": "write-up-a-session",
+  "title": "Write up a session",
+  "audience": "tutor",
+  "persona": "tutor@demo.test",
+  "summary": "In a few minutes, record what happened: topics, a summary for the writer, next steps and resources.",
+  "duration": 67.2,
+  "try_url": "/centers/demo/records/to-write/",
+  "faq": [
+   "session-records"
+  ],
+  "steps": [
+   {
+    "text": "After a visit, the tutor writes it up. This list shows sessions still waiting for a record.",
+    "start": 0.0
+   },
+   {
+    "text": "Tom\u00e1s opens the record for Sam's last visit.",
+    "start": 7.5
+   },
+   {
+    "text": "The summary is written to the student, who reads it on their My writing page.",
+    "start": 11.5
+   },
+   {
+    "text": "Next steps tell the student what to do before the next visit.",
+    "start": 26.0
+   },
+   {
+    "text": "Topics describe what the writing needed, where the writer was in the work, and what happened. They feed the center's reports.",
+    "start": 34.2
+   },
+   {
+    "text": "The center's own report questions come last. The director can change them any time.",
+    "start": 50.2
+   },
+   {
+    "text": "Finalizing shows the summary to the student and emails them a link. Later changes are kept as dated amendments.",
+    "start": 54.8
+   },
+   {
+    "text": "The record is final. The statistics, the topic report and the student's timeline all update.",
+    "start": 62.2
+   }
+  ],
+  "bytes": 1610152
+ },
+ {
+  "slug": "raise-an-early-alert",
+  "title": "Raise an early alert",
+  "audience": "tutor",
+  "persona": "tutor@demo.test",
+  "summary": "When you are worried about a student, say why. The right people see it, and it is tracked to a close.",
+  "duration": 38.6,
+  "try_url": "/centers/demo/alerts/mine/",
+  "faq": [
+   "early-alerts"
+  ],
+  "steps": [
+   {
+    "text": "A tutor has a concern about a student's attendance.",
+    "start": 0.0
+   },
+   {
+    "text": "Tom\u00e1s opens a recent visit with the student.",
+    "start": 4.8
+   },
+   {
+    "text": "From the student's page...",
+    "start": 8.5
+   },
+   {
+    "text": "...he can raise an early alert.",
+    "start": 10.8
+   },
+   {
+    "text": "He says what it is about.",
+    "start": 13.6
+   },
+   {
+    "text": "A reason is required. It is what the director reads, and what the student can ask to see.",
+    "start": 16.4
+   },
+   {
+    "text": "He records whether the student knows.",
+    "start": 28.8
+   },
+   {
+    "text": "Only the director and the people the center chose see the alert, and every step is written to the audit log.",
+    "start": 31.6
+   }
+  ],
+  "bytes": 754983
+ },
+ {
+  "slug": "take-a-training-module",
+  "title": "Take a training module",
+  "audience": "tutor",
+  "persona": "tutor@demo.test",
+  "summary": "Tutor training lives in the same place as the work: modules, readings and quizzes, tracked for you.",
+  "duration": 24.0,
+  "try_url": "/centers/demo/training/",
+  "faq": [
+   "training"
+  ],
+  "steps": [
+   {
+    "text": "Training sits beside the work. Tom\u00e1s sees every module his center has published.",
+    "start": 0.0
+   },
+   {
+    "text": "He opens a module on supporting a struggling writer.",
+    "start": 6.0
+   },
+   {
+    "text": "Each module is a few short items: pages, readings and quizzes.",
+    "start": 9.9
+   },
+   {
+    "text": "He reads the page, then moves to the quiz.",
+    "start": 14.5
+   },
+   {
+    "text": "Quiz results and completions are tracked for the director, who can sign off a new tutor's module.",
+    "start": 18.4
+   }
+  ],
+  "bytes": 440539
+ },
+ {
+  "slug": "check-possible-no-shows",
+  "title": "Check possible no-shows",
+  "audience": "frontdesk",
+  "persona": "frontdesk@demo.test",
+  "summary": "Confirm who came, who did not, and clear any flag, with a note on the record.",
+  "duration": 26.8,
+  "try_url": "/centers/demo/attendance/",
+  "faq": [
+   "no-shows"
+  ],
+  "steps": [
+   {
+    "text": "Felix runs the front desk. Sessions where nobody marked attendance show up here.",
+    "start": 0.0
+   },
+   {
+    "text": "Each one has three choices: they came, they did not, or the flag was wrong.",
+    "start": 5.9
+   },
+   {
+    "text": "He marks the student as having come.",
+    "start": 11.8
+   },
+   {
+    "text": "A confirmed no-show counts toward the center's booking limit, and the student is told. Staff can also waive one with a reason.",
+    "start": 15.4
+   },
+   {
+    "text": "Below is the last 30 days, where a no-show can be waived.",
+    "start": 22.7
+   }
+  ],
+  "bytes": 548289
+ },
+ {
+  "slug": "check-a-student-in",
+  "title": "Check a student in at the front desk",
+  "audience": "frontdesk",
+  "persona": "frontdesk@demo.test",
+  "summary": "See who is waiting and who is with a tutor, and check a walk-in student in with their ID.",
+  "duration": 22.5,
+  "try_url": "/centers/demo/waiting-room/",
+  "faq": [
+   "walk-ins"
+  ],
+  "steps": [
+   {
+    "text": "The waiting room shows who has checked in, and who is next.",
+    "start": 0.0
+   },
+   {
+    "text": "A student gives their ID, or checks in at the kiosk themselves.",
+    "start": 5.9
+   },
+   {
+    "text": "Optionally, what they want help with.",
+    "start": 11.3
+   },
+   {
+    "text": "One click checks them in.",
+    "start": 15.6
+   },
+   {
+    "text": "The tutor sees them waiting, and walk-in counts feed the center's reports.",
+    "start": 18.5
+   }
+  ],
+  "bytes": 319626
+ },
+ {
+  "slug": "run-an-hours-report",
+  "title": "Run an hours report",
+  "audience": "director",
+  "persona": "director@demo.test",
+  "summary": "See how many hours you offered and how many were booked, by tutor, schedule and week.",
+  "duration": 31.3,
+  "try_url": "/centers/demo/reports/hours/",
+  "faq": [
+   "reports"
+  ],
+  "steps": [
+   {
+    "text": "Dana directs the center. Her page opens with the numbers, and the things that need her.",
+    "start": 0.0
+   },
+   {
+    "text": "She opens the hours report.",
+    "start": 7.1
+   },
+   {
+    "text": "Hours are offered by schedule, tutor and week. She picks the term.",
+    "start": 9.9
+   },
+   {
+    "text": "By tutor: hours offered, hours booked, and how full each tutor's time was.",
+    "start": 16.7
+   },
+   {
+    "text": "And by week, so she can see where demand peaks.",
+    "start": 21.1
+   },
+   {
+    "text": "Every report downloads as CSV, Excel or JSON.",
+    "start": 24.5
+   },
+   {
+    "text": "The same numbers feed budget requests and the end-of-year report.",
+    "start": 27.9
+   }
+  ],
+  "bytes": 864883
+ },
+ {
+  "slug": "read-the-statistics",
+  "title": "Read the statistics and break them down by course",
+  "audience": "director",
+  "persona": "director@demo.test",
+  "summary": "Appointments, visits, no-shows and topics for a term, and who comes from which courses and years.",
+  "duration": 21.7,
+  "try_url": "/centers/demo/reports/statistics/",
+  "faq": [
+   "reports"
+  ],
+  "steps": [
+   {
+    "text": "The statistics page counts appointments, visits and students for any term.",
+    "start": 0.0
+   },
+   {
+    "text": "Broken down by tutor...",
+    "start": 5.8
+   },
+   {
+    "text": "...and by how they met: in person or online.",
+    "start": 7.4
+   },
+   {
+    "text": "The by-course report shows which courses and class years send students, and what they work on.",
+    "start": 10.4
+   },
+   {
+    "text": "The center chooses which registration and intake questions the report reads, so it fits its own forms.",
+    "start": 16.1
+   }
+  ],
+  "bytes": 710810
+ },
+ {
+  "slug": "handle-an-early-alert",
+  "title": "Handle an early alert",
+  "audience": "director",
+  "persona": "director@demo.test",
+  "summary": "Read the reason, acknowledge it, and close it with a note about what was done.",
+  "duration": 29.7,
+  "try_url": "/centers/demo/alerts/",
+  "faq": [
+   "early-alerts"
+  ],
+  "steps": [
+   {
+    "text": "Early alerts raised by tutors and staff come to the director.",
+    "start": 0.0
+   },
+   {
+    "text": "Dana opens one about a student who has missed two booked sessions and not replied to the reminder.",
+    "start": 5.5
+   },
+   {
+    "text": "She reads who raised it, why, and whether the student knows.",
+    "start": 12.8
+   },
+   {
+    "text": "She acknowledges it, so the person who raised it knows it was seen.",
+    "start": 16.4
+   },
+   {
+    "text": "When it is resolved, she closes it with a note about what was done. Nothing is deleted, and the audit log keeps every step.",
+    "start": 21.7
+   }
+  ],
+  "bytes": 516382
+ },
+ {
+  "slug": "approve-timesheets",
+  "title": "Approve timesheets",
+  "audience": "director",
+  "persona": "director@demo.test",
+  "summary": "Tutors clock in and out; you review hours by person and approve a pay period.",
+  "duration": 24.1,
+  "try_url": "/centers/demo/time-clock/approvals/",
+  "faq": [
+   "time-clock"
+  ],
+  "steps": [
+   {
+    "text": "Tutors and the front desk clock in and out in the app. The director approves their hours here.",
+    "start": 0.0
+   },
+   {
+    "text": "Each person's hours for the period are one line.",
+    "start": 7.7
+   },
+   {
+    "text": "Approving locks the period, so nobody changes hours afterward by accident.",
+    "start": 11.5
+   },
+   {
+    "text": "Changes to approved hours need a director's reason, and every change is in the audit log. Payroll IDs and pay codes export for HR.",
+    "start": 16.1
+   }
+  ],
+  "bytes": 473390
+ },
+ {
+  "slug": "audit-log-and-export",
+  "title": "See who opened what, and take your data with you",
+  "audience": "director",
+  "persona": "director@demo.test",
+  "summary": "The audit log records every look at a student's record. A full export gives you everything.",
+  "duration": 17.8,
+  "try_url": "/centers/demo/audit/",
+  "faq": [
+   "your-data"
+  ],
+  "steps": [
+   {
+    "text": "Every sign-in, booking, record opened, and export is written to the audit log.",
+    "start": 0.0
+   },
+   {
+    "text": "It cannot be edited or deleted by the center. The database itself refuses.",
+    "start": 6.0
+   },
+   {
+    "text": "A full export of the center's data is one page away.",
+    "start": 10.4
+   },
+   {
+    "text": "If you ever leave Sympraxi, you take everything with you.",
+    "start": 14.5
+   }
+  ],
+  "bytes": 459672
+ }
+]

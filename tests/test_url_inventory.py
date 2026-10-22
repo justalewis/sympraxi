@@ -462,6 +462,10 @@ CAS_ENDPOINTS = {
 # registered platform (tests/test_lti.py).
 LTI_ENDPOINTS = {"lti:login", "lti:launch"}
 
+# A demo video's page needs the video's name, and answers 404 unless the site is a demo
+# with that video recorded (tests/test_demo.py).
+DEMO_VIDEO_PAGES = {"core:demo_video"}
+
 # The JSON API. It answers to a bearer token, not a session; tests/test_integrations.py
 # checks what each does. Here: none answers without one.
 API_ENDPOINTS = {
@@ -483,6 +487,7 @@ def test_every_url_is_classified() -> None:
         | API_ENDPOINTS
         | SIGNED_ENDPOINTS
         | CAS_ENDPOINTS
+        | DEMO_VIDEO_PAGES
         | LTI_ENDPOINTS
     )
     assert sympraxi_url_names() == classified

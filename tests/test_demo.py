@@ -259,6 +259,130 @@ def test_the_front_page_of_a_demo_site_is_the_demo_page(client, demo) -> None:
     assert response.status_code == 302 and response["Location"] == reverse("core:demo")
 
 
+# --- Videos and the FAQ ---------------------------------------------------------------------
+
+
+def test_the_video_scripts_and_the_faq_agree_with_each_other() -> None:
+    from sympraxi.core.demo_world import faq, videos
+
+    slugs = [s.slug for s in videos.SCENARIOS]
+    assert len(slugs) == len(set(slugs)), "two scripts share a slug"
+    ids = [f.id for f in faq.FAQS]
+    assert len(ids) == len(set(ids)), "two FAQ entries share an id"
+    groups = {key for key, _ in faq.GROUPS}
+    audiences = {key for key, _ in videos.AUDIENCES}
+    for entry in faq.FAQS:
+        assert entry.group in groups
+        assert entry.answer and all(p.strip() for p in entry.answer)
+        for slug in entry.videos:
+            assert slug in slugs, f"{entry.id} names a video that doesn't exist: {slug}"
+    for scenario in videos.SCENARIOS:
+        assert scenario.audience in audiences
+        assert scenario.persona in videos.PERSONA_NAMES
+        assert scenario.steps and any(step.caption for step in scenario.steps)
+        for faq_id in scenario.faq:
+            assert faq_id in ids, f"{scenario.slug} names a FAQ entry that doesn't exist: {faq_id}"
+        assert all(
+            step.do
+            in {
+                "goto",
+                "click",
+                "fill",
+                "select",
+                "check",
+                "highlight",
+                "scroll",
+                "wait",
+                "caption",
+            }
+            for step in scenario.steps
+        )
+
+
+@pytest.fixture
+def recorded(demo, seeded, tmp_path, monkeypatch):
+    """A manifest as the recorder writes it, for two of the scripts."""
+    import json
+
+    from sympraxi.core.demo_world import manifest
+
+    rows = [
+        {
+            "slug": "book-an-appointment",
+            "title": "Book an appointment",
+            "audience": "student",
+            "persona": "student@demo.test",
+            "summary": "Choose a schedule, a day and a tutor.",
+            "duration": 47.2,
+            "try_url": "/centers/demo/schedules/",
+            "faq": ["how-do-i-book"],
+            "steps": [
+                {"text": "Sam wants a tutor.", "start": 1.0},
+                {"text": "He books it.", "start": 20.5},
+            ],
+        },
+        {
+            "slug": "run-an-hours-report",
+            "title": "Run an hours report",
+            "audience": "director",
+            "persona": "director@demo.test",
+            "summary": "Hours offered and booked.",
+            "duration": 38.0,
+            "try_url": "/centers/demo/reports/hours/",
+            "faq": ["reports"],
+            "steps": [{"text": "Dana opens the report.", "start": 1.0}],
+        },
+    ]
+    path = tmp_path / "video_manifest.json"
+    path.write_text(json.dumps(rows), encoding="utf-8")
+    monkeypatch.setattr(manifest, "MANIFEST", path)
+    return rows
+
+
+def test_with_no_videos_recorded_the_front_page_still_works_and_has_the_faq(
+    client, seeded, tmp_path, monkeypatch
+) -> None:
+    from sympraxi.core.demo_world import manifest
+
+    monkeypatch.setattr(manifest, "MANIFEST", tmp_path / "missing.json")
+    html = client.get(reverse("core:demo")).content.decode()
+    assert "Watch it first" not in html
+    assert "Questions people ask" in html and "How do I book an appointment?" in html
+    assert 'id="faq-how-do-i-book"' in html
+
+
+def test_the_front_page_lists_the_videos_by_audience(client, recorded) -> None:
+    html = client.get(reverse("core:demo")).content.decode()
+    assert "Watch it first" in html and "For students" in html and "For directors" in html
+    assert reverse("core:demo_video", args=["book-an-appointment"]) in html
+    assert "(0:47)" in html
+
+
+def test_a_faq_answer_with_a_video_shows_its_steps_and_a_link(client, recorded) -> None:
+    html = client.get(reverse("core:demo")).content.decode()
+    assert "Sam wants a tutor." in html and "He books it." in html
+    assert "Watch: Book an appointment (0:47)" in html
+
+
+def test_a_video_page_has_captions_a_transcript_and_a_way_to_try_it(client, recorded) -> None:
+    html = client.get(reverse("core:demo_video", args=["book-an-appointment"])).content.decode()
+    assert "<video" in html and 'kind="captions"' in html and ".vtt" in html
+    assert "0:20" in html and "He books it." in html
+    assert "Try it yourself as Sam Student" in html
+    assert 'href="/centers/demo/schedules/"' in html
+    assert "How do I book an appointment?" in html  # the related question
+
+
+def test_a_video_that_was_not_recorded_is_a_404(client, recorded) -> None:
+    assert client.get(reverse("core:demo_video", args=["write-up-a-session"])).status_code == 404
+    assert client.get(reverse("core:demo_video", args=["no-such-video"])).status_code == 404
+
+
+def test_video_pages_do_not_exist_on_a_normal_site(client, recorded, settings) -> None:
+    settings.SYMPRAXI_DEMO = False
+    assert client.get(reverse("core:demo_video", args=["book-an-appointment"])).status_code == 404
+
+
 # --- The guards that stop a demo from reaching real people --------------------------------------
 
 
