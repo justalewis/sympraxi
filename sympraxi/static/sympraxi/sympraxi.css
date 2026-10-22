@@ -67,6 +67,123 @@ summary:focus {
   margin: 0;
 }
 
+/* The center's front page: panels, number tiles and today's table. */
+.sympraxi-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.sympraxi-panel {
+  border: 1px solid var(--sympraxi-line, #c9c9c9);
+  border-radius: 0.25rem;
+  padding: 0 1rem 0.5rem;
+}
+
+.sympraxi-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0.5rem 0 1rem;
+  padding: 0;
+}
+
+.sympraxi-tile {
+  border: 1px solid var(--sympraxi-line, #c9c9c9);
+  border-radius: 0.25rem;
+  padding: 0.75rem 1rem;
+}
+
+.sympraxi-tile--attention {
+  border-color: #b5472b;
+  border-width: 2px;
+}
+
+.sympraxi-tile__value {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1.1;
+}
+
+.sympraxi-month {
+  margin: 0 0 1rem;
+}
+
+.sympraxi-row--now {
+  background: #fff8e6;
+}
+
+/* The demo's front page. */
+.sympraxi-hero {
+  padding: 2.5rem 0 1.5rem;
+  max-width: 48rem;
+}
+
+.sympraxi-hero h1 {
+  font-size: 2.25rem;
+  line-height: 1.15;
+  margin: 0.25rem 0 1rem;
+}
+
+.sympraxi-eyebrow {
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.sympraxi-lead {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+}
+
+.sympraxi-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.sympraxi-hero__actions form {
+  margin: 0;
+}
+
+.sympraxi-section {
+  margin: 2.5rem 0;
+}
+
+.sympraxi-tiles--wide {
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+.sympraxi-panels--cards {
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.sympraxi-panels--tour {
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+}
+
+.sympraxi-tour-links li {
+  margin-bottom: 0.5rem;
+}
+
+.sympraxi-cast {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  list-style: none;
+  margin: 0.5rem 0 1.5rem;
+  padding: 0;
+}
+
+.sympraxi-cast .sympraxi-panel {
+  padding-top: 0.75rem;
+}
+
 /* The language links are separate tap targets: at least 24 by 24 CSS pixels with room around. */
 .sympraxi-language {
   display: flex;

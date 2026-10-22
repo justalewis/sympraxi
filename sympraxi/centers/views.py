@@ -1,3 +1,5 @@
+from typing import cast
+
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -5,6 +7,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django_htmx.middleware import HtmxDetails
 
+from sympraxi.accounts.models import User
+from sympraxi.centers import dashboard
 from sympraxi.centers.models import Center, Membership
 from sympraxi.core.policy import Action, can, get_for_action, roles_in
 from sympraxi.feedback import services as feedback_services
@@ -53,6 +57,7 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
         "can_manage_announcements": can(request.user, Action.MANAGE_ANNOUNCEMENTS, center),
         "can_send_mass_email": can(request.user, Action.SEND_MASS_EMAIL, center),
         "announcements": news.showing(center, request.user),
+        "dashboard": dashboard.build(cast(User, request.user), center),
         "asks_registration": can(request.user, Action.ANSWER_OWN_FORMS, center)
         and Form.objects.filter(
             center=center,

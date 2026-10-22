@@ -64,6 +64,11 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S105", "S106"]
+# Sample prose for the demo center: long lines are sentences, not code.
+"sympraxi/core/demo_world/library.py" = ["E501"]
+"sympraxi/core/demo_world/cast.py" = ["E501"]
+"sympraxi/core/demo_world/extras.py" = ["E501"]
+"sympraxi/core/demo_world/tour.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.12"

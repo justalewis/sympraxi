@@ -7,6 +7,7 @@
     <p>{% translate "Your roles here:" %} {% for role in my_roles %}<span class="usa-tag">{{ role.label }}</span> {% endfor %}</p>
   {% endif %}
   {% include "notify/_announcements.html" %}
+  {% include "centers/_dashboard.html" %}
   {% if can_view_schedules or can_book_own or can_tutor or can_mark_attendance %}
     <h2>{% translate "Appointments" %}</h2>
     <ul class="usa-list">

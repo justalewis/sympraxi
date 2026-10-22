@@ -1,21 +1,91 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block head_title %}{% translate "Try the demo" %}{% endblock head_title %}
+{% block head_title %}{% translate "Try Sympraxi" %}{% endblock head_title %}
 
 {% block content %}
-  <div class="grid-container padding-y-4">
-    <h1>{% translate "Try the demo" %}</h1>
-    <p>{% translate "Choose a sample person to see the site as they do. Nothing here is real, and everything resets each night." %}</p>
-    {% for label, people in groups %}
-      <h2>{{ label }}</h2>
-      <ul class="usa-list usa-list--unstyled">
-        {% for person in people %}
-          <li class="margin-bottom-2">
+  <section class="sympraxi-hero" aria-labelledby="demo-title">
+    <p class="sympraxi-eyebrow">{% translate "A living demo" %}</p>
+    <h1 id="demo-title">{% translate "Scheduling and records for writing centers that want to keep their own data." %}</h1>
+    <p class="sympraxi-lead">{% translate "Everything on this site works. The people, sessions and numbers are made up, and everything resets each night. Sign in as a student, a tutor, the front desk or the director, and click through a center that has been running for ten weeks." %}</p>
+    <div class="sympraxi-hero__actions">
+      {% if sam %}
+        <form method="post" action="{% url 'core:demo_sign_in' %}">
+          {% csrf_token %}
+          <input type="hidden" name="person" value="{{ sam.pk }}">
+          <button type="submit" class="usa-button usa-button--big">{% translate "Start as Sam, a student" %}</button>
+        </form>
+      {% endif %}
+      {% if dana %}
+        <form method="post" action="{% url 'core:demo_sign_in' %}">
+          {% csrf_token %}
+          <input type="hidden" name="person" value="{{ dana.pk }}">
+          <button type="submit" class="usa-button usa-button--big usa-button--outline">{% translate "Start as Dana, the director" %}</button>
+        </form>
+      {% endif %}
+    </div>
+  </section>
+
+  <section aria-labelledby="demo-counts">
+    <h2 id="demo-counts" class="usa-sr-only">{% translate "What is in the demo" %}</h2>
+    <ul class="sympraxi-tiles sympraxi-tiles--wide">
+      {% for value, label in counts %}
+        <li class="sympraxi-tile"><span class="sympraxi-tile__value">{{ value }}</span><span class="sympraxi-tile__label">{{ label }}</span></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="sympraxi-section" aria-labelledby="demo-why">
+    <h2 id="demo-why">{% translate "Why writing centers choose Sympraxi" %}</h2>
+    <div class="sympraxi-panels sympraxi-panels--cards">
+      {% for title, body in arguments %}
+        <article class="sympraxi-panel">
+          <h3>{{ title }}</h3>
+          <p>{{ body }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="sympraxi-section" aria-labelledby="demo-tour">
+    <h2 id="demo-tour">{% translate "Explore by what you do" %}</h2>
+    <p>{% translate "Sign in as the person on each card, then use the links to land straight on a page." %}</p>
+    <div class="sympraxi-panels sympraxi-panels--tour">
+      {% for t in tours %}
+        <article class="sympraxi-panel" aria-labelledby="tour-{{ t.key }}">
+          <h3 id="tour-{{ t.key }}">{{ t.title }}</h3>
+          <p>{{ t.pitch }}</p>
+          {% if t.person %}
             <form method="post" action="{% url 'core:demo_sign_in' %}">
               {% csrf_token %}
-              <input type="hidden" name="person" value="{{ person.pk }}">
-              <button type="submit" class="usa-button">{% blocktranslate with name=person.full_name %}Sign in as {{ name }}{% endblocktranslate %}</button>
+              <input type="hidden" name="person" value="{{ t.person.pk }}">
+              <button type="submit" class="usa-button">{% blocktranslate with name=t.person.full_name %}Sign in as {{ name }}{% endblocktranslate %}</button>
+            </form>
+          {% endif %}
+          <ul class="usa-list sympraxi-tour-links">
+            {% for link in t.links %}
+              <li><a href="{{ link.url }}">{{ link.label }}</a><br><span class="text-base-dark">{{ link.note }}</span></li>
+            {% endfor %}
+          </ul>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="sympraxi-section" aria-labelledby="demo-cast">
+    <h2 id="demo-cast">{% translate "Meet the people" %}</h2>
+    <p>{% translate "Choose anyone. Each one sees the center the way their role would. There are 24 students in all; these show the range." %}</p>
+    {% for label, people in groups %}
+      <h3>{{ label }}</h3>
+      <ul class="sympraxi-cast">
+        {% for entry in people %}
+          <li class="sympraxi-panel">
+            <strong>{{ entry.person.full_name }}</strong>
+            <p>{{ entry.blurb }}</p>
+            <form method="post" action="{% url 'core:demo_sign_in' %}">
+              {% csrf_token %}
+              <input type="hidden" name="person" value="{{ entry.person.pk }}">
+              <button type="submit" class="usa-button usa-button--outline">{% blocktranslate with name=entry.person.full_name %}Sign in as {{ name }}{% endblocktranslate %}</button>
             </form>
           </li>
         {% endfor %}
@@ -23,5 +93,26 @@
     {% empty %}
       <p>{% translate "The sample people haven't been created yet." %}</p>
     {% endfor %}
-  </div>
+  </section>
+
+  <section class="sympraxi-section" aria-labelledby="demo-adopt">
+    <h2 id="demo-adopt">{% translate "From here to your center" %}</h2>
+    <ol class="usa-process-list">
+      {% for title, body in steps %}
+        <li class="usa-process-list__item">
+          <h3 class="usa-process-list__heading">{{ title }}</h3>
+          <p>{{ body }}</p>
+        </li>
+      {% endfor %}
+    </ol>
+    <p><a class="usa-button" href="{{ source_url }}">{% translate "Get the source code" %}</a></p>
+  </section>
+
+  <section class="sympraxi-section" aria-labelledby="demo-limits">
+    <h2 id="demo-limits">{% translate "Where it stands" %}</h2>
+    <p>{% translate "A fair look includes what isn't finished:" %}</p>
+    <ul class="usa-list">
+      {% for line in limits %}<li>{{ line }}</li>{% endfor %}
+    </ul>
+  </section>
 {% endblock content %}

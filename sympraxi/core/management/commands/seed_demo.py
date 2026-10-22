@@ -15,6 +15,7 @@ from django.utils import timezone
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership, Role
+from sympraxi.core import demo_world
 from sympraxi.core.demo_more import add_more
 from sympraxi.forms import builder as form_builder
 from sympraxi.forms import services as form_services
@@ -110,7 +111,9 @@ class Command(BaseCommand):
         self._attendance(center, assignment)
         self._forms(center)
         survey_url = self._survey(center)
+        world = demo_world.build(center)
         printed = add_more(center, assignment)
+        demo_world.add_extras(world)
         self.stdout.write(self.style.SUCCESS(f"Demo center ready at /centers/{center.slug}/"))
         self.stdout.write("Accounts: " + ", ".join(e for e, _, _ in DEMO_PEOPLE))
         if options["password"] is None:

@@ -1,0 +1,81 @@
+{% load i18n %}
+{% if dashboard.student %}
+  <div class="sympraxi-panels">
+    <section class="sympraxi-panel" aria-labelledby="dash-next">
+      <h2 id="dash-next">{% translate "Coming up" %}</h2>
+      {% if dashboard.student.upcoming %}
+        <ul class="usa-list usa-list--unstyled">
+          {% for a in dashboard.student.upcoming %}
+            <li class="margin-bottom-1">
+              <a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=a.pk %}"><strong>{{ a.starts_at|date:"l, F j" }}, {{ a.starts_at|time:"P T" }}</strong></a><br>
+              {% blocktranslate with tutor=a.tutor.display_name %}with {{ tutor }}{% endblocktranslate %} · {{ a.get_modality_display }}{% if a.is_tentative %} · {% translate "waiting for confirmation" %}{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>{% translate "Nothing booked yet." %}</p>
+      {% endif %}
+      {% if can_view_schedules %}<p><a class="usa-button" href="{% url 'scheduling:schedules' slug=center.slug %}">{% translate "Book an appointment" %}</a></p>{% endif %}
+    </section>
+    {% if dashboard.student.last %}
+      <section class="sympraxi-panel" aria-labelledby="dash-last">
+        <h2 id="dash-last">{% translate "From your last session" %}</h2>
+        <p class="text-base-dark margin-top-0">{{ dashboard.student.last.held_at|date:"F j" }} · {% blocktranslate with tutor=dashboard.student.last.tutor.display_name %}with {{ tutor }}{% endblocktranslate %}{% if dashboard.student.last.project %} · {{ dashboard.student.last.project.title }}{% endif %}</p>
+        {% if dashboard.student.last.summary %}<p>{{ dashboard.student.last.summary|linebreaksbr }}</p>{% endif %}
+        {% if dashboard.student.last.next_steps %}<p><strong>{% translate "Your next steps" %}</strong><br>{{ dashboard.student.last.next_steps|linebreaksbr }}</p>{% endif %}
+        {% if can_see_own_writing %}<p><a href="{% url 'records:my_writing' slug=center.slug %}">{% translate "All your session summaries" %}</a></p>{% endif %}
+      </section>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if dashboard.tiles %}
+  <h2 class="sympraxi-visually-spaced">{% translate "At a glance" %}</h2>
+  <ul class="sympraxi-tiles">
+    {% for tile in dashboard.tiles %}
+      <li class="sympraxi-tile{% if tile.alert %} sympraxi-tile--attention{% endif %}">
+        <span class="sympraxi-tile__value">{{ tile.value }}</span>
+        {% if tile.link %}<a class="sympraxi-tile__label" href="{% if tile.link == 'records:to_write' %}{% url 'records:to_write' slug=center.slug %}{% elif tile.link == 'scheduling:attendance_list' %}{% url 'scheduling:attendance_list' slug=center.slug %}{% endif %}">{{ tile.label }}</a>{% else %}<span class="sympraxi-tile__label">{{ tile.label }}</span>{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% if dashboard.month %}
+  <p class="sympraxi-month">
+    {% blocktranslate with sessions=dashboard.month.sessions students=dashboard.month.students hours=dashboard.month.hours %}In the last 30 days: {{ sessions }} sessions written up, {{ students }} different students, {{ hours }} hours of tutoring.{% endblocktranslate %}
+    {% if can_view_statistics %}<a href="{% url 'reports:statistics' slug=center.slug %}">{% translate "See the full statistics" %}</a>{% endif %}
+  </p>
+{% endif %}
+
+{% if dashboard.today_title %}
+  <h2>{% translate dashboard.today_title %}</h2>
+  {% if dashboard.today %}
+    <table class="usa-table usa-table--borderless usa-table--stacked sympraxi-today">
+      <caption class="usa-sr-only">{% translate dashboard.today_title %}</caption>
+      <thead><tr><th scope="col">{% translate "Time" %}</th><th scope="col">{% translate "Tutor" %}</th><th scope="col">{% translate "Who" %}</th><th scope="col">{% translate "Where" %}</th></tr></thead>
+      <tbody>
+        {% for row in dashboard.today %}
+          <tr{% if row.state == "now" %} class="sympraxi-row--now"{% endif %}>
+            <td data-label="{% translate 'Time' %}"><a href="{% url 'scheduling:appointment' slug=center.slug appointment_id=row.appointment.pk %}">{{ row.appointment.starts_at|time:"P" }}</a>{% if row.state == "now" %} <span class="usa-tag">{% translate "now" %}</span>{% elif row.state == "done" %} <span class="text-base">{% translate "done" %}</span>{% endif %}{% if row.tentative %} <span class="usa-tag">{% translate "to confirm" %}</span>{% endif %}</td>
+            <td data-label="{% translate 'Tutor' %}">{{ row.appointment.tutor.display_name }}</td>
+            <td data-label="{% translate 'Who' %}">{{ row.people }}</td>
+            <td data-label="{% translate 'Where' %}">{{ row.appointment.get_modality_display }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if dashboard.today_more %}<p>{% blocktranslate with n=dashboard.today_more %}and {{ n }} more today.{% endblocktranslate %}</p>{% endif %}
+  {% else %}
+    <p>{% translate "No sessions today." %}</p>
+  {% endif %}
+{% endif %}
+
+{% if dashboard.workshops %}
+  <h2>{% translate "Upcoming workshops" %}</h2>
+  <ul class="usa-list">
+    {% for w in dashboard.workshops %}
+      <li><a href="{% url 'workshops:list' slug=center.slug %}">{{ w.title }}</a> · {{ w.starts_at|date:"l, F j" }}, {{ w.starts_at|time:"P T" }}{% if w.location %} · {{ w.location }}{% endif %}</li>
+    {% endfor %}
+  </ul>
+{% endif %}

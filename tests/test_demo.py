@@ -34,7 +34,19 @@ def demo(settings):
 
 @pytest.fixture
 def seeded(demo):
-    call_command("seed_demo", password="not-used-by-the-picker", stdout=io.StringIO())
+    """A few sample people, enough for the picker. The full world has its own test."""
+    from sympraxi.centers.models import Center, Membership, Role
+
+    center = Center.objects.create(name="Demo Writing Center", slug="demo")
+    people = (
+        ("student@demo.test", "Sam Student", Role.STUDENT),
+        ("tutor@demo.test", "Tomás Tutor", Role.TUTOR),
+        ("frontdesk@demo.test", "Felix Frontdesk", Role.FRONT_DESK),
+        ("director@demo.test", "Dana Director", Role.DIRECTOR),
+    )
+    for email, name, role in people:
+        user = UserFactory(email=email, full_name=name)
+        Membership.objects.create(user=user, center=center, role=role)
     return User.objects.get(email="student@demo.test")
 
 
@@ -150,35 +162,101 @@ def test_a_demo_calls_no_webhooks(demo, monkeypatch) -> None:
 # --- The sample data ---------------------------------------------------------------------------
 
 
-def test_the_sample_data_covers_the_later_features(seeded) -> None:
-    center = Center.objects.get(slug="demo")
-    assert Workshop.objects.filter(center=center).count() == 3
-    assert Registration.objects.filter(workshop__center=center).count() == 4
-    assert Module.objects.filter(center=center, is_published=True).count() == 1
-    assert Cohort.objects.filter(center=center).count() == 1
-    assert Alert.objects.filter(center=center).count() == 2
-    assert VisitShare.objects.filter(center=center).count() == 1
-    assert TimeEntry.objects.filter(center=center).count() == 3
-    assert WaitingEntry.objects.count() == 1
-    center.refresh_from_db()
-    assert center.visit_sharing_enabled and center.alert_email
-
-
-def test_seeding_twice_does_not_double_anything(seeded) -> None:
-    call_command("seed_demo", stdout=io.StringIO())
-    center = Center.objects.get(slug="demo")
-    assert Workshop.objects.filter(center=center).count() == 3
-    assert Alert.objects.filter(center=center).count() == 2
-    assert TimeEntry.objects.filter(center=center).count() == 3
-    assert WaitingEntry.objects.count() == 1
-
-
-def test_the_sample_dates_are_relative_to_today(seeded) -> None:
+def test_the_full_demo_world_builds_and_every_tour_link_opens(client, demo) -> None:
+    """One real run of the seed (about 20 seconds), then everything checked against it."""
     from django.utils import timezone
 
-    upcoming = Workshop.objects.filter(starts_at__gt=timezone.now()).count()
-    past = Workshop.objects.filter(starts_at__lt=timezone.now()).count()
-    assert (upcoming, past) == (2, 1)
+    from sympraxi.alerts.models import AlertStatus
+    from sympraxi.centers.models import Membership, Role
+    from sympraxi.core.demo_world import tour
+    from sympraxi.records.models import RecordStatus, SessionRecord
+    from sympraxi.scheduling.models import Appointment, Participant
+
+    call_command("seed_demo", stdout=io.StringIO())
+    center = Center.objects.get(slug="demo")
+    now = timezone.now()
+
+    # A center with history, not a handful of rows.
+    assert Membership.objects.filter(center=center, role=Role.STUDENT).count() >= 24
+    assert Membership.objects.filter(center=center, role=Role.TUTOR).count() >= 6
+    assert Membership.objects.filter(center=center, role=Role.FRONT_DESK).count() >= 2
+    assert Membership.objects.filter(center=center, role=Role.DIRECTOR).count() >= 2
+    assert Appointment.objects.filter(schedule__center=center, starts_at__lt=now).count() >= 100
+    assert Appointment.objects.filter(schedule__center=center, starts_at__gt=now).count() >= 15
+    assert SessionRecord.objects.filter(center=center, status=RecordStatus.FINAL).count() >= 80
+    assert Workshop.objects.filter(center=center).count() >= 6
+    assert Registration.objects.filter(workshop__center=center).count() >= 30
+    assert Module.objects.filter(center=center, is_published=True).count() >= 3
+    assert Cohort.objects.filter(center=center).count() == 1
+    assert Alert.objects.filter(center=center).count() >= 5
+    assert Alert.objects.filter(center=center, status=AlertStatus.CLOSED).exists()
+    assert VisitShare.objects.filter(center=center).count() >= 4
+    assert TimeEntry.objects.filter(center=center).count() >= 150
+    assert WaitingEntry.objects.count() >= 3
+    center.refresh_from_db()
+    assert center.visit_sharing_enabled and center.alert_email and center.sms_enabled
+
+    # Sam leads: the student with the most history, and a next appointment booked.
+    sam = User.objects.get(email="student@demo.test")
+    assert SessionRecord.objects.filter(student=sam, status=RecordStatus.FINAL).count() >= 8
+    assert Participant.objects.filter(student=sam, appointment__starts_at__gt=now).exists()
+
+    # Dates are relative to today, so a nightly reset always looks current.
+    assert Workshop.objects.filter(starts_at__gt=now).count() >= 2
+    assert Workshop.objects.filter(starts_at__lt=now).count() >= 2
+
+    # Running the seed again adds nothing.
+    before = (
+        Appointment.objects.count(),
+        Alert.objects.count(),
+        TimeEntry.objects.count(),
+        Workshop.objects.count(),
+    )
+    call_command("seed_demo", stdout=io.StringIO())
+    assert before == (
+        Appointment.objects.count(),
+        Alert.objects.count(),
+        TimeEntry.objects.count(),
+        Workshop.objects.count(),
+    )
+
+    # The front page makes the case, lists every role, and leads with Sam.
+    html = client.get(reverse("core:demo")).content.decode()
+    assert "keep their own data" in html and "Where it stands" in html
+    assert html.index("Sign in as Sam Student") < html.index("Sign in as Dana Director")
+    for heading in ("Students", "Tutors", "Front desk", "Directors"):
+        assert heading in html
+    assert "Run an hours report" in html and "Book an appointment" in html
+
+    # Every link on the tour opens for the person it is written for.
+    for entry in tour.TOURS:
+        person = User.objects.get(email=entry.persona)
+        client.post(reverse("core:demo_sign_in"), {"person": str(person.pk)})
+        for link in entry.links:
+            url = (
+                reverse(link.name)
+                if link.name == "sms:settings"
+                else reverse(link.name, kwargs={"slug": "demo"})
+            )
+            response = client.get(url)
+            assert response.status_code == 200, (
+                f"{entry.key}: {link.name} gave {response.status_code}"
+            )
+        client.logout()
+
+    # Each role's front page has real numbers and tables, not only links.
+    director = User.objects.get(email="director@demo.test")
+    client.force_login(director)
+    page = client.get("/centers/demo/").content.decode()
+    assert "At a glance" in page and "Open early alerts" in page
+    client.force_login(sam)
+    page = client.get("/centers/demo/").content.decode()
+    assert "Coming up" in page and "From your last session" in page
+
+
+def test_the_front_page_of_a_demo_site_is_the_demo_page(client, demo) -> None:
+    response = client.get("/")
+    assert response.status_code == 302 and response["Location"] == reverse("core:demo")
 
 
 # --- The guards that stop a demo from reaching real people --------------------------------------

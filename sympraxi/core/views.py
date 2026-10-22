@@ -12,6 +12,7 @@ from django.http import (
 )
 from django.shortcuts import render
 from django.template import loader
+from django.urls import reverse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import requires_csrf_token
 from django.views.decorators.http import require_GET
@@ -22,6 +23,8 @@ from sympraxi.centers.models import Membership
 
 def home(request: HttpRequest) -> HttpResponse:
     if not request.user.is_authenticated:
+        if settings.SYMPRAXI_DEMO:
+            return HttpResponseRedirect(reverse("core:demo"))
         return render(request, "core/landing.html")
     memberships = (
         Membership.objects.filter(user=request.user, is_active=True, center__is_active=True)
@@ -109,34 +112,87 @@ def set_language(request: HttpRequest, code: str) -> HttpResponse:
     return response
 
 
-def _demo_people() -> list[tuple[str, list[User]]]:
-    """The sample people, grouped by role, in the order a visitor would want them."""
+def _demo_context() -> dict[str, object]:
+    """Everything the demo's front page shows: the case for adopting, a tour by role,
+    the cast, and live counts from the sample center."""
+    from django.urls import NoReverseMatch, reverse
+
     from sympraxi.accounts.middleware import DEMO_DOMAIN
     from sympraxi.centers.models import Role
+    from sympraxi.core.demo_world import cast, tour
+    from sympraxi.records.models import RecordStatus, SessionRecord
+    from sympraxi.workshops.models import Workshop
 
-    order = [
-        (Role.STUDENT, "Students"),
-        (Role.TUTOR, "Tutors"),
-        (Role.FRONT_DESK, "Front desk"),
-        (Role.DIRECTOR, "Directors"),
+    people = {p.email: p for p in User.objects.filter(email__endswith=DEMO_DOMAIN, is_active=True)}
+    tours = []
+    for entry in tour.TOURS:
+        links = []
+        for link in entry.links:
+            try:
+                url = (
+                    reverse(link.name)
+                    if link.name == "sms:settings"
+                    else reverse(link.name, kwargs={"slug": "demo"})
+                )
+            except NoReverseMatch:
+                continue
+            links.append({"url": url, "label": link.label, "note": link.note})
+        tours.append(
+            {
+                "key": entry.key,
+                "title": entry.title,
+                "pitch": entry.pitch,
+                "person": people.get(entry.persona),
+                "links": links,
+            }
+        )
+
+    def card(email: str, blurb: str) -> dict[str, object] | None:
+        person = people.get(email)
+        return {"person": person, "blurb": blurb} if person else None
+
+    featured = [card(e, b) for e, b in tour.FEATURED_STUDENTS.items()]
+    staff_by_role: dict[str, list[dict[str, object] | None]] = {
+        Role.TUTOR: [],
+        Role.FRONT_DESK: [],
+        Role.DIRECTOR: [],
+    }
+    for member in cast.STAFF:
+        staff_by_role[member.role].append(card(member.email, member.blurb))
+    groups = [
+        ("Students", [c for c in featured if c]),
+        ("Tutors", [c for c in staff_by_role[Role.TUTOR] if c]),
+        ("Front desk", [c for c in staff_by_role[Role.FRONT_DESK] if c]),
+        ("Directors", [c for c in staff_by_role[Role.DIRECTOR] if c]),
     ]
-    people = User.objects.filter(email__endswith=DEMO_DOMAIN, is_active=True).order_by("full_name")
-    found = []
-    for role, label in order:
-        members = [
-            p for p in people if p.memberships.filter(role=role, center__slug="demo").exists()
-        ]
-        if members:
-            found.append((str(label), members))
-    return found
+    held = SessionRecord.objects.filter(center__slug="demo", status=RecordStatus.FINAL)
+    counts = [
+        (held.count(), "sessions written up"),
+        (Membership.objects.filter(center__slug="demo", role=Role.STUDENT).count(), "students"),
+        (Membership.objects.filter(center__slug="demo", role=Role.TUTOR).count(), "tutors"),
+        (round(sum(held.values_list("minutes", flat=True)) / 60), "hours of tutoring"),
+        (Workshop.objects.filter(center__slug="demo").count(), "workshops"),
+    ]
+    return {
+        "tours": tours,
+        "groups": groups,
+        "counts": counts,
+        "arguments": tour.ARGUMENTS,
+        "limits": tour.LIMITS,
+        "steps": tour.STEPS,
+        "sam": people.get("student@demo.test"),
+        "dana": people.get("director@demo.test"),
+        "source_url": settings.SYMPRAXI_SOURCE_CODE_URL,
+    }
 
 
 @require_GET
 def demo_page(request: HttpRequest) -> HttpResponse:
-    """Pick a sample person to sign in as. Only exists on a site in demo mode."""
+    """The demo's front page: the case for adopting, a tour by role, and a way in.
+    Only exists on a site in demo mode."""
     if not settings.SYMPRAXI_DEMO:
         raise Http404
-    return render(request, "core/demo.html", {"groups": _demo_people()})
+    return render(request, "core/demo.html", _demo_context())
 
 
 def demo_sign_in(request: HttpRequest) -> HttpResponse:
