@@ -11,7 +11,7 @@ A web application for college writing centers: scheduling, session records, form
 | Area | Why it matters | Where |
 |---|---|---|
 | Central permission rules | Every page is checked against one table of actions and roles; a bug here exposes student records | `sympraxi/core/policy.py`; `tests/test_policy*.py`, `tests/test_url_inventory.py` (every URL must be classified) |
-| Sign-in paths | Five ways in: password, passkey, Entra/Google/generic OIDC, CAS, LTI | `sympraxi/accounts/`, `sympraxi/lti/` |
+| Sign-in paths | Six ways in: password, passkey, Entra/Google/generic OIDC, SAML, CAS, LTI | `sympraxi/accounts/`, `sympraxi/lti/` |
 | The LTI launch | Trusts a signed token from another site to sign a person in; CSRF is exempt on purpose | `sympraxi/lti/launch.py`, `sympraxi/lti/views.py` |
 | The API and webhooks | Bearer tokens act as a director; webhooks make server-side requests to addresses a director enters | `sympraxi/integrations/`; address vetting in `sympraxi/records/linkcheck.py` |
 | Text messages | A provider webhook open to the internet, checked only by signature | `sympraxi/sms/` |
@@ -36,7 +36,7 @@ A web application for college writing centers: scheduling, session records, form
 - No real identity provider, CAS server, learning system, SMS provider or webhook receiver has been used; each is tested against a stand-in written in this repository, so a mismatch with the real service wouldn't show.
 - The Docker images, Caddy routes, backups and restore scripts haven't been run in this environment.
 - Load testing was done once, before the later features.
-- SAML is not implemented.
+- SAML (`sympraxi/accounts/saml.py`) is new and has only been tried against a stand-in provider that signs real responses; single logout isn't implemented.
 
 ## Known gaps
 

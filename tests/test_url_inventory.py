@@ -446,9 +446,15 @@ SECRET_ENDPOINTS = {"collab:load", "collab:store"}
 # request signed by the provider (tests/test_sms.py).
 SIGNED_ENDPOINTS = {"sms:inbound"}
 
-# The CAS sign-in pages. Public, and answer 404 until the host sets a CAS server
-# (tests/test_sso_more.py checks the flow).
-CAS_ENDPOINTS = {"accounts:cas_login", "accounts:cas_callback"}
+# The CAS and SAML sign-in pages. Public, and answer 404 until the host sets a CAS server
+# or a SAML provider (tests/test_sso_more.py and tests/test_saml.py check the flows).
+CAS_ENDPOINTS = {
+    "accounts:cas_login",
+    "accounts:cas_callback",
+    "accounts:saml_login",
+    "accounts:saml_acs",
+    "accounts:saml_metadata",
+}
 
 # The learning system launch. Open to the internet; answers only a signed launch from a
 # registered platform (tests/test_lti.py).

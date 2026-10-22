@@ -368,7 +368,7 @@ Slices 6 and 7 wait on decisions or files from the maintainer.
 6. **Multi-center polish and Spanish.** A center switcher and per-center settings review, and a first Spanish translation of the student-facing pages and emails.
 7. **Release material.** A draft HECVAT, accessibility conformance report and security-review brief, and the 1.0 notes. SAML needs a package that isn't installed and is decided separately.
 
-**Status, October 21, 2026.** Slices 1 to 7 are built. Open: SAML (needs a package decision), a real-system test of single sign-on, CAS, LTI and texts, the outside security review, the manual accessibility review, a Spanish reader, and the second maintainer (see `docs/release-1.0-notes.md`). Slice 5 launches and signs people in; filling in course and instructor details wasn't built.
+**Status, October 21, 2026.** Slices 1 to 7 are built. SAML was added afterward (python3-saml). Open: a real-system test of single sign-on, CAS, LTI and texts, the outside security review, the manual accessibility review, a Spanish reader, and the second maintainer (see `docs/release-1.0-notes.md`). Slice 5 launches and signs people in; filling in course and instructor details wasn't built.
 
 **Exit:** a second campus installs and runs it without help from the core team.
 

@@ -10,7 +10,7 @@ Not released. This is the draft to finish when the open items below are closed. 
 
 **Staff.** A time clock with approvals and locking, a check-in kiosk, payroll detail, onboarding and training, cohorts, mentors and observations, workshops with registration.
 
-**Sign-in.** Email and password, passkeys, two-factor login (required for staff), single sign-on with Microsoft Entra ID, Google or any OpenID Connect provider, CAS, and a launch from Canvas, Moodle or D2L (LTI 1.3).
+**Sign-in.** Email and password, passkeys, two-factor login (required for staff), single sign-on with Microsoft Entra ID, Google or any OpenID Connect provider, SAML 2.0, CAS, and a launch from Canvas, Moodle or D2L (LTI 1.3).
 
 **Integration.** A read and write API with scoped tokens, and signed webhooks.
 
@@ -28,7 +28,7 @@ Not released. This is the draft to finish when the open items below are closed. 
 
 ## What isn't in 1.0
 
-- SAML single sign-on.
+- SAML single logout, and SAML requests signed or encrypted by Sympraxi.
 - A converter for WCONLINE exports (the importer takes a documented CSV layout, not a WCONLINE file).
 - Translations beyond the first Spanish pages.
 - Deep linking and grade passback in the LTI launch.

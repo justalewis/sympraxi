@@ -22,7 +22,7 @@
     </p>
   {% else %}
     <h1>{% translate "Sign in" %}</h1>
-    {% if sso_providers or CAS_ENABLED %}
+    {% if sso_providers or CAS_ENABLED or SAML_ENABLED %}
       <p>{% translate "Use your college account." %}</p>
     {% endif %}
     {% if sso_providers %}
@@ -31,10 +31,13 @@
     {% if CAS_ENABLED %}
       <p><a class="usa-button" href="{% url 'accounts:cas_login' %}?next={{ request.GET.next|urlencode }}">{% translate "Sign in with your college account" %}</a></p>
     {% endif %}
+    {% if SAML_ENABLED %}
+      <p><a class="usa-button" href="{% url 'accounts:saml_login' %}?next={{ request.GET.next|urlencode }}">{% translate "Sign in with your college account" %}</a></p>
+    {% endif %}
   {% endif %}
 
   {% if not SSO_ONLY or break_glass %}
-    {% if sso_providers or CAS_ENABLED %}
+    {% if sso_providers or CAS_ENABLED or SAML_ENABLED %}
       {% if not break_glass %}
         <h2>{% translate "Or use your email and password" %}</h2>
       {% endif %}

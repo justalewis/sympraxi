@@ -135,6 +135,11 @@ Site administrators keep a break-glass sign-in with their password and two-facto
 - Every Microsoft sign-in says the email address wasn't confirmed: the `email` or `xms_edov` optional claim is missing (step 4).
 - Sympraxi shows "Sign-in didn't work": the provider's answer failed a check, for example a token from another tenant. Site administrators can see it under **Site administration** → **Audit events**, as a failed sign-in with the provider and the reason.
 
+### SAML
+
+For Shibboleth, ADFS, Entra's SAML or another SAML 2.0 identity provider, give the provider Sympraxi's metadata from `https://<your site>/accounts/saml/metadata/` (entity ID is that address; the assertion consumer service is `https://<your site>/accounts/saml/acs/`, HTTP-POST). Then set `SYMPRAXI_SAML_IDP_ENTITY_ID`, `SYMPRAXI_SAML_IDP_SSO_URL` (an https address; the HTTP-Redirect binding is used) and `SYMPRAXI_SAML_IDP_CERT` (the provider's signing certificate, as PEM text with `
+` for the line breaks, or just the base64 body). `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` must be set. Sympraxi reads the email from the attribute in `SYMPRAXI_SAML_EMAIL_ATTRIBUTE` (default `mail`; the NameID is used if it is an address), the name from `SYMPRAXI_SAML_NAME_ATTRIBUTE` (default `displayName`), and, if you set it, the student ID from `SYMPRAXI_SAML_STUDENT_ID_ATTRIBUTE`. Ask the provider to sign the assertion; an unsigned one is refused. The site's address must be exactly the one in the metadata, so set `SYMPRAXI_BASE_URL` and have the proxy pass the host and https headers on. Rotating the provider's certificate means changing the setting when they do.
+
 ### Other OpenID Connect providers, CAS, and student IDs
 
 For Okta, Keycloak or another OpenID Connect provider, set `SYMPRAXI_OIDC_ISSUER` (the https address that serves `/.well-known/openid-configuration`), `SYMPRAXI_OIDC_CLIENT_ID`, `SYMPRAXI_OIDC_CLIENT_SECRET`, and optionally `SYMPRAXI_OIDC_NAME` (the button's label). In the provider, register the redirect address `https://<your site>/accounts/oidc/oidc/login/callback/`. `SYMPRAXI_SIGNUP_EMAIL_DOMAINS` must be set.

@@ -94,7 +94,12 @@ def sso_only() -> bool:
     Only with a provider set up: otherwise nobody but site admins could sign in.
     """
     return bool(
-        settings.SYMPRAXI_SSO_ONLY and (provider_apps() or settings.SYMPRAXI_CAS_SERVER_URL)
+        settings.SYMPRAXI_SSO_ONLY
+        and (
+            provider_apps()
+            or settings.SYMPRAXI_CAS_SERVER_URL
+            or settings.SYMPRAXI_SAML_IDP_SSO_URL
+        )
     )
 
 

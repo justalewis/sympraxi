@@ -14,12 +14,15 @@ Graph profile instead, which carries none of them.
 settings.py imports this module, so it must not import anything from Django apps.
 """
 
+import base64
+import binascii
 import json
 import uuid
 from typing import Any
 from urllib.parse import urlsplit
 
 import environ
+from cryptography import x509
 from django.core.exceptions import ImproperlyConfigured
 
 ENTRA = "entra"
@@ -222,6 +225,38 @@ def check_cas(server_url: str, email_domains: list[str]) -> None:
         )
 
 
+def check_saml(entity_id: str, sso_url: str, cert: str, email_domains: list[str]) -> None:
+    """Refuse to start with a half-set-up or unsafe SAML provider."""
+    if not (entity_id or sso_url or cert):
+        return
+    if not (entity_id and sso_url and cert):
+        raise ImproperlyConfigured(
+            "SAML needs SYMPRAXI_SAML_IDP_ENTITY_ID, SYMPRAXI_SAML_IDP_SSO_URL and "
+            "SYMPRAXI_SAML_IDP_CERT all set."
+        )
+    parts = urlsplit(sso_url)
+    if parts.scheme != "https" or not parts.netloc:
+        raise ImproperlyConfigured("SYMPRAXI_SAML_IDP_SSO_URL must start with https://.")
+    body = "".join(
+        ln.strip()
+        for ln in cert.replace("\\n", "\n").splitlines()
+        if ln.strip() and not ln.startswith("-----")
+    )
+    try:
+        der = base64.b64decode(body, validate=True)
+        x509.load_der_x509_certificate(der)
+    except (ValueError, binascii.Error) as error:
+        raise ImproperlyConfigured(
+            "SYMPRAXI_SAML_IDP_CERT must be the identity provider's signing certificate, "
+            "as PEM text or the base64 body."
+        ) from error
+    if not email_domains:
+        raise ImproperlyConfigured(
+            "SAML needs SYMPRAXI_SIGNUP_EMAIL_DOMAINS set to your college's email domain, "
+            "because a SAML response says who signed in, not that the address is the college's."
+        )
+
+
 def login_origins(apps: list[dict[str, Any]]) -> list[str]:
     origins = []
     for app in apps:
@@ -233,9 +268,11 @@ def login_origins(apps: list[dict[str, Any]]) -> list[str]:
     return origins
 
 
-def check_sso_only(sso_only: bool, apps: list[dict[str, Any]], *, cas: bool = False) -> None:
+def check_sso_only(
+    sso_only: bool, apps: list[dict[str, Any]], *, cas: bool = False, saml: bool = False
+) -> None:
     """SSO-only with no provider would leave only site administrators able to sign in."""
-    if sso_only and not apps and not cas:
+    if sso_only and not apps and not cas and not saml:
         raise ImproperlyConfigured(
             "SYMPRAXI_SSO_ONLY needs a single sign-on provider. Set one up, or turn it off."
         )
