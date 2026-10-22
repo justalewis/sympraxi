@@ -22,11 +22,11 @@ docker compose exec -T db dropdb -U sympraxi --if-exists --force sympraxi
 docker compose exec -T db createdb -U sympraxi sympraxi
 docker compose run --rm --no-deps -T --entrypoint sh web -c 'find /app/media -mindepth 1 -delete'
 
-docker compose run --rm web python manage.py migrate --noinput
-docker compose run --rm web python manage.py createcachetable
-docker compose run --rm web python manage.py load_catalog
-docker compose run --rm web python manage.py load_content_pack
-docker compose run --rm web python manage.py seed_demo
+docker compose run --rm -T web python manage.py migrate --noinput
+docker compose run --rm -T web python manage.py createcachetable
+docker compose run --rm -T web python manage.py load_catalog
+docker compose run --rm -T web python manage.py load_content_pack
+docker compose run --rm -T web python manage.py seed_demo
 docker compose up -d --wait
 
 echo "Demo reset at $(date -u +%Y-%m-%dT%H:%M:%SZ)"

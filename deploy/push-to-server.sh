@@ -25,7 +25,11 @@ package="$(mktemp -d)/sympraxi.tgz"
 git archive --format=tar.gz -o "$package" HEAD -- . ':(exclude)content-pack/noncommercial'
 (cd "$(dirname "$package")" && scp "${ssh_opts[@]}" "$(basename "$package")" "$SERVER:/tmp/sympraxi-update.tgz")
 
-ssh "${ssh_opts[@]}" "$SERVER" "DIR='$DIR' RESET='${RESET_DEMO:-}' bash -s" <<'REMOTE'
+# The script arrives on the server's standard input, and `docker compose run` would read
+# the rest of it as its own input and end the update silently. So it is saved to a file
+# first and run from there.
+remote_script="$(mktemp)"
+cat >"$remote_script" <<'REMOTE'
 set -euo pipefail
 dir="$DIR"; reset="$RESET"
 cd "$dir"
@@ -35,9 +39,9 @@ cd deploy
 docker compose build
 docker compose up -d --wait db
 docker compose stop scheduler
-docker compose run --rm web python manage.py migrate --noinput
-docker compose run --rm web python manage.py load_catalog
-docker compose run --rm web python manage.py load_content_pack
+docker compose run --rm -T web python manage.py migrate --noinput
+docker compose run --rm -T web python manage.py load_catalog
+docker compose run --rm -T web python manage.py load_content_pack
 if [ -n "$reset" ]; then
     bash reset-demo.sh
 else
@@ -45,4 +49,6 @@ else
 fi
 docker compose ps --format '{{.Service}} {{.Status}}'
 REMOTE
+(cd "$(dirname "$remote_script")" && scp "${ssh_opts[@]}" "$(basename "$remote_script")" "$SERVER:/tmp/sympraxi-update.sh")
+ssh "${ssh_opts[@]}" "$SERVER" "DIR='$DIR' RESET='${RESET_DEMO:-}' bash /tmp/sympraxi-update.sh </dev/null; status=\$?; rm -f /tmp/sympraxi-update.sh; exit \$status"
 echo "Server updated."
