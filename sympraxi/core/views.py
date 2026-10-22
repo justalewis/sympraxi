@@ -181,6 +181,7 @@ def _demo_context() -> dict[str, object]:
         "limits": tour.LIMITS,
         "steps": tour.STEPS,
         "sam": people.get("student@demo.test"),
+        "tomas": people.get("tutor@demo.test"),
         "dana": people.get("director@demo.test"),
         "source_url": settings.SYMPRAXI_SOURCE_CODE_URL,
     }

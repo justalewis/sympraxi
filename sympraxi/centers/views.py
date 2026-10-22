@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.utils import timezone
 from django_htmx.middleware import HtmxDetails
 
 from sympraxi.accounts.models import User
@@ -66,7 +67,9 @@ def center_detail(request: HttpRequest, slug: str) -> HttpResponse:
             versions__published_at__isnull=False,
         ).exists(),
     }
-    return render(request, "centers/center_detail.html", context)
+    # Times on this page are in the center's zone, like every other page of the center.
+    with timezone.override(center.time_zone):
+        return render(request, "centers/center_detail.html", context)
 
 
 class HtmxHttpRequest(HttpRequest):

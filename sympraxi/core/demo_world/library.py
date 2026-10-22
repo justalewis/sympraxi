@@ -418,6 +418,37 @@ TEMPLATES: dict[str, Template] = {
     ),
 }
 
+GOALS = {
+    "thesis": "Put my claim in the first paragraph and make it arguable.",
+    "evidence": "Explain every quotation I use in a sentence of my own.",
+    "organization": "Check that each paragraph does one job, in an order I can explain.",
+    "citations_apa": "Format my reference list correctly the first time.",
+    "citations_mla": "Match every in-text citation to a Works Cited entry.",
+    "citations_chicago": "Use footnotes without confusing short and full forms.",
+    "revision": "Revise in order: ideas, then structure, then sentences.",
+    "intro_conclusion": "Open with my point and end by saying why it matters.",
+    "counterargument": "Answer the strongest objection to my argument.",
+    "articles": "Notice where articles are missing before I hand in a draft.",
+    "grammar_boundaries": "Catch run-on sentences by reading aloud.",
+    "paragraphs": "Split paragraphs that hold more than one idea.",
+    "lab_report": "Keep results and interpretation in their own sections.",
+    "personal_statement": "Tell one story that sounds like me.",
+    "lit_review": "Organize sources by idea, not by author.",
+    "research": "Ask a question I can answer in the space I have.",
+    "concision": "Cut a quarter of the words without losing anything.",
+    "getting_started": "Start writing before I feel ready.",
+    "anxiety": "Break a long assignment into steps with dates.",
+    "dissertation": "Make a dated plan for each chapter revision.",
+    "creative": "Keep my own voice through revision.",
+    "reflection": "Say what changed in me, not only what happened.",
+    "word_choice": "Replace vague words with exact ones.",
+    "annotated_bib": "Write summary, evaluation and use for every source.",
+    "paraphrasing": "Paraphrase with the source covered.",
+    "synthesis": "Put two sources in conversation with each other.",
+    "assignment": "Read the prompt's verbs before I plan.",
+    "ai_tools": "Know what my instructor allows and say what I used.",
+}
+
 BROUGHT_DRAFT = {"getting_started": "No", "anxiety": "No", "assignment": "No", "research": "No"}
 
 NEXT_TUTOR_NOTES = (

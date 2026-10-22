@@ -95,7 +95,11 @@ class Command(BaseCommand):
         password = options["password"] or secrets.token_urlsafe(12)
         center, _ = Center.objects.get_or_create(
             slug="demo",
-            defaults={"name": "Demo Writing Center", "contact_email": "writing@demo.test"},
+            defaults={
+                "name": "Demo Writing Center",
+                "contact_email": "writing@demo.test",
+                "time_zone": "America/Los_Angeles",
+            },
         )
         for email, name, role in DEMO_PEOPLE:
             user, created = User.objects.get_or_create(email=email, defaults={"full_name": name})

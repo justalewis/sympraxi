@@ -16,6 +16,13 @@
           <button type="submit" class="usa-button usa-button--big">{% translate "Start as Sam, a student" %}</button>
         </form>
       {% endif %}
+      {% if tomas %}
+        <form method="post" action="{% url 'core:demo_sign_in' %}">
+          {% csrf_token %}
+          <input type="hidden" name="person" value="{{ tomas.pk }}">
+          <button type="submit" class="usa-button usa-button--big usa-button--outline">{% translate "Start as Tomás, a tutor" %}</button>
+        </form>
+      {% endif %}
       {% if dana %}
         <form method="post" action="{% url 'core:demo_sign_in' %}">
           {% csrf_token %}

@@ -24,7 +24,13 @@ from sympraxi.integrations.models import ApiToken
 from sympraxi.notify.models import Announcement, Audience, MassEmail
 from sympraxi.reports import demographics, research
 from sympraxi.scheduling import waitlist
-from sympraxi.scheduling.models import Exemption, Modality, Participant, WaitingEntry
+from sympraxi.scheduling.models import (
+    Appointment,
+    Exemption,
+    Modality,
+    Participant,
+    WaitingEntry,
+)
 from sympraxi.scheduling.timeutils import first_instant
 from sympraxi.staff.models import Category, PayrollDetail, TimeEntry, TimesheetApproval
 from sympraxi.training.models import (
@@ -52,6 +58,7 @@ def add_extras(world: World) -> None:
     _alerts_more(world)
     _shares_more(world)
     _waiting_more(world)
+    _flagged_sessions(world)
     _time_clock(world)
     _training_more(world)
     _announcements(world)
@@ -229,6 +236,52 @@ def _waiting_more(world: World) -> None:
             )
         except waitlist.WaitlistError:
             continue
+
+
+def _flagged_sessions(world: World) -> None:
+    """Sessions from the last few days where nobody marked attendance and the flag is up,
+    so the front desk's "Attendance to check" has real work in it."""
+    from sympraxi.core.demo_world import history
+
+    center = world.center
+    if (
+        Participant.objects.filter(
+            appointment__schedule__center=center,
+            flagged_at__isnull=False,
+            flag_cleared_at__isnull=True,
+        ).count()
+        > 2
+    ):
+        return
+    for email, days_ago, key in (
+        ("tyler.brooks@demo.test", 1, "getting_started"),
+        ("liam.oconnor@demo.test", 2, "assignment"),
+        ("lucia.gomez@demo.test", 3, "paragraphs"),
+    ):
+        day = world.today - timedelta(days=days_ago)
+        while day.weekday() > 4:
+            day -= timedelta(days=1)
+        tutor_email = history.tutor_for(world, key, day)
+        if tutor_email is None:
+            continue
+        slot = history.find_slot(world, tutor_email, day, 30)
+        if slot is None:
+            continue
+        assignment = world.assignments[tutor_email]
+        appointment = Appointment.objects.create(
+            schedule=assignment.schedule,
+            assignment=assignment,
+            tutor=assignment.tutor,
+            starts_at=slot[0],
+            ends_at=slot[1],
+            blocked_until=slot[1],
+            modality=Modality.IN_PERSON,
+            room=assignment.room,
+        )
+        participant = Participant.objects.create(appointment=appointment, student=world.user(email))
+        Participant.objects.filter(pk=participant.pk).update(
+            flagged_at=slot[0] + timedelta(minutes=20)
+        )
 
 
 def _time_clock(world: World) -> None:
@@ -584,7 +637,9 @@ def _workshops_more(world: World) -> None:
             status=WorkshopStatus.PUBLISHED,
             created_by=dana,
         )
-        for profile in rng.sample(students, min(len(students), rng.randint(5, 10))):
+        # Sam registers on camera for the later ones, so he isn't already on their lists.
+        pool = [s for s in students if offset < 0 or s.email != "student@demo.test"]
+        for profile in rng.sample(pool, min(len(pool), rng.randint(5, 10))):
             mark = ""
             if offset < 0:
                 mark = Attendance.ATTENDED if rng.random() < 0.8 else Attendance.NO_SHOW

@@ -20,7 +20,7 @@ from sympraxi.forms import services as form_services
 from sympraxi.forms.models import Form, FormKind, FormVersion
 from sympraxi.forms.report import ReportAnswers
 from sympraxi.records import services as records
-from sympraxi.records.models import Resource, Topic, WritingProject
+from sympraxi.records.models import Goal, GoalStatus, Resource, Topic, WritingProject
 from sympraxi.scheduling import attendance, services
 from sympraxi.scheduling.models import (
     Appointment,
@@ -105,6 +105,7 @@ def build(center: Center) -> World:
     _forms_cache(world)
     _schedules(world)
     _projects(world)
+    _goals(world)
     _registrations(world)
     _past_sessions(world)
     _future_sessions(world)
@@ -261,6 +262,31 @@ def _projects(world: World) -> None:
         world.projects[profile.email] = existing
 
 
+def _goals(world: World) -> None:
+    """One or two goals per student, so a tutor's brief before a session has something in it."""
+    tutor = world.user("tutor@demo.test")
+    for profile in cast.STUDENTS:
+        student = world.user(profile.email)
+        if Goal.objects.filter(center=world.center, student=student).exists():
+            continue
+        for n, key in enumerate(profile.wants[:2]):
+            text = library.GOALS.get(key)
+            if not text:
+                continue
+            goal = Goal.objects.create(
+                center=world.center,
+                student=student,
+                text=text,
+                target_on=world.today + timedelta(days=world.rng.randint(14, 45)),
+                project=world.projects[profile.email],
+                created_by=student if n == 0 else tutor,
+            )
+            if n == 1 and world.rng.random() < 0.3:
+                Goal.objects.filter(pk=goal.pk).update(
+                    status=GoalStatus.MET, closed_at=timezone.now(), closed_by=tutor
+                )
+
+
 def _registrations(world: World) -> None:
     version = world.registration_version
     if version is None:
@@ -296,7 +322,7 @@ def _free(world: World, tutor: User, start: datetime, end: datetime) -> bool:
     ).exists()
 
 
-def _find_slot(
+def find_slot(
     world: World, email: str, day: date, minutes: int
 ) -> tuple[datetime, datetime] | None:
     _kind, hours = cast.TUTOR_HOURS[email]
@@ -316,7 +342,7 @@ def _find_slot(
     return None
 
 
-def _tutor_for(world: World, template_key: str, day: date) -> str | None:
+def tutor_for(world: World, template_key: str, day: date) -> str | None:
     preferred = [
         e for e in SPECIALTY.get(template_key, []) if day.weekday() in cast.TUTOR_HOURS[e][1]
     ]
@@ -400,11 +426,11 @@ def _past_sessions(world: World) -> None:
         for n, day in enumerate(picks):
             key = profile.wants[n % len(profile.wants)]
             for _attempt in range(6):
-                email = _tutor_for(world, key, day)
+                email = tutor_for(world, key, day)
                 if email is None:
                     break
                 minutes = _length(world, email)
-                slot = _find_slot(world, email, day, minutes)
+                slot = find_slot(world, email, day, minutes)
                 if slot:
                     break
                 day = rng.choice(days)
@@ -483,10 +509,16 @@ def _one_session(
 
 
 def _intake(
-    world: World, student: User, appointment: Appointment, key: str, profile: cast.StudentProfile
+    world: World,
+    student: User,
+    appointment: Appointment,
+    key: str,
+    profile: cast.StudentProfile,
+    *,
+    always: bool = False,
 ) -> None:
     version = world.intake_version
-    if version is None or world.rng.random() > 0.65:
+    if version is None or (not always and world.rng.random() > 0.65):
         return
     template = library.TEMPLATES[key]
     kinds = {
@@ -545,11 +577,11 @@ def _future_sessions(world: World) -> None:
         key = rng.choice(profile.wants)
         for _attempt in range(8):
             day = rng.choice(days)
-            email = _tutor_for(world, key, day)
+            email = tutor_for(world, key, day)
             if email is None:
                 continue
             minutes = _length(world, email)
-            slot = _find_slot(world, email, day, minutes)
+            slot = find_slot(world, email, day, minutes)
             if slot and slot[0] > timezone.now() + timedelta(hours=2):
                 break
         else:
@@ -568,7 +600,9 @@ def _future_sessions(world: World) -> None:
             room=None if kind == "online" else assignment.room,
             is_tentative=assignment.needs_confirmation,
         )
-        Participant.objects.create(appointment=appointment, student=world.user(profile.email))
+        student = world.user(profile.email)
+        Participant.objects.create(appointment=appointment, student=student)
+        _intake(world, student, appointment, key, profile, always=True)
         booked += 1
         if booked >= 24:
             break

@@ -2,9 +2,33 @@
    prefer USWDS utility classes in templates. No inline styles anywhere: the
    Content Security Policy blocks them. */
 
+/* The page is a warm stone color and the center column is a lighter paper, so the content
+   has an edge. Both pass WCAG AA for the text and links used on them. */
+body {
+  background: #e7e4dc;
+}
+
 .sympraxi-main {
+  background: #fbf9f4;
+  border: 1px solid #d3cdbf;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
   padding-top: 2rem;
   padding-bottom: 4rem;
+}
+
+/* USWDS's hint gray is 4.36:1 on this paper color, just under AA. A step darker passes. */
+.sympraxi-main .usa-hint,
+.sympraxi-main .text-base {
+  color: #565c65;
+}
+
+@media (max-width: 40em) {
+  .sympraxi-main {
+    border-left: 0;
+    border-right: 0;
+    margin-top: 0;
+  }
 }
 
 /* usa-prose limits line length for reading; forms and tables use the full column. */
