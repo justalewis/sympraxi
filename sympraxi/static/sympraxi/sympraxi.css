@@ -67,6 +67,27 @@ summary:focus {
   margin: 0;
 }
 
+/* The language links are separate tap targets: at least 24 by 24 CSS pixels with room around. */
+.sympraxi-language {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0;
+}
+
+.sympraxi-language a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0 0.75rem;
+}
+
+.sympraxi-language a[aria-current="true"] {
+  font-weight: bold;
+  text-decoration: none;
+}
+
 /* Single sign-on buttons: one form per provider, stacked, full width on phones. */
 .sympraxi-sso {
   display: flex;
