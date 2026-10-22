@@ -94,6 +94,8 @@ def payload_for(event_name: str, event: AuditEvent) -> dict[str, Any]:
 
 def hook(event: AuditEvent) -> None:
     """Called when an audit event is written. Queues notices after the transaction commits."""
+    if settings.SYMPRAXI_DEMO:
+        return  # A demo never calls out to other sites.
     if event.center_id is not None and event.action in ACTION_TO_EVENT:
         transaction.on_commit(lambda: queue(event.pk))
 

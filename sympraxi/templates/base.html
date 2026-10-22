@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false, "allowScriptTags": false}'>
+  {% if DEMO %}<meta name="robots" content="noindex, nofollow">{% endif %}
   <title>{% block head_title %}{% endblock head_title %} | {{ SITE_NAME }}</title>
   <script src="{% static 'vendor/uswds/js/uswds-init.min.js' %}"></script>
   <link rel="stylesheet" href="{% static 'vendor/uswds/css/uswds.min.css' %}">
@@ -14,6 +15,13 @@
 </head>
 <body>
   <a class="usa-skipnav" href="#main-content">{% translate "Skip to main content" %}</a>
+  {% if DEMO %}
+    <section class="usa-alert usa-alert--warning usa-alert--slim" aria-label="{% translate 'Demo site' %}">
+      <div class="usa-alert__body">
+        <p class="usa-alert__text">{% translate "This is a demo with made-up people. Everything resets each night, and no email or text is ever sent. Please don't enter real information." %} <a href="{% url 'core:demo' %}">{% translate "Switch person" %}</a></p>
+      </div>
+    </section>
+  {% endif %}
 
   <header class="usa-header usa-header--basic">
     <div class="usa-nav-container">

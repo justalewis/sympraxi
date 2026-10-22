@@ -8,6 +8,7 @@ them all. Defaults are the safe production choice unless noted.
 from pathlib import Path
 
 import environ
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.csp import CSP
 
 from sympraxi.accounts import sso_config
@@ -47,7 +48,13 @@ SYMPRAXI_SOURCE_CODE_URL = env.str(
     "SYMPRAXI_SOURCE_CODE_URL", default="https://github.com/sympraxi/sympraxi"
 )
 SYMPRAXI_REQUIRE_STAFF_MFA = env.bool("SYMPRAXI_REQUIRE_STAFF_MFA", default=True)
-SYMPRAXI_SIGNUP_OPEN = env.bool("SYMPRAXI_SIGNUP_OPEN", default=True)
+# Demo mode: a public site for showing Sympraxi to people. Anyone can sign in as a sample
+# person from /demo/, no email or text message ever leaves the server, and the data is
+# wiped and recreated each night (deploy/reset-demo.sh). Never turn it on for a site
+# that holds real records. The checks below refuse to start a demo that could contact
+# real people or sign real people in.
+SYMPRAXI_DEMO = env.bool("SYMPRAXI_DEMO", default=False)
+SYMPRAXI_SIGNUP_OPEN = env.bool("SYMPRAXI_SIGNUP_OPEN", default=True) and not SYMPRAXI_DEMO
 # If set, only these email domains may register, e.g. "college.edu,students.college.edu".
 SYMPRAXI_SIGNUP_EMAIL_DOMAINS = [
     d.lower().lstrip("@") for d in env.list("SYMPRAXI_SIGNUP_EMAIL_DOMAINS", default=[])
@@ -324,6 +331,24 @@ sso_config.check_sso_only(
     saml=bool(SYMPRAXI_SAML_IDP_SSO_URL),
 )
 
+if SYMPRAXI_DEMO:
+    _demo_problems = [
+        name
+        for name, bad in {
+            "SYMPRAXI_SMS_PROVIDER (only empty or console)": SYMPRAXI_SMS_PROVIDER
+            not in ("", "console"),
+            "SYMPRAXI_LINK_CHECK": SYMPRAXI_LINK_CHECK,
+            "a single sign-on provider (Entra, Google, OIDC, CAS or SAML)": bool(
+                SYMPRAXI_SSO_PROVIDERS or SYMPRAXI_CAS_SERVER_URL or SYMPRAXI_SAML_IDP_SSO_URL
+            ),
+        }.items()
+        if bad
+    ]
+    if _demo_problems:
+        raise ImproperlyConfigured(
+            "SYMPRAXI_DEMO can't run with: " + "; ".join(_demo_problems) + "."
+        )
+
 SOCIALACCOUNT_ADAPTER = "sympraxi.accounts.adapter.SocialAccountAdapter"
 SOCIALACCOUNT_PROVIDERS = {"openid_connect": {"APPS": SYMPRAXI_SSO_PROVIDERS}}
 # A sign-in that passes the checks in sso.py may link to an existing account with
@@ -340,7 +365,12 @@ SOCIALACCOUNT_REQUESTS_TIMEOUT = 10
 DEFAULT_FROM_EMAIL = env.str("SYMPRAXI_FROM_EMAIL", default="sympraxi@localhost")
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-_email = env.email_url("EMAIL_URL", default="consolemail://")
+# A demo never sends mail, whatever EMAIL_URL says.
+_email = (
+    environ.Env.email_url_config("consolemail://")
+    if SYMPRAXI_DEMO
+    else env.email_url("EMAIL_URL", default="consolemail://")
+)
 _delivery: dict[str, object] = {"BACKEND": _email["EMAIL_BACKEND"]}
 if _email["EMAIL_BACKEND"].endswith("smtp.EmailBackend"):
     _delivery["OPTIONS"] = {

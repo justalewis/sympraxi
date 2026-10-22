@@ -454,6 +454,8 @@ CAS_ENDPOINTS = {
     "accounts:saml_login",
     "accounts:saml_acs",
     "accounts:saml_metadata",
+    "core:demo",
+    "core:demo_sign_in",
 }
 
 # The learning system launch. Open to the internet; answers only a signed launch from a

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% translate "Try the demo" %}{% endblock head_title %}
+
+{% block content %}
+  <div class="grid-container padding-y-4">
+    <h1>{% translate "Try the demo" %}</h1>
+    <p>{% translate "Choose a sample person to see the site as they do. Nothing here is real, and everything resets each night." %}</p>
+    {% for label, people in groups %}
+      <h2>{{ label }}</h2>
+      <ul class="usa-list usa-list--unstyled">
+        {% for person in people %}
+          <li class="margin-bottom-2">
+            <form method="post" action="{% url 'core:demo_sign_in' %}">
+              {% csrf_token %}
+              <input type="hidden" name="person" value="{{ person.pk }}">
+              <button type="submit" class="usa-button">{% blocktranslate with name=person.full_name %}Sign in as {{ name }}{% endblocktranslate %}</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% empty %}
+      <p>{% translate "The sample people haven't been created yet." %}</p>
+    {% endfor %}
+  </div>
+{% endblock content %}

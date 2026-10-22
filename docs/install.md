@@ -147,6 +147,16 @@ For CAS, set `SYMPRAXI_CAS_SERVER_URL` (for example `https://cas.example.edu/cas
 
 To bring the student ID in from an OpenID Connect sign-in, set `SYMPRAXI_SSO_STUDENT_ID_CLAIM` to the claim's name.
 
+## A demo site
+
+To show Sympraxi to others, run a second installation just for demos, never on a server that holds real records. Set `SYMPRAXI_DEMO=true` in `deploy/.env`, install as above, then run `docker compose run --rm web python manage.py seed_demo`. People open `https://<your site>/demo/` and choose a sample person to sign in as. Mail is written to the log only, text messages, webhooks and single sign-on are refused, and sign-up is closed. To wipe and recreate the sample data every night, add to the server's crontab:
+
+```
+30 3 * * * bash /opt/sympraxi/deploy/reset-demo.sh >> /var/log/sympraxi-demo-reset.log 2>&1
+```
+
+The script deletes the whole database and every upload, and refuses to run unless `SYMPRAXI_DEMO=true` is set.
+
 ## Launching from Canvas, Moodle or D2L
 
 Sympraxi speaks LTI 1.3. The setup is done by a site administrator.

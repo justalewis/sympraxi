@@ -12,6 +12,14 @@ Short records of choices made while building, with the reason, so later contribu
 
 **Not done.** Approval is per person and period, not a pay-period calendar with a single approve-everyone button. A person can't see whether their hours are approved on their own page. Clock-in network rules don't apply to the kiosk yet, which doesn't exist until the next slice.
 
+## Demo mode (October 2026)
+
+**A public demo that can't touch real people.** `SYMPRAXI_DEMO=true` turns a site into a demo: `/demo/` lists made-up people by role with a "sign in as" button for each, so a visitor (or someone demoing for others) needs no password. Every page carries a banner saying it is a demo, and asks search engines not to index it. The settings refuse to start a demo that could reach real people: a real text provider, the link checker, or any single sign-on provider stops the site with an error naming the setting. Whatever `EMAIL_URL` says, a demo writes mail to the log only; webhooks aren't called; sign-up is closed. The sample staff skip two-factor setup, matched by the `@demo.test` address, so a real administrator account on the same server still needs it.
+
+**Sample data for the later features.** `seed_demo` (which now runs in demo mode as well as development) adds upcoming and past workshops with registrations and attendance, a training module with a quiz, a new-tutor cohort with a mentor and a draft observation, an open and a closed early alert, a shared-visit link, a waiting-list entry, and three time-clock shifts. Dates are relative to today.
+
+**Reset by rebuilding.** `deploy/reset-demo.sh` drops the database, clears uploads, migrates and seeds again, from cron each night. It refuses to run unless `SYMPRAXI_DEMO=true` is in `deploy/.env`, because it deletes everything. Rebuilding avoids fighting the database triggers that keep the audit log and records from being deleted, at the cost of about a minute of downtime. Site administrators are removed with the rest and are made again with `createsuperuser` when needed.
+
 ## Phase 5: Spanish (October 2026)
 
 **First translation, a subset.** Spanish covers the pages a student meets first: sign-in, error pages, booking, appointments, waiting list, account and email reminder settings (about ninety strings, in `locale/es`). The rest stays in English until it is translated; Django falls back string by string, so nothing breaks. A person chooses a language in the page footer (kept in a cookie), and until then the browser's language decides. Sentences with variables (`blocktranslate`) aren't translated yet.

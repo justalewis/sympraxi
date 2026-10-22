@@ -36,6 +36,10 @@
     {% endif %}
   {% endif %}
 
+  {% if DEMO and not break_glass %}
+    <p><a class="usa-button usa-button--outline" href="{% url 'core:demo' %}">{% translate "Try the demo as a sample person" %}</a></p>
+  {% endif %}
+
   {% if not SSO_ONLY or break_glass %}
     {% if sso_providers or CAS_ENABLED or SAML_ENABLED %}
       {% if not break_glass %}

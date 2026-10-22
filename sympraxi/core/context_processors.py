@@ -12,6 +12,7 @@ def site(request: HttpRequest) -> dict[str, object]:
         "SSO_ONLY": sso_only,
         # A CAS server is set up, so the sign-in page offers it beside any other provider.
         "CAS_ENABLED": bool(settings.SYMPRAXI_CAS_SERVER_URL),
+        "DEMO": settings.SYMPRAXI_DEMO,
         "SAML_ENABLED": bool(settings.SYMPRAXI_SAML_IDP_SSO_URL),
         "LOCAL_SIGNUP_OPEN": settings.SYMPRAXI_SIGNUP_OPEN and not sso_only,
     }

@@ -25,6 +25,7 @@ EXEMPT_PREFIXES = (
     "/visit/",
     "/lti/",
 )
+DEMO_DOMAIN = "@demo.test"
 STRONG_FACTORS = (Authenticator.Type.TOTP, Authenticator.Type.WEBAUTHN)
 
 
@@ -32,6 +33,8 @@ def needs_mfa_setup(user: policy.UserLike) -> bool:
     """True for staff and site admins who have no authenticator app or passkey yet."""
     if not user.is_authenticated or not policy.is_staff_member(user):
         return False
+    if settings.SYMPRAXI_DEMO and user.email.endswith(DEMO_DOMAIN):
+        return False  # Sample staff accounts, so a demo isn't stopped at two-factor setup.
     return not Authenticator.objects.filter(user=user, type__in=STRONG_FACTORS).exists()
 
 

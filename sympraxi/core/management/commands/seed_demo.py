@@ -15,6 +15,7 @@ from django.utils import timezone
 
 from sympraxi.accounts.models import User
 from sympraxi.centers.models import Center, Membership, Role
+from sympraxi.core.demo_more import add_more
 from sympraxi.forms import builder as form_builder
 from sympraxi.forms import services as form_services
 from sympraxi.forms.builder import QuestionData
@@ -76,7 +77,7 @@ DEMO_PEOPLE = [
 
 
 class Command(BaseCommand):
-    help = "Create a demo center and demo accounts (development only; refuses when DEBUG is off)."
+    help = "Create a demo center and demo accounts (development or demo mode only)."
 
     def add_arguments(self, parser: Any) -> None:
         parser.add_argument(
@@ -86,8 +87,10 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args: Any, **options: Any) -> None:
-        if not settings.DEBUG:
-            raise CommandError("seed_demo only runs with SYMPRAXI_DEBUG=true.")
+        if not (settings.DEBUG or settings.SYMPRAXI_DEMO):
+            raise CommandError(
+                "seed_demo only runs with SYMPRAXI_DEBUG=true or SYMPRAXI_DEMO=true."
+            )
         password = options["password"] or secrets.token_urlsafe(12)
         center, _ = Center.objects.get_or_create(
             slug="demo",
@@ -107,19 +110,23 @@ class Command(BaseCommand):
         self._attendance(center, assignment)
         self._forms(center)
         survey_url = self._survey(center)
+        printed = add_more(center, assignment)
         self.stdout.write(self.style.SUCCESS(f"Demo center ready at /centers/{center.slug}/"))
         self.stdout.write("Accounts: " + ", ".join(e for e, _, _ in DEMO_PEOPLE))
         if options["password"] is None:
             self.stdout.write(f"Password for new accounts: {password}")
-        self.stdout.write(
-            "Staff accounts will be asked to set up two-factor login on first sign-in."
-        )
+        if not settings.SYMPRAXI_DEMO:
+            self.stdout.write(
+                "Staff accounts will be asked to set up two-factor login on first sign-in."
+            )
         self.stdout.write(
             "Run `manage.py scheduler` alongside the server to send reminders and surveys and "
             "flag possible no-shows."
         )
         if survey_url:
             self.stdout.write(f"Sam's survey link (works once, no sign-in): {survey_url}")
+        for label, value in printed.items():
+            self.stdout.write(f"{label}: {value}")
 
     def _schedule(self, center: Center) -> TutorAssignment:
         """A drop-in schedule for the next three months, with the demo tutor on weekdays."""
