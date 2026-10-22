@@ -1,12 +1,18 @@
 """The three SAML addresses: start a sign-in, take the response, and describe this service."""
 
 from django.contrib import messages
-from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import (
+    Http404,
+    HttpRequest,
+    HttpResponse,
+    HttpResponseNotAllowed,
+    HttpResponseRedirect,
+)
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_GET
 
 from sympraxi.accounts import cas, saml
 from sympraxi.privacy.audit import AuditAction, record
@@ -27,11 +33,12 @@ def saml_login(request: HttpRequest) -> HttpResponse:
 
 
 @csrf_exempt  # The identity provider posts from its own site; the signed response is the proof.
-@require_POST
 @never_cache
 def saml_acs(request: HttpRequest) -> HttpResponse:
     if not saml.configured():
         raise Http404
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
     failure = HttpResponseRedirect(reverse("account_login"))
     try:
         identity, target = saml.consume(request)
